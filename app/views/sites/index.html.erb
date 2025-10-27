@@ -1,0 +1,130 @@
+<% content_for :header, "Sites" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Mes Sites</h2>
+      <p class="typo-body-small">Gérer la structure patrimoniale - Sites, Bâtiments, Niveaux, Espaces</p>
+    </div>
+    <a href="<%= new_site_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nouveau Site
+    </a>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+    <!-- Filters Section -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+          <input type="text" placeholder="Nom du site, ville..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type de Site</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <option>Tous</option>
+            <option>Bureaux</option>
+            <option>Industriel</option>
+            <option>Commercial</option>
+            <option>Résidentiel</option>
+          </select>
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Région</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <option>Toutes</option>
+            <option>Île-de-France</option>
+            <option>PACA</option>
+            <option>Auvergne-Rhône-Alpes</option>
+          </select>
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Trier par</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <option>Nom (A-Z)</option>
+            <option>Surface</option>
+            <option>Nb. Bâtiments</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sites Grid -->
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+      <% [
+        {name: "Tour Montparnasse", address: "33 Avenue du Maine", city: "Paris", postal: "75015", region: "Île-de-France", type: "Bureaux", area: "120,000 m²", buildings: 1, equipment: 487, contracts: 23},
+        {name: "Campus La Défense", address: "15 Esplanade du Général de Gaulle", city: "La Défense", postal: "92400", region: "Île-de-France", type: "Bureaux", area: "85,500 m²", buildings: 4, equipment: 892, contracts: 34},
+        {name: "Centre Commercial Odysseum", address: "2 Place de Lisbonne", city: "Montpellier", postal: "34000", region: "Occitanie", type: "Commercial", area: "65,000 m²", buildings: 2, equipment: 324, contracts: 18},
+        {name: "Site Industriel Lyon Nord", address: "Zone Industrielle des Marais", city: "Lyon", postal: "69009", region: "Auvergne-Rhône-Alpes", type: "Industriel", area: "45,000 m²", buildings: 8, equipment: 567, contracts: 29},
+        {name: "Résidence Le Parc", address: "89 Avenue Victor Hugo", city: "Nice", postal: "06000", region: "PACA", type: "Résidentiel", area: "12,500 m²", buildings: 3, equipment: 156, contracts: 12},
+        {name: "Parc d'Activités Roissy", address: "Avenue de la Commune de Paris", city: "Roissy", postal: "95700", region: "Île-de-France", type: "Logistique", area: "95,000 m²", buildings: 6, equipment: 445, contracts: 21},
+        {name: "Immeuble Haussmann", address: "45 Boulevard Haussmann", city: "Paris", postal: "75009", region: "Île-de-France", type: "Bureaux", area: "8,200 m²", buildings: 1, equipment: 89, contracts: 8},
+        {name: "Centre Médical Pasteur", address: "12 Rue Louis Pasteur", city: "Marseille", postal: "13001", region: "PACA", type: "Santé", area: "15,600 m²", buildings: 2, equipment: 234, contracts: 16},
+        {name: "Campus Universitaire Grenoble", address: "621 Avenue Centrale", city: "Grenoble", postal: "38400", region: "Auvergne-Rhône-Alpes", type: "Enseignement", area: "42,000 m²", buildings: 7, equipment: 678, contracts: 27},
+        {name: "Zone Commerciale Atlantis", address: "Avenue des Thébaudières", city: "Nantes", postal: "44800", region: "Pays de la Loire", type: "Commercial", area: "52,000 m²", buildings: 3, equipment: 298, contracts: 19}
+      ].each do |site| %>
+        <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); overflow: hidden; transition: box-shadow 0.3s;">
+          <!-- Site Header -->
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-lg); color: white;">
+            <h4 class="typo-h4" style="color: white; margin-bottom: var(--space-xs);"><%= site[:name] %></h4>
+            <p class="typo-body-small" style="color: rgba(255,255,255,0.9); font-size: 0.85rem;"><%= site[:address] %></p>
+            <p class="typo-body-small" style="color: rgba(255,255,255,0.8); font-size: 0.8rem;"><%= site[:city] %>, <%= site[:postal] %></p>
+          </div>
+          
+          <!-- Site Details -->
+          <div style="padding: var(--space-lg);">
+            <div style="display: flex; gap: var(--space-sm); margin-bottom: var(--space-md);">
+              <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                <%= site[:type] %>
+              </span>
+              <span style="display: inline-block; padding: 4px 12px; background-color: #f0f0f0; color: #666; border-radius: 12px; font-size: 0.75rem;">
+                <%= site[:region] %>
+              </span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); margin-bottom: var(--space-lg);">
+              <div>
+                <p class="typo-body-small" style="color: #999; font-size: 0.7rem;">SURFACE TOTALE</p>
+                <p class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= site[:area] %></p>
+              </div>
+              <div>
+                <p class="typo-body-small" style="color: #999; font-size: 0.7rem;">BÂTIMENTS</p>
+                <p class="typo-body-small typo-bold"><%= site[:buildings] %></p>
+              </div>
+              <div>
+                <p class="typo-body-small" style="color: #999; font-size: 0.7rem;">ÉQUIPEMENTS</p>
+                <p class="typo-body-small typo-bold"><%= site[:equipment] %></p>
+              </div>
+              <div>
+                <p class="typo-body-small" style="color: #999; font-size: 0.7rem;">CONTRATS</p>
+                <p class="typo-body-small typo-bold"><%= site[:contracts] %></p>
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: var(--space-sm);">
+              <a href="#" class="typo-btn-primary" style="flex: 1; text-align: center; padding: 8px; font-size: 0.85rem;">
+                Voir Détails
+              </a>
+              <a href="#" style="flex: 1; text-align: center; padding: 8px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); text-decoration: none; color: #666; font-size: 0.85rem;">
+                Éditer
+              </a>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <div style="margin-top: var(--space-xl);">
+      <%= render 'shared/pagination', 
+        current_page: 1, 
+        total_pages: 3, 
+        total_count: 24, 
+        per_page: 10,
+        path: sites_path %>
+    </div>
+  </div>
+</div>

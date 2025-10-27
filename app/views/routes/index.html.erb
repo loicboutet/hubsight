@@ -1,37 +1,31 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">HubSight Application Routes</h1>
-    <p class="text-gray-600">Routes organized by user role based on specification.md</p>
+<% content_for :header, "Routes de l'Application" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">HubSight - Toutes les Routes</h2>
+    <p class="typo-body-small">Routes organisées par rôle utilisateur selon specification.md</p>
   </div>
 
-  <div class="space-y-8">
+  <!-- 3-Column Grid Layout -->
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
     <% @routes_by_role.each do |role_name, routes| %>
-      <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-          <h2 class="text-2xl font-semibold text-white"><%= role_name %></h2>
+      <div style="background-color: var(--white); border-radius: var(--space-md); overflow: hidden; border: 1px solid var(--light-gray);">
+        <!-- Role Header -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-lg); color: white;">
+          <h3 class="typo-h4" style="color: white; margin: 0;"><%= role_name %></h3>
         </div>
         
-        <div class="divide-y divide-gray-200">
+        <!-- Routes List -->
+        <div style="padding: var(--space-md);">
           <% routes.each do |route| %>
-            <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
-              <div class="flex items-start justify-between">
-                <div class="flex-1">
-                  <%= link_to route[:path], class: "group block" do %>
-                    <h3 class="text-lg font-medium text-blue-600 group-hover:text-blue-800 mb-1">
-                      <%= route[:name] %>
-                    </h3>
-                    <p class="text-sm text-gray-600"><%= route[:description] %></p>
-                  <% end %>
+            <div style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 1px solid var(--pink-pale);">
+              <%= link_to route[:path], style: "text-decoration: none;" do %>
+                <div style="margin-bottom: var(--space-xs);">
+                  <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= route[:name] %></span>
                 </div>
-                <div class="ml-4">
-                  <%= link_to route[:path], class: "inline-flex items-center px-4 py-2 border border-blue-300 rounded-md text-sm font-medium text-blue-700 bg-white hover:bg-blue-50 transition-colors" do %>
-                    Visit →
-                  <% end %>
-                </div>
-              </div>
-              <div class="mt-2">
-                <code class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-700"><%= route[:path] %></code>
-              </div>
+                <p class="typo-body-small" style="color: #666; font-size: 0.8rem; line-height: 1.3;"><%= route[:description] %></p>
+                <code style="font-size: 0.7rem; color: #999; display: block; margin-top: var(--space-xs);"><%= route[:path] %></code>
+              <% end %>
             </div>
           <% end %>
         </div>
@@ -39,18 +33,36 @@
     <% end %>
   </div>
 
-  <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-    <h3 class="text-lg font-semibold text-blue-900 mb-2">About the Roles</h3>
-    <div class="space-y-2 text-sm text-blue-800">
-      <p><strong>👤 Admin:</strong> System administrator who manages Portfolio Manager accounts and price references</p>
-      <p><strong>👑 Portfolio Manager:</strong> Main user who manages the entire property portfolio, contracts, and sites</p>
-      <p><strong>🏢 Site Manager:</strong> Limited access user assigned to specific sites, can view and upload contracts for their sites</p>
+  <!-- Info Section -->
+  <div style="background-color: #f8f9fa; border-radius: var(--space-md); padding: var(--space-xl); border: 1px solid var(--light-gray);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-md);">À propos des Rôles</h3>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+      <div>
+        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm);">👤 Admin</p>
+        <p class="typo-body-small" style="font-size: 0.85rem; line-height: 1.4;">Administrateur système qui gère les comptes Gestionnaires de Portefeuille et les références de prix</p>
+      </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm);">👑 Gestionnaire de Portefeuille</p>
+        <p class="typo-body-small" style="font-size: 0.85rem; line-height: 1.4;">Utilisateur principal qui gère l'ensemble du portefeuille immobilier, les contrats et les sites</p>
+      </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm);">🏢 Responsable de Site</p>
+        <p class="typo-body-small" style="font-size: 0.85rem; line-height: 1.4;">Utilisateur avec accès limité aux sites assignés, peut consulter et uploader des contrats</p>
+      </div>
+    </div>
+    <div style="margin-top: var(--space-lg); text-align: center;">
+      <p class="typo-body-small" style="color: #666;">
+        <strong>BRIQUE 2</strong> inclut : Alertes, Analyse d'Économies, et Références de Prix
+      </p>
     </div>
   </div>
-
-  <div class="mt-6 text-center">
-    <p class="text-sm text-gray-500">
-      BRIQUE 2 features include: Alerts, Savings Analysis, and Price References
-    </p>
-  </div>
 </div>
+
+<!-- Responsive CSS for mobile -->
+<style>
+  @media (max-width: 1024px) {
+    div[style*="grid-template-columns: repeat(3, 1fr)"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>

@@ -1,0 +1,110 @@
+<% content_for :header, "Tableau de Bord" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Tableau de Bord</h2>
+    <p class="typo-body-small">Vue d'ensemble du portefeuille immobilier</p>
+  </div>
+
+  <!-- KPI Cards -->
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
+    <% [
+      {title: "Sites", value: "24", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "#667eea"},
+      {title: "Contrats Actifs", value: "186", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z", color: "#48bb78"},
+      {title: "Équipements", value: "1,247", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z", color: "#ed8936"},
+      {title: "Alertes", value: "12", icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9", color: "#f56565"}
+    ].each do |kpi| %>
+      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); border: 1px solid var(--light-gray);">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-md);">
+          <div>
+            <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);"><%= kpi[:title] %></p>
+            <h3 class="typo-h2" style="color: <%= kpi[:color] %>;"><%= kpi[:value] %></h3>
+          </div>
+          <div style="background-color: <%= kpi[:color] %>20; padding: var(--space-sm); border-radius: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="<%= kpi[:color] %>" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="<%= kpi[:icon] %>" />
+            </svg>
+          </div>
+        </div>
+        <p class="typo-body-small" style="color: #48bb78;">
+          <span style="font-weight: 600;">+5.2%</span> vs mois dernier
+        </p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-lg);">
+    <!-- Recent Contracts -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+      <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Contrats Récents
+      </h3>
+      <div style="space-y: var(--space-md);">
+        <% [
+          {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", amount: "24,500 €", status: "Actif", date: "15 Jan 2025"},
+          {number: "CTR-2025-002", title: "Nettoyage bureaux - Site Paris", provider: "Clean Pro Services", amount: "12,800 €", status: "Actif", date: "10 Jan 2025"},
+          {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", amount: "8,500 €", status: "Terminé", date: "05 Jan 2025"},
+          {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", amount: "31,200 €", status: "Actif", date: "02 Jan 2025"},
+          {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature", amount: "6,400 €", status: "Actif", date: "28 Dec 2024"}
+        ].each do |contract| %>
+          <div style="padding: var(--space-md); border: 1px solid #eee; border-radius: var(--space-sm); margin-bottom: var(--space-md);">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-sm);">
+              <div>
+                <p class="typo-body-small typo-bold"><%= contract[:number] %></p>
+                <p class="typo-body-small" style="color: #666;"><%= contract[:title] %></p>
+                <p class="typo-body-small" style="color: #999; font-size: 0.75rem;"><%= contract[:provider] %></p>
+              </div>
+              <div style="text-align: right;">
+                <p class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= contract[:amount] %></p>
+                <span style="display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 600; <%= contract[:status] == 'Actif' ? 'background-color: #d4edda; color: #155724;' : 'background-color: #e2e8f0; color: #4a5568;' %>">
+                  <%= contract[:status] %>
+                </span>
+              </div>
+            </div>
+            <p class="typo-body-small" style="color: #999; font-size: 0.7rem;"><%= contract[:date] %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Alerts & Quick Actions -->
+    <div>
+      <!-- Alerts -->
+      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-lg);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Alertes Actives
+        </h3>
+        <% [
+          {type: "Échéance", title: "Contrat CTR-2024-156", date: "Dans 15 jours", color: "#ffc107"},
+          {type: "Risque", title: "Résiliation non effectuée", date: "Dépassé", color: "#dc3545"},
+          {type: "À venir", title: "Contrôle réglementaire", date: "Dans 30 jours", color: "#17a2b8"}
+        ].each do |alert| %>
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-left: 4px solid <%= alert[:color] %>; border-radius: var(--space-xs); margin-bottom: var(--space-md);">
+            <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);"><%= alert[:type] %></p>
+            <p class="typo-body-small" style="color: #666; font-size: 0.85rem;"><%= alert[:title] %></p>
+            <p class="typo-body-small" style="color: #999; font-size: 0.75rem; margin-top: var(--space-xs);"><%= alert[:date] %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Quick Actions -->
+      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Actions Rapides
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+          <a href="<%= new_site_path %>" class="typo-btn-primary" style="text-align: center; display: block;">
+            + Nouveau Site
+          </a>
+          <a href="<%= upload_contracts_path %>" class="typo-btn-success" style="text-align: center; display: block;">
+            📄 Upload Contrat
+          </a>
+          <a href="<%= new_equipment_path %>" style="text-align: center; display: block; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); text-decoration: none; color: #666;">
+            ⚙️ Ajouter Équipement
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
