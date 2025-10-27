@@ -197,4 +197,13 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  <%= render 'shared/pagination', 
+    current_page: 1, 
+    total_pages: 5, 
+    total_count: 73, 
+    per_page: 15, 
+    path: admin_portfolio_managers_path 
+  %>
 </div>

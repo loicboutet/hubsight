@@ -153,6 +153,15 @@
     </table>
   </div>
 
+  <!-- Pagination -->
+  <%= render 'shared/pagination', 
+    current_page: 1, 
+    total_pages: 3, 
+    total_count: 42, 
+    per_page: 15, 
+    path: admin_clients_path 
+  %>
+
   <!-- Access Log -->
   <div style="margin-top: var(--space-2xl);">
     <h3 class="typo-h4" style="margin-bottom: var(--space-lg);">Recent Access Log</h3>

@@ -225,4 +225,13 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  <%= render 'shared/pagination', 
+    current_page: 2, 
+    total_pages: 8, 
+    total_count: 115, 
+    per_page: 15, 
+    path: admin_price_references_path 
+  %>
 </div>
