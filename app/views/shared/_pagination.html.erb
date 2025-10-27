@@ -25,22 +25,22 @@
   %>
   <div class="pagination-wrapper">
     <div class="pagination-info">
-      Showing <span class="pagination-info-bold"><%= start_item %></span> to <span class="pagination-info-bold"><%= end_item %></span> of <span class="pagination-info-bold"><%= total_count %></span> entries
+      Affichage de <span class="pagination-info-bold"><%= start_item %></span> à <span class="pagination-info-bold"><%= end_item %></span> sur <span class="pagination-info-bold"><%= total_count %></span> entrées
     </div>
     
     <nav class="pagination" role="navigation" aria-label="Pagination">
       <!-- First Page -->
       <% if current_page == 1 %>
-        <span class="pagination-item first disabled">« First</span>
+        <span class="pagination-item first disabled">« Début</span>
       <% else %>
-        <a href="<%= path %>?page=1" class="pagination-item first">« First</a>
+        <a href="<%= path %>?page=1" class="pagination-item first">« Début</a>
       <% end %>
       
       <!-- Previous Page -->
       <% if current_page == 1 %>
-        <span class="pagination-item prev disabled">‹ Prev</span>
+        <span class="pagination-item prev disabled">‹ Préc</span>
       <% else %>
-        <a href="<%= path %>?page=<%= current_page - 1 %>" class="pagination-item prev" rel="prev">‹ Prev</a>
+        <a href="<%= path %>?page=<%= current_page - 1 %>" class="pagination-item prev" rel="prev">‹ Préc</a>
       <% end %>
       
       <!-- Page Numbers -->
@@ -56,16 +56,16 @@
       
       <!-- Next Page -->
       <% if current_page == total_pages %>
-        <span class="pagination-item next disabled">Next ›</span>
+        <span class="pagination-item next disabled">Suiv ›</span>
       <% else %>
-        <a href="<%= path %>?page=<%= current_page + 1 %>" class="pagination-item next" rel="next">Next ›</a>
+        <a href="<%= path %>?page=<%= current_page + 1 %>" class="pagination-item next" rel="next">Suiv ›</a>
       <% end %>
       
       <!-- Last Page -->
       <% if current_page == total_pages %>
-        <span class="pagination-item last disabled">Last »</span>
+        <span class="pagination-item last disabled">Fin »</span>
       <% else %>
-        <a href="<%= path %>?page=<%= total_pages %>" class="pagination-item last">Last »</a>
+        <a href="<%= path %>?page=<%= total_pages %>" class="pagination-item last">Fin »</a>
       <% end %>
     </nav>
   </div>
