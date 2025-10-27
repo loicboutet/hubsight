@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Admin Portal - HubSight" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "typography", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <div class="admin-layout">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar-header">
+          <h1 class="admin-sidebar-brand">HubSight Admin</h1>
+        </div>
+        <nav class="admin-sidebar-nav">
+          <ul>
+            <li>
+              <%= link_to "Portfolio Managers", admin_portfolio_managers_path, class: "admin-sidebar-link #{controller_name == 'portfolio_managers' ? 'active' : ''}" %>
+            </li>
+            <li>
+              <%= link_to "Clients", admin_clients_path, class: "admin-sidebar-link #{controller_name == 'clients' ? 'active' : ''}" %>
+            </li>
+            <li>
+              <%= link_to "Price References", admin_price_references_path, class: "admin-sidebar-link #{controller_name == 'price_references' ? 'active' : ''}" %>
+            </li>
+            <li style="margin-top: var(--space-xl); padding-top: var(--space-xl); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+              <%= link_to "Back to Dashboard", root_path, class: "admin-sidebar-link" %>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Overlay for mobile -->
+      <div class="admin-overlay" id="adminOverlay"></div>
+
+      <!-- Main Content -->
+      <div class="admin-main">
+        <header class="admin-header">
+          <h2 class="admin-header-title">
+            <%= content_for(:header) || "Admin Portal" %>
+          </h2>
+          <div class="admin-header-user">
+            <span class="admin-header-username">Admin User</span>
+            <div class="admin-header-avatar">A</div>
+          </div>
+        </header>
+
+        <main class="admin-content">
+          <%= yield %>
+        </main>
+      </div>
+
+      <!-- Mobile Toggle Button -->
+      <button class="admin-mobile-toggle" id="adminMobileToggle">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <script>
+      // Mobile menu toggle
+      document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('adminSidebar');
+        const overlay = document.getElementById('adminOverlay');
+        const toggleBtn = document.getElementById('adminMobileToggle');
+        
+        function toggleSidebar() {
+          sidebar.classList.toggle('mobile-open');
+          overlay.classList.toggle('visible');
+        }
+        
+        toggleBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+      });
+    </script>
+  </body>
+</html>
