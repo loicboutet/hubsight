@@ -1,0 +1,56 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">HubSight Application Routes</h1>
+    <p class="text-gray-600">Routes organized by user role based on specification.md</p>
+  </div>
+
+  <div class="space-y-8">
+    <% @routes_by_role.each do |role_name, routes| %>
+      <div class="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+          <h2 class="text-2xl font-semibold text-white"><%= role_name %></h2>
+        </div>
+        
+        <div class="divide-y divide-gray-200">
+          <% routes.each do |route| %>
+            <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <%= link_to route[:path], class: "group block" do %>
+                    <h3 class="text-lg font-medium text-blue-600 group-hover:text-blue-800 mb-1">
+                      <%= route[:name] %>
+                    </h3>
+                    <p class="text-sm text-gray-600"><%= route[:description] %></p>
+                  <% end %>
+                </div>
+                <div class="ml-4">
+                  <%= link_to route[:path], class: "inline-flex items-center px-4 py-2 border border-blue-300 rounded-md text-sm font-medium text-blue-700 bg-white hover:bg-blue-50 transition-colors" do %>
+                    Visit →
+                  <% end %>
+                </div>
+              </div>
+              <div class="mt-2">
+                <code class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-700"><%= route[:path] %></code>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+    <h3 class="text-lg font-semibold text-blue-900 mb-2">About the Roles</h3>
+    <div class="space-y-2 text-sm text-blue-800">
+      <p><strong>👤 Admin:</strong> System administrator who manages Portfolio Manager accounts and price references</p>
+      <p><strong>👑 Portfolio Manager:</strong> Main user who manages the entire property portfolio, contracts, and sites</p>
+      <p><strong>🏢 Site Manager:</strong> Limited access user assigned to specific sites, can view and upload contracts for their sites</p>
+    </div>
+  </div>
+
+  <div class="mt-6 text-center">
+    <p class="text-sm text-gray-500">
+      BRIQUE 2 features include: Alerts, Savings Analysis, and Price References
+    </p>
+  </div>
+</div>

@@ -243,14 +243,15 @@ Rails.application.routes.draw do
   get 'mockups/typography'
 
   # =============================================================================
+  # ROUTES INDEX (Public - shows all routes organized by role)
+  # =============================================================================
+  
+  get 'routes', to: 'routes#index', as: :routes_index
+
+  # =============================================================================
   # ROOT ROUTE
   # =============================================================================
   
-  # Redirect to appropriate dashboard based on user role
-  authenticated :user do
-    root to: 'dashboard#index', as: :authenticated_root
-  end
-  
-  # Unauthenticated users see login
-  root to: redirect('/login')
+  # Show routes index to all users
+  root to: 'routes#index'
 end
