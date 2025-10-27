@@ -1,0 +1,217 @@
+<%= form_with(model: [@site, building], local: true) do |f| %>
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+    
+    <!-- Basic Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations de Base
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom du Bâtiment <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :name, placeholder: "Ex: Bâtiment A - Principal", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Référence Cadastrale
+          </label>
+          <%= f.text_field :cadastral_reference, placeholder: "Ex: AB-123-456", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Année de Construction <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :construction_year, placeholder: "Ex: 2005", min: 1800, max: Time.current.year, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Année de Rénovation
+          </label>
+          <%= f.number_field :renovation_year, placeholder: "Ex: 2020", min: 1800, max: Time.current.year, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Surface (m²) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :area, placeholder: "Ex: 12500", step: 0.01, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nombre de Niveaux <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :number_of_levels, placeholder: "Ex: 8", min: 1, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Hauteur (m)
+          </label>
+          <%= f.number_field :height, placeholder: "Ex: 28.5", step: 0.1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Structure
+          </label>
+          <%= f.select :structure_type, 
+            [['Béton', 'concrete'], ['Métal', 'metal'], ['Bois', 'wood'], ['Mixte', 'mixed'], ['Autre', 'other']], 
+            { include_blank: 'Sélectionner...' },
+            { style: "width: 100%;" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- ERP Classification Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Classification ERP
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Catégorie ERP
+          </label>
+          <%= f.select :erp_category, 
+            [
+              ['Type J - Personnes âgées et handicapées', 'J'],
+              ['Type L - Salles de conférences', 'L'],
+              ['Type M - Magasins, centres commerciaux', 'M'],
+              ['Type N - Restaurants et bars', 'N'],
+              ['Type O - Hôtels', 'O'],
+              ['Type P - Salles de danse', 'P'],
+              ['Type R - Enseignement', 'R'],
+              ['Type S - Bibliothèques', 'S'],
+              ['Type T - Salles d\'exposition', 'T'],
+              ['Type U - Établissements de santé', 'U'],
+              ['Type V - Lieux de culte', 'V'],
+              ['Type W - Bureaux', 'W'],
+              ['Type X - Établissements sportifs couverts', 'X'],
+              ['Type Y - Musées', 'Y']
+            ],
+            { include_blank: 'Sélectionner...' },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type ERP (détails)
+          </label>
+          <%= f.text_field :erp_type, placeholder: "Ex: 1ère catégorie", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Capacité d'Accueil (personnes)
+          </label>
+          <%= f.number_field :capacity, placeholder: "Ex: 500", min: 0, style: "width: 100%;" %>
+        </div>
+
+        <div style="display: flex; align-items: center; padding-top: var(--space-lg);">
+          <label class="typo-body-small" style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+            <%= f.check_box :pmr_accessibility, style: "width: 20px; height: 20px; cursor: pointer;" %>
+            <span class="typo-bold">Accessibilité PMR (Personnes à Mobilité Réduite)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Energy & Environment Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Performance Énergétique et Environnement
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Certification Environnementale
+          </label>
+          <%= f.select :environmental_certification,
+            [
+              ['HQE (Haute Qualité Environnementale)', 'HQE'],
+              ['BREEAM', 'BREEAM'],
+              ['LEED', 'LEED'],
+              ['BBC (Bâtiment Basse Consommation)', 'BBC'],
+              ['RT 2012', 'RT2012'],
+              ['RE 2020', 'RE2020'],
+              ['Aucune', 'none']
+            ],
+            { include_blank: 'Sélectionner...' },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Consommation Énergétique (kWh/m²/an)
+          </label>
+          <%= f.number_field :energy_consumption, placeholder: "Ex: 120", step: 0.1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            DPE (Diagnostic Performance Énergétique)
+          </label>
+          <%= f.select :dpe_rating,
+            [
+              ['A - Excellent (≤ 50 kWh/m²/an)', 'A'],
+              ['B - Bon (51-90 kWh/m²/an)', 'B'],
+              ['C - Assez bon (91-150 kWh/m²/an)', 'C'],
+              ['D - Moyen (151-230 kWh/m²/an)', 'D'],
+              ['E - Médiocre (231-330 kWh/m²/an)', 'E'],
+              ['F - Mauvais (331-450 kWh/m²/an)', 'F'],
+              ['G - Très mauvais (> 450 kWh/m²/an)', 'G']
+            ],
+            { include_blank: 'Sélectionner...' },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            GES (Gaz à Effet de Serre)
+          </label>
+          <%= f.select :ghg_rating,
+            [
+              ['A - Excellent (≤ 5 kg CO₂/m²/an)', 'A'],
+              ['B - Bon (6-10 kg CO₂/m²/an)', 'B'],
+              ['C - Assez bon (11-20 kg CO₂/m²/an)', 'C'],
+              ['D - Moyen (21-35 kg CO₂/m²/an)', 'D'],
+              ['E - Médiocre (36-55 kg CO₂/m²/an)', 'E'],
+              ['F - Mauvais (56-80 kg CO₂/m²/an)', 'F'],
+              ['G - Très mauvais (> 80 kg CO₂/m²/an)', 'G']
+            ],
+            { include_blank: 'Sélectionner...' },
+            { style: "width: 100%;" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Notes Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Notes Complémentaires
+      </h4>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          Notes
+        </label>
+        <%= f.text_area :notes, rows: 4, placeholder: "Informations complémentaires sur le bâtiment...", style: "width: 100%;" %>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to "Annuler", @site ? site_buildings_path(@site) : buildings_path, class: "typo-btn-cancel" %>
+      <%= f.submit building.new_record? ? "Créer le Bâtiment" : "Mettre à Jour", class: "typo-btn-success" %>
+    </div>
+  </div>
+<% end %>

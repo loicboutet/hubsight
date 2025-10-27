@@ -1,0 +1,104 @@
+<% content_for :header, "Levels" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Niveaux du Bâtiment</h2>
+      <p class="typo-body-small">Gérer les niveaux/étages de ce bâtiment</p>
+    </div>
+    <a href="<%= new_building_level_path(@building) %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nouveau Niveau
+    </a>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+    
+    <!-- Levels Table -->
+    <div style="overflow-x: auto;">
+      <table class="typo-table">
+        <thead>
+          <tr>
+            <th>Niveau</th>
+            <th>Altitude (m)</th>
+            <th>Surface (m²)</th>
+            <th>Nombre d'Espaces</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% [
+            {name: "Sous-sol 1", altitude: -3.5, area: "2,800 m²", spaces: 12},
+            {name: "Rez-de-chaussée", altitude: 0, area: "3,200 m²", spaces: 24},
+            {name: "Étage 1", altitude: 3.5, area: "3,200 m²", spaces: 28},
+            {name: "Étage 2", altitude: 7.0, area: "3,200 m²", spaces: 28},
+            {name: "Étage 3", altitude: 10.5, area: "3,200 m²", spaces: 28},
+            {name: "Étage 4", altitude: 14.0, area: "3,200 m²", spaces: 28},
+            {name: "Étage 5", altitude: 17.5, area: "3,200 m²", spaces: 26},
+            {name: "Étage 6", altitude: 21.0, area: "2,400 m²", spaces: 18},
+            {name: "Toiture technique", altitude: 24.5, area: "800 m²", spaces: 4}
+          ].each do |level| %>
+            <tr>
+              <td>
+                <span class="typo-body-small typo-bold" style="color: var(--dark-gray);"><%= level[:name] %></span>
+              </td>
+              <td>
+                <span class="typo-body-small" style="<%= level[:altitude] < 0 ? 'color: #e53e3e;' : 'color: var(--dark-gray);' %>">
+                  <%= level[:altitude] > 0 ? '+' : '' %><%= level[:altitude] %> m
+                </span>
+              </td>
+              <td>
+                <span class="typo-body-small" style="color: var(--coral-primary); font-weight: 600;"><%= level[:area] %></span>
+              </td>
+              <td>
+                <span class="typo-body-small"><%= level[:spaces] %></span>
+              </td>
+              <td style="text-align: right;">
+                <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                  <a href="#" class="typo-btn-small-secondary" style="text-decoration: none; padding: 6px 12px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline;">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    Espaces
+                  </a>
+                  <a href="#" class="typo-btn-small-primary" style="text-decoration: none; padding: 6px 12px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline;">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Éditer
+                  </a>
+                  <button class="typo-btn-small-danger" style="padding: 6px 12px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline;">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Summary -->
+    <div style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+        <div style="text-align: center;">
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">TOTAL NIVEAUX</p>
+          <p class="typo-h3" style="color: var(--coral-primary); margin: 0;">9</p>
+        </div>
+        <div style="text-align: center;">
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">SURFACE TOTALE</p>
+          <p class="typo-h3" style="color: var(--coral-primary); margin: 0;">24,000 m²</p>
+        </div>
+        <div style="text-align: center;">
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">TOTAL ESPACES</p>
+          <p class="typo-h3" style="color: var(--coral-primary); margin: 0;">196</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

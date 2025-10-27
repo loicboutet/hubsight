@@ -1,0 +1,144 @@
+<%= form_with(model: [@organization, contact], local: true) do |f| %>
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+    
+    <!-- Personal Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations Personnelles
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :last_name, placeholder: "Ex: Dupont", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prénom <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :first_name, placeholder: "Ex: Marie", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Fonction/Poste <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :position, placeholder: "Ex: Responsable Maintenance", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Organisation Affiliée
+          </label>
+          <%= f.text_field :affiliated_organization, placeholder: "Rempli automatiquement", disabled: @organization.present?, value: @organization&.name, style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+            Le contact sera lié à cette organisation
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Coordonnées
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone Fixe
+          </label>
+          <%= f.tel_field :office_phone, placeholder: "Ex: +33 1 23 45 67 89", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone Mobile <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.tel_field :mobile_phone, placeholder: "Ex: +33 6 12 34 56 78", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email Principal <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.email_field :email, placeholder: "Ex: m.dupont@entreprise.fr", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email Secondaire
+          </label>
+          <%= f.email_field :secondary_email, placeholder: "Ex: marie.dupont@autre.fr", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations Complémentaires
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Disponibilité
+          </label>
+          <%= f.text_area :availability, rows: 3, placeholder: "Ex: Disponible du lundi au vendredi de 9h à 18h, joignable le soir en cas d'urgence...", style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+            Précisez les horaires de disponibilité et conditions de contact
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Langues Parlées
+          </label>
+          <%= f.text_field :languages, placeholder: "Ex: Français, Anglais, Espagnol", style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+            Listez les langues parlées par le contact
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Notes
+          </label>
+          <%= f.text_area :notes, rows: 4, placeholder: "Informations complémentaires sur le contact...", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Reference Examples -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 4px solid var(--coral-primary);">
+      <h5 class="typo-h5" style="margin-bottom: var(--space-sm); color: var(--dark-gray);">
+        💡 Conseils de Saisie
+      </h5>
+      <ul style="margin: 0; padding-left: var(--space-lg); color: var(--medium-gray);">
+        <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+          <strong>Format téléphone :</strong> Utilisez le format international (+33 pour la France)
+        </li>
+        <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+          <strong>Email professionnel :</strong> Privilégiez l'adresse email de l'organisation
+        </li>
+        <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+          <strong>Disponibilité :</strong> Précisez les horaires et jours de disponibilité
+        </li>
+        <li class="typo-body-small">
+          <strong>Langues :</strong> Utile pour les interventions internationales
+        </li>
+      </ul>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to "Annuler", @organization ? organization_contacts_path(@organization) : contacts_path, class: "typo-btn-cancel" %>
+      <%= f.submit contact.new_record? ? "Créer le Contact" : "Mettre à Jour", class: "typo-btn-success" %>
+    </div>
+  </div>
+<% end %>
