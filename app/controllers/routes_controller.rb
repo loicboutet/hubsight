@@ -35,6 +35,11 @@ class RoutesController < ApplicationController
         { name: 'Upload Contracts', path: '/my_contracts/upload', description: 'Upload contracts for assigned sites' },
         { name: 'My Alerts', path: '/my_alerts', description: 'View alerts for assigned sites (BRIQUE 2)' },
         { name: 'My Savings', path: '/my_savings', description: 'View potential savings for assigned sites (BRIQUE 2)' }
+      ],
+      'Technician (Technicien)' => [
+        { name: 'Buildings', path: '/buildings', description: 'View buildings (read-only access)' },
+        { name: 'Equipment', path: '/equipment', description: 'Manage equipment and maintenance' },
+        { name: 'Contracts', path: '/contracts', description: 'View contracts (read-only access)' }
       ]
     }
   end
