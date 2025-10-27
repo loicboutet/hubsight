@@ -11,9 +11,7 @@ Rails.application.routes.draw do
   }
   
   # Role-based dashboard redirect
-  authenticated :user do
-    get 'dashboard', to: 'dashboard#index', as: :dashboard
-  end
+  get 'dashboard', to: 'dashboard#index', as: :dashboard
 
   # =============================================================================
   # ADMIN NAMESPACE
