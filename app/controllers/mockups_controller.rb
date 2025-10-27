@@ -32,6 +32,10 @@ class MockupsController < ApplicationController
     # Admin analytics mockup
   end
   
+  def typography
+    # Typography style guide
+  end
+  
   private
   
   # Determine which layout to use based on the action name
