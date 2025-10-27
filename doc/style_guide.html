@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charte Graphique</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --coral-primary: #FF6B6B;
+            --coral-light: #FF8585;
+            --coral-lighter: #FFB3B3;
+            --pink-pale: #FFE5E5;
+            --pink-light: #FFF0F0;
+            --dark-gray: #2D2D2D;
+            --medium-gray: #666666;
+            --light-gray: #CCCCCC;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .bg-coral-primary { background-color: var(--coral-primary); }
+        .bg-coral-light { background-color: var(--coral-light); }
+        .bg-pink-pale { background-color: var(--pink-pale); }
+        .bg-pink-light { background-color: var(--pink-light); }
+        
+        .text-coral-primary { color: var(--coral-primary); }
+        .text-coral-light { color: var(--coral-light); }
+        
+        .border-coral { border-color: var(--coral-primary); }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 50%, #FF8585 100%);
+        }
+
+        .diagonal-section {
+            clip-path: polygon(0 0, 100% 10%, 100% 100%, 0 90%);
+        }
+
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 120px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .btn-primary {
+            background-color: var(--coral-primary);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--coral-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--coral-primary);
+            padding: 12px 32px;
+            border-radius: 8px;
+            border: 2px solid var(--coral-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--pink-pale);
+        }
+
+        h1, h2, h3 {
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .arrow-icon {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Header -->
+    <div class="gradient-bg py-20 px-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center gap-8">
+                <div class="logo-placeholder">
+                    <span class="text-gray-400 text-xs text-center">Votre<br>Logo</span>
+                </div>
+                <div>
+                    <h1 class="text-5xl mb-4 text-gray-800">Charte Graphique</h1>
+                    <p class="text-xl text-gray-600">Design System - Documentation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-8 py-16">
+        
+        <!-- Palette de Couleurs -->
+        <section class="mb-20">
+            <h2 class="text-4xl mb-8 text-gray-800">Palette de Couleurs</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div>
+                    <div class="color-swatch bg-coral-primary mb-4"></div>
+                    <h3 class="text-lg font-semibold mb-2">Coral Primary</h3>
+                    <p class="text-gray-600">#FF6B6B</p>
+                    <p class="text-sm text-gray-500 mt-2">Couleur principale - CTA, accents</p>
+                </div>
+                
+                <div>
+                    <div class="color-swatch bg-coral-light mb-4"></div>
+                    <h3 class="text-lg font-semibold mb-2">Coral Light</h3>
+                    <p class="text-gray-600">#FF8585</p>
+                    <p class="text-sm text-gray-500 mt-2">Hover states, dégradés</p>
+                </div>
+                
+                <div>
+                    <div class="color-swatch bg-pink-pale mb-4"></div>
+                    <h3 class="text-lg font-semibold mb-2">Pink Pale</h3>
+                    <p class="text-gray-600">#FFE5E5</p>
+                    <p class="text-sm text-gray-500 mt-2">Backgrounds, sections claires</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="color-swatch bg-gray-800 mb-4"></div>
+                    <h3 class="text-lg font-semibold mb-2">Dark Gray</h3>
+                    <p class="text-gray-600">#2D2D2D</p>
+                    <p class="text-sm text-gray-500 mt-2">Titres, texte principal</p>
+                </div>
+                
+                <div>
+                    <div class="color-swatch bg-gray-600 mb-4"></div>
+                    <h3 class="text-lg font-semibold mb-2">Medium Gray</h3>
+                    <p class="text-gray-600">#666666</p>
+                    <p class="text-sm text-gray-500 mt-2">Texte secondaire</p>
+                </div>
+                
+                <div>
+                    <div class="color-swatch bg-white border-2 border-gray-200 mb-4"></div>
+                    <h3 class="text-lg font-semibold mb-2">White</h3>
+                    <p class="text-gray-600">#FFFFFF</p>
+                    <p class="text-sm text-gray-500 mt-2">Backgrounds, cartes</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typographie -->
+        <section class="mb-20">
+            <h2 class="text-4xl mb-8 text-gray-800">Typographie</h2>
+            
+            <div class="card mb-8">
+                <h1 class="text-5xl mb-4">Titre Principal H1</h1>
+                <p class="text-gray-600">Font: System Sans-serif / Poids: 400 / Taille: 48-60px</p>
+            </div>
+            
+            <div class="card mb-8">
+                <h2 class="text-4xl mb-4">Titre Section H2</h2>
+                <p class="text-gray-600">Font: System Sans-serif / Poids: 400 / Taille: 36-48px</p>
+            </div>
+            
+            <div class="card mb-8">
+                <h3 class="text-2xl mb-4">Sous-titre H3</h3>
+                <p class="text-gray-600">Font: System Sans-serif / Poids: 400 / Taille: 24-32px</p>
+            </div>
+            
+            <div class="card">
+                <p class="text-lg mb-2">Paragraphe standard avec un texte de démonstration pour visualiser le rendu et l'espacement.</p>
+                <p class="text-gray-600">Font: System Sans-serif / Poids: 400 / Taille: 16-18px / Line-height: 1.6</p>
+            </div>
+        </section>
+
+        <!-- Boutons -->
+        <section class="mb-20">
+            <h2 class="text-4xl mb-8 text-gray-800">Boutons</h2>
+            
+            <div class="card">
+                <div class="flex flex-wrap gap-6 mb-8">
+                    <button class="btn-primary">
+                        Action Principale
+                        <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </button>
+                    
+                    <button class="btn-outline">
+                        Action Secondaire
+                    </button>
+                </div>
+                
+                <div class="text-sm text-gray-600">
+                    <p class="mb-2"><strong>Primary:</strong> Coral (#FF6B6B) / Hover: Coral Light (#FF8585)</p>
+                    <p><strong>Border-radius:</strong> 8px / <strong>Padding:</strong> 12px 32px</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cartes & Composants -->
+        <section class="mb-20">
+            <h2 class="text-4xl mb-8 text-gray-800">Cartes & Composants</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-xl mb-3">Suivi énergétique</h3>
+                    <p class="text-gray-600 mb-4">Description du service ou fonctionnalité</p>
+                    <div class="flex items-center text-coral-primary">
+                        <span class="mr-2">En savoir plus</span>
+                        <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="card hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-xl mb-3">Pilotage technique</h3>
+                    <p class="text-gray-600 mb-4">Description du service ou fonctionnalité</p>
+                    <div class="flex items-center text-coral-primary">
+                        <span class="mr-2">En savoir plus</span>
+                        <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="card hover:shadow-xl transition-shadow cursor-pointer">
+                    <h3 class="text-xl mb-3">Confort occupants</h3>
+                    <p class="text-gray-600 mb-4">Description du service ou fonctionnalité</p>
+                    <div class="flex items-center text-coral-primary">
+                        <span class="mr-2">En savoir plus</span>
+                        <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-sm text-gray-600 card">
+                <p class="mb-2"><strong>Cards:</strong> Background white / Border-radius: 16px</p>
+                <p class="mb-2"><strong>Shadow:</strong> 0 4px 16px rgba(0,0,0,0.08)</p>
+                <p><strong>Hover:</strong> Shadow intensifiée + légère translation</p>
+            </div>
+        </section>
+
+        <!-- Espacement & Grille -->
+        <section class="mb-20">
+            <h2 class="text-4xl mb-8 text-gray-800">Espacement</h2>
+            
+            <div class="card">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 text-gray-600">4px</div>
+                        <div class="h-1 w-1 bg-coral-primary"></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 text-gray-600">8px</div>
+                        <div class="h-1 w-2 bg-coral-primary"></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 text-gray-600">16px</div>
+                        <div class="h-1 w-4 bg-coral-primary"></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 text-gray-600">24px</div>
+                        <div class="h-1 w-6 bg-coral-primary"></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 text-gray-600">32px</div>
+                        <div class="h-1 w-8 bg-coral-primary"></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 text-gray-600">48px</div>
+                        <div class="h-1 w-12 bg-coral-primary"></div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 text-gray-600">64px</div>
+                        <div class="h-1 w-16 bg-coral-primary"></div>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-gray-600 mt-8">Système d'espacement basé sur des multiples de 8px pour cohérence</p>
+            </div>
+        </section>
+
+        <!-- Icônes & Éléments -->
+        <section class="mb-20">
+            <h2 class="text-4xl mb-8 text-gray-800">Icônes & Éléments</h2>
+            
+            <div class="card">
+                <div class="flex gap-8 items-center mb-6">
+                    <svg class="w-8 h-8 text-coral-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                    <svg class="w-8 h-8 text-coral-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                    <svg class="w-8 h-8 text-coral-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                
+                <p class="text-sm text-gray-600">Icônes: Style line (outline) / Stroke: 2px / Couleur: Coral primary</p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer avec dégradé -->
+    <div class="gradient-bg diagonal-section py-20 px-8 mt-20">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-3xl mb-4 text-gray-800">Activez l'intelligence<br>de vos bâtiments</h2>
+            <p class="text-gray-600 mb-8">Exemple d'utilisation du style hero</p>
+            <button class="btn-primary">
+                Découvrir
+                <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>
