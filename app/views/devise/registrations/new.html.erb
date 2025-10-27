@@ -1,29 +1,37 @@
-<h2>Sign up</h2>
+<div style="text-align: center; margin-bottom: var(--space-2xl);">
+  <%= link_to root_path, style: "display: inline-block; margin-bottom: var(--space-lg);" do %>
+    <%= image_tag "hugsight_logo.png", alt: "HubSight Logo", style: "height: 60px; width: auto; display: block;" %>
+  <% end %>
+  <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un Compte</h2>
+  <p class="typo-body-small typo-color-secondary">Inscrivez-vous pour accéder à HubSight</p>
+</div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<div class="section" style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);">
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <div style="margin-bottom: var(--space-lg);">
+      <%= f.label :email, "Adresse Email", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "votre.email@example.com", style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
+    <div style="margin-bottom: var(--space-lg);">
+      <%= f.label :password, "Mot de Passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+      <% if @minimum_password_length %>
+        <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);"><%= @minimum_password_length %> caractères minimum</p>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password", placeholder: "Choisissez un mot de passe sécurisé", style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+    <div style="margin-bottom: var(--space-xl);">
+      <%= f.label :password_confirmation, "Confirmer le Mot de Passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirmez votre mot de passe", style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+    </div>
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+    <div style="margin-bottom: var(--space-lg);">
+      <%= f.submit "S'inscrire", class: "typo-btn-success", style: "width: 100%; cursor: pointer; justify-content: center;" %>
+    </div>
 
-<%= render "devise/shared/links" %>
+    <%= render "devise/shared/links" %>
+  <% end %>
+</div>
