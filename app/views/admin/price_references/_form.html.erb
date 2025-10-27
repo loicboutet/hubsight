@@ -1,4 +1,4 @@
-<div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+<div style="background-color: var(--white); border-radius: var(--space-md); ">
   <form action="<%= @price_reference&.persisted? ? admin_price_reference_path(@price_reference) : admin_price_references_path %>" method="post" accept-charset="UTF-8">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <% if @price_reference&.persisted? %>

@@ -1,0 +1,460 @@
+<div style="background-color: var(--white); border-radius: var(--space-md);">
+  <%= form_with(url: contract.respond_to?(:id) && contract.id.present? ? contract_path(contract.id) : contracts_path, method: contract.respond_to?(:id) && contract.id.present? ? :patch : :post, local: true) do |f| %>
+    
+    <!-- Identification Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Identification du Contrat
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Numéro de Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :contract_number, value: contract.contract_number, placeholder: "Ex: CTR-2024-001", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Titre du Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :title, value: contract.title, placeholder: "Ex: Maintenance HVAC", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :contract_type,
+            [
+              ['Maintenance préventive', 'preventive_maintenance'],
+              ['Maintenance corrective', 'corrective_maintenance'],
+              ['Maintenance mixte', 'mixed_maintenance'],
+              ['Nettoyage', 'cleaning'],
+              ['Contrôle technique', 'technical_control'],
+              ['Fluides', 'utilities'],
+              ['Assurance', 'insurance'],
+              ['Autre', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.contract_type },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Famille d'Achats <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :purchase_family,
+            [
+              ['Maintenance', 'maintenance'],
+              ['Nettoyage et Hygiène', 'cleaning'],
+              ['Contrôle Technique', 'technical_control'],
+              ['Fluides', 'utilities'],
+              ['Assurances', 'insurance'],
+              ['Immobilier', 'real_estate'],
+              ['Autres Contrats', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.purchase_family },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Sous-Famille d'Achats
+          </label>
+          <%= f.text_field :purchase_subfamily, value: contract.purchase_subfamily, placeholder: "Ex: Ascenseurs, CVC, Électricité", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Statut <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :status,
+            [
+              ['Actif', 'active'],
+              ['En cours de signature', 'in_progress'],
+              ['Résilié', 'terminated'],
+              ['Suspendu', 'suspended'],
+              ['Expiré', 'expired']
+            ],
+            { selected: contract.status || 'active' },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Objet du Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_area :object, value: contract.object, rows: 3, placeholder: "Description de l'objet du contrat", required: true, style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stakeholders Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Parties Prenantes
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prestataire (Organisation) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :contractor_organization, value: contract.contractor_organization, placeholder: "Nom du prestataire", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Contact Principal Prestataire
+          </label>
+          <%= f.text_field :contractor_contact, value: contract.contractor_contact, placeholder: "Nom du contact", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email Prestataire
+          </label>
+          <%= f.email_field :contractor_email, value: contract.contractor_email, placeholder: "contact@prestataire.fr", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone Prestataire
+          </label>
+          <%= f.text_field :contractor_phone, value: contract.contractor_phone, placeholder: "+33 1 23 45 67 89", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Gestionnaire du Contrat
+          </label>
+          <%= f.text_field :contract_manager, value: contract.contract_manager, placeholder: "Nom du gestionnaire interne", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Département Gestionnaire
+          </label>
+          <%= f.text_field :managing_department, value: contract.managing_department, placeholder: "Ex: Services Généraux", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scope Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Périmètre d'Application
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Sites Couverts
+          </label>
+          <%= f.text_field :covered_sites, value: contract.covered_sites, placeholder: "Ex: Tous sites, Site A, Site B", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Bâtiments Couverts
+          </label>
+          <%= f.text_field :covered_buildings, value: contract.covered_buildings, placeholder: "Ex: Tous bâtiments, Bât. A", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type d'Équipement Concerné
+          </label>
+          <%= f.text_field :equipment_type, value: contract.equipment_type, placeholder: "Ex: Ascenseurs, CVC, Plomberie", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nombre d'Équipements
+          </label>
+          <%= f.number_field :equipment_count, value: contract.equipment_count, placeholder: "Ex: 12", min: 0, style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Zones Géographiques
+          </label>
+          <%= f.text_area :geographic_areas, value: contract.geographic_areas, rows: 2, placeholder: "Description des zones couvertes", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Aspects Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Aspects Financiers
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Montant Annuel HT (€) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :annual_amount_excl_tax, value: contract.annual_amount_excl_tax, placeholder: "Ex: 50000", step: 0.01, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Montant Annuel TTC (€)
+          </label>
+          <%= f.number_field :annual_amount_incl_tax, value: contract.annual_amount_incl_tax, placeholder: "Ex: 60000", step: 0.01, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Mode de Facturation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :billing_method,
+            [
+              ['Prix forfaitaire', 'fixed_price'],
+              ['Régie (temps passé)', 'time_materials'],
+              ['Mixte', 'mixed']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.billing_method },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Fréquence de Facturation
+          </label>
+          <%= f.select :billing_frequency,
+            [
+              ['Mensuelle', 'monthly'],
+              ['Trimestrielle', 'quarterly'],
+              ['Semestrielle', 'biannual'],
+              ['Annuelle', 'annual']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.billing_frequency },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Indice de Révision
+          </label>
+          <%= f.text_field :revision_index, value: contract.revision_index, placeholder: "Ex: TP09, ICHT", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Conditions de Révision
+          </label>
+          <%= f.text_field :revision_conditions, value: contract.revision_conditions, placeholder: "Ex: Annuelle selon indice", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Temporality Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Temporalité
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Signature <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :signature_date, value: contract.signature_date, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Début d'Exécution <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :start_date, value: contract.start_date, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Fin <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :end_date, value: contract.end_date, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Durée Initiale (mois)
+          </label>
+          <%= f.number_field :initial_duration, value: contract.initial_duration, placeholder: "Ex: 12, 24, 36", min: 1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Durée de Reconduction (mois)
+          </label>
+          <%= f.number_field :renewal_duration, value: contract.renewal_duration, placeholder: "Ex: 12", min: 1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nombre de Reconductions Possibles
+          </label>
+          <%= f.number_field :renewal_count, value: contract.renewal_count, placeholder: "Ex: 2, 3", min: 0, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Reconduction Automatique
+          </label>
+          <%= f.select :automatic_renewal,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.automatic_renewal },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Préavis de Résiliation (jours)
+          </label>
+          <%= f.number_field :termination_notice, value: contract.termination_notice, placeholder: "Ex: 30, 60, 90", min: 0, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prochaine Échéance
+          </label>
+          <%= f.date_field :next_deadline, value: contract.next_deadline, style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services & SLA Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Services et Niveau de Service
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nature des Prestations
+          </label>
+          <%= f.text_area :service_nature, value: contract.service_nature, rows: 3, placeholder: "Description des prestations fournies", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Fréquence d'Intervention
+          </label>
+          <%= f.text_field :intervention_frequency, value: contract.intervention_frequency, placeholder: "Ex: Mensuelle, Trimestrielle", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Délai d'Intervention (heures)
+          </label>
+          <%= f.number_field :intervention_delay, value: contract.intervention_delay, placeholder: "Ex: 4, 24, 48", min: 0, step: 0.5, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Délai de Résolution (heures)
+          </label>
+          <%= f.number_field :resolution_delay, value: contract.resolution_delay, placeholder: "Ex: 24, 48, 72", min: 0, step: 0.5, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Horaires d'Intervention
+          </label>
+          <%= f.text_field :working_hours, value: contract.working_hours, placeholder: "Ex: 8h-18h, Lun-Ven", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Astreinte 24/7
+          </label>
+          <%= f.select :on_call_24_7,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.on_call_24_7 },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Niveau de Service Garanti (%)
+          </label>
+          <%= f.number_field :service_level, value: contract.service_level, placeholder: "Ex: 95, 98, 99", min: 0, max: 100, step: 0.1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Pièces de Rechange Incluses
+          </label>
+          <%= f.select :spare_parts_included,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.spare_parts_included },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Rapport d'Intervention Obligatoire
+          </label>
+          <%= f.select :intervention_report_required,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.intervention_report_required },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Indicateurs de Performance (KPI)
+          </label>
+          <%= f.text_area :kpi, value: contract.kpi, rows: 2, placeholder: "Ex: Taux de disponibilité, temps de réponse, satisfaction client", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Notes Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Notes et Documents
+      </h4>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          Notes / Observations
+        </label>
+        <%= f.text_area :notes, value: contract.notes, rows: 4, placeholder: "Notes complémentaires, clauses particulières, etc.", style: "width: 100%;" %>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to contracts_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= (contract.respond_to?(:id) && contract.id.present?) ? "Mettre à Jour" : "Créer le Contrat" %>
+      </button>
+    </div>
+  <% end %>
+</div>

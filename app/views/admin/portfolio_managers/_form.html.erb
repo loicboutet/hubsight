@@ -1,4 +1,4 @@
-<div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+<div style="background-color: var(--white); border-radius: var(--space-md); ">
   <form action="<%= @portfolio_manager&.persisted? ? admin_portfolio_manager_path(@portfolio_manager) : admin_portfolio_managers_path %>" method="post" accept-charset="UTF-8">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <% if @portfolio_manager&.persisted? %>
