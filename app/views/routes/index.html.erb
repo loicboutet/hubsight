@@ -18,7 +18,7 @@
         <!-- Routes List -->
         <div style="padding: var(--space-md);">
           <% routes.each do |route| %>
-            <div style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 1px solid var(--pink-pale);">
+            <div style="margin-bottom: var(--space-sm); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--pink-pale);">
               <%= link_to route[:path], style: "text-decoration: none;" do %>
                 <div style="margin-bottom: var(--space-xs);">
                   <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= route[:name] %></span>
@@ -32,29 +32,7 @@
     <% end %>
   </div>
 
-  <!-- Info Section -->
-  <div style="background-color: #f8f9fa; border-radius: var(--space-md); padding: var(--space-xl); border: 1px solid var(--light-gray);">
-    <h3 class="typo-h4" style="margin-bottom: var(--space-md);">À propos des Rôles</h3>
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
-      <div>
-        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm);">👤 Admin</p>
-        <p class="typo-body-small" style="font-size: 0.85rem; line-height: 1.4;">Administrateur système qui gère les comptes Gestionnaires de Portefeuille et les références de prix</p>
-      </div>
-      <div>
-        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm);">👑 Gestionnaire de Portefeuille</p>
-        <p class="typo-body-small" style="font-size: 0.85rem; line-height: 1.4;">Utilisateur principal qui gère l'ensemble du portefeuille immobilier, les contrats et les sites</p>
-      </div>
-      <div>
-        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm);">🏢 Responsable de Site</p>
-        <p class="typo-body-small" style="font-size: 0.85rem; line-height: 1.4;">Utilisateur avec accès limité aux sites assignés, peut consulter et uploader des contrats</p>
-      </div>
-    </div>
-    <div style="margin-top: var(--space-lg); text-align: center;">
-      <p class="typo-body-small" style="color: #666;">
-        <strong>BRIQUE 2</strong> inclut : Alertes, Analyse d'Économies, et Références de Prix
-      </p>
-    </div>
-  </div>
+  
 </div>
 
 <!-- Responsive CSS for mobile -->
