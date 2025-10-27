@@ -24,22 +24,43 @@
     <div class="admin-layout">
       <!-- Sidebar -->
       <aside class="admin-sidebar" id="adminSidebar">
-        <div class="admin-sidebar-header">
-          <h1 class="admin-sidebar-brand">HubSight Admin</h1>
+        <div class="admin-sidebar-header" style="text-align: center;">
+          <%= image_tag "hugsight_logo.png", alt: "HubSight Logo", style: "max-width: 150px; height: auto; margin-bottom: var(--space-sm);" %>
+          <h1 class="admin-sidebar-brand" style="font-size: 1.25rem; margin: 0;">Admin Portal</h1>
         </div>
         <nav class="admin-sidebar-nav">
           <ul>
             <li>
-              <%= link_to "Portfolio Managers", admin_portfolio_managers_path, class: "admin-sidebar-link #{controller_name == 'portfolio_managers' ? 'active' : ''}" %>
+              <%= link_to admin_portfolio_managers_path, class: "admin-sidebar-link #{controller_name == 'portfolio_managers' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Portfolio Managers
+              <% end %>
             </li>
             <li>
-              <%= link_to "Clients", admin_clients_path, class: "admin-sidebar-link #{controller_name == 'clients' ? 'active' : ''}" %>
+              <%= link_to admin_clients_path, class: "admin-sidebar-link #{controller_name == 'clients' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Clients
+              <% end %>
             </li>
             <li>
-              <%= link_to "Price References", admin_price_references_path, class: "admin-sidebar-link #{controller_name == 'price_references' ? 'active' : ''}" %>
+              <%= link_to admin_price_references_path, class: "admin-sidebar-link #{controller_name == 'price_references' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Price References
+              <% end %>
             </li>
             <li style="margin-top: var(--space-xl); padding-top: var(--space-xl); border-top: 1px solid rgba(255, 255, 255, 0.1);">
-              <%= link_to "Back to Dashboard", root_path, class: "admin-sidebar-link" %>
+              <%= link_to root_path, class: "admin-sidebar-link" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Dashboard
+              <% end %>
             </li>
           </ul>
         </nav>
@@ -51,6 +72,12 @@
       <!-- Main Content -->
       <div class="admin-main">
         <header class="admin-header">
+          <!-- Mobile Toggle Button (moved inside header for smaller devices) -->
+          <button class="admin-mobile-toggle-header" id="adminMobileToggleHeader">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           <h2 class="admin-header-title">
             <%= content_for(:header) || "Admin Portal" %>
           </h2>
@@ -79,6 +106,7 @@
         const sidebar = document.getElementById('adminSidebar');
         const overlay = document.getElementById('adminOverlay');
         const toggleBtn = document.getElementById('adminMobileToggle');
+        const toggleBtnHeader = document.getElementById('adminMobileToggleHeader');
         
         function toggleSidebar() {
           sidebar.classList.toggle('mobile-open');
@@ -86,6 +114,9 @@
         }
         
         toggleBtn.addEventListener('click', toggleSidebar);
+        if (toggleBtnHeader) {
+          toggleBtnHeader.addEventListener('click', toggleSidebar);
+        }
         overlay.addEventListener('click', toggleSidebar);
       });
     </script>

@@ -1,0 +1,119 @@
+<% content_for :header, "Price Reference Details" %>
+
+<div class="section">
+  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-xl);">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Price Reference Details</h2>
+      <p class="typo-body-small">View price reference information</p>
+    </div>
+    <div style="display: flex; gap: var(--space-md);">
+      <%= link_to edit_admin_price_reference_path, class: "typo-btn-success" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        Edit
+      <% end %>
+      <%= link_to admin_price_references_path, class: "typo-btn-cancel" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to List
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Classification Information -->
+  <div style="background-color: var(--pink-light); padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Contract Classification</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Contract Family</label>
+        <p class="typo-body"><span class="typo-label-primary">Maintenance</span></p>
+      </div>
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Contract Sub-Family</label>
+        <p class="typo-body">HVAC Maintenance</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Equipment & Service Information -->
+  <div style="background-color: var(--white); padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl); border: 1px solid var(--pink-pale);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Equipment & Service Details</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Equipment Type</label>
+        <p class="typo-body">Air Conditioning Unit</p>
+      </div>
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Service Type</label>
+        <p class="typo-body">Annual Maintenance</p>
+      </div>
+      <div style="grid-column: span 2;">
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Technical Characteristics</label>
+        <p class="typo-body">Power: 10kW, Coverage: 200m², Frequency: Quarterly</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing Information -->
+  <div style="background-color: var(--pink-light); padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Pricing Information</h3>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Reference Price</label>
+        <p class="typo-h3" style="margin: 0; color: var(--coral-primary);">€1,200.00</p>
+      </div>
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Unit</label>
+        <p class="typo-body">Per Year</p>
+      </div>
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Currency</label>
+        <p class="typo-body">EUR (€)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Information -->
+  <div style="background-color: var(--white); padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl); border: 1px solid var(--pink-pale);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Location</h3>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Region</label>
+        <p class="typo-body">Île-de-France</p>
+      </div>
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">City/Area</label>
+        <p class="typo-body">Paris</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Information -->
+  <div style="background-color: var(--pink-light); padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Additional Information</h3>
+    <div>
+      <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Notes</label>
+      <p class="typo-body">Based on market research conducted in Q1 2025. Includes standard maintenance contract terms.</p>
+    </div>
+    <div style="margin-top: var(--space-lg);">
+      <label class="typo-body-small typo-bold" style="display: block; color: var(--medium-gray); margin-bottom: var(--space-xs);">Last Updated</label>
+      <p class="typo-body-small">January 15, 2025</p>
+    </div>
+  </div>
+
+  <!-- Danger Zone -->
+  <div style="margin-top: var(--space-2xl); padding: var(--space-xl); background-color: #fee; border: 2px solid #fcc; border-radius: var(--space-md);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-md); color: #c00;">Danger Zone</h3>
+    <p class="typo-body" style="margin-bottom: var(--space-lg); color: var(--dark-gray);">
+      Deleting this price reference will affect price comparisons for contracts using this reference. This action cannot be undone.
+    </p>
+    <%= link_to admin_price_reference_path, method: :delete, data: { confirm: 'Are you sure? This will affect price comparisons!' }, class: "typo-btn-danger" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+      </svg>
+      Delete Price Reference
+    <% end %>
+  </div>
+</div>
