@@ -10,11 +10,11 @@
 <nav style="margin-bottom: var(--space-lg); padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
   <ol style="display: flex; align-items: center; gap: var(--space-sm); list-style: none; margin: 0; padding: 0; flex-wrap: wrap;">
     <li style="display: flex; align-items: center; gap: var(--space-sm);">
-      <%= link_to root_path, style: "color: var(--medium-gray); text-decoration: none; display: flex; align-items: center; gap: var(--space-xs); transition: color 0.2s;" do %>
+      <%= link_to root_path, style: "color: var(--medium-gray); text-decoration: none; display: inline-flex; align-items: center; gap: var(--space-xs); transition: color 0.2s;" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
-        <span class="typo-body-small">Accueil</span>
+        <span class="typo-body-small" style="margin-bottom: 0;">Accueil</span>
       <% end %>
     </li>
     
@@ -26,18 +26,18 @@
           </svg>
           
           <% if item[:url].present? %>
-            <%= link_to item[:url], style: "color: var(--medium-gray); text-decoration: none; display: flex; align-items: center; gap: var(--space-xs); transition: color 0.2s;" do %>
+            <%= link_to item[:url], style: "color: var(--medium-gray); text-decoration: none; display: inline-flex; align-items: center; gap: var(--space-xs); transition: color 0.2s;" do %>
               <% if item[:icon].present? %>
                 <%= item[:icon].html_safe %>
               <% end %>
-              <span class="typo-body-small"><%= item[:name] %></span>
+              <span class="typo-body-small" style="margin-bottom: 0;"><%= item[:name] %></span>
             <% end %>
           <% else %>
-            <span style="display: flex; align-items: center; gap: var(--space-xs);">
+            <span style="display: inline-flex; align-items: center; gap: var(--space-xs);">
               <% if item[:icon].present? %>
                 <%= item[:icon].html_safe %>
               <% end %>
-              <span class="typo-body-small typo-bold" style="color: var(--dark-gray);"><%= item[:name] %></span>
+              <span class="typo-body-small typo-bold" style="color: var(--dark-gray); margin-bottom: 0;"><%= item[:name] %></span>
             </span>
           <% end %>
         </li>
