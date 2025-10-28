@@ -25,8 +25,7 @@ class RoutesController < ApplicationController
         
         # Monitoring Section (BRIQUE 2)
         { name: 'Alerts', path: '/alerts?role=admin', description: 'Dashboard of all alerts across all portfolios' },
-        { name: 'Savings Analysis', path: '/savings?role=admin', description: 'View potential savings overview' },
-        
+       
         # Tools Section
         { name: 'Global Search', path: '/search?role=admin', description: 'Universal search across all entities' }
       ],
@@ -48,7 +47,6 @@ class RoutesController < ApplicationController
         { name: 'Dashboard', path: '/my_sites', description: 'Site manager dashboard (assigned sites)' },
         { name: 'My Sites', path: '/my_sites', description: 'List assigned sites' },
         { name: 'My Contracts', path: '/my_contracts', description: 'List contracts for assigned sites' },
-        { name: 'Contract Upload', path: '/my_contracts/upload', description: 'Upload contract for assigned site' },
         { name: 'My Alerts', path: '/my_alerts', description: 'View alerts for assigned sites (BRIQUE 2)' },
         { name: 'My Savings', path: '/my_savings', description: 'View potential savings for assigned sites (BRIQUE 2)' }
       ],
