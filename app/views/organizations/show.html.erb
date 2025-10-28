@@ -27,7 +27,7 @@
     <!-- Main Information Column -->
     <div>
       <!-- Basic Information -->
-      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
         <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
           Informations de Base
         </h3>
@@ -63,7 +63,7 @@
       </div>
 
       <!-- Contact Information -->
-      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
         <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
           Coordonnées
         </h3>
@@ -109,7 +109,7 @@
 
       <!-- Additional Notes -->
       <% if @organization.notes.present? %>
-        <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+        <div style="background-color: var(--white); border-radius: var(--space-md); ">
           <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
             Notes
           </h3>
@@ -121,7 +121,7 @@
     <!-- Sidebar Column -->
     <div>
       <!-- Status Card -->
-      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
         <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Statut</h4>
         <div style="text-align: center; padding: var(--space-md);">
           <span style="display: inline-block; padding: 10px 24px; background-color: <%= @organization.status == 'active' ? '#d4edda' : '#f8d7da' %>; color: <%= @organization.status == 'active' ? '#155724' : '#721c24' %>; border-radius: 24px; font-size: 1rem; font-weight: 600;">
@@ -131,7 +131,7 @@
       </div>
 
       <!-- Relationship Info -->
-      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
         <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Relation</h4>
         <div>
           <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Début de Relation</p>
@@ -145,7 +145,7 @@
       </div>
 
       <!-- Quick Stats -->
-      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
         <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Statistiques</h4>
         
         <div style="margin-bottom: var(--space-md);">
@@ -165,7 +165,7 @@
       </div>
 
       <!-- Quick Actions -->
-      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <div style="background-color: var(--white); border-radius: var(--space-md); ">
         <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Actions Rapides</h4>
         
         <div style="display: flex; flex-direction: column; gap: var(--space-sm);">

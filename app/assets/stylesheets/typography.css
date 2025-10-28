@@ -686,19 +686,19 @@ body {
   box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
 }
 
-/* Delete Button - Dark with Red Accent (Destructive Action) */
+/* Delete Button - Light with Red Accent (Destructive Action) */
 .typo-btn-small-danger {
-  background-color: var(--dark-gray);
-  color: #ff6b6b;
-  border: 1px solid #ff6b6b;
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #feb2b2;
 }
 
 .typo-btn-small-danger:hover {
-  background-color: #ff6b6b;
-  color: var(--white);
-  border-color: #ff6b6b;
+  background-color: #fed7d7;
+  color: #c53030;
+  border-color: #fc8181;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 2px 4px rgba(229, 62, 62, 0.2);
 }
 
 /* =============================================================================
@@ -949,11 +949,11 @@ select:focus {
   padding: var(--space-md) var(--space-lg);
   color: var(--light-gray);
   text-decoration: none;
-  font-size: 1.3rem; /* increased by 30% */
+  font-size: 1.105rem; /* reduced by 15% from 1.3rem */
   font-weight: 500;
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
-  min-height: 3.9rem; /* increased by 30% */
+  min-height: 3.315rem; /* reduced by 15% from 3.9rem */
   display: flex;
   align-items: center;
 }

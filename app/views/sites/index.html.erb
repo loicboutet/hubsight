@@ -14,10 +14,18 @@
     </a>
   </div>
 
-  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+  <div style="background-color: var(--white); border-radius: var(--space-md); ">
     <!-- Filters Section -->
     <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md);">
+      <style>
+        @media (max-width: 1200px) {
+          .filters-grid-sites { grid-template-columns: 1fr 1fr auto auto !important; }
+        }
+        @media (max-width: 768px) {
+          .filters-grid-sites { grid-template-columns: 1fr !important; }
+        }
+      </style>
+      <div class="filters-grid-sites" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
           <input type="text" placeholder="Nom du site, ville..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
@@ -49,6 +57,18 @@
             <option>Nb. Bâtiments</option>
           </select>
         </div>
+        <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Effacer
+        </button>
+        <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Filtrer
+        </button>
       </div>
     </div>
 
@@ -127,20 +147,20 @@
               <!-- Actions -->
               <td style="padding: var(--space-md);">
                 <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
-                  <%= link_to site_path(site[:name].parameterize), title: "Voir", style: "background-color: #ff6b6b; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.813rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: background-color 0.2s;" do %>
+                  <%= link_to site_path(site[:name].parameterize), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                     Voir
                   <% end %>
-                  <%= link_to edit_site_path(site[:name].parameterize), title: "Éditer", style: "background-color: #6c757d; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.813rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: background-color 0.2s;" do %>
+                  <%= link_to edit_site_path(site[:name].parameterize), title: "Éditer", class: "typo-btn-small typo-btn-small-primary" do %>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     Éditer
                   <% end %>
-                  <%= button_to site_path(site[:name].parameterize), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer ce site ?" }, title: "Supprimer", style: "background-color: #dc3545; color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.813rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: background-color 0.2s;", form: { style: "margin: 0; display: inline;" } do %>
+                  <%= button_to site_path(site[:name].parameterize), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer ce site ?" }, title: "Supprimer", class: "typo-btn-small typo-btn-small-danger", form: { style: "margin: 0; display: inline;" } do %>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>

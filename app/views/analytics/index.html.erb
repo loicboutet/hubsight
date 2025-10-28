@@ -76,7 +76,7 @@
   <!-- Charts Section -->
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-2xl);">
     <!-- Pie Chart: Contract Distribution by Family -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+    <div style="background-color: var(--white); border-radius: var(--space-md); ">
       <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
         Répartition par Famille d'Achats
       </h3>
@@ -104,7 +104,7 @@
     </div>
 
     <!-- Bar Chart: Monthly Expirations -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+    <div style="background-color: var(--white); border-radius: var(--space-md); ">
       <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
         Échéances Mensuelles 2025
       </h3>
@@ -127,7 +127,7 @@
   </div>
 
   <!-- Top Contracts Table -->
-  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+  <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-xl);">
     <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
       Top 10 Contrats par Valeur
     </h3>
@@ -173,7 +173,7 @@
   </div>
 
   <!-- Savings Opportunities Table -->
-  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+  <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-xl);">
     <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
       Opportunités d'Économies (BRIQUE 2)
     </h3>
@@ -221,7 +221,7 @@
   </div>
 
   <!-- Site Distribution Table -->
-  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+  <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-xl);">
     <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
       Répartition par Site
     </h3>
@@ -269,7 +269,7 @@
   <!-- Additional Metrics -->
   <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
     <!-- Equipment Coverage -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+    <div style="background-color: var(--white); border-radius: var(--space-md); ">
       <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Couverture Équipements</h4>
       <div style="margin-bottom: var(--space-md);">
         <p class="typo-h2" style="margin: 0; color: var(--coral-primary);"><%= number_with_delimiter(@total_equipment, delimiter: ' ') %></p>
@@ -288,7 +288,7 @@
     </div>
 
     <!-- Service Providers -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+    <div style="background-color: var(--white); border-radius: var(--space-md); ">
       <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Prestataires</h4>
       <div style="margin-bottom: var(--space-md);">
         <p class="typo-h2" style="margin: 0; color: var(--coral-primary);"><%= @active_organizations %></p>
@@ -301,7 +301,7 @@
     </div>
 
     <!-- Geographic Distribution -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+    <div style="background-color: var(--white); border-radius: var(--space-md); ">
       <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Répartition Géographique</h4>
       <% @geographic_distribution.each do |region| %>
         <div style="margin-bottom: var(--space-sm);">
