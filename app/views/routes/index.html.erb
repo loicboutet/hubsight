@@ -1,0 +1,45 @@
+<% content_for :header, "Routes de l'Application" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">HubSight - Toutes les Routes</h2>
+    <p class="typo-body-small">Routes organisées par rôle utilisateur selon specification.md</p>
+  </div>
+
+  <!-- 4-Column Grid Layout -->
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
+    <% @routes_by_role.each do |role_name, routes| %>
+      <div style="background-color: var(--white); border-radius: var(--space-md); overflow: hidden; border: 1px solid var(--light-gray);">
+        <!-- Role Header -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-lg); color: white;">
+          <h3 class="typo-h4" style="color: white; margin: 0;"><%= role_name %></h3>
+        </div>
+        
+        <!-- Routes List -->
+        <div style="padding: var(--space-md);">
+          <% routes.each do |route| %>
+            <div style="margin-bottom: var(--space-sm); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--pink-pale);">
+              <%= link_to route[:path], style: "text-decoration: none;" do %>
+                <div style="margin-bottom: var(--space-xs);">
+                  <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= route[:name] %></span>
+                </div>
+                
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  
+</div>
+
+<!-- Responsive CSS for mobile -->
+<style>
+  @media (max-width: 1024px) {
+    div[style*="grid-template-columns: repeat(4, 1fr)"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>

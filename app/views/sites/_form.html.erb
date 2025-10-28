@@ -1,0 +1,195 @@
+<div style="background-color: var(--white); border-radius: var(--space-md);">
+  <%= form_with(url: site.respond_to?(:id) && site.id.present? ? site_path(site.id) : sites_path, method: site.respond_to?(:id) && site.id.present? ? :patch : :post, local: true) do |f| %>
+    <!-- Basic Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations de Base
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom du Site <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :name, value: site.name, placeholder: "Ex: Tour Montparnasse", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Code Site
+          </label>
+          <%= f.text_field :code, value: site.code, placeholder: "Ex: TMP-001", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Site <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :site_type,
+            [
+              ['Bureaux', 'office'],
+              ['Industriel', 'industrial'],
+              ['Commercial', 'commercial'],
+              ['Résidentiel', 'residential'],
+              ['Logistique', 'logistics'],
+              ['Santé', 'healthcare'],
+              ['Enseignement', 'education'],
+              ['Autre', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: site.site_type },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Surface Totale (m²) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :total_area, value: site.total_area, placeholder: "Ex: 120000", step: 0.01, required: true, style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Adresse
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Adresse <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :address, value: site.address, placeholder: "Ex: 33 Avenue du Maine", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Ville <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :city, value: site.city, placeholder: "Ex: Paris", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Code Postal <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :postal_code, value: site.postal_code, placeholder: "Ex: 75015", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Département <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :department, value: site.department, placeholder: "Ex: 75, 34, 69", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Région <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :region,
+            [
+              ['Île-de-France', 'ile-de-france'],
+              ['PACA', 'paca'],
+              ['Auvergne-Rhône-Alpes', 'auvergne-rhone-alpes'],
+              ['Occitanie', 'occitanie'],
+              ['Pays de la Loire', 'pays-de-la-loire'],
+              ['Nouvelle-Aquitaine', 'nouvelle-aquitaine'],
+              ['Grand Est', 'grand-est'],
+              ['Hauts-de-France', 'hauts-de-france'],
+              ['Bretagne', 'bretagne'],
+              ['Normandie', 'normandie'],
+              ['Bourgogne-Franche-Comté', 'bourgogne-franche-comte'],
+              ['Centre-Val de Loire', 'centre-val-de-loire'],
+              ['Corse', 'corse']
+            ],
+            { include_blank: 'Sélectionner...', selected: site.region },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Pays
+          </label>
+          <%= f.text_field :country, placeholder: "Ex: France", value: site.country || "France", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact & Management Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Gestion et Contact
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Responsable de Site
+          </label>
+          <%= f.text_field :site_manager, value: site.site_manager, placeholder: "Nom du responsable", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email de Contact
+          </label>
+          <%= f.email_field :contact_email, value: site.contact_email, placeholder: "email@example.com", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone
+          </label>
+          <%= f.text_field :contact_phone, value: site.contact_phone, placeholder: "+33 1 23 45 67 89", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Statut
+          </label>
+          <%= f.select :status,
+            [
+              ['Actif', 'active'],
+              ['En construction', 'construction'],
+              ['En rénovation', 'renovation'],
+              ['Inactif', 'inactive']
+            ],
+            { selected: site.status || 'active' },
+            { style: "width: 100%;" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Notes Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Notes Complémentaires
+      </h4>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          Description
+        </label>
+        <%= f.text_area :description, value: site.description, rows: 4, placeholder: "Description générale du site, particularités, etc...", style: "width: 100%;" %>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to sites_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= (site.respond_to?(:id) && site.id.present?) ? "Mettre à Jour" : "Créer le Site" %>
+      </button>
+    </div>
+  <% end %>
+</div>

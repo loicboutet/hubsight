@@ -1,0 +1,153 @@
+<% content_for :header, "Éditer Alerte" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; align-items: center; gap: var(--space-md);">
+    <div style="width: 48px; height: 48px; border-radius: 50%; background-color: #dc3545; display: flex; align-items: center; justify-content: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+    </div>
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Éditer l'Alerte</h2>
+      <p class="typo-body-small" style="color: var(--medium-gray);">Modifier les paramètres de l'alerte</p>
+    </div>
+  </div>
+
+  <form action="<%= alert_path(1) %>" method="post">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <%= hidden_field_tag :_method, 'patch' %>
+    
+    <div style="background-color: var(--white); border-radius: var(--space-md);">
+      
+      <!-- Alert Information Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations de l'Alerte
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Titre de l'Alerte <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="text" name="alert[title]" value="Résiliation non effectuée - CTR-2024-156" required style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Type d'Alerte <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="alert[alert_type]" required style="width: 100%;">
+              <option value="">Sélectionner...</option>
+              <option value="upcoming">À venir</option>
+              <option value="at_risk" selected>En risque</option>
+              <option value="missing_contract">Contrat manquant</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Contrat Associé
+            </label>
+            <select name="alert[contract_id]" style="width: 100%;">
+              <option value="">Aucun</option>
+              <option value="1" selected>CTR-2024-156 - Maintenance ascenseurs</option>
+              <option value="2">CTR-2024-189 - Nettoyage bureaux</option>
+              <option value="3">CTR-2025-001 - Contrôle électrique</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Site <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="alert[site_id]" required style="width: 100%;">
+              <option value="">Sélectionner...</option>
+              <option value="1" selected>Tour Montparnasse</option>
+              <option value="2">Campus La Défense</option>
+              <option value="3">Site Industriel Lyon Nord</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Date Limite <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="date" name="alert[deadline_date]" value="2025-01-15" required style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Priorité
+            </label>
+            <select name="alert[priority]" style="width: 100%;">
+              <option value="low">Faible</option>
+              <option value="medium">Moyenne</option>
+              <option value="high" selected>Élevée</option>
+              <option value="critical">Critique</option>
+            </select>
+          </div>
+
+          <div style="grid-column: 1 / -1;">
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Statut
+            </label>
+            <select name="alert[status]" style="width: 100%;">
+              <option value="active" selected>Active</option>
+              <option value="validated">Validée</option>
+              <option value="dismissed">Ignorée</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Description
+        </h4>
+        
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Description de l'Alerte <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <textarea name="alert[description]" rows="4" required style="width: 100%;">La date limite de résiliation pour le contrat CTR-2024-156 a été dépassée sans qu'aucune action n'ait été entreprise. Une intervention immédiate est requise pour éviter le renouvellement automatique du contrat dans des conditions potentiellement défavorables.</textarea>
+        </div>
+      </div>
+
+      <!-- Notification Settings -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Paramètres de Notification
+        </h4>
+        
+        <div style="display: grid; gap: var(--space-md);">
+          <div style="display: flex; align-items: center; gap: var(--space-sm);">
+            <input type="checkbox" name="alert[send_email]" id="send_email" value="1" checked />
+            <label for="send_email" class="typo-body-small">Envoyer une notification par email</label>
+          </div>
+          <div style="display: flex; align-items: center; gap: var(--space-sm);">
+            <input type="checkbox" name="alert[send_reminder]" id="send_reminder" value="1" checked />
+            <label for="send_reminder" class="typo-body-small">Envoyer un rappel 7 jours avant l'échéance</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+        <%= link_to alert_path(1), class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Annuler
+        <% end %>
+        <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Mettre à Jour
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

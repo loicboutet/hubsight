@@ -1,0 +1,214 @@
+<% content_for :header, "Paramètres des Alertes" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Configuration des Alertes Contractuelles</h2>
+    <p class="typo-body-small">Personnalisez vos préférences de notification et délais d'alerte</p>
+  </div>
+
+  <%= form_with url: settings_alerts_path, method: :patch, local: true do |f| %>
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+      
+      <!-- Notification Preferences Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+          Préférences de Notification
+        </h3>
+        
+        <div style="display: grid; gap: var(--space-lg);">
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[email_notifications]" value="1" checked style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Notifications par Email</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Recevoir des alertes par email pour les échéances contractuelles</span>
+              </div>
+            </label>
+          </div>
+
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[dashboard_notifications]" value="1" checked style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Notifications sur le Tableau de Bord</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Afficher les alertes importantes sur le tableau de bord principal</span>
+              </div>
+            </label>
+          </div>
+
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[weekly_digest]" value="1" style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Résumé Hebdomadaire</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Recevoir un résumé hebdomadaire des alertes à venir</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Timing Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+          Délais d'Alerte
+        </h3>
+        
+        <div style="display: grid; gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Alerte d'Échéance de Contrat
+            </label>
+            <select name="settings[contract_expiry_days]" style="width: 100%; max-width: 400px; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <option value="7">7 jours avant</option>
+              <option value="15">15 jours avant</option>
+              <option value="30" selected>30 jours avant</option>
+              <option value="60">60 jours avant</option>
+              <option value="90">90 jours avant</option>
+            </select>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs);">
+              Délai avant l'échéance du contrat pour déclencher une alerte
+            </p>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Alerte de Résiliation
+            </label>
+            <select name="settings[termination_notice_days]" style="width: 100%; max-width: 400px; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <option value="30">30 jours avant</option>
+              <option value="60" selected>60 jours avant</option>
+              <option value="90">90 jours avant</option>
+              <option value="120">120 jours avant</option>
+            </select>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs);">
+              Délai avant la date limite de résiliation pour déclencher une alerte
+            </p>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Alerte de Contrôle Réglementaire
+            </label>
+            <select name="settings[regulatory_check_days]" style="width: 100%; max-width: 400px; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <option value="15">15 jours avant</option>
+              <option value="30" selected>30 jours avant</option>
+              <option value="45">45 jours avant</option>
+              <option value="60">60 jours avant</option>
+            </select>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs);">
+              Délai avant un contrôle réglementaire obligatoire
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Types Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+          Types d'Alertes Activées
+        </h3>
+        
+        <div style="display: grid; gap: var(--space-md);">
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[alert_contract_expiry]" value="1" checked style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Échéance de Contrat</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Alertes pour les contrats arrivant à échéance</span>
+              </div>
+            </label>
+          </div>
+
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[alert_termination_deadline]" value="1" checked style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Date Limite de Résiliation</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Alertes pour les dates limites de résiliation de contrats</span>
+              </div>
+            </label>
+          </div>
+
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[alert_missing_contracts]" value="1" checked style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Contrats Manquants</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Alertes pour les équipements sans contrats de maintenance</span>
+              </div>
+            </label>
+          </div>
+
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[alert_regulatory_checks]" value="1" checked style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Contrôles Réglementaires</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Alertes pour les contrôles techniques obligatoires</span>
+              </div>
+            </label>
+          </div>
+
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" name="settings[alert_price_anomalies]" value="1" style="width: 20px; height: 20px; margin-right: var(--space-md);">
+              <div>
+                <span class="typo-body typo-bold" style="display: block; margin-bottom: var(--space-xs);">Anomalies de Prix</span>
+                <span class="typo-body-small" style="color: var(--medium-gray);">Alertes pour les contrats avec des prix anormalement élevés (BRIQUE 2)</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Settings Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+          Paramètres Additionnels
+        </h3>
+        
+        <div style="display: grid; gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Destinataires des Notifications Email
+            </label>
+            <input type="email" name="settings[notification_emails]" placeholder="email@example.com, email2@example.com" style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs);">
+              Séparez plusieurs adresses email par des virgules
+            </p>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Jour d'Envoi du Résumé Hebdomadaire
+            </label>
+            <select name="settings[weekly_digest_day]" style="width: 100%; max-width: 400px; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <option value="monday" selected>Lundi</option>
+              <option value="tuesday">Mardi</option>
+              <option value="wednesday">Mercredi</option>
+              <option value="thursday">Jeudi</option>
+              <option value="friday">Vendredi</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+        <%= link_to alerts_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Annuler
+        <% end %>
+        <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Enregistrer les Paramètres
+        </button>
+      </div>
+    </div>
+  <% end %>
+</div>

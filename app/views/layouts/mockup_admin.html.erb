@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Admin Mockup - Base Rails App" %></title>
+    <title><%= content_for(:title) || "Admin Portal - HubSight" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -15,53 +15,374 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "typography", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
+    <style>
+      /* Admin Layout Specific Styles */
+      .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+      }
+      
+      .admin-sidebar {
+        width: 260px;
+        background-color: var(--dark-gray);
+        color: var(--white);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        transition: transform 0.3s ease;
+        z-index: 1000;
+      }
+      
+      .admin-sidebar-header {
+        padding: var(--space-xl) var(--space-lg);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .admin-sidebar-brand {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--white);
+        margin: 0;
+      }
+      
+      .admin-sidebar-nav {
+        padding: var(--space-lg) 0;
+      }
+      
+      .admin-sidebar-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      
+      .admin-sidebar-link {
+        display: block;
+        padding: var(--space-md) var(--space-lg);
+        color: var(--light-gray);
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+      }
+      
+      .admin-sidebar-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--white);
+        border-left-color: var(--coral-primary);
+      }
+      
+      .admin-sidebar-link.active {
+        background-color: rgba(255, 107, 107, 0.1);
+        color: var(--coral-light);
+        border-left-color: var(--coral-primary);
+      }
+      
+      .admin-main {
+        flex: 1;
+        margin-left: 260px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      
+      .admin-header {
+        background-color: var(--white);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: var(--space-lg) var(--space-xl);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      
+      .admin-header-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--dark-gray);
+        margin: 0;
+      }
+      
+      .admin-header-user {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+      }
+      
+      .admin-header-username {
+        font-size: 0.875rem;
+        color: var(--medium-gray);
+        font-weight: 500;
+      }
+      
+      .admin-header-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--coral-primary) 0%, var(--coral-light) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      
+      .admin-content {
+        flex: 1;
+        padding: var(--space-xl);
+      }
+      
+      .admin-mobile-toggle {
+        display: none;
+        position: fixed;
+        bottom: var(--space-lg);
+        right: var(--space-lg);
+        width: 56px;
+        height: 56px;
+        background-color: var(--coral-primary);
+        color: var(--white);
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        cursor: pointer;
+        z-index: 1001;
+        transition: all 0.3s ease;
+      }
+      
+      .admin-mobile-toggle:hover {
+        background-color: var(--coral-light);
+        transform: scale(1.1);
+      }
+      
+      .admin-mobile-toggle svg {
+        width: 24px;
+        height: 24px;
+      }
+      
+      .admin-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+      
+      /* Stats Card Styles */
+      .admin-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: var(--space-lg);
+        margin-bottom: var(--space-xl);
+      }
+      
+      .admin-stat-card {
+        background-color: var(--white);
+        padding: var(--space-lg);
+        border-radius: var(--space-md);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--pink-pale);
+        transition: all 0.3s ease;
+      }
+      
+      .admin-stat-card:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+      }
+      
+      .admin-stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      
+      .admin-stat-label {
+        font-size: 0.875rem;
+        color: var(--medium-gray);
+        font-weight: 500;
+        margin-bottom: var(--space-xs);
+      }
+      
+      .admin-stat-value {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--dark-gray);
+        margin: var(--space-xs) 0;
+      }
+      
+      .admin-stat-change {
+        font-size: 0.75rem;
+        margin-top: var(--space-xs);
+      }
+      
+      .admin-stat-change.positive {
+        color: #38a169;
+      }
+      
+      .admin-stat-change.negative {
+        color: #e53e3e;
+      }
+      
+      .admin-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--space-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .admin-stat-icon.blue {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+      }
+      
+      .admin-stat-icon.green {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+      }
+      
+      .admin-stat-icon.purple {
+        background-color: rgba(168, 85, 247, 0.1);
+        color: #a855f7;
+      }
+      
+      .admin-stat-icon.coral {
+        background-color: var(--pink-light);
+        color: var(--coral-primary);
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .admin-sidebar {
+          transform: translateX(-100%);
+        }
+        
+        .admin-sidebar.mobile-open {
+          transform: translateX(0);
+        }
+        
+        .admin-main {
+          margin-left: 0;
+        }
+        
+        .admin-mobile-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .admin-overlay.visible {
+          display: block;
+        }
+        
+        .admin-content {
+          padding: var(--space-lg);
+        }
+        
+        .admin-header {
+          padding: var(--space-md) var(--space-lg);
+        }
+        
+        .admin-header-title {
+          font-size: 1.25rem;
+        }
+        
+        .admin-stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .admin-header-username {
+          display: none;
+        }
+        
+        .admin-content {
+          padding: var(--space-md);
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <div class="flex h-screen bg-gray-100">
+    <div class="admin-layout">
       <!-- Sidebar -->
-      <div class="w-64 bg-gray-800 text-white">
-        <div class="p-4">
-          <h1 class="text-2xl font-bold">Admin Portal</h1>
+      <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar-header">
+          <h1 class="admin-sidebar-brand">HubSight Admin</h1>
         </div>
-        <nav class="mt-4">
+        <nav class="admin-sidebar-nav">
           <ul>
-            <li class="px-4 py-2 hover:bg-gray-700">
-              <%= link_to "Dashboard", { controller: "mockups", action: "admin_dashboard" }, class: "block" %>
+            <li>
+              <%= link_to "Dashboard", { controller: "mockups", action: "admin_dashboard" }, class: "admin-sidebar-link #{params[:action] == 'admin_dashboard' ? 'active' : ''}" %>
             </li>
-            <li class="px-4 py-2 hover:bg-gray-700">
-              <%= link_to "Users", { controller: "mockups", action: "admin_users" }, class: "block" %>
+            <li>
+              <%= link_to "Users", { controller: "mockups", action: "admin_users" }, class: "admin-sidebar-link #{params[:action] == 'admin_users' ? 'active' : ''}" %>
             </li>
-            <li class="px-4 py-2 hover:bg-gray-700">
-              <%= link_to "Analytics", { controller: "mockups", action: "admin_analytics" }, class: "block" %>
+            <li>
+              <%= link_to "Analytics", { controller: "mockups", action: "admin_analytics" }, class: "admin-sidebar-link #{params[:action] == 'admin_analytics' ? 'active' : ''}" %>
             </li>
-            <li class="px-4 py-2 hover:bg-gray-700">
-              <%= link_to "Back to Index", { controller: "mockups", action: "index" }, class: "block" %>
+            <li style="margin-top: var(--space-xl); padding-top: var(--space-xl); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+              <%= link_to "Back to Mockups", { controller: "mockups", action: "index" }, class: "admin-sidebar-link" %>
             </li>
           </ul>
         </nav>
-      </div>
+      </aside>
+
+      <!-- Overlay for mobile -->
+      <div class="admin-overlay" id="adminOverlay"></div>
 
       <!-- Main Content -->
-      <div class="flex-1 overflow-y-auto">
-        <header class="bg-white shadow">
-          <div class="p-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-gray-800">
-              <%= content_for(:header) || "Admin Dashboard" %>
-            </h2>
-            <div class="flex items-center">
-              <span class="mr-2">Admin User</span>
-              <div class="w-8 h-8 rounded-full bg-gray-500"></div>
-            </div>
+      <div class="admin-main">
+        <header class="admin-header">
+          <h2 class="admin-header-title">
+            <%= content_for(:header) || "Admin Dashboard" %>
+          </h2>
+          <div class="admin-header-user">
+            <span class="admin-header-username">Admin User</span>
+            <div class="admin-header-avatar">A</div>
           </div>
         </header>
 
-        <main class="p-6">
+        <main class="admin-content">
           <%= yield %>
         </main>
       </div>
+
+      <!-- Mobile Toggle Button -->
+      <button class="admin-mobile-toggle" id="adminMobileToggle">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
     </div>
+
+    <script>
+      // Mobile menu toggle
+      document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('adminSidebar');
+        const overlay = document.getElementById('adminOverlay');
+        const toggleBtn = document.getElementById('adminMobileToggle');
+        
+        function toggleSidebar() {
+          sidebar.classList.toggle('mobile-open');
+          overlay.classList.toggle('visible');
+        }
+        
+        toggleBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+      });
+    </script>
   </body>
 </html>

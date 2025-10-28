@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "HubSight - Portfolio Management" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "typography", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <style>
+      /* User Layout Specific Styles */
+      .user-layout {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+      }
+
+      .user-header {
+        background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 50%, #FF8585 100%);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .user-header-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 var(--space-lg);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 80px;
+        gap: var(--space-lg);
+      }
+
+      .user-header-left {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xl);
+      }
+
+      .user-logo-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+      }
+
+      .user-logo-link:hover {
+        transform: scale(1.05);
+      }
+
+      .user-logo {
+        height: 50px;
+        width: auto;
+      }
+
+      .user-nav {
+        display: flex;
+        gap: var(--space-md);
+        align-items: center;
+      }
+
+      .user-nav-link {
+        color: var(--dark-gray);
+        text-decoration: none;
+        font-size: 1.105rem;
+        font-weight: 500;
+        padding: var(--space-sm) var(--space-md);
+        border-radius: var(--space-sm);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .user-nav-link:hover {
+        background-color: rgba(255, 107, 107, 0.15);
+        color: var(--dark-gray);
+      }
+
+      .user-nav-link.active {
+        background-color: rgba(255, 107, 107, 0.2);
+        color: var(--coral-primary);
+        font-weight: 600;
+      }
+
+      .user-header-right {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+      }
+
+      .user-avatar-wrapper {
+        position: relative;
+      }
+
+      .user-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--coral-primary) 0%, var(--coral-light) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: 600;
+        font-size: 1.125rem;
+        border: 3px solid var(--white);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+      }
+
+      .user-avatar:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+      }
+
+      .user-dropdown {
+        position: absolute;
+        top: calc(100% + 12px);
+        right: 0;
+        background-color: var(--white);
+        border-radius: var(--space-md);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        min-width: 200px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+        z-index: 1000;
+        border: 1px solid var(--pink-pale);
+      }
+
+      .user-dropdown.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .user-dropdown::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        right: 16px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid var(--white);
+      }
+
+      .user-dropdown-link {
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
+        padding: var(--space-md) var(--space-lg);
+        color: var(--dark-gray);
+        text-decoration: none;
+        font-size: 1.037rem;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid var(--pink-pale);
+      }
+
+      .user-dropdown-link:first-child {
+        border-radius: var(--space-md) var(--space-md) 0 0;
+      }
+
+      .user-dropdown-link:last-child {
+        border-bottom: none;
+        border-radius: 0 0 var(--space-md) var(--space-md);
+      }
+
+      .user-dropdown-link:hover {
+        background-color: var(--pink-light);
+      }
+
+      .user-dropdown-link svg {
+        flex-shrink: 0;
+        color: var(--medium-gray);
+        width: 22px;
+        height: 22px;
+      }
+
+      .user-dropdown-link:hover svg {
+        color: var(--coral-primary);
+      }
+
+      .user-mobile-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--dark-gray);
+        cursor: pointer;
+        padding: var(--space-sm);
+        border-radius: var(--space-sm);
+        transition: background-color 0.2s ease;
+      }
+
+      .user-mobile-toggle:hover {
+        background-color: rgba(255, 107, 107, 0.15);
+      }
+
+      .user-mobile-toggle svg {
+        width: 30px;
+        height: 30px;
+        display: block;
+      }
+
+      .user-mobile-nav {
+        display: none;
+        background-color: var(--white);
+        border-top: 1px solid var(--pink-pale);
+        padding: var(--space-md);
+      }
+
+      .user-mobile-nav.show {
+        display: block;
+      }
+
+      .user-mobile-nav-link {
+        display: block;
+        color: var(--dark-gray);
+        text-decoration: none;
+        font-size: 1.105rem;
+        font-weight: 500;
+        padding: var(--space-md);
+        border-radius: var(--space-sm);
+        transition: background-color 0.2s ease;
+        margin-bottom: var(--space-xs);
+      }
+
+      .user-mobile-nav-link:hover {
+        background-color: var(--pink-light);
+      }
+
+      .user-mobile-nav-link.active {
+        background-color: rgba(255, 107, 107, 0.15);
+        color: var(--coral-primary);
+        font-weight: 600;
+      }
+
+      .user-main {
+        flex: 1;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+        padding: var(--space-xl) var(--space-lg);
+      }
+
+      .user-footer {
+        background-color: var(--dark-gray);
+        color: #e2e8f0;
+        margin-top: auto;
+      }
+
+      .user-footer-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--space-2xl) var(--space-lg);
+      }
+
+      .user-footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--space-xl);
+        margin-bottom: var(--space-xl);
+      }
+
+      .user-footer-section h3 {
+        font-size: 1.243125rem;
+        font-weight: 600;
+        color: var(--white);
+        margin-bottom: var(--space-md);
+      }
+
+      .user-footer-text {
+        font-size: 0.966875rem;
+        line-height: 1.6;
+        color: var(--light-gray);
+        margin-bottom: var(--space-sm);
+      }
+
+      .user-footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .user-footer-links li {
+        margin-bottom: var(--space-sm);
+      }
+
+      .user-footer-link {
+        color: var(--light-gray);
+        text-decoration: none;
+        font-size: 0.966875rem;
+        transition: color 0.2s ease;
+      }
+
+      .user-footer-link:hover {
+        color: var(--coral-light);
+        text-decoration: underline;
+      }
+
+      .user-footer-bottom {
+        padding-top: var(--space-xl);
+        border-top: 1px solid var(--medium-gray);
+        text-align: center;
+      }
+
+      .user-footer-copyright {
+        font-size: 0.966875rem;
+        color: var(--light-gray);
+        margin: 0;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .user-nav {
+          display: none;
+        }
+
+        .user-mobile-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .user-header-container {
+          min-height: 64px;
+          padding: 0 var(--space-md);
+        }
+
+        .user-logo {
+          height: 40px;
+        }
+
+        .user-main {
+          padding: var(--space-lg) var(--space-md);
+        }
+
+        .user-footer-container {
+          padding: var(--space-xl) var(--space-md);
+        }
+
+        .user-footer-grid {
+          grid-template-columns: 1fr;
+          gap: var(--space-lg);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .user-header-container {
+          min-height: 56px;
+          padding: 0 var(--space-sm);
+          gap: var(--space-sm);
+        }
+
+        .user-logo {
+          height: 36px;
+        }
+
+        .user-avatar {
+          width: 36px;
+          height: 36px;
+          font-size: 1rem;
+          border-width: 2px;
+        }
+
+        .user-main {
+          padding: var(--space-md) var(--space-sm);
+        }
+
+        .user-dropdown {
+          min-width: 180px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="user-layout">
+      <!-- Header -->
+      <header class="user-header">
+        <div class="user-header-container">
+          <div class="user-header-left">
+            <!-- Clickable Logo -->
+            <%= link_to root_path, class: "user-logo-link" do %>
+              <%= image_tag "hugsight_logo.png", alt: "HubSight Logo", class: "user-logo" %>
+            <% end %>
+
+            <!-- Desktop Navigation -->
+            <nav class="user-nav">
+              <%= link_to "Tableau de Bord", root_path, class: "user-nav-link #{controller_name == 'dashboard' ? 'active' : ''}" %>
+              <%= link_to "Sites", sites_path, class: "user-nav-link #{controller_name == 'sites' ? 'active' : ''}" %>
+              <%= link_to "Contrats", contracts_path, class: "user-nav-link #{controller_name == 'contracts' ? 'active' : ''}" %>
+              <%= link_to "Équipements", equipment_index_path, class: "user-nav-link #{controller_name == 'equipment' ? 'active' : ''}" %>
+              <%= link_to "Organisations", organizations_path, class: "user-nav-link #{controller_name == 'organizations' ? 'active' : ''}" %>
+              <%= link_to "Analytics", analytics_path, class: "user-nav-link #{controller_name == 'analytics' ? 'active' : ''}" %>
+            </nav>
+          </div>
+
+          <div class="user-header-right">
+            <!-- Mobile Menu Toggle -->
+            <button class="user-mobile-toggle" id="userMobileToggle">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            <!-- User Avatar & Dropdown -->
+            <div class="user-avatar-wrapper">
+              <button class="user-avatar" id="userAvatarBtn">U</button>
+              <div class="user-dropdown" id="userDropdown">
+                <%= link_to "#", class: "user-dropdown-link" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  Profil
+                <% end %>
+                <%= link_to "#", class: "user-dropdown-link" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Paramètres
+                <% end %>
+                <%= link_to "#", class: "user-dropdown-link" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Déconnexion
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="user-mobile-nav" id="userMobileNav">
+          <%= link_to "Tableau de Bord", root_path, class: "user-mobile-nav-link #{controller_name == 'dashboard' ? 'active' : ''}" %>
+          <%= link_to "Sites", sites_path, class: "user-mobile-nav-link #{controller_name == 'sites' ? 'active' : ''}" %>
+          <%= link_to "Contrats", contracts_path, class: "user-mobile-nav-link #{controller_name == 'contracts' ? 'active' : ''}" %>
+          <%= link_to "Équipements", equipment_index_path, class: "user-mobile-nav-link #{controller_name == 'equipment' ? 'active' : ''}" %>
+          <%= link_to "Organisations", organizations_path, class: "user-mobile-nav-link #{controller_name == 'organizations' ? 'active' : ''}" %>
+          <%= link_to "Analytics", analytics_path, class: "user-mobile-nav-link #{controller_name == 'analytics' ? 'active' : ''}" %>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="user-main">
+        <%= yield %>
+      </main>
+
+      <!-- Footer -->
+      <footer class="user-footer">
+        <div class="user-footer-container">
+          <div class="user-footer-grid">
+            <div class="user-footer-section">
+              <h3>À propos de HubSight</h3>
+              <p class="user-footer-text">
+                Plateforme de gestion immobilière et technique pour la gestion et le suivi des contrats.
+              </p>
+            </div>
+            <div class="user-footer-section">
+              <h3>Liens Rapides</h3>
+              <ul class="user-footer-links">
+                <li><%= link_to "Tableau de Bord", root_path, class: "user-footer-link" %></li>
+                <li><%= link_to "Sites", sites_path, class: "user-footer-link" %></li>
+                <li><%= link_to "Contrats", contracts_path, class: "user-footer-link" %></li>
+                <li><%= link_to "Support", "#", class: "user-footer-link" %></li>
+              </ul>
+            </div>
+            <div class="user-footer-section">
+              <h3>Contact</h3>
+              <p class="user-footer-text">
+                Email: contact@hubsight.com<br>
+                Téléphone: +33 1 23 45 67 89
+              </p>
+            </div>
+          </div>
+          <div class="user-footer-bottom">
+            <p class="user-footer-copyright">
+              © <%= Time.current.year %> HubSight. Tous droits réservés.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Avatar dropdown toggle
+        const avatarBtn = document.getElementById('userAvatarBtn');
+        const dropdown = document.getElementById('userDropdown');
+        
+        if (avatarBtn && dropdown) {
+          avatarBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+          });
+          
+          // Close dropdown when clicking outside
+          document.addEventListener('click', function(e) {
+            if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
+              dropdown.classList.remove('show');
+            }
+          });
+        }
+
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('userMobileToggle');
+        const mobileNav = document.getElementById('userMobileNav');
+        
+        if (mobileToggle && mobileNav) {
+          mobileToggle.addEventListener('click', function() {
+            mobileNav.classList.toggle('show');
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,107 @@
+<% content_for :header, "Import Price References" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Import Price References</h2>
+    <p class="typo-body-small">Upload an Excel file to bulk import price references into the database</p>
+  </div>
+
+  <!-- Instructions -->
+  <div style="background-color: #e3f2fd; border-left: 4px solid #2196f3; padding: var(--space-lg); margin-bottom: var(--space-xl); border-radius: var(--space-sm);">
+    <div style="display: flex; align-items: start; gap: var(--space-md);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#1565c0" style="flex-shrink: 0;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <p class="typo-body typo-bold" style="color: #1565c0; margin-bottom: var(--space-xs);">Import Instructions</p>
+        <ul class="typo-list" style="color: #1565c0; margin: var(--space-sm) 0 0 var(--space-lg);">
+          <li>Download the Excel template below to ensure proper formatting</li>
+          <li>Fill in all required fields: Contract Family, Sub-Family, Equipment Type, Service Type, and Reference Price</li>
+          <li>Optional fields include: Technical Characteristics, Location, City, and Notes</li>
+          <li>Save your file and upload it using the form below</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Download Template -->
+  <div style="background-color: var(--pink-light); padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-md);">Step 1: Download Template</h3>
+    <p class="typo-body" style="margin-bottom: var(--space-lg);">Download the Excel template with the required column structure for importing price references.</p>
+    <%= link_to "#", class: "typo-btn-success" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+      </svg>
+      Download Excel Template
+    <% end %>
+  </div>
+
+  <!-- Upload Form -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); ">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+      </svg>
+      Step 2: Upload Your File
+    </h3>
+
+    <%= form_with url: process_import_admin_price_references_path, method: :post, local: true, multipart: true do |form| %>
+      <div style="margin-bottom: var(--space-2xl);">
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-md);">
+          Select Excel File <span style="color: var(--coral-primary);">*</span>
+        </label>
+        
+        <!-- File Upload Area -->
+        <div style="border: 2px dashed var(--light-gray); border-radius: var(--space-md); padding: var(--space-2xl); text-align: center; background-color: var(--pink-light); transition: all 0.3s ease;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-md); color: var(--medium-gray);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          
+          <%= form.file_field :file, accept: ".xlsx,.xls", style: "display: block; margin: 0 auto var(--space-md); max-width: 400px; padding: var(--space-sm); border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          
+          <p class="typo-body-small" style="color: var(--medium-gray); margin: 0;">
+            Supported formats: .xlsx, .xls (Max size: 10MB)
+          </p>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div style="margin-bottom: var(--space-2xl); padding: var(--space-lg); background-color: var(--pink-light); border-radius: var(--space-sm);">
+        <h4 class="typo-h5" style="margin-bottom: var(--space-md);">Import Options</h4>
+        
+        <div style="margin-bottom: var(--space-md);">
+          <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+            <%= form.check_box :skip_duplicates, style: "width: 20px; height: 20px; cursor: pointer;" %>
+            <span class="typo-body">Skip duplicate entries (based on Contract Family + Equipment Type)</span>
+          </label>
+        </div>
+        
+        <div>
+          <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+            <%= form.check_box :update_existing, style: "width: 20px; height: 20px; cursor: pointer;" %>
+            <span class="typo-body">Update existing entries with new data</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-xl); border-top: 1px solid var(--pink-pale);">
+        <%= link_to "Cancel", admin_price_references_path, class: "typo-btn-cancel" %>
+        <%= form.submit "Import Price References", class: "typo-btn-success", style: "cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Import History -->
+  <div style="margin-top: var(--space-2xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg);">Recent Imports</h3>
+    <div style="background-color: var(--white); border: 1px solid var(--pink-pale); border-radius: var(--space-md); padding: var(--space-lg);">
+      <div style="text-align: center; padding: var(--space-xl); color: var(--medium-gray);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-sm); opacity: 0.3;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="typo-body-small">No import history available</p>
+      </div>
+    </div>
+  </div>
+</div>

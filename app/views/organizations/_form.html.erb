@@ -1,0 +1,170 @@
+<div style="background-color: var(--white); border-radius: var(--space-md);">
+  <%= form_with(url: organization.respond_to?(:id) && organization.id.present? ? organization_path(organization.id) : organizations_path, method: organization.respond_to?(:id) && organization.id.present? ? :patch : :post, local: true) do |f| %>
+    <!-- Basic Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations de Base
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom de l'Organisation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :name, value: organization.name, placeholder: "Ex: ENGIE Solutions", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Raison Sociale <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :legal_name, value: organization.legal_name, placeholder: "Ex: ENGIE Solutions SAS", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            SIRET <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :siret, value: organization.siret, placeholder: "Ex: 552 081 317 00426", required: true, style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: #999; margin-top: 4px; font-size: 0.75rem;">14 chiffres (numéro d'identification de l'entreprise)</p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type d'Organisation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :organization_type,
+            [
+              ['Prestataire', 'Service provider'],
+              ['Fournisseur', 'Supplier'],
+              ['Locataire', 'Tenant'],
+              ['Propriétaire', 'Owner'],
+              ['Organisme de contrôle', 'Control body'],
+              ['Assureur', 'Insurer'],
+              ['Autre', 'Other']
+            ],
+            { include_blank: 'Sélectionner...', selected: organization.organization_type },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Details Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Coordonnées
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Adresse du Siège Social <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :headquarters_address, value: organization.headquarters_address, placeholder: "Ex: 1 Place Samuel de Champlain", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Ville <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :city, value: organization.city, placeholder: "Ex: Paris", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Code Postal <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :postal_code, value: organization.postal_code, placeholder: "Ex: 75016", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :phone, value: organization.phone, placeholder: "Ex: +33 1 40 06 20 00", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.email_field :email, value: organization.email, placeholder: "Ex: contact@example.com", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Site Web
+          </label>
+          <%= f.url_field :website, value: organization.website, placeholder: "Ex: https://www.example.com", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations Commerciales
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Spécialités / Métiers <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_area :specialties, value: organization.specialties, rows: 2, placeholder: "Ex: CVC, Énergie, Maintenance multi-technique, Gestion technique des bâtiments", required: true, style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: #999; margin-top: 4px; font-size: 0.75rem;">Séparer les spécialités par des virgules</p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Début de Relation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :relationship_start_date, value: organization.relationship_start_date, required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Statut <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :status,
+            [
+              ['Actif', 'active'],
+              ['Inactif', 'inactive']
+            ],
+            { selected: organization.status || 'active' },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Notes Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Notes Complémentaires
+      </h4>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          Notes
+        </label>
+        <%= f.text_area :notes, value: organization.notes, rows: 4, placeholder: "Informations complémentaires, historique de collaboration, particularités, etc.", style: "width: 100%;" %>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to organizations_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= (organization.respond_to?(:id) && organization.id.present?) ? "Mettre à Jour" : "Créer l'Organisation" %>
+      </button>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,10 @@
+<% content_for :header, "Edit Level" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier le Niveau</h2>
+    <p class="typo-body-small">Éditer les informations du niveau <%= @level.name %></p>
+  </div>
+
+  <%= render 'form', level: @level, building: @building %>
+</div>

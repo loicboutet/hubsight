@@ -1,0 +1,10 @@
+<% content_for :header, "New Building" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un Nouveau Bâtiment</h2>
+    <p class="typo-body-small">Ajouter un bâtiment au site <%= @site.name %></p>
+  </div>
+
+  <%= render 'form', building: @building, site: @site %>
+</div>

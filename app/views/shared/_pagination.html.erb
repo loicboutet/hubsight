@@ -1,0 +1,72 @@
+<% 
+  current_page ||= 1
+  total_pages ||= 1
+  total_count ||= 0
+  per_page ||= 15
+  path ||= '#'
+%>
+
+<% if total_pages > 1 %>
+  <% 
+    # Calculate display range
+    start_item = total_count > 0 ? ((current_page - 1) * per_page) + 1 : 0
+    end_item = [current_page * per_page, total_count].min
+    
+    # Determine which page numbers to show
+    if total_pages <= 7
+      pages = (1..total_pages).to_a
+    elsif current_page <= 4
+      pages = (1..5).to_a + ['gap'] + [total_pages]
+    elsif current_page >= total_pages - 3
+      pages = [1] + ['gap'] + ((total_pages - 4)..total_pages).to_a
+    else
+      pages = [1] + ['gap'] + ((current_page - 1)..(current_page + 1)).to_a + ['gap'] + [total_pages]
+    end
+  %>
+  <div class="pagination-wrapper">
+    <div class="pagination-info">
+      Affichage de <span class="pagination-info-bold"><%= start_item %></span> à <span class="pagination-info-bold"><%= end_item %></span> sur <span class="pagination-info-bold"><%= total_count %></span> entrées
+    </div>
+    
+    <nav class="pagination" role="navigation" aria-label="Pagination">
+      <!-- First Page -->
+      <% if current_page == 1 %>
+        <span class="pagination-item first disabled">« Début</span>
+      <% else %>
+        <a href="<%= path %>?page=1" class="pagination-item first">« Début</a>
+      <% end %>
+      
+      <!-- Previous Page -->
+      <% if current_page == 1 %>
+        <span class="pagination-item prev disabled">‹ Préc</span>
+      <% else %>
+        <a href="<%= path %>?page=<%= current_page - 1 %>" class="pagination-item prev" rel="prev">‹ Préc</a>
+      <% end %>
+      
+      <!-- Page Numbers -->
+      <% pages.each do |page| %>
+        <% if page == 'gap' %>
+          <span class="pagination-item gap">…</span>
+        <% elsif page == current_page %>
+          <span class="pagination-item page current" aria-current="page"><%= page %></span>
+        <% else %>
+          <a href="<%= path %>?page=<%= page %>" class="pagination-item page"><%= page %></a>
+        <% end %>
+      <% end %>
+      
+      <!-- Next Page -->
+      <% if current_page == total_pages %>
+        <span class="pagination-item next disabled">Suiv ›</span>
+      <% else %>
+        <a href="<%= path %>?page=<%= current_page + 1 %>" class="pagination-item next" rel="next">Suiv ›</a>
+      <% end %>
+      
+      <!-- Last Page -->
+      <% if current_page == total_pages %>
+        <span class="pagination-item last disabled">Fin »</span>
+      <% else %>
+        <a href="<%= path %>?page=<%= total_pages %>" class="pagination-item last">Fin »</a>
+      <% end %>
+    </nav>
+  </div>
+<% end %>
