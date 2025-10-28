@@ -31,18 +31,18 @@ class RoutesController < ApplicationController
         { name: 'Global Search', path: '/search?role=admin', description: 'Universal search across all entities' }
       ],
       'Portfolio Manager (Gestionnaire de Portefeuille)' => [
-        { name: 'Dashboard', path: '/dashboard', description: 'Main dashboard with portfolio overview' },
-        { name: 'Analytics', path: '/analytics', description: 'View analytics and key indicators' },
-        { name: 'Sites', path: '/sites', description: 'Manage sites in portfolio (includes Buildings, Levels, Spaces)' },
-        { name: 'Equipment', path: '/equipment', description: 'Manage equipment with OmniClass classification' },
-        { name: 'Contracts', path: '/contracts', description: 'Manage contracts with PDF upload and OCR extraction' },
-        { name: 'Organizations', path: '/organizations', description: 'Manage organizations and service providers (includes contacts)' },
-        { name: 'Site Managers', path: '/site_managers', description: 'Create and manage Site Manager profiles' },
-        { name: 'Alerts', path: '/alerts', description: 'View and manage contract alerts (BRIQUE 2)' },
-        { name: 'Alert Settings', path: '/alerts/settings', description: 'Configure alert notifications' },
-        { name: 'Equipment Types', path: '/equipment_types', description: 'Browse OmniClass equipment classification' },
-        { name: 'Contract Families', path: '/contract_families', description: 'Browse contract families and sub-families' },
-        { name: 'Search', path: '/search', description: 'Global search across all resources' }
+        { name: 'Dashboard', path: '/dashboard', description: 'Portfolio manager dashboard' },
+        { name: 'Analytics', path: '/analytics', description: 'Analytics overview (BRIQUE 2)' },
+        { name: 'Sites', path: '/sites', description: 'List all sites in portfolio' },
+        { name: 'Equipment', path: '/equipment', description: 'List all equipment (with filters)' },
+        { name: 'Contracts', path: '/contracts', description: 'List all contracts (with filters)' },
+        { name: 'Organizations', path: '/organizations', description: 'List organizations' },
+        { name: 'Site Managers', path: '/site_managers', description: 'List all site managers' },
+        { name: 'Alerts', path: '/alerts', description: 'Dashboard of all alerts' },
+        { name: 'Alert Settings', path: '/alerts/settings', description: 'Alert settings form' },
+        { name: 'Equipment Types', path: '/equipment_types', description: 'List equipment type catalog (OmniClass)' },
+        { name: 'Contract Families', path: '/contract_families', description: 'List contract families & subfamilies' },
+        { name: 'Search', path: '/search', description: 'Global search across all entities' }
       ],
       'Site Manager (Responsable de Site)' => [
         { name: 'My Sites', path: '/my_sites', description: 'View assigned sites' },
