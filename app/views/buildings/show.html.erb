@@ -102,7 +102,7 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
         <div style="display: flex; align-items: center; gap: var(--space-sm);">
           <%= render 'shared/hierarchy_icons', type: 'level', size: 24, color: '#f59e0b' %>
-          <h4 class="typo-h4">Niveaux de ce Bâtiment</h4>
+          <h4 class="typo-h4" style="margin-bottom: 0">Niveaux de ce Bâtiment</h4>
         </div>
         <div style="display: flex; gap: var(--space-sm);">
           <%= link_to new_building_level_path(@building.id), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
@@ -137,7 +137,7 @@
               <div style="flex: 1;">
                 <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'level', size: 20, color: '#f59e0b' %>
-                  <h5 class="typo-h5" style="color: var(--dark-gray);"><%= level[:name] %></h5>
+                  <h5 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 0"><%= level[:name] %></h5>
                 </div>
                 <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
                   <%= number_with_delimiter(level[:area], delimiter: ' ') %> m² • Altitude: <%= level[:altitude] %> m
@@ -146,13 +146,13 @@
                 <div style="display: flex; gap: var(--space-lg);">
                   <div style="display: flex; align-items: center; gap: var(--space-xs);">
                     <%= render 'shared/hierarchy_icons', type: 'space', size: 16, color: '#8b5cf6' %>
-                    <span class="typo-body-small typo-bold"><%= level[:spaces] %></span>
-                    <span class="typo-body-small" style="color: var(--medium-gray);">Espaces</span>
+                    <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= level[:spaces] %></span>
+                    <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Espaces</span>
                   </div>
                   <div style="display: flex; align-items: center; gap: var(--space-xs);">
                     <%= render 'shared/hierarchy_icons', type: 'equipment', size: 16, color: '#6b7280' %>
-                    <span class="typo-body-small typo-bold"><%= level[:equipment] %></span>
-                    <span class="typo-body-small" style="color: var(--medium-gray);">Équipements</span>
+                    <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= level[:equipment] %></span>
+                    <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Équipements</span>
                   </div>
                 </div>
               </div>
