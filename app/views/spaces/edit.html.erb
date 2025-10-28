@@ -1,0 +1,28 @@
+<% content_for :header, "Éditer l'Espace" %>
+
+<div class="section">
+  <!-- Breadcrumb Navigation -->
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
+  <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
+  <% space_icon = capture { render 'shared/hierarchy_icons', type: 'space', size: 16 } %>
+  <%= render 'shared/breadcrumb', path: [
+    { name: 'Sites', url: sites_path, icon: site_icon },
+    { name: 'Tour Montparnasse', url: site_path(1), icon: site_icon },
+    { name: 'Bât. A', url: building_path(1), icon: building_icon },
+    { name: 'RDC', url: level_path(1), icon: level_icon },
+    { name: 'Espaces', url: level_spaces_path(1), icon: space_icon },
+    { name: 'Éditer', url: nil, icon: space_icon }
+  ] %>
+
+  <!-- Header Section -->
+  <div style="margin-bottom: var(--space-xl); display: flex; align-items: center; gap: var(--space-md);">
+    <%= render 'shared/hierarchy_icons', type: 'space', size: 32, color: '#8b5cf6' %>
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Éditer l'Espace</h2>
+      <p class="typo-body-small" style="color: var(--medium-gray);">Modifiez les informations de l'espace</p>
+    </div>
+  </div>
+
+  <%= render 'form', space: @space, level: @level %>
+</div>

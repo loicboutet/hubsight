@@ -1,0 +1,294 @@
+<% content_for :header, "Nouvel Équipement" %>
+
+<div class="section">
+  <!-- Breadcrumb Navigation -->
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
+  <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
+  <% space_icon = capture { render 'shared/hierarchy_icons', type: 'space', size: 16 } %>
+  <% equipment_icon = capture { render 'shared/hierarchy_icons', type: 'equipment', size: 16 } %>
+  <%= render 'shared/breadcrumb', path: [
+    { name: 'Sites', url: sites_path, icon: site_icon },
+    { name: 'Tour Montparnasse', url: site_path(1), icon: site_icon },
+    { name: 'Bât. A', url: building_path(1), icon: building_icon },
+    { name: 'RDC', url: level_path(1), icon: level_icon },
+    { name: 'Bureau 101', url: space_path(1), icon: space_icon },
+    { name: 'Nouvel Équipement', url: nil, icon: equipment_icon }
+  ] %>
+
+  <!-- Header Section -->
+  <div style="margin-bottom: var(--space-xl); display: flex; align-items: center; gap: var(--space-md);">
+    <%= render 'shared/hierarchy_icons', type: 'equipment', size: 32, color: 'var(--coral-primary)' %>
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Nouvel Équipement</h2>
+      <p class="typo-body-small" style="color: var(--medium-gray);">Ajoutez un nouvel équipement à l'espace</p>
+    </div>
+  </div>
+
+  <form action="<%= space_equipment_index_path(params[:space_id]) %>" method="post">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    
+    <div style="background-color: var(--white); border-radius: var(--space-md);">
+      
+      <!-- Basic Information Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations de Base
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Nom de l'Équipement <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="text" name="equipment[name]" placeholder="Ex: Climatiseur Daikin AC-500" required style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Type d'Équipement <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[equipment_type_id]" required style="width: 100%;">
+              <option value="">Sélectionner...</option>
+              <optgroup label="CVC - HVAC">
+                <option value="1">Climatiseur</option>
+                <option value="2">Chaudière</option>
+                <option value="3">VMC - Ventilation</option>
+                <option value="4">Radiateur</option>
+              </optgroup>
+              <optgroup label="ELE - Électricité">
+                <option value="5">Luminaire</option>
+                <option value="6">Tableau électrique</option>
+                <option value="7">Onduleur</option>
+              </optgroup>
+              <optgroup label="PLO - Plomberie">
+                <option value="8">Chauffe-eau</option>
+                <option value="9">Pompe</option>
+              </optgroup>
+              <optgroup label="SEC - Sécurité">
+                <option value="10">Détecteur incendie</option>
+                <option value="11">Extincteur</option>
+                <option value="12">Alarme intrusion</option>
+              </optgroup>
+              <optgroup label="ASC - Ascenseurs">
+                <option value="13">Ascenseur</option>
+                <option value="14">Monte-charge</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Fabricant / Marque <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="text" name="equipment[manufacturer]" placeholder="Ex: Daikin, Schneider Electric..." required style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Modèle
+            </label>
+            <input type="text" name="equipment[model]" placeholder="Ex: AC-500" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Numéro de Série
+            </label>
+            <input type="text" name="equipment[serial_number]" placeholder="Ex: SN123456789" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Référence BDD
+            </label>
+            <input type="text" name="equipment[bdd_reference]" placeholder="Ex: EQ-2025-001" style="width: 100%;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Specifications Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Caractéristiques Techniques
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Puissance Nominale (kW)
+            </label>
+            <input type="number" name="equipment[nominal_power]" placeholder="Ex: 3.5" step="0.01" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Tension Nominale (V)
+            </label>
+            <input type="number" name="equipment[nominal_voltage]" placeholder="Ex: 230" step="1" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Intensité (A)
+            </label>
+            <input type="number" name="equipment[current]" placeholder="Ex: 16" step="0.1" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Fréquence (Hz)
+            </label>
+            <input type="number" name="equipment[frequency]" placeholder="Ex: 50" step="1" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Poids (kg)
+            </label>
+            <input type="number" name="equipment[weight]" placeholder="Ex: 45" step="0.1" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Dimensions (L x l x H en cm)
+            </label>
+            <input type="text" name="equipment[dimensions]" placeholder="Ex: 80 x 60 x 120" style="width: 100%;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Dates Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Dates Importantes
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Date de Fabrication
+            </label>
+            <input type="date" name="equipment[manufacturing_date]" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Date de Mise en Service
+            </label>
+            <input type="date" name="equipment[commissioning_date]" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Date Fin de Garantie
+            </label>
+            <input type="date" name="equipment[warranty_end_date]" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Date Prochaine Maintenance
+            </label>
+            <input type="date" name="equipment[next_maintenance_date]" style="width: 100%;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Supplier Information Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations Fournisseur
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Fournisseur / Distributeur
+            </label>
+            <input type="text" name="equipment[supplier]" placeholder="Ex: SARL TechnoClim" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Prix d'Achat (€)
+            </label>
+            <input type="number" name="equipment[purchase_price]" placeholder="Ex: 2500.00" step="0.01" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Numéro de Commande
+            </label>
+            <input type="text" name="equipment[order_number]" placeholder="Ex: CMD-2024-123" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Numéro de Facture
+            </label>
+            <input type="text" name="equipment[invoice_number]" placeholder="Ex: FAC-2024-456" style="width: 100%;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Information Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations Complémentaires
+        </h4>
+        
+        <div style="display: grid; gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Statut
+            </label>
+            <select name="equipment[status]" style="width: 100%;">
+              <option value="active" selected>Actif</option>
+              <option value="inactive">Inactif</option>
+              <option value="maintenance">En maintenance</option>
+              <option value="out_of_service">Hors service</option>
+              <option value="decommissioned">Décommissionné</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Niveau de Criticité
+            </label>
+            <select name="equipment[criticality]" style="width: 100%;">
+              <option value="">Non défini</option>
+              <option value="low">Faible</option>
+              <option value="medium">Moyen</option>
+              <option value="high">Élevé</option>
+              <option value="critical">Critique</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Notes / Commentaires
+            </label>
+            <textarea name="equipment[notes]" rows="4" placeholder="Informations complémentaires sur l'équipement..." style="width: 100%;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+        <%= link_to space_path(params[:space_id]), class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Annuler
+        <% end %>
+        <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Créer l'Équipement
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
