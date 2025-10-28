@@ -4,8 +4,8 @@
   <!-- Breadcrumb Navigation -->
   <%= render 'shared/breadcrumb', path: [
     { name: 'Sites', url: sites_path, icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Tour Montparnasse', url: site_path('tour-montparnasse'), icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Bât. A', url: site_building_path('tour-montparnasse', 'building-a'), icon: render('shared/hierarchy_icons', type: 'building', size: 16) },
+    { name: 'Tour Montparnasse', url: site_path(1), icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
+    { name: 'Bât. A', url: building_path(1), icon: render('shared/hierarchy_icons', type: 'building', size: 16) },
     { name: 'Niveaux', url: building_levels_path('building-a'), icon: render('shared/hierarchy_icons', type: 'level', size: 16) },
     { name: 'Rez-de-chaussée', url: nil, icon: render('shared/hierarchy_icons', type: 'level', size: 16) }
   ] %>
@@ -26,7 +26,7 @@
         </svg>
         Éditer
       <% end %>
-      <%= link_to site_building_path('tour-montparnasse', 'building-a'), class: "typo-btn-cancel" do %>
+      <%= link_to building_path(1), class: "typo-btn-cancel" do %>
         ← Retour au Bâtiment
       <% end %>
     </div>

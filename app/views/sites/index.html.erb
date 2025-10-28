@@ -89,16 +89,16 @@
         </thead>
         <tbody>
           <% [
-            {name: "Tour Montparnasse", address: "33 Avenue du Maine", city: "Paris", postal: "75015", region: "Île-de-France", type: "Bureaux", area: "120,000", buildings: 1, equipment: 487, contracts: 23},
-            {name: "Campus La Défense", address: "15 Esplanade du Général de Gaulle", city: "La Défense", postal: "92400", region: "Île-de-France", type: "Bureaux", area: "85,500", buildings: 4, equipment: 892, contracts: 34},
-            {name: "Centre Commercial Odysseum", address: "2 Place de Lisbonne", city: "Montpellier", postal: "34000", region: "Occitanie", type: "Commercial", area: "65,000", buildings: 2, equipment: 324, contracts: 18},
-            {name: "Site Industriel Lyon Nord", address: "Zone Industrielle des Marais", city: "Lyon", postal: "69009", region: "Auvergne-Rhône-Alpes", type: "Industriel", area: "45,000", buildings: 8, equipment: 567, contracts: 29},
-            {name: "Résidence Le Parc", address: "89 Avenue Victor Hugo", city: "Nice", postal: "06000", region: "PACA", type: "Résidentiel", area: "12,500", buildings: 3, equipment: 156, contracts: 12},
-            {name: "Parc d'Activités Roissy", address: "Avenue de la Commune de Paris", city: "Roissy", postal: "95700", region: "Île-de-France", type: "Logistique", area: "95,000", buildings: 6, equipment: 445, contracts: 21},
-            {name: "Immeuble Haussmann", address: "45 Boulevard Haussmann", city: "Paris", postal: "75009", region: "Île-de-France", type: "Bureaux", area: "8,200", buildings: 1, equipment: 89, contracts: 8},
-            {name: "Centre Médical Pasteur", address: "12 Rue Louis Pasteur", city: "Marseille", postal: "13001", region: "PACA", type: "Santé", area: "15,600", buildings: 2, equipment: 234, contracts: 16},
-            {name: "Campus Universitaire Grenoble", address: "621 Avenue Centrale", city: "Grenoble", postal: "38400", region: "Auvergne-Rhône-Alpes", type: "Enseignement", area: "42,000", buildings: 7, equipment: 678, contracts: 27},
-            {name: "Zone Commerciale Atlantis", address: "Avenue des Thébaudières", city: "Nantes", postal: "44800", region: "Pays de la Loire", type: "Commercial", area: "52,000", buildings: 3, equipment: 298, contracts: 19}
+            {id: 1, name: "Tour Montparnasse", address: "33 Avenue du Maine", city: "Paris", postal: "75015", region: "Île-de-France", type: "Bureaux", area: "120,000", buildings: 1, equipment: 487, contracts: 23},
+            {id: 2, name: "Campus La Défense", address: "15 Esplanade du Général de Gaulle", city: "La Défense", postal: "92400", region: "Île-de-France", type: "Bureaux", area: "85,500", buildings: 4, equipment: 892, contracts: 34},
+            {id: 3, name: "Centre Commercial Odysseum", address: "2 Place de Lisbonne", city: "Montpellier", postal: "34000", region: "Occitanie", type: "Commercial", area: "65,000", buildings: 2, equipment: 324, contracts: 18},
+            {id: 4, name: "Site Industriel Lyon Nord", address: "Zone Industrielle des Marais", city: "Lyon", postal: "69009", region: "Auvergne-Rhône-Alpes", type: "Industriel", area: "45,000", buildings: 8, equipment: 567, contracts: 29},
+            {id: 5, name: "Résidence Le Parc", address: "89 Avenue Victor Hugo", city: "Nice", postal: "06000", region: "PACA", type: "Résidentiel", area: "12,500", buildings: 3, equipment: 156, contracts: 12},
+            {id: 6, name: "Parc d'Activités Roissy", address: "Avenue de la Commune de Paris", city: "Roissy", postal: "95700", region: "Île-de-France", type: "Logistique", area: "95,000", buildings: 6, equipment: 445, contracts: 21},
+            {id: 7, name: "Immeuble Haussmann", address: "45 Boulevard Haussmann", city: "Paris", postal: "75009", region: "Île-de-France", type: "Bureaux", area: "8,200", buildings: 1, equipment: 89, contracts: 8},
+            {id: 8, name: "Centre Médical Pasteur", address: "12 Rue Louis Pasteur", city: "Marseille", postal: "13001", region: "PACA", type: "Santé", area: "15,600", buildings: 2, equipment: 234, contracts: 16},
+            {id: 9, name: "Campus Universitaire Grenoble", address: "621 Avenue Centrale", city: "Grenoble", postal: "38400", region: "Auvergne-Rhône-Alpes", type: "Enseignement", area: "42,000", buildings: 7, equipment: 678, contracts: 27},
+            {id: 10, name: "Zone Commerciale Atlantis", address: "Avenue des Thébaudières", city: "Nantes", postal: "44800", region: "Pays de la Loire", type: "Commercial", area: "52,000", buildings: 3, equipment: 298, contracts: 19}
           ].each_with_index do |site, index| %>
             <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
               <!-- Site Name -->
@@ -147,20 +147,20 @@
               <!-- Actions -->
               <td style="padding: var(--space-md);">
                 <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
-                  <%= link_to site_path(site[:name].parameterize), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                  <%= link_to site_path(site[:id]), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                     Voir
                   <% end %>
-                  <%= link_to edit_site_path(site[:name].parameterize), title: "Éditer", class: "typo-btn-small typo-btn-small-primary" do %>
+                  <%= link_to edit_site_path(site[:id]), title: "Éditer", class: "typo-btn-small typo-btn-small-primary" do %>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     Éditer
                   <% end %>
-                  <%= button_to site_path(site[:name].parameterize), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer ce site ?" }, title: "Supprimer", class: "typo-btn-small typo-btn-small-danger", form: { style: "margin: 0; display: inline;" } do %>
+                  <%= button_to site_path(site[:id]), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer ce site ?" }, title: "Supprimer", class: "typo-btn-small typo-btn-small-danger", form: { style: "margin: 0; display: inline;" } do %>
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>

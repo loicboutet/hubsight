@@ -4,8 +4,8 @@
   <!-- Breadcrumb Navigation -->
   <%= render 'shared/breadcrumb', path: [
     { name: 'Sites', url: sites_path, icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Tour Montparnasse', url: site_path('tour-montparnasse'), icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Bât. A', url: site_building_path('tour-montparnasse', 'building-a'), icon: render('shared/hierarchy_icons', type: 'building', size: 16) },
+    { name: 'Tour Montparnasse', url: site_path(1), icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
+    { name: 'Bât. A', url: building_path(1), icon: render('shared/hierarchy_icons', type: 'building', size: 16) },
     { name: 'RDC', url: building_level_path('building-a', 'level-rdc'), icon: render('shared/hierarchy_icons', type: 'level', size: 16) },
     { name: 'Espaces', url: level_spaces_path('level-rdc'), icon: render('shared/hierarchy_icons', type: 'space', size: 16) },
     { name: 'Bureau 101', url: nil, icon: render('shared/hierarchy_icons', type: 'space', size: 16) }

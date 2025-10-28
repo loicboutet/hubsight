@@ -3,8 +3,8 @@
 <div class="section">
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un Nouveau Niveau</h2>
-    <p class="typo-body-small">Ajouter un niveau/étage au bâtiment</p>
+    <p class="typo-body-small">Ajouter un niveau/étage au bâtiment <%= @building.name %></p>
   </div>
 
-  <%= render 'form', level: @level %>
+  <%= render 'form', level: @level, building: @building %>
 </div>

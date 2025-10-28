@@ -1,0 +1,10 @@
+<% content_for :header, "Edit Building" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier le Bâtiment</h2>
+    <p class="typo-body-small">Mettre à jour les informations du bâtiment <%= @building.name %></p>
+  </div>
+
+  <%= render 'form', building: @building, site: @site %>
+</div>

@@ -1,4 +1,4 @@
-<%= form_with(model: [@building, level], local: true) do |f| %>
+<%= form_with(model: [building, level], local: true) do |f| %>
   <div style="background-color: var(--white); border-radius: var(--space-md); ">
     
     <!-- Level Information -->
@@ -96,7 +96,7 @@
 
     <!-- Action Buttons -->
     <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
-      <%= link_to "Annuler", @building ? building_levels_path(@building) : levels_path, class: "typo-btn-cancel" %>
+      <%= link_to "Annuler", building ? building_path(building.id) : levels_path, class: "typo-btn-cancel" %>
       <%= f.submit level.new_record? ? "Créer le Niveau" : "Mettre à Jour", class: "typo-btn-success" %>
     </div>
   </div>

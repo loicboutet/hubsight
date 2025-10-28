@@ -2,87 +2,100 @@
 
 <div class="section">
   <!-- Breadcrumb Navigation -->
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
   <%= render 'shared/breadcrumb', path: [
-    { name: 'Sites', url: sites_path, icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Tour Montparnasse', url: site_path('tour-montparnasse'), icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Bâtiments', url: site_buildings_path('tour-montparnasse'), icon: render('shared/hierarchy_icons', type: 'building', size: 16) },
-    { name: 'Bâtiment A', url: nil, icon: render('shared/hierarchy_icons', type: 'building', size: 16) }
+    { name: 'Sites', url: sites_path, icon: site_icon },
+    { name: @site.name, url: site_path(@site.id), icon: site_icon },
+    { name: @building.name, url: nil, icon: building_icon }
   ] %>
 
   <!-- Header Section -->
-  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; align-items: center; gap: var(--space-md);">
+  <div style="margin-bottom: var(--space-xl); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-md);">
+    <div style="display: flex; align-items: center; gap: var(--space-md); flex: 1; min-width: 300px;">
       <%= render 'shared/hierarchy_icons', type: 'building', size: 32, color: '#10b981' %>
       <div>
-        <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Bâtiment A - Principal</h2>
-        <p class="typo-body-small" style="color: var(--medium-gray);">Site: Tour Montparnasse</p>
+        <h2 class="typo-h2" style="margin-bottom: var(--space-xs);"><%= @building.name %></h2>
+        <p class="typo-body-small" style="color: var(--medium-gray);">Site: <%= @site.name %></p>
       </div>
     </div>
-    <div style="display: flex; gap: var(--space-md);">
-      <%= link_to edit_site_building_path('tour-montparnasse', 'building-a'), class: "typo-btn-small typo-btn-small-primary" do %>
+    <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+      <%= link_to edit_building_path(@building.id), class: "typo-btn-small typo-btn-small-primary" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
         Éditer
       <% end %>
-      <%= link_to site_path('tour-montparnasse'), class: "typo-btn-cancel" do %>
+      <%= link_to site_path(@site.id), class: "typo-btn-cancel" do %>
         ← Retour au Site
       <% end %>
     </div>
   </div>
 
-  <div style="background-color: var(--white); border-radius: var(--space-md); ">
-    <!-- Building Header Card -->
-    <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: var(--space-xl); border-radius: var(--space-md); color: white; margin-bottom: var(--space-xl);">
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg);">
-        <div>
-          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs); text-transform: uppercase;">Surface</p>
-          <p class="typo-h4" style="color: white;">12,500 m²</p>
+  <!-- Building Information Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-xl);">
+    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Code</p>
+      <p style="color: #10b981; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;"><%= @building.code %></p>
+    </div>
+    <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #22c55e; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Surface Totale</p>
+      <p style="color: #22c55e; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;"><%= number_with_delimiter(@building.area, delimiter: ' ') %> m²</p>
+    </div>
+    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #f59e0b; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Construction</p>
+      <p style="color: #f59e0b; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;"><%= @building.construction_year %></p>
+    </div>
+    <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #3b82f6; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Statut</p>
+      <p style="color: #3b82f6; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;"><%= @building.status.capitalize %></p>
+    </div>
+  </div>
+
+  <!-- Summary Statistics with Icons -->
+  <div style="margin-bottom: var(--space-xl);">
+    <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Vue d'Ensemble</h4>
+    <div class="admin-stats-grid">
+      <div class="admin-stat-card">
+        <div class="admin-stat-header">
+          <div>
+            <div class="admin-stat-label">Niveaux</div>
+            <div class="admin-stat-value">8</div>
+            <div class="admin-stat-change">Étages dans ce bâtiment</div>
+          </div>
+          <div class="admin-stat-icon orange">
+            <%= render 'shared/hierarchy_icons', type: 'level', size: 32, color: '#f59e0b' %>
+          </div>
         </div>
-        <div>
-          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs); text-transform: uppercase;">Niveaux</p>
-          <p class="typo-h4" style="color: white;">8</p>
+      </div>
+
+      <div class="admin-stat-card">
+        <div class="admin-stat-header">
+          <div>
+            <div class="admin-stat-label">Espaces</div>
+            <div class="admin-stat-value">98</div>
+            <div class="admin-stat-change">Zones fonctionnelles</div>
+          </div>
+          <div class="admin-stat-icon purple">
+            <%= render 'shared/hierarchy_icons', type: 'space', size: 32, color: '#a855f7' %>
+          </div>
         </div>
-        <div>
-          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs); text-transform: uppercase;">Année Construction</p>
-          <p class="typo-h4" style="color: white;">2005</p>
-        </div>
-        <div>
-          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs); text-transform: uppercase;">Hauteur</p>
-          <p class="typo-h4" style="color: white;">28.5 m</p>
+      </div>
+
+      <div class="admin-stat-card">
+        <div class="admin-stat-header">
+          <div>
+            <div class="admin-stat-label">Équipements</div>
+            <div class="admin-stat-value">187</div>
+            <div class="admin-stat-change">Actifs gérés</div>
+          </div>
+          <div class="admin-stat-icon coral">
+            <%= render 'shared/hierarchy_icons', type: 'equipment', size: 32, color: 'var(--coral-primary)' %>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Summary Statistics with Icons -->
-    <div style="margin-bottom: var(--space-xl);">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Vue d'Ensemble</h4>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
-        <div style="text-align: center; padding: var(--space-xl); background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: var(--space-md); color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="display: flex; justify-content: center; margin-bottom: var(--space-md);">
-            <%= render 'shared/hierarchy_icons', type: 'level', size: 32, color: 'white' %>
-          </div>
-          <p class="typo-h2" style="color: white; margin-bottom: var(--space-xs);">8</p>
-          <p class="typo-body-small" style="color: rgba(255,255,255,0.9); text-transform: uppercase; font-size: 0.75rem; font-weight: 600;">Niveaux</p>
-        </div>
-
-        <div style="text-align: center; padding: var(--space-xl); background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-radius: var(--space-md); color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="display: flex; justify-content: center; margin-bottom: var(--space-md);">
-            <%= render 'shared/hierarchy_icons', type: 'space', size: 32, color: 'white' %>
-          </div>
-          <p class="typo-h2" style="color: white; margin-bottom: var(--space-xs);">98</p>
-          <p class="typo-body-small" style="color: rgba(255,255,255,0.9); text-transform: uppercase; font-size: 0.75rem; font-weight: 600;">Espaces</p>
-        </div>
-
-        <div style="text-align: center; padding: var(--space-xl); background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); border-radius: var(--space-md); color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="display: flex; justify-content: center; margin-bottom: var(--space-md);">
-            <%= render 'shared/hierarchy_icons', type: 'equipment', size: 32, color: 'white' %>
-          </div>
-          <p class="typo-h2" style="color: white; margin-bottom: var(--space-xs);">187</p>
-          <p class="typo-body-small" style="color: rgba(255,255,255,0.9); text-transform: uppercase; font-size: 0.75rem; font-weight: 600;">Équipements</p>
-        </div>
-      </div>
-    </div>
+  </div>
 
     <!-- Levels Section -->
     <div style="margin-bottom: var(--space-xl);">
@@ -91,7 +104,7 @@
           <%= render 'shared/hierarchy_icons', type: 'level', size: 24, color: '#f59e0b' %>
           <h4 class="typo-h4">Niveaux de ce Bâtiment</h4>
         </div>
-        <%= link_to new_building_level_path('building-a'), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <%= link_to new_building_level_path(@building.id), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
@@ -136,19 +149,31 @@
                 </div>
               </div>
               
-              <div style="display: flex; gap: var(--space-xs);">
-                <%= link_to building_level_path('building-a', level[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
+              <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
+                <%= link_to level_path(level[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                   Voir
                 <% end %>
-                <%= link_to edit_building_level_path('building-a', level[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+                <%= link_to edit_level_path(level[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                   Éditer
+                <% end %>
+                <%= link_to new_level_space_path(level[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Ajouter Espace
+                <% end %>
+                <%= link_to level_path(level[:id]), method: :delete, data: { confirm: "ATTENTION : Cette action est irréversible !\n\nÊtes-vous sûr de vouloir supprimer définitivement ce niveau ?\n\nToutes les données associées (espaces, équipements) seront également supprimées." }, class: "typo-btn-small typo-btn-small-danger" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Supprimer
                 <% end %>
               </div>
             </div>
