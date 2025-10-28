@@ -3,9 +3,32 @@ class RoutesController < ApplicationController
     # Routes organized by role based on specification.md
     @routes_by_role = {
       'Admin (5000.dev)' => [
-        { name: 'Portfolio Managers', path: '/admin/portfolio_managers', description: 'Create and configure Portfolio Manager accounts' },
-        { name: 'Client Data Access', path: '/admin/clients', description: 'Access client data (with authorization)' },
-        { name: 'Price References', path: '/admin/price_references', description: 'Manage price reference database (BRIQUE 2)' }
+        # Dashboard Section
+        { name: 'Dashboard', path: '/dashboard?role=admin', description: 'Main admin dashboard with overview' },
+        { name: 'Analytics', path: '/analytics?role=admin', description: 'Analytics overview (BRIQUE 2)' },
+        
+        # Admin Management Section
+        { name: 'Portfolio Managers', path: '/admin/portfolio_managers', description: 'Manage portfolio manager users' },
+        { name: 'Clients', path: '/admin/clients', description: 'View and access client portfolios' },
+        { name: 'Site Managers', path: '/site_managers?role=admin', description: 'Manage site manager users and site assignments' },
+        { name: 'Price References', path: '/admin/price_references', description: 'Manage reference pricing data (BRIQUE 2)' },
+        
+        # Portfolio Section
+        { name: 'Sites', path: '/sites?role=admin', description: 'List and manage all sites' },
+        { name: 'Equipment', path: '/equipment?role=admin', description: 'List and manage all equipment' },
+        { name: 'Contracts', path: '/contracts?role=admin', description: 'List and manage all contracts' },
+        
+        # Resources Section
+        { name: 'Organizations', path: '/organizations?role=admin', description: 'Manage organizations (contractors, suppliers)' },
+        { name: 'Equipment Types', path: '/equipment_types?role=admin', description: 'View equipment type catalog (OmniClass)' },
+        { name: 'Contract Families', path: '/contract_families?role=admin', description: 'View contract families & subfamilies' },
+        
+        # Monitoring Section (BRIQUE 2)
+        { name: 'Alerts', path: '/alerts?role=admin', description: 'Dashboard of all alerts across all portfolios' },
+        { name: 'Savings Analysis', path: '/savings?role=admin', description: 'View potential savings overview' },
+        
+        # Tools Section
+        { name: 'Global Search', path: '/search?role=admin', description: 'Universal search across all entities' }
       ],
       'Portfolio Manager (Gestionnaire de Portefeuille)' => [
         { name: 'Dashboard', path: '/dashboard', description: 'Main dashboard with portfolio overview' },

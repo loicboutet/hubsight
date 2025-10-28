@@ -11,8 +11,30 @@ class ApplicationController < ActionController::Base
   def layout_by_resource
     if devise_controller?
       'auth'
+    elsif admin_context?
+      'admin'
     else
       'user'
     end
   end
+  
+  # TODO: PHASE 2 - Replace URL parameter with actual user authentication
+  # This method currently checks ?role=admin parameter or admin namespace
+  # Later: Replace with current_user.admin? or similar authorization check
+  def admin_context?
+    params[:role] == 'admin' || self.class.module_parent == Admin
+  end
+  
+  # Make admin_context? available in views
+  helper_method :admin_context?
+  
+  # TODO: PHASE 2 - Add authorization checks
+  # Add methods like:
+  # def authorize_admin!
+  #   redirect_to root_path unless current_user&.admin?
+  # end
+  # 
+  # def authorize_portfolio_manager!
+  #   redirect_to root_path unless current_user&.portfolio_manager?
+  # end
 end

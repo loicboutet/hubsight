@@ -6,8 +6,8 @@
     <p class="typo-body-small">Routes organisées par rôle utilisateur selon specification.md</p>
   </div>
 
-  <!-- 3-Column Grid Layout -->
-  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
+  <!-- 4-Column Grid Layout -->
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
     <% @routes_by_role.each do |role_name, routes| %>
       <div style="background-color: var(--white); border-radius: var(--space-md); overflow: hidden; border: 1px solid var(--light-gray);">
         <!-- Role Header -->
@@ -38,7 +38,7 @@
 <!-- Responsive CSS for mobile -->
 <style>
   @media (max-width: 1024px) {
-    div[style*="grid-template-columns: repeat(3, 1fr)"] {
+    div[style*="grid-template-columns: repeat(4, 1fr)"] {
       grid-template-columns: 1fr !important;
     }
   }
