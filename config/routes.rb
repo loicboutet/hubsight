@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   # Buildings Management
   resources :buildings, except: [:index, :new, :create] do
     # Levels nested under buildings
-    resources :levels, only: [:index, :new, :create]
+    resources :levels, only: [:index, :new, :create, :show]
   end
   
   # Levels Management

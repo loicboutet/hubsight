@@ -54,7 +54,7 @@
 
   <!-- Summary Statistics with Icons -->
   <div style="margin-bottom: var(--space-xl);">
-    <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Vue d'Ensemble</h4>
+    <h4 class="typo-h4" style="margin-bottom: 0;">Vue d'Ensemble</h4>
     <div class="admin-stats-grid">
       <div class="admin-stat-card">
         <div class="admin-stat-header">
@@ -115,14 +115,22 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
         <div style="display: flex; align-items: center; gap: var(--space-sm);">
           <%= render 'shared/hierarchy_icons', type: 'building', size: 24, color: '#10b981' %>
-          <h4 class="typo-h4">Bâtiments de ce Site</h4>
+          <h4 class="typo-h4" style="margin-bottom: 0;">Bâtiments de ce Site</h4>
         </div>
-        <%= link_to new_site_building_path(@site.id), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Nouveau Bâtiment
-        <% end %>
+        <div style="display: flex; gap: var(--space-sm);">
+          <%= link_to new_site_building_path(@site.id), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Nouveau Bâtiment
+          <% end %>
+          <%= link_to site_buildings_path(@site.id), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            Buildings
+          <% end %>
+        </div>
       </div>
 
       <div style="display: grid; gap: var(--space-md);">
@@ -140,7 +148,7 @@
               <div style="flex: 1;">
                 <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'building', size: 20, color: '#10b981' %>
-                  <h5 class="typo-h5" style="color: var(--dark-gray);"><%= building[:name] %></h5>
+                  <h5 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 0;"><%= building[:name] %></h5>
                 </div>
                 <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
                   <%= number_with_delimiter(building[:area], delimiter: ' ') %> m² • Construit en <%= building[:year] %>
@@ -202,7 +210,7 @@
     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl); margin-bottom: var(--space-xl);">
       <!-- Address Section -->
       <div>
-        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        <h4 class="typo-h4" style="margin-bottom: 0; padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
           Adresse
         </h4>
         <div style="display: grid; gap: var(--space-md);">
@@ -235,7 +243,7 @@
 
       <!-- Contact Section -->
       <div>
-        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        <h4 class="typo-h4" style="margin-bottom: 0; padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
           Gestion et Contact
         </h4>
         <div style="display: grid; gap: var(--space-md);">
@@ -258,7 +266,7 @@
     <!-- Description Section -->
     <% if @site.description.present? %>
       <div>
-        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        <h4 class="typo-h4" style="margin-bottom: 0; padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
           Description
         </h4>
         <p class="typo-body-small"><%= @site.description %></p>

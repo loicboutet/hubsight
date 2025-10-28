@@ -6,7 +6,7 @@
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Espaces du Niveau</h2>
       <p class="typo-body-small">Gérer les espaces/pièces de ce niveau</p>
     </div>
-    <a href="<%= new_level_space_path(@level) %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+    <a href="<%= new_level_space_path(@level.id) %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
@@ -17,7 +17,7 @@
   <div style="background-color: var(--white); border-radius: var(--space-md); ">
     <!-- Filters Section -->
     <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md);">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
           <input type="text" placeholder="Nom de l'espace..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
@@ -29,8 +29,7 @@
             <option>Bureau</option>
             <option>Salle de réunion</option>
             <option>Local technique</option>
-            <option>Sanitaires</option>
-            <option>Circulation</option>
+            <option>Réception</option>
           </select>
         </div>
         <div>
@@ -41,92 +40,111 @@
             <option>Capacité</option>
           </select>
         </div>
+        <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Effacer
+        </button>
+        <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Filtrer
+        </button>
       </div>
     </div>
 
-    <!-- Spaces Grid -->
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-      <% [
-        {name: "Bureau 101", type: "Bureau", area: "25 m²", capacity: 2, equipment: 5, windows: true, pmr: true, hvac: true},
-        {name: "Salle de réunion A", type: "Salle de réunion", area: "45 m²", capacity: 12, equipment: 8, windows: true, pmr: true, hvac: true},
-        {name: "Open Space Est", type: "Bureau", area: "180 m²", capacity: 24, equipment: 45, windows: true, pmr: true, hvac: true},
-        {name: "Local Serveur", type: "Local technique", area: "35 m²", capacity: 2, equipment: 12, windows: false, pmr: false, hvac: true},
-        {name: "Cafétéria", type: "Espace de vie", area: "65 m²", capacity: 30, equipment: 15, windows: true, pmr: true, hvac: true},
-        {name: "Sanitaires Hommes", type: "Sanitaires", area: "18 m²", capacity: 5, equipment: 8, windows: false, pmr: true, hvac: true},
-      ].each do |space| %>
-        <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); overflow: hidden; transition: box-shadow 0.3s;">
-          <!-- Space Header -->
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-lg); color: white;">
-            <h4 class="typo-h4" style="color: white; margin-bottom: var(--space-xs);"><%= space[:name] %></h4>
-            <p class="typo-body-small" style="color: rgba(255,255,255,0.9); font-size: 0.85rem;"><%= space[:type] %></p>
-          </div>
-          
-          <!-- Space Details -->
-          <div style="padding: var(--space-lg);">
-            <div style="display: flex; gap: var(--space-xs); margin-bottom: var(--space-md); flex-wrap: wrap;">
-              <% if space[:windows] %>
-                <span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background-color: #e7f3ff; color: #0066cc; border-radius: 10px; font-size: 0.7rem;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Fenêtres
+    <!-- Spaces Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ESPACE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TYPE</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SURFACE</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CAPACITÉ</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ÉQUIPEMENTS</th>
+            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @spaces.each_with_index do |space, index| %>
+            <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
+              <!-- Space Name -->
+              <td style="padding: var(--space-md);">
+                <div>
+                  <p class="typo-body-small typo-bold" style="margin-bottom: 2px;"><%= space.name %></p>
+                  <p class="typo-body-small" style="color: #999; font-size: 0.813rem;"><%= space.area %> m²</p>
+                </div>
+              </td>
+              
+              <!-- Type -->
+              <td style="padding: var(--space-md);">
+                <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                  <%= space.type %>
                 </span>
-              <% end %>
-              <% if space[:pmr] %>
-                <span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background-color: #d4edda; color: #155724; border-radius: 10px; font-size: 0.7rem;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 0z"/>
-                    <path d="M7.5 1.5A1.5 1.5 0 1 0 9 0a1.5 1.5 0 0 0-1.5 1.5zM6 8a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0v-3H7v3a1 1 0 0 1-2 0V8z"/>
-                  </svg>
-                  PMR
-                </span>
-              <% end %>
-              <% if space[:hvac] %>
-                <span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background-color: #fff3cd; color: #856404; border-radius: 10px; font-size: 0.7rem;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  Climatisé
-                </span>
-              <% end %>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); margin-bottom: var(--space-lg);">
-              <div>
-                <p class="typo-body-small" style="color: #999; font-size: 0.7rem;">SURFACE</p>
-                <p class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= space[:area] %></p>
-              </div>
-              <div>
-                <p class="typo-body-small" style="color: #999; font-size: 0.7rem;">CAPACITÉ</p>
-                <p class="typo-body-small typo-bold"><%= space[:capacity] %> pers.</p>
-              </div>
-              <div>
-                <p class="typo-body-small" style="color: #999; font-size: 0.7rem;">ÉQUIPEMENTS</p>
-                <p class="typo-body-small typo-bold"><%= space[:equipment] %></p>
-              </div>
-            </div>
-            
-            <div style="display: flex; gap: var(--space-sm);">
-              <a href="#" class="typo-btn-small-secondary" style="flex: 1; text-align: center; padding: 8px; font-size: 0.85rem; text-decoration: none;">
-                Voir Détails
-              </a>
-              <a href="#" class="typo-btn-small-primary" style="flex: 1; text-align: center; padding: 8px; font-size: 0.85rem; text-decoration: none;">
-                Éditer
-              </a>
-            </div>
-          </div>
-        </div>
-      <% end %>
+              </td>
+              
+              <!-- Surface -->
+              <td style="padding: var(--space-md); text-align: center;">
+                <p class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= space.area %> m²</p>
+              </td>
+              
+              <!-- Capacity -->
+              <td style="padding: var(--space-md); text-align: center;">
+                <p class="typo-body-small typo-bold"><%= space.capacity %></p>
+              </td>
+              
+              <!-- Equipment Count -->
+              <td style="padding: var(--space-md); text-align: center;">
+                <p class="typo-body-small typo-bold"><%= space.equipment_count %></p>
+              </td>
+              
+              <!-- Actions -->
+              <td style="padding: var(--space-md);">
+                <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                  <%= link_to space_path(space.id), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    Voir
+                  <% end %>
+                  <%= link_to edit_space_path(space.id), title: "Éditer", class: "typo-btn-small typo-btn-small-primary" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Éditer
+                  <% end %>
+                  <%= link_to new_space_equipment_path(space.id), title: "Ajouter Équipement", class: "typo-btn-small typo-btn-small-primary" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Équipement
+                  <% end %>
+                  <%= button_to space_path(space.id), method: :delete, data: { confirm: "ATTENTION : Cette action est irréversible !\n\nÊtes-vous sûr de vouloir supprimer définitivement cet espace ?\n\nTous les équipements associés seront également supprimés." }, title: "Supprimer", class: "typo-btn-small typo-btn-small-danger", form: { style: "margin: 0; display: inline;" } do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Suppr
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
 
     <!-- Pagination -->
     <div style="margin-top: var(--space-xl);">
       <%= render 'shared/pagination', 
         current_page: 1, 
-        total_pages: 2, 
-        total_count: 12, 
-        per_page: 6,
-        path: level_spaces_path(@level) %>
+        total_pages: 1, 
+        total_count: @spaces.length, 
+        per_page: 10,
+        path: level_spaces_path(@level.id) %>
     </div>
   </div>
 </div>

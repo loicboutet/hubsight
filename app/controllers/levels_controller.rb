@@ -78,6 +78,21 @@ class LevelsController < ApplicationController
     redirect_to building_path(params[:building_id]), notice: "Niveau créé avec succès"
   end
 
+  def show
+    @level = OpenStruct.new(
+      id: params[:id],
+      name: "Rez-de-chaussée",
+      level_number: 0,
+      area: 1800,
+      altitude: 0,
+      spaces_count: 15,
+      equipment_count: 28,
+      building_id: 1
+    )
+    @building = OpenStruct.new(id: @level.building_id, name: "Bâtiment A - Principal")
+    @site = OpenStruct.new(id: 1, name: "Tour Montparnasse")
+  end
+
   def edit
     @level = MockModel.new(
       id: params[:id],
