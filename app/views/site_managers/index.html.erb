@@ -1,0 +1,162 @@
+<% content_for :header, "Responsables de Site" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Responsables de Site</h2>
+      <p class="typo-body-small">Gérer les profils des responsables de site de votre organisation</p>
+    </div>
+    <%= link_to new_site_manager_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nouveau Responsable
+    <% end %>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    
+    <!-- Filters Section -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+          <input type="text" placeholder="Nom, email..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <option>Tous</option>
+            <option>Actif</option>
+            <option>Inactif</option>
+          </select>
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Sites assignés</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <option>Tous</option>
+            <option>Avec sites</option>
+            <option>Sans site</option>
+          </select>
+        </div>
+        <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Effacer
+        </button>
+        <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+          </svg>
+          Filtrer
+        </button>
+      </div>
+    </div>
+
+    <!-- Site Managers Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">RESPONSABLE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">EMAIL</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TÉLÉPHONE</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SITES ASSIGNÉS</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DERNIÈRE CONNEXION</th>
+            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% [
+            {id: 1, name: "Jean Dupont", email: "jean.dupont@example.com", phone: "+33 6 12 34 56 78", sites: 3, status: "Actif", last_login: "Il y a 2 heures"},
+            {id: 2, name: "Marie Martin", email: "marie.martin@example.com", phone: "+33 6 23 45 67 89", sites: 5, status: "Actif", last_login: "Il y a 1 jour"},
+            {id: 3, name: "Pierre Bernard", email: "pierre.bernard@example.com", phone: "+33 6 34 56 78 90", sites: 2, status: "Actif", last_login: "Il y a 3 jours"},
+            {id: 4, name: "Sophie Durand", email: "sophie.durand@example.com", phone: "+33 6 45 67 89 01", sites: 4, status: "Actif", last_login: "Il y a 5 heures"},
+            {id: 5, name: "Luc Petit", email: "luc.petit@example.com", phone: "+33 6 56 78 90 12", sites: 1, status: "Inactif", last_login: "Il y a 15 jours"},
+            {id: 6, name: "Isabelle Roux", email: "isabelle.roux@example.com", phone: "+33 6 67 89 01 23", sites: 6, status: "Actif", last_login: "Il y a 30 minutes"},
+            {id: 7, name: "Thomas Moreau", email: "thomas.moreau@example.com", phone: "+33 6 78 90 12 34", sites: 2, status: "Actif", last_login: "Il y a 2 jours"},
+            {id: 8, name: "Catherine Simon", email: "catherine.simon@example.com", phone: "+33 6 89 01 23 45", sites: 3, status: "Actif", last_login: "Il y a 1 heure"},
+          ].each_with_index do |user, index| %>
+            <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
+              <!-- Name -->
+              <td style="padding: var(--space-md);">
+                <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem;">
+                    <%= user[:name].split.map(&:first).join %>
+                  </div>
+                  <p class="typo-body-small typo-bold"><%= user[:name] %></p>
+                </div>
+              </td>
+              
+              <!-- Email -->
+              <td style="padding: var(--space-md);">
+                <p class="typo-body-small"><%= user[:email] %></p>
+              </td>
+              
+              <!-- Phone -->
+              <td style="padding: var(--space-md);">
+                <p class="typo-body-small"><%= user[:phone] %></p>
+              </td>
+              
+              <!-- Assigned Sites -->
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                  <%= user[:sites] %> site<%= user[:sites] > 1 ? 's' : '' %>
+                </span>
+              </td>
+              
+              <!-- Status -->
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; <%= user[:status] == 'Actif' ? 'background-color: #d4edda; color: #155724;' : 'background-color: #f8d7da; color: #721c24;' %>">
+                  <%= user[:status] %>
+                </span>
+              </td>
+              
+              <!-- Last Login -->
+              <td style="padding: var(--space-md); text-align: center;">
+                <p class="typo-body-small" style="color: #666;"><%= user[:last_login] %></p>
+              </td>
+              
+              <!-- Actions -->
+              <td style="padding: var(--space-md);">
+                <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                  <%= link_to site_manager_path(user[:id]), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    Voir
+                  <% end %>
+                  <%= link_to edit_site_manager_path(user[:id]), title: "Éditer", class: "typo-btn-small typo-btn-small-primary" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Éditer
+                  <% end %>
+                  <%= link_to assign_sites_site_manager_path(user[:id]), title: "Assigner Sites", class: "typo-btn-small", style: "background-color: #667eea; color: white;" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Sites
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div style="margin-top: var(--space-xl);">
+      <%= render 'shared/pagination', 
+        current_page: 1, 
+        total_pages: 2, 
+        total_count: 15, 
+        per_page: 10,
+        path: site_managers_path %>
+    </div>
+  </div>
+</div>

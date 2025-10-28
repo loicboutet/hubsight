@@ -1,0 +1,145 @@
+<% content_for :header, "Nouveau Responsable de Site" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; align-items: center; gap: var(--space-md);">
+    <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+    </div>
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Nouveau Responsable de Site</h2>
+      <p class="typo-body-small" style="color: var(--medium-gray);">Créer un nouveau profil de responsable de site</p>
+    </div>
+  </div>
+
+  <form action="<%= site_managers_path %>" method="post">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    
+    <div style="background-color: var(--white); border-radius: var(--space-md);">
+      
+      <!-- Personal Information Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations Personnelles
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Prénom <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="text" name="user[first_name]" placeholder="Ex: Jean" required style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Nom <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="text" name="user[last_name]" placeholder="Ex: Dupont" required style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Email <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="email" name="user[email]" placeholder="Ex: jean.dupont@entreprise.fr" required style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Téléphone <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="tel" name="user[phone]" placeholder="Ex: +33 6 12 34 56 78" required style="width: 100%;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Information Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations de Compte
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Mot de passe <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="password" name="user[password]" placeholder="Minimum 8 caractères" required minlength="8" style="width: 100%;" />
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+              Minimum 8 caractères
+            </p>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Confirmer le mot de passe <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <input type="password" name="user[password_confirmation]" placeholder="Confirmer le mot de passe" required minlength="8" style="width: 100%;" />
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Rôle
+            </label>
+            <select name="user[role]" style="width: 100%;" disabled>
+              <option value="site_manager" selected>Responsable de Site</option>
+            </select>
+            <input type="hidden" name="user[role]" value="site_manager" />
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+              Le rôle est automatiquement défini sur "Responsable de Site"
+            </p>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Statut
+            </label>
+            <select name="user[status]" style="width: 100%;">
+              <option value="active" selected>Actif</option>
+              <option value="inactive">Inactif</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference -->
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 4px solid #667eea;">
+        <h5 class="typo-h5" style="margin-bottom: var(--space-sm); color: var(--dark-gray);">
+          💡 Informations Importantes
+        </h5>
+        <ul style="margin: 0; padding-left: var(--space-lg); color: var(--medium-gray);">
+          <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+            <strong>Rôle :</strong> Le responsable de site aura accès uniquement aux sites qui lui seront assignés
+          </li>
+          <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+            <strong>Assignation :</strong> Après création, utilisez le bouton "Sites" pour assigner des sites à ce responsable
+          </li>
+          <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+            <strong>Email :</strong> Un email de bienvenue sera envoyé avec les identifiants de connexion
+          </li>
+          <li class="typo-body-small">
+            <strong>Sécurité :</strong> Le mot de passe doit contenir au moins 8 caractères
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+        <%= link_to site_managers_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          Annuler
+        <% end %>
+        <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Créer le Responsable
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
