@@ -17,8 +17,6 @@ class RoutesController < ApplicationController
         { name: 'Site Managers', path: '/site_managers', description: 'Create and manage Site Manager profiles' },
         { name: 'Alerts', path: '/alerts', description: 'View and manage contract alerts (BRIQUE 2)' },
         { name: 'Alert Settings', path: '/alerts/settings', description: 'Configure alert notifications' },
-        { name: 'Savings Analysis', path: '/savings', description: 'View potential savings and price comparisons (BRIQUE 2)' },
-        { name: 'Savings Report', path: '/savings/report', description: 'Generate economic analysis report (BRIQUE 2)' },
         { name: 'Equipment Types', path: '/equipment_types', description: 'Browse OmniClass equipment classification' },
         { name: 'Contract Families', path: '/contract_families', description: 'Browse contract families and sub-families' },
         { name: 'Search', path: '/search', description: 'Global search across all resources' }
