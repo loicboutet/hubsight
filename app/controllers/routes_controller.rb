@@ -45,16 +45,17 @@ class RoutesController < ApplicationController
         { name: 'Search', path: '/search', description: 'Global search across all entities' }
       ],
       'Site Manager (Responsable de Site)' => [
-        { name: 'My Sites', path: '/my_sites', description: 'View assigned sites' },
-        { name: 'My Contracts', path: '/my_contracts', description: 'View contracts for assigned sites' },
-        { name: 'Upload Contracts', path: '/my_contracts/upload', description: 'Upload contracts for assigned sites' },
+        { name: 'Dashboard', path: '/my_sites', description: 'Site manager dashboard (assigned sites)' },
+        { name: 'My Sites', path: '/my_sites', description: 'List assigned sites' },
+        { name: 'My Contracts', path: '/my_contracts', description: 'List contracts for assigned sites' },
+        { name: 'Contract Upload', path: '/my_contracts/upload', description: 'Upload contract for assigned site' },
         { name: 'My Alerts', path: '/my_alerts', description: 'View alerts for assigned sites (BRIQUE 2)' },
         { name: 'My Savings', path: '/my_savings', description: 'View potential savings for assigned sites (BRIQUE 2)' }
       ],
       'Technician (Technicien)' => [
-        { name: 'Buildings', path: '/buildings', description: 'View buildings (read-only access)' },
-        { name: 'Equipment', path: '/equipment', description: 'Manage equipment and maintenance' },
-        { name: 'Contracts', path: '/contracts', description: 'View contracts (read-only access)' }
+        { name: 'Buildings', path: '/technician/buildings', description: 'View buildings (read-only access)' },
+        { name: 'Equipment', path: '/technician/equipment', description: 'Manage equipment and maintenance' },
+        { name: 'Contracts', path: '/technician/contracts', description: 'View contracts (read-only access)' }
       ]
     }
   end
