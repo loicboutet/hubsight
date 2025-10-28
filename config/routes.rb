@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   end
   
   # Levels Management
-  resources :levels, only: [:edit, :update, :destroy] do
+  resources :levels, only: [:show, :edit, :update, :destroy] do
     # Spaces nested under levels
     resources :spaces, only: [:index, :new, :create]
   end
