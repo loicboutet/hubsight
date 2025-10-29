@@ -369,19 +369,41 @@
     </div>
 
     <script>
-      // Mobile menu toggle
-      document.addEventListener('DOMContentLoaded', function() {
+      function initializeMockupAdminDropdowns() {
         const sidebar = document.getElementById('adminSidebar');
         const overlay = document.getElementById('adminOverlay');
         const toggleBtn = document.getElementById('adminMobileToggle');
         
-        function toggleSidebar() {
-          sidebar.classList.toggle('mobile-open');
-          overlay.classList.toggle('visible');
+        if (toggleBtn && sidebar && overlay) {
+          toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('visible');
+          });
         }
         
-        toggleBtn.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
+        if (overlay && sidebar) {
+          overlay.addEventListener('click', function() {
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('visible');
+          });
+        }
+      }
+      
+      // Initialize on page load and after Turbo navigation
+      document.addEventListener('turbo:load', initializeMockupAdminDropdowns);
+      document.addEventListener('DOMContentLoaded', initializeMockupAdminDropdowns);
+      
+      // Clean up before caching
+      document.addEventListener('turbo:before-cache', function() {
+        const sidebar = document.getElementById('adminSidebar');
+        const overlay = document.getElementById('adminOverlay');
+        
+        if (sidebar) {
+          sidebar.classList.remove('mobile-open');
+        }
+        if (overlay) {
+          overlay.classList.remove('visible');
+        }
       });
     </script>
   </body>

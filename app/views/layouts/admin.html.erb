@@ -227,27 +227,34 @@
     </div>
 
     <script>
-      // Mobile menu toggle
-      document.addEventListener('DOMContentLoaded', function() {
+      function initializeAdminDropdowns() {
         const sidebar = document.getElementById('adminSidebar');
         const overlay = document.getElementById('adminOverlay');
+        const dropdown = document.getElementById('adminDropdown');
+        const avatarBtn = document.getElementById('adminAvatarBtn');
         const toggleBtn = document.getElementById('adminMobileToggle');
         const toggleBtnHeader = document.getElementById('adminMobileToggleHeader');
         
-        function toggleSidebar() {
-          sidebar.classList.toggle('mobile-open');
-          overlay.classList.toggle('visible');
+        if (toggleBtn && sidebar && overlay) {
+          toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('visible');
+          });
         }
         
-        toggleBtn.addEventListener('click', toggleSidebar);
-        if (toggleBtnHeader) {
-          toggleBtnHeader.addEventListener('click', toggleSidebar);
+        if (toggleBtnHeader && sidebar && overlay) {
+          toggleBtnHeader.addEventListener('click', function() {
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('visible');
+          });
         }
-        overlay.addEventListener('click', toggleSidebar);
         
-        // Avatar dropdown toggle
-        const avatarBtn = document.getElementById('adminAvatarBtn');
-        const dropdown = document.getElementById('adminDropdown');
+        if (overlay && sidebar) {
+          overlay.addEventListener('click', function() {
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('visible');
+          });
+        }
         
         if (avatarBtn && dropdown) {
           avatarBtn.addEventListener('click', function(e) {
@@ -255,12 +262,32 @@
             dropdown.classList.toggle('show');
           });
           
-          // Close dropdown when clicking outside
           document.addEventListener('click', function(e) {
             if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
               dropdown.classList.remove('show');
             }
           });
+        }
+      }
+      
+      // Initialize on page load and after Turbo navigation
+      document.addEventListener('turbo:load', initializeAdminDropdowns);
+      document.addEventListener('DOMContentLoaded', initializeAdminDropdowns);
+      
+      // Clean up before caching
+      document.addEventListener('turbo:before-cache', function() {
+        const sidebar = document.getElementById('adminSidebar');
+        const overlay = document.getElementById('adminOverlay');
+        const dropdown = document.getElementById('adminDropdown');
+        
+        if (sidebar) {
+          sidebar.classList.remove('mobile-open');
+        }
+        if (overlay) {
+          overlay.classList.remove('visible');
+        }
+        if (dropdown) {
+          dropdown.classList.remove('show');
         }
       });
     </script>

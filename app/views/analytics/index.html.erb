@@ -1,13 +1,15 @@
 <% content_for :header, "Analytics" %>
 
 <div class="section">
-  <div style="margin-bottom: var(--space-xl);">
-    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Tableau de Bord Analytique</h2>
-    <p class="typo-body-small">Vue d'ensemble du portefeuille et indicateurs clés de performance</p>
+  <div class="page-header-responsive">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Tableau de Bord Analytique</h2>
+      <p class="typo-body-small">Vue d'ensemble du portefeuille et indicateurs clés de performance</p>
+    </div>
   </div>
 
   <!-- KPI Cards Section -->
-  <div class="admin-stats-grid">
+  <div class="admin-stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
     <!-- Card 1: Total Budget -->
     <div class="admin-stat-card">
       <div class="admin-stat-header">
@@ -74,7 +76,7 @@
   </div>
 
   <!-- Charts Section -->
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-2xl);">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-2xl);" class="analytics-charts-grid">
     <!-- Pie Chart: Contract Distribution by Family -->
     <div style="background-color: var(--white); border-radius: var(--space-md); ">
       <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
@@ -132,7 +134,7 @@
       Top 10 Contrats par Valeur
     </h3>
     
-    <div style="overflow-x: auto;">
+    <div class="table-responsive">
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
@@ -178,7 +180,7 @@
       Opportunités d'Économies (BRIQUE 2)
     </h3>
     
-    <div style="overflow-x: auto;">
+    <div class="table-responsive">
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
@@ -226,7 +228,7 @@
       Répartition par Site
     </h3>
     
-    <div style="overflow-x: auto;">
+    <div class="table-responsive">
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
@@ -267,7 +269,7 @@
   </div>
 
   <!-- Additional Metrics -->
-  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);" class="analytics-metrics-grid">
     <!-- Equipment Coverage -->
     <div style="background-color: var(--white); border-radius: var(--space-md); ">
       <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Couverture Équipements</h4>
