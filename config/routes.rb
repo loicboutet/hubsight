@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   end
   
   # Levels Management
-  resources :levels, only: [:edit, :update, :destroy] do
+  resources :levels, only: [:show, :edit, :update, :destroy] do
     # Spaces nested under levels
     resources :spaces, only: [:index, :new, :create]
   end
@@ -151,6 +151,29 @@ Rails.application.routes.draw do
   
   # Savings (Read-only, BRIQUE 2)
   get 'my_savings', to: 'site_manager/savings#index'
+
+  # =============================================================================
+  # TECHNICIAN ROUTES (Read-only access to buildings, full access to equipment)
+  # =============================================================================
+  
+  namespace :technician do
+    # Buildings (Read-only)
+    resources :buildings, only: [:index, :show]
+    
+    # Equipment (Full CRUD)
+    resources :equipment do
+      collection do
+        get :search
+      end
+    end
+    
+    # Contracts (Read-only)
+    resources :contracts, only: [:index, :show] do
+      member do
+        get :pdf
+      end
+    end
+  end
 
   # =============================================================================
   # SHARED RESOURCES & UTILITIES

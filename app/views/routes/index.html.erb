@@ -19,11 +19,16 @@
         <div style="padding: var(--space-md);">
           <% routes.each do |route| %>
             <div style="margin-bottom: var(--space-sm); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--pink-pale);">
-              <%= link_to route[:path], style: "text-decoration: none;" do %>
+              <%= link_to route[:path], style: "text-decoration: none; display: block; padding: var(--space-xs); border-radius: var(--space-xs); transition: background-color 0.2s;" do %>
                 <div style="margin-bottom: var(--space-xs);">
                   <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= route[:name] %></span>
                 </div>
-                
+                <div>
+                  <span class="typo-body-tiny" style="color: var(--dark-gray);"><%= route[:description] %></span>
+                </div>
+                <div style="margin-top: var(--space-xs);">
+                  <code class="typo-body-tiny" style="background-color: var(--pink-pale); padding: 2px 6px; border-radius: 3px; color: var(--coral-primary);"><%= route[:path] %></code>
+                </div>
               <% end %>
             </div>
           <% end %>

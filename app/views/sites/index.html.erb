@@ -104,7 +104,9 @@
               <!-- Site Name -->
               <td style="padding: var(--space-md);">
                 <div>
-                  <p class="typo-body-small typo-bold" style="margin-bottom: 2px;"><%= site[:name] %></p>
+                  <%= link_to site_path(site[:id]), style: "text-decoration: none;" do %>
+                    <p class="typo-body-small typo-bold" style="margin-bottom: 2px; color: var(--coral-primary); transition: color 0.2s;"><%= site[:name] %></p>
+                  <% end %>
                   <p class="typo-body-small" style="color: #999; font-size: 0.813rem;"><%= site[:address] %></p>
                 </div>
               </td>

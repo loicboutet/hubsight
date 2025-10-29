@@ -107,7 +107,7 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
       <div style="display: flex; align-items: center; gap: var(--space-sm);">
         <%= render 'shared/hierarchy_icons', type: 'space', size: 24, color: '#8b5cf6' %>
-        <h4 class="typo-h4">Espaces de ce Niveau</h4>
+        <h4 class="typo-h4" style="margin-bottom: 0">Espaces de ce Niveau</h4>
       </div>
       <div style="display: flex; gap: var(--space-sm);">
         <%= link_to new_level_space_path(@level.id), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
@@ -143,7 +143,9 @@
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                 <%= render 'shared/hierarchy_icons', type: 'space', size: 20, color: '#8b5cf6' %>
-                <h5 class="typo-h5" style="color: var(--dark-gray);"><%= space[:name] %></h5>
+                <%= link_to space_path(space[:id]), style: "text-decoration: none;" do %>
+                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= space[:name] %></h5>
+                <% end %>
                 <span style="display: inline-block; padding: 4px 10px; background-color: #f3e8ff; color: #7c3aed; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
                   <%= space[:type] %>
                 </span>
@@ -154,8 +156,8 @@
               
               <div style="display: flex; align-items: center; gap: var(--space-xs);">
                 <%= render 'shared/hierarchy_icons', type: 'equipment', size: 16, color: '#6b7280' %>
-                <span class="typo-body-small typo-bold"><%= space[:equipment] %></span>
-                <span class="typo-body-small" style="color: var(--medium-gray);">Équipements</span>
+                <span class="typo-body-small typo-bold;" style="margin-bottom: 0"><%= space[:equipment] %></span>
+                <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Équipements</span>
               </div>
             </div>
             

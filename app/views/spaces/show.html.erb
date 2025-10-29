@@ -60,7 +60,7 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
         <div style="display: flex; align-items: center; gap: var(--space-sm);">
           <%= render 'shared/hierarchy_icons', type: 'equipment', size: 24, color: '#6b7280' %>
-          <h4 class="typo-h4">Équipements de cet Espace</h4>
+          <h4 class="typo-h4" style="margin-bottom: 0">Équipements de cet Espace</h4>
         </div>
         <%= link_to new_space_equipment_path(1), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,7 +86,9 @@
               <div style="flex: 1;">
                 <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'equipment', size: 20, color: 'var(--coral-primary)' %>
-                  <h5 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 0;"><%= equipment[:name] %></h5>
+                  <%= link_to equipment_path(equipment[:id]), style: "text-decoration: none;" do %>
+                    <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= equipment[:name] %></h5>
+                  <% end %>
                 </div>
                 <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
                   <%= equipment[:type] %> • <%= equipment[:manufacturer] %>
@@ -102,7 +104,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span class="typo-body-small" style="color: var(--medium-gray);">Maintenance: <%= equipment[:last_maintenance] %></span>
+                    <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Maintenance: <%= equipment[:last_maintenance] %></span>
                   </div>
                 </div>
               </div>
