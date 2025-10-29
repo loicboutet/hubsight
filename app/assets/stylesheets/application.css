@@ -8,3 +8,283 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* ===================================
+   RESPONSIVE PAGE HEADERS
+   =================================== */
+
+/* Make page headers responsive */
+.page-header-responsive {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+/* On tablets and below, stack vertically */
+@media (max-width: 768px) {
+  .page-header-responsive {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .page-header-responsive > div:first-child {
+    width: 100%;
+  }
+  
+  /* Button container should take full width and wrap */
+  .page-header-responsive > div:last-child,
+  .page-header-responsive > a {
+    width: 100%;
+  }
+  
+  /* Make button groups wrap and stack on mobile */
+  .page-header-responsive div[style*="display: flex"] {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+  }
+  
+  /* Buttons should be full width on mobile */
+  .page-header-responsive a[class*="typo-btn"],
+  .page-header-responsive button[class*="typo-btn"] {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Responsive title sizing */
+@media (max-width: 768px) {
+  .typo-h2 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .typo-h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .typo-h4 {
+    font-size: 1.1rem !important;
+    line-height: 1.3 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .typo-h2 {
+    font-size: 1.25rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .typo-h3 {
+    font-size: 1.1rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .typo-h4 {
+    font-size: 1rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+/* ===================================
+   RESPONSIVE BUTTON GROUPS
+   =================================== */
+
+/* Make button groups wrap on smaller screens */
+.button-group-responsive {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .button-group-responsive {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .button-group-responsive a,
+  .button-group-responsive button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ===================================
+   RESPONSIVE TABLES
+   =================================== */
+
+/* Enable horizontal scroll on tables for mobile */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table-responsive table {
+    min-width: 800px;
+  }
+}
+
+/* ===================================
+   RESPONSIVE CONTAINER
+   =================================== */
+
+/* Adjust container padding on mobile */
+@media (max-width: 768px) {
+  main.container {
+    padding-left: var(--space-md) !important;
+    padding-right: var(--space-md) !important;
+    margin-top: var(--space-xl) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  main.container {
+    padding-left: var(--space-sm) !important;
+    padding-right: var(--space-sm) !important;
+    margin-top: var(--space-lg) !important;
+  }
+}
+
+/* ===================================
+   RESPONSIVE SECTIONS
+   =================================== */
+
+.section {
+  padding: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--space-sm);
+  }
+}
+
+/* ===================================
+   RESPONSIVE GRID LAYOUTS
+   =================================== */
+
+/* Make filter grids responsive */
+@media (max-width: 1200px) {
+  .filters-grid-sites,
+  .filters-grid-contracts,
+  .filters-grid-equipment,
+  .filters-grid-alerts,
+  div[style*="grid-template-columns: repeat(4, 1fr)"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .filters-grid-sites,
+  .filters-grid-contracts,
+  .filters-grid-equipment,
+  .filters-grid-alerts,
+  div[style*="grid-template-columns: repeat(4, 1fr)"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ===================================
+   RESPONSIVE UTILITY CLASSES
+   =================================== */
+
+/* Hide elements on mobile */
+.hide-mobile {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Show only on mobile */
+.show-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .show-mobile {
+    display: block !important;
+  }
+}
+
+/* Text alignment responsive */
+@media (max-width: 768px) {
+  .text-center-mobile {
+    text-align: center !important;
+  }
+}
+
+/* ===================================
+   RESPONSIVE ANALYTICS PAGE
+   =================================== */
+
+/* Analytics stats grid */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 1200px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Analytics charts grid */
+.analytics-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 1024px) {
+  .analytics-charts-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Analytics metrics grid */
+.analytics-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (max-width: 1024px) {
+  .analytics-metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .analytics-metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
