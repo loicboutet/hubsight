@@ -107,7 +107,9 @@
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                 <%= render 'shared/hierarchy_icons', type: 'equipment', size: 20, color: 'var(--coral-primary)' %>
-                <h5 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 0;"><%= equipment[:name] %></h5>
+                <%= link_to equipment_path(equipment[:id]), style: "text-decoration: none;" do %>
+                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= equipment[:name] %></h5>
+                <% end %>
               </div>
               <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);">
                 <%= equipment[:type] %> • <%= equipment[:manufacturer] %>

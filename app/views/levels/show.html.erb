@@ -143,7 +143,9 @@
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                 <%= render 'shared/hierarchy_icons', type: 'space', size: 20, color: '#8b5cf6' %>
-                <h5 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 0"><%= space[:name] %></h5>
+                <%= link_to space_path(space[:id]), style: "text-decoration: none;" do %>
+                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= space[:name] %></h5>
+                <% end %>
                 <span style="display: inline-block; padding: 4px 10px; background-color: #f3e8ff; color: #7c3aed; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
                   <%= space[:type] %>
                 </span>
