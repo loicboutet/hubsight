@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class SitesController < ApplicationController
   def index
     # Renders sites/index.html.erb
