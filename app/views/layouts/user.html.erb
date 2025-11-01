@@ -41,13 +41,22 @@
         overflow-y: auto;
         box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
         z-index: 1000;
-        transition: transform 0.3s ease;
+        transition: width 0.3s ease, transform 0.3s ease;
+      }
+
+      .user-sidebar.collapsed {
+        width: 80px;
       }
 
       .user-sidebar-header {
         padding: var(--space-xl) var(--space-lg);
         text-align: center;
         border-bottom: 1px solid #e5e7eb;
+        transition: padding 0.3s ease;
+      }
+
+      .user-sidebar.collapsed .user-sidebar-header {
+        padding: var(--space-md) var(--space-sm);
       }
 
       .user-sidebar-header a {
@@ -55,17 +64,31 @@
         display: flex;
         align-items: center;
         gap: var(--space-md);
+        flex-direction: column;
       }
 
       .user-logo {
         max-width: 120px;
         height: auto;
+        transition: max-width 0.3s ease;
+      }
+
+      .user-sidebar.collapsed .user-logo {
+        max-width: 40px;
       }
 
       .user-sidebar-brand {
         font-size: 1.25rem;
         font-weight: 600;
         color: var(--dark-gray);
+        margin: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .user-sidebar.collapsed .user-sidebar-brand {
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
         margin: 0;
       }
 
@@ -112,6 +135,20 @@
       .user-sidebar-link svg {
         margin-right: var(--space-md);
         flex-shrink: 0;
+        transition: margin 0.3s ease;
+      }
+
+      .user-sidebar.collapsed .user-sidebar-link {
+        padding: var(--space-md) var(--space-sm);
+        justify-content: center;
+      }
+
+      .user-sidebar.collapsed .user-sidebar-link svg {
+        margin-right: 0;
+      }
+
+      .user-sidebar.collapsed .user-sidebar-link span {
+        display: none;
       }
 
       /* Sidebar Section Headers */
@@ -153,6 +190,46 @@
         margin-bottom: var(--space-xs);
       }
 
+      /* Sidebar Collapse Toggle Button */
+      .sidebar-collapse-toggle {
+        position: absolute;
+        top: var(--space-md);
+        right: calc(var(--space-md) * -1);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 2px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1001;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar-collapse-toggle:hover {
+        background: var(--coral-primary);
+        border-color: var(--coral-primary);
+        transform: scale(1.1);
+      }
+
+      .sidebar-collapse-toggle svg {
+        width: 16px;
+        height: 16px;
+        color: var(--medium-gray);
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-collapse-toggle:hover svg {
+        color: var(--white);
+      }
+
+      .user-sidebar.collapsed .sidebar-collapse-toggle svg {
+        transform: rotate(180deg);
+      }
+
       /* Main Content Area */
       .user-main-wrapper {
         flex: 1;
@@ -160,6 +237,11 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        transition: margin-left 0.3s ease;
+      }
+
+      .user-sidebar.collapsed ~ .user-main-wrapper {
+        margin-left: 80px;
       }
 
       .user-header {
@@ -511,98 +593,105 @@
             <%= image_tag "hugsight_logo.png", alt: "HubSight Logo", class: "user-logo" %>
             <h1 class="user-sidebar-brand">HubSight</h1>
           <% end %>
+          
+          <!-- Collapse/Expand Toggle Button -->
+          <button class="sidebar-collapse-toggle" data-action="click->sidebar#toggleCollapse" title="Réduire/Agrandir la barre latérale">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
         </div>
 
         <nav class="user-sidebar-nav">
           <ul>
             <!-- Tableau de bord -->
             <li>
-              <%= link_to dashboard_path, class: "user-sidebar-link #{controller_name == 'dashboard' ? 'active' : ''}" do %>
+              <%= link_to dashboard_path, class: "user-sidebar-link #{controller_name == 'dashboard' ? 'active' : ''}", title: "Tableau de bord" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
                 </svg>
-                Tableau de bord
+                <span>Tableau de bord</span>
               <% end %>
             </li>
 
             <!-- Alertes -->
             <li>
-              <%= link_to alerts_path, class: "user-sidebar-link #{controller_name == 'alerts' ? 'active' : ''}" do %>
+              <%= link_to alerts_path, class: "user-sidebar-link #{controller_name == 'alerts' ? 'active' : ''}", title: "Alertes" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                Alertes
+                <span>Alertes</span>
               <% end %>
             </li>
 
             <!-- Sites -->
             <li>
-              <%= link_to sites_path, class: "user-sidebar-link #{controller_name == 'sites' ? 'active' : ''}" do %>
+              <%= link_to sites_path, class: "user-sidebar-link #{controller_name == 'sites' ? 'active' : ''}", title: "Sites" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
-                Sites
+                <span>Sites</span>
               <% end %>
             </li>
 
             <!-- Équipements -->
             <li>
-              <%= link_to equipment_index_path, class: "user-sidebar-link #{controller_name == 'equipment' ? 'active' : ''}" do %>
+              <%= link_to equipment_index_path, class: "user-sidebar-link #{controller_name == 'equipment' ? 'active' : ''}", title: "Équipements" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                Équipements
+                <span>Équipements</span>
               <% end %>
             </li>
 
             <!-- Contrats -->
             <li>
-              <%= link_to contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' ? 'active' : ''}" do %>
+              <%= link_to contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' ? 'active' : ''}", title: "Contrats" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Contrats
+                <span>Contrats</span>
               <% end %>
             </li>
 
             <!-- Économies Potentielles -->
             <li>
-              <%= link_to savings_path, class: "user-sidebar-link #{controller_name == 'savings' ? 'active' : ''}" do %>
+              <%= link_to savings_path, class: "user-sidebar-link #{controller_name == 'savings' ? 'active' : ''}", title: "Économies Potentielles" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
-                Économies Potentielles
+                <span>Économies Potentielles</span>
               <% end %>
             </li>
 
             <!-- Contacts -->
             <li>
-              <%= link_to "#", class: "user-sidebar-link #{controller_name == 'contacts' ? 'active' : ''}" do %>
+              <%= link_to "#", class: "user-sidebar-link #{controller_name == 'contacts' ? 'active' : ''}", title: "Contacts" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                Contacts
+                <span>Contacts</span>
               <% end %>
             </li>
 
             <!-- Organisations -->
             <li>
-              <%= link_to organizations_path, class: "user-sidebar-link #{controller_name == 'organizations' ? 'active' : ''}" do %>
+              <%= link_to organizations_path, class: "user-sidebar-link #{controller_name == 'organizations' ? 'active' : ''}", title: "Organisations" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
-                Organisations
+                <span>Organisations</span>
               <% end %>
             </li>
 
             <!-- Analytics -->
             <li>
-              <%= link_to analytics_path, class: "user-sidebar-link #{controller_name == 'analytics' ? 'active' : ''}" do %>
+              <%= link_to analytics_path, class: "user-sidebar-link #{controller_name == 'analytics' ? 'active' : ''}", title: "Analytics" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                Analytics
+                <span>Analytics</span>
               <% end %>
             </li>
           </ul>
@@ -612,28 +701,28 @@
             <div class="user-sidebar-footer-separator"></div>
             <ul>
               <li>
-                <%= link_to "#", class: "user-sidebar-link" do %>
+                <%= link_to "#", class: "user-sidebar-link", title: "Paramètres" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  Paramètres
+                  <span>Paramètres</span>
                 <% end %>
               </li>
               <li>
-                <%= link_to "#", class: "user-sidebar-link" do %>
+                <%= link_to "#", class: "user-sidebar-link", title: "Gestion des utilisateurs" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
-                  Gestion des utilisateurs
+                  <span>Gestion des utilisateurs</span>
                 <% end %>
               </li>
               <li>
-                <%= link_to "#", class: "user-sidebar-link" do %>
+                <%= link_to "#", class: "user-sidebar-link", title: "Recommander Hubsight" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
-                  Recommander Hubsight
+                  <span>Recommander Hubsight</span>
                 <% end %>
               </li>
             </ul>

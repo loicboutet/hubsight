@@ -8,6 +8,12 @@ export default class extends Controller {
     // Listen for turbo:before-cache to cleanup state before caching
     this.beforeCacheHandler = this.beforeCache.bind(this)
     document.addEventListener("turbo:before-cache", this.beforeCacheHandler)
+    
+    // Load collapsed state from localStorage
+    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true'
+    if (isCollapsed) {
+      this.sidebarTarget.classList.add("collapsed")
+    }
   }
 
   disconnect() {
@@ -23,6 +29,14 @@ export default class extends Controller {
   close() {
     this.sidebarTarget.classList.remove("mobile-open")
     this.overlayTarget.classList.remove("visible")
+  }
+
+  toggleCollapse() {
+    this.sidebarTarget.classList.toggle("collapsed")
+    
+    // Save collapsed state to localStorage
+    const isCollapsed = this.sidebarTarget.classList.contains("collapsed")
+    localStorage.setItem('sidebarCollapsed', isCollapsed)
   }
 
   beforeCache() {
