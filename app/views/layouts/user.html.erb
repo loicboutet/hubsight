@@ -29,9 +29,9 @@
 
       /* Sidebar Styles */
       .user-sidebar {
-        width: 280px;
-        background: linear-gradient(180deg, #FF6B6B 0%, #FF8585 100%);
-        color: var(--white);
+        width: 320px;
+        background: var(--white);
+        color: var(--dark-gray);
         display: flex;
         flex-direction: column;
         position: fixed;
@@ -47,24 +47,25 @@
       .user-sidebar-header {
         padding: var(--space-xl) var(--space-lg);
         text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid #e5e7eb;
       }
 
       .user-sidebar-header a {
         text-decoration: none;
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: var(--space-md);
       }
 
       .user-logo {
-        max-width: 150px;
+        max-width: 120px;
         height: auto;
-        margin-bottom: var(--space-md);
       }
 
       .user-sidebar-brand {
         font-size: 1.25rem;
         font-weight: 600;
-        color: var(--white);
+        color: var(--dark-gray);
         margin: 0;
       }
 
@@ -86,7 +87,7 @@
       .user-sidebar-link {
         display: flex;
         align-items: center;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--medium-gray);
         text-decoration: none;
         padding: var(--space-md) var(--space-xl);
         font-size: 1.037rem;
@@ -96,16 +97,16 @@
       }
 
       .user-sidebar-link:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: var(--white);
-        border-left-color: var(--white);
+        background-color: #f3f4f6;
+        color: var(--coral-primary);
+        border-left-color: var(--coral-primary);
       }
 
       .user-sidebar-link.active {
-        background-color: rgba(255, 255, 255, 0.2);
-        color: var(--white);
+        background-color: #fef2f2;
+        color: var(--coral-primary);
         font-weight: 600;
-        border-left-color: var(--white);
+        border-left-color: var(--coral-primary);
       }
 
       .user-sidebar-link svg {
@@ -117,7 +118,7 @@
       .user-sidebar-section {
         margin-top: var(--space-lg);
         padding-top: var(--space-md);
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-top: 1px solid #e5e7eb;
       }
 
       .user-sidebar-section-title {
@@ -126,14 +127,36 @@
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--medium-gray);
         letter-spacing: 0.05em;
+      }
+
+      /* Sidebar Footer */
+      .user-sidebar-footer {
+        margin-top: auto;
+        padding: var(--space-lg) 0 var(--space-md) 0;
+      }
+
+      .user-sidebar-footer-separator {
+        height: 1px;
+        background-color: #e5e7eb;
+        margin: 0 var(--space-xl) var(--space-md) var(--space-xl);
+      }
+
+      .user-sidebar-footer ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .user-sidebar-footer li {
+        margin-bottom: var(--space-xs);
       }
 
       /* Main Content Area */
       .user-main-wrapper {
         flex: 1;
-        margin-left: 280px;
+        margin-left: 320px;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
@@ -493,18 +516,24 @@
         <nav class="user-sidebar-nav">
           <ul>
             <!-- Main Navigation -->
+            
+
+            <!-- Portfolio Section -->
             <li>
               <%= link_to root_path, class: "user-sidebar-link #{controller_name == 'dashboard' ? 'active' : ''}" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7H4V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7h-6V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3H4v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3h-6v-3z" />
                 </svg>
                 Tableau de Bord
               <% end %>
             </li>
-
-            <!-- Portfolio Section -->
-            <li class="user-sidebar-section">
-              <span class="user-sidebar-section-title">Portfolio</span>
+            <li>
+              <%= link_to alerts_path, class: "user-sidebar-link #{controller_name == 'alerts' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                Alertes
+              <% end %>
             </li>
             <li>
               <%= link_to sites_path, class: "user-sidebar-link #{controller_name == 'sites' ? 'active' : ''}" do %>
@@ -512,14 +541,6 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
                 Sites
-              <% end %>
-            </li>
-            <li>
-              <%= link_to contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' ? 'active' : ''}" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Contrats
               <% end %>
             </li>
             <li>
@@ -532,13 +553,46 @@
               <% end %>
             </li>
             <li>
-              <%= link_to organizations_path, class: "user-sidebar-link #{controller_name == 'organizations' ? 'active' : ''}" do %>
+              <%= link_to contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Contrats
+              <% end %>
+            </li>
+            <li>
+              <%= link_to "#", class: "user-sidebar-link #{controller_name == 'buildings' ? 'active' : ''}" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Bâtiments
+              <% end %>
+            </li>
+            <li>
+              <%= link_to "#", class: "user-sidebar-link #{controller_name == 'spaces' ? 'active' : ''}" do %>
+                
+                Espaces
+              <% end %>
+            </li>
+            <li>
+              <%= link_to "#", class: "user-sidebar-link #{controller_name == 'levels' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Niveaux
+              <% end %>
+            </li>
+            
+            
+            <li>
+              <%= link_to organizations_path, class: "user-sidebar-link #{controller_name == 'organizations' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 Organisations
               <% end %>
             </li>
+            
 
             <!-- Analytics Section -->
             <li class="user-sidebar-section">
@@ -552,7 +606,47 @@
                 Analytics
               <% end %>
             </li>
+            <li>
+              <%= link_to "#", class: "user-sidebar-link #{controller_name == 'savings' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Économies
+              <% end %>
+            </li>
           </ul>
+
+          <!-- Sidebar Footer -->
+          <div class="user-sidebar-footer">
+            <div class="user-sidebar-footer-separator"></div>
+            <ul>
+              <li>
+                <%= link_to "#", class: "user-sidebar-link" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Paramètres
+                <% end %>
+              </li>
+              <li>
+                <%= link_to "#", class: "user-sidebar-link" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  Gestion des utilisateurs
+                <% end %>
+              </li>
+              <li>
+                <%= link_to "#", class: "user-sidebar-link" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                  Recommander Hubsight
+                <% end %>
+              </li>
+            </ul>
+          </div>
         </nav>
       </aside>
 
