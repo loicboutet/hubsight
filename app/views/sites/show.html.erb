@@ -209,7 +209,7 @@
     </div>
 
     <!-- Information Details -->
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl); margin-bottom: var(--space-xl);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-xl); margin-bottom: var(--space-xl);">
       <!-- Address Section -->
       <div>
         <h4 class="typo-h4" style="padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
@@ -265,14 +265,13 @@
       </div>
     </div>
 
-    <!-- Description Section -->
-    <% if @site.description.present? %>
-      <div>
-        <h4 class="typo-h4" style="margin-bottom: 0; padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-          Description
-        </h4>
-        <p class="typo-body-small"><%= @site.description %></p>
-      </div>
-    <% end %>
-  </div>
+  <!-- Description Section -->
+  <% if @site.description.present? %>
+    <div>
+      <h4 class="typo-h4" style="margin-bottom: 0; padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Description
+      </h4>
+      <p class="typo-body-small"><%= @site.description %></p>
+    </div>
+  <% end %>
 </div>

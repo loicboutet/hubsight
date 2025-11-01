@@ -20,16 +20,127 @@
     <%= javascript_importmap_tags %>
 
     <style>
-      /* User Layout Specific Styles */
+      /* User Layout with Sidebar */
       .user-layout {
-        min-height: 100vh;
         display: flex;
-        flex-direction: column;
+        min-height: 100vh;
         background-color: #f8f9fa;
       }
 
+      /* Sidebar Styles */
+      .user-sidebar {
+        width: 280px;
+        background: linear-gradient(180deg, #FF6B6B 0%, #FF8585 100%);
+        color: var(--white);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        transition: transform 0.3s ease;
+      }
+
+      .user-sidebar-header {
+        padding: var(--space-xl) var(--space-lg);
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .user-sidebar-header a {
+        text-decoration: none;
+        display: block;
+      }
+
+      .user-logo {
+        max-width: 150px;
+        height: auto;
+        margin-bottom: var(--space-md);
+      }
+
+      .user-sidebar-brand {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--white);
+        margin: 0;
+      }
+
+      .user-sidebar-nav {
+        flex: 1;
+        padding: var(--space-lg) 0;
+      }
+
+      .user-sidebar-nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .user-sidebar-nav li {
+        margin-bottom: var(--space-xs);
+      }
+
+      .user-sidebar-link {
+        display: flex;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        padding: var(--space-md) var(--space-xl);
+        font-size: 1.037rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+      }
+
+      .user-sidebar-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--white);
+        border-left-color: var(--white);
+      }
+
+      .user-sidebar-link.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: var(--white);
+        font-weight: 600;
+        border-left-color: var(--white);
+      }
+
+      .user-sidebar-link svg {
+        margin-right: var(--space-md);
+        flex-shrink: 0;
+      }
+
+      /* Sidebar Section Headers */
+      .user-sidebar-section {
+        margin-top: var(--space-lg);
+        padding-top: var(--space-md);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .user-sidebar-section-title {
+        display: block;
+        padding: var(--space-xs) var(--space-xl);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 0.05em;
+      }
+
+      /* Main Content Area */
+      .user-main-wrapper {
+        flex: 1;
+        margin-left: 280px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
       .user-header {
-        background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 50%, #FF8585 100%);
+        background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 50%, #FFDEDE 100%);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         position: sticky;
         top: 0;
@@ -37,64 +148,20 @@
       }
 
       .user-header-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 var(--space-lg);
+        padding: 0 var(--space-xl);
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        min-height: 80px;
+        justify-content: flex-end;
+        min-height: 70px;
         gap: var(--space-lg);
       }
 
-      .user-header-left {
-        display: flex;
-        align-items: center;
-        gap: var(--space-xl);
-      }
-
-      .user-logo-link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        transition: transform 0.2s ease;
-      }
-
-      .user-logo-link:hover {
-        transform: scale(1.05);
-      }
-
-      .user-logo {
-        height: 50px;
-        width: auto;
-      }
-
-      .user-nav {
-        display: flex;
-        gap: var(--space-md);
-        align-items: center;
-      }
-
-      .user-nav-link {
-        color: var(--dark-gray);
-        text-decoration: none;
-        font-size: 1.105rem;
-        font-weight: 500;
-        padding: var(--space-sm) var(--space-md);
-        border-radius: var(--space-sm);
-        transition: all 0.2s ease;
-        white-space: nowrap;
-      }
-
-      .user-nav-link:hover {
-        background-color: rgba(255, 107, 107, 0.15);
-        color: var(--dark-gray);
-      }
-
-      .user-nav-link.active {
-        background-color: rgba(255, 107, 107, 0.2);
-        color: var(--coral-primary);
+      .user-header-title {
+        flex: 1;
+        font-size: 1.5rem;
         font-weight: 600;
+        color: var(--dark-gray);
+        margin: 0;
       }
 
       .user-header-right {
@@ -200,66 +267,9 @@
         color: var(--coral-primary);
       }
 
-      .user-mobile-toggle {
-        display: none;
-        background: none;
-        border: none;
-        color: var(--dark-gray);
-        cursor: pointer;
-        padding: var(--space-sm);
-        border-radius: var(--space-sm);
-        transition: background-color 0.2s ease;
-      }
-
-      .user-mobile-toggle:hover {
-        background-color: rgba(255, 107, 107, 0.15);
-      }
-
-      .user-mobile-toggle svg {
-        width: 30px;
-        height: 30px;
-        display: block;
-      }
-
-      .user-mobile-nav {
-        display: none;
-        background-color: var(--white);
-        border-top: 1px solid var(--pink-pale);
-        padding: var(--space-md);
-      }
-
-      .user-mobile-nav.show {
-        display: block;
-      }
-
-      .user-mobile-nav-link {
-        display: block;
-        color: var(--dark-gray);
-        text-decoration: none;
-        font-size: 1.105rem;
-        font-weight: 500;
-        padding: var(--space-md);
-        border-radius: var(--space-sm);
-        transition: background-color 0.2s ease;
-        margin-bottom: var(--space-xs);
-      }
-
-      .user-mobile-nav-link:hover {
-        background-color: var(--pink-light);
-      }
-
-      .user-mobile-nav-link.active {
-        background-color: rgba(255, 107, 107, 0.15);
-        color: var(--coral-primary);
-        font-weight: 600;
-      }
-
       .user-main {
         flex: 1;
-        max-width: 1400px;
-        margin: 0 auto;
-        width: 100%;
-        padding: var(--space-xl) var(--space-lg);
+        padding: var(--space-xl);
       }
 
       .user-footer {
@@ -269,9 +279,7 @@
       }
 
       .user-footer-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: var(--space-2xl) var(--space-lg);
+        padding: var(--space-2xl) var(--space-xl);
       }
 
       .user-footer-grid {
@@ -329,33 +337,112 @@
         margin: 0;
       }
 
+      /* Mobile Toggle Button */
+      .user-mobile-toggle {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--coral-primary) 0%, var(--coral-light) 100%);
+        color: var(--white);
+        border: none;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        cursor: pointer;
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .user-mobile-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(255, 107, 107, 0.5);
+      }
+
+      .user-mobile-toggle svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .user-mobile-toggle-header {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--dark-gray);
+        cursor: pointer;
+        padding: var(--space-sm);
+        border-radius: var(--space-sm);
+        transition: background-color 0.2s ease;
+      }
+
+      .user-mobile-toggle-header:hover {
+        background-color: rgba(255, 107, 107, 0.15);
+      }
+
+      .user-mobile-toggle-header svg {
+        width: 28px;
+        height: 28px;
+        display: block;
+      }
+
+      /* Overlay for mobile sidebar */
+      .user-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .user-overlay.show {
+        display: block;
+        opacity: 1;
+      }
+
       /* Responsive Design */
-      @media (max-width: 768px) {
-        .user-nav {
-          display: none;
+      @media (max-width: 1024px) {
+        .user-sidebar {
+          transform: translateX(-100%);
         }
 
-        .user-mobile-toggle {
+        .user-sidebar.show {
+          transform: translateX(0);
+        }
+
+        .user-main-wrapper {
+          margin-left: 0;
+        }
+
+        .user-mobile-toggle,
+        .user-mobile-toggle-header {
           display: flex;
-          align-items: center;
-          justify-content: center;
         }
+      }
 
+      @media (max-width: 768px) {
         .user-header-container {
-          min-height: 64px;
-          padding: 0 var(--space-md);
+          padding: 0 var(--space-lg);
+          min-height: 60px;
         }
 
-        .user-logo {
-          height: 40px;
+        .user-header-title {
+          font-size: 1.25rem;
         }
 
         .user-main {
-          padding: var(--space-lg) var(--space-md);
+          padding: var(--space-lg);
         }
 
         .user-footer-container {
-          padding: var(--space-xl) var(--space-md);
+          padding: var(--space-xl) var(--space-lg);
         }
 
         .user-footer-grid {
@@ -366,13 +453,12 @@
 
       @media (max-width: 480px) {
         .user-header-container {
+          padding: 0 var(--space-md);
           min-height: 56px;
-          padding: 0 var(--space-sm);
-          gap: var(--space-sm);
         }
 
-        .user-logo {
-          height: 36px;
+        .user-header-title {
+          font-size: 1.125rem;
         }
 
         .user-avatar {
@@ -383,7 +469,7 @@
         }
 
         .user-main {
-          padding: var(--space-md) var(--space-sm);
+          padding: var(--space-md);
         }
 
         .user-dropdown {
@@ -394,114 +480,178 @@
   </head>
 
   <body>
-    <div class="user-layout">
-      <!-- Header -->
-      <header class="user-header" data-controller="toggle">
-        <div class="user-header-container">
-          <div class="user-header-left">
-            <!-- Clickable Logo -->
-            <%= link_to root_path, class: "user-logo-link" do %>
-              <%= image_tag "hugsight_logo.png", alt: "HubSight Logo", class: "user-logo" %>
-            <% end %>
+    <div class="user-layout" data-controller="sidebar">
+      <!-- Sidebar -->
+      <aside class="user-sidebar" data-sidebar-target="sidebar">
+        <div class="user-sidebar-header">
+          <%= link_to root_path do %>
+            <%= image_tag "hugsight_logo.png", alt: "HubSight Logo", class: "user-logo" %>
+            <h1 class="user-sidebar-brand">HubSight</h1>
+          <% end %>
+        </div>
 
-            <!-- Desktop Navigation -->
-            <nav class="user-nav">
-              <%= link_to "Tableau de Bord", root_path, class: "user-nav-link #{controller_name == 'dashboard' ? 'active' : ''}" %>
-              <%= link_to "Sites", sites_path, class: "user-nav-link #{controller_name == 'sites' ? 'active' : ''}" %>
-              <%= link_to "Contrats", contracts_path, class: "user-nav-link #{controller_name == 'contracts' ? 'active' : ''}" %>
-              <%= link_to "Équipements", equipment_index_path, class: "user-nav-link #{controller_name == 'equipment' ? 'active' : ''}" %>
-              <%= link_to "Organisations", organizations_path, class: "user-nav-link #{controller_name == 'organizations' ? 'active' : ''}" %>
-              <%= link_to "Analytics", analytics_path, class: "user-nav-link #{controller_name == 'analytics' ? 'active' : ''}" %>
-            </nav>
-          </div>
+        <nav class="user-sidebar-nav">
+          <ul>
+            <!-- Main Navigation -->
+            <li>
+              <%= link_to root_path, class: "user-sidebar-link #{controller_name == 'dashboard' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Tableau de Bord
+              <% end %>
+            </li>
 
-          <div class="user-header-right">
-            <!-- Mobile Menu Toggle -->
-            <button class="user-mobile-toggle" data-action="click->toggle#toggle">
+            <!-- Portfolio Section -->
+            <li class="user-sidebar-section">
+              <span class="user-sidebar-section-title">Portfolio</span>
+            </li>
+            <li>
+              <%= link_to sites_path, class: "user-sidebar-link #{controller_name == 'sites' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Sites
+              <% end %>
+            </li>
+            <li>
+              <%= link_to contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Contrats
+              <% end %>
+            </li>
+            <li>
+              <%= link_to equipment_index_path, class: "user-sidebar-link #{controller_name == 'equipment' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Équipements
+              <% end %>
+            </li>
+            <li>
+              <%= link_to organizations_path, class: "user-sidebar-link #{controller_name == 'organizations' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Organisations
+              <% end %>
+            </li>
+
+            <!-- Analytics Section -->
+            <li class="user-sidebar-section">
+              <span class="user-sidebar-section-title">Analyse</span>
+            </li>
+            <li>
+              <%= link_to analytics_path, class: "user-sidebar-link #{controller_name == 'analytics' ? 'active' : ''}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Analytics
+              <% end %>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Overlay for mobile -->
+      <div class="user-overlay" data-sidebar-target="overlay" data-action="click->sidebar#close"></div>
+
+      <!-- Main Content Wrapper -->
+      <div class="user-main-wrapper">
+        <!-- Header -->
+        <header class="user-header">
+          <div class="user-header-container">
+            <!-- Mobile Toggle Button (in header for mobile) -->
+            <button class="user-mobile-toggle-header" data-action="click->sidebar#toggle">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
 
-            <!-- User Avatar & Dropdown -->
-            <div class="user-avatar-wrapper" data-controller="dropdown">
-              <button class="user-avatar" data-action="click->dropdown#toggle">U</button>
-              <div class="user-dropdown" data-dropdown-target="menu">
-                <%= link_to "#", class: "user-dropdown-link" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Profil
-                <% end %>
-                <%= link_to "#", class: "user-dropdown-link" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Paramètres
-                <% end %>
-                <%= link_to "#", class: "user-dropdown-link" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  Déconnexion
-                <% end %>
+            <h2 class="user-header-title">
+              <%= content_for(:header) || "Tableau de Bord" %>
+            </h2>
+
+            <div class="user-header-right">
+              <!-- User Avatar & Dropdown -->
+              <div class="user-avatar-wrapper" data-controller="dropdown">
+                <button class="user-avatar" data-action="click->dropdown#toggle">U</button>
+                <div class="user-dropdown" data-dropdown-target="menu">
+                  <%= link_to "#", class: "user-dropdown-link" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Profil
+                  <% end %>
+                  <%= link_to "#", class: "user-dropdown-link" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Paramètres
+                  <% end %>
+                  <%= link_to "#", class: "user-dropdown-link" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Déconnexion
+                  <% end %>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </header>
 
-        <!-- Mobile Navigation -->
-        <div class="user-mobile-nav" data-toggle-target="toggleable">
-          <%= link_to "Tableau de Bord", root_path, class: "user-mobile-nav-link #{controller_name == 'dashboard' ? 'active' : ''}" %>
-          <%= link_to "Sites", sites_path, class: "user-mobile-nav-link #{controller_name == 'sites' ? 'active' : ''}" %>
-          <%= link_to "Contrats", contracts_path, class: "user-mobile-nav-link #{controller_name == 'contracts' ? 'active' : ''}" %>
-          <%= link_to "Équipements", equipment_index_path, class: "user-mobile-nav-link #{controller_name == 'equipment' ? 'active' : ''}" %>
-          <%= link_to "Organisations", organizations_path, class: "user-mobile-nav-link #{controller_name == 'organizations' ? 'active' : ''}" %>
-          <%= link_to "Analytics", analytics_path, class: "user-mobile-nav-link #{controller_name == 'analytics' ? 'active' : ''}" %>
-        </div>
-      </header>
+        <!-- Main Content -->
+        <main class="user-main">
+          <%= yield %>
+        </main>
 
-      <!-- Main Content -->
-      <main class="user-main">
-        <%= yield %>
-      </main>
-
-      <!-- Footer -->
-      <footer class="user-footer">
-        <div class="user-footer-container">
-          <div class="user-footer-grid">
-            <div class="user-footer-section">
-              <h3>À propos de HubSight</h3>
-              <p class="user-footer-text">
-                Plateforme de gestion immobilière et technique pour la gestion et le suivi des contrats.
-              </p>
+        <!-- Footer -->
+        <footer class="user-footer">
+          <div class="user-footer-container">
+            <div class="user-footer-grid">
+              <div class="user-footer-section">
+                <h3>À propos de HubSight</h3>
+                <p class="user-footer-text">
+                  Plateforme de gestion immobilière et technique pour la gestion et le suivi des contrats.
+                </p>
+              </div>
+              <div class="user-footer-section">
+                <h3>Liens Rapides</h3>
+                <ul class="user-footer-links">
+                  <li><%= link_to "Tableau de Bord", root_path, class: "user-footer-link" %></li>
+                  <li><%= link_to "Sites", sites_path, class: "user-footer-link" %></li>
+                  <li><%= link_to "Contrats", contracts_path, class: "user-footer-link" %></li>
+                  <li><%= link_to "Support", "#", class: "user-footer-link" %></li>
+                </ul>
+              </div>
+              <div class="user-footer-section">
+                <h3>Contact</h3>
+                <p class="user-footer-text">
+                  Email: contact@hubsight.com<br>
+                  Téléphone: +33 1 23 45 67 89
+                </p>
+              </div>
             </div>
-            <div class="user-footer-section">
-              <h3>Liens Rapides</h3>
-              <ul class="user-footer-links">
-                <li><%= link_to "Tableau de Bord", root_path, class: "user-footer-link" %></li>
-                <li><%= link_to "Sites", sites_path, class: "user-footer-link" %></li>
-                <li><%= link_to "Contrats", contracts_path, class: "user-footer-link" %></li>
-                <li><%= link_to "Support", "#", class: "user-footer-link" %></li>
-              </ul>
-            </div>
-            <div class="user-footer-section">
-              <h3>Contact</h3>
-              <p class="user-footer-text">
-                Email: contact@hubsight.com<br>
-                Téléphone: +33 1 23 45 67 89
+            <div class="user-footer-bottom">
+              <p class="user-footer-copyright">
+                © <%= Time.current.year %> HubSight. Tous droits réservés.
               </p>
             </div>
           </div>
-          <div class="user-footer-bottom">
-            <p class="user-footer-copyright">
-              © <%= Time.current.year %> HubSight. Tous droits réservés.
-            </p>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
+
+      <!-- Mobile Toggle Button (fixed at bottom right) -->
+      <button class="user-mobile-toggle" data-action="click->sidebar#toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
     </div>
-
   </body>
 </html>
