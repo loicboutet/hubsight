@@ -1873,7 +1873,12 @@ select:focus {
 
 .user-main {
   flex: 1;
-  padding: var(--space-xl);
+  padding: 0;
+}
+
+/* Remove section roundness for user layout */
+.user-layout .section {
+  border-radius: 0;
 }
 
 .user-footer {
