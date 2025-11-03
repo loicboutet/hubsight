@@ -17,6 +17,7 @@
   border: 1px solid var(--pink-pale);
   transition: all 0.3s ease;
   min-height: 180px;
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
@@ -31,12 +32,12 @@
 .dashboard-kpi-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
 }
 
 .dashboard-kpi-label {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--medium-gray);
   font-weight: 600;
   text-transform: uppercase;
@@ -48,6 +49,7 @@
   flex: 1;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .dashboard-kpi-value {
@@ -121,15 +123,6 @@
   color: #1976d2;
 }
 
-/* Special styling for Organisation card with more content */
-.dashboard-kpi-card.complex .dashboard-kpi-label {
-  font-size: 0.7rem;
-}
-
-.dashboard-kpi-card.complex .dashboard-kpi-value {
-  font-size: 1.5rem;
-}
-
 .dashboard-kpi-details {
   font-size: 0.65rem;
   color: var(--medium-gray);
@@ -152,25 +145,25 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1400px) {
+/* Large screens: 6 cards per row (≥1900px) */
+/* Default grid is already set to repeat(6, 1fr) above */
+
+/* Medium screens: 3 cards per row (900px - 1899px) */
+@media (max-width: 1899px) {
   .dashboard-kpi-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 1024px) {
-  .dashboard-kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
+/* Small screens: 1 card per row (<900px) */
+@media (max-width: 899px) {
   .dashboard-kpi-grid {
     grid-template-columns: 1fr;
   }
   
   .dashboard-kpi-card {
     min-height: 140px;
+    min-width: 300px;
   }
   
   .dashboard-kpi-value {
