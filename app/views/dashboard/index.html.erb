@@ -1,4 +1,5 @@
 <% content_for :header, "Tableau de Bord" %>
+<%= stylesheet_link_tag "dashboard", "data-turbo-track": "reload" %>
 
 <div class="section">
   <div style="margin-bottom: var(--space-xl);">
@@ -7,15 +8,16 @@
   </div>
 
   <!-- KPI Cards -->
-  <div class="admin-stats-grid">
-    <div class="admin-stat-card">
-      <div class="admin-stat-header">
-        <div>
-          <div class="admin-stat-label">Sites</div>
-          <div class="admin-stat-value">24</div>
-          <div class="admin-stat-change positive">↗ +5.2% vs mois dernier</div>
-        </div>
-        <div class="admin-stat-icon blue">
+  <div class="dashboard-kpi-grid">
+    <!-- Card 1: Sites Total -->
+    <div class="dashboard-kpi-card">
+      <div class="dashboard-kpi-content">
+        <div class="dashboard-kpi-label">Sites Total</div>
+        <div class="dashboard-kpi-value">0</div>
+        <div class="dashboard-kpi-subtitle">Sites immobiliers</div>
+      </div>
+      <div class="dashboard-kpi-icon-container">
+        <div class="dashboard-kpi-icon blue">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
@@ -23,14 +25,15 @@
       </div>
     </div>
 
-    <div class="admin-stat-card">
-      <div class="admin-stat-header">
-        <div>
-          <div class="admin-stat-label">Contrats Actifs</div>
-          <div class="admin-stat-value">186</div>
-          <div class="admin-stat-change positive">↗ +8.1% vs mois dernier</div>
-        </div>
-        <div class="admin-stat-icon green">
+    <!-- Card 2: Contrats Actifs -->
+    <div class="dashboard-kpi-card">
+      <div class="dashboard-kpi-content">
+        <div class="dashboard-kpi-label">Contrats Actifs</div>
+        <div class="dashboard-kpi-value">186</div>
+        <div class="dashboard-kpi-subtitle">92% de portfolio couvert</div>
+      </div>
+      <div class="dashboard-kpi-icon-container">
+        <div class="dashboard-kpi-icon red">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
@@ -38,34 +41,149 @@
       </div>
     </div>
 
-    <div class="admin-stat-card">
-      <div class="admin-stat-header">
-        <div>
-          <div class="admin-stat-label">Équipements</div>
-          <div class="admin-stat-value">1,247</div>
-          <div class="admin-stat-change positive">↗ +12.3% vs mois dernier</div>
+    <!-- Card 3: Organisations -->
+    <div class="dashboard-kpi-card complex">
+      <div class="dashboard-kpi-content">
+        <div class="dashboard-kpi-label">Prestataires at Autres Organisations</div>
+        <div class="dashboard-kpi-value">0</div>
+        <div class="dashboard-kpi-details">
+          <div>Fournisseurs et tiers</div>
+          <div>Moy. contrats/prestataire: <strong>4.1</strong></div>
+          <div>Top: <strong>ENGIE Solutions</strong> (75 contrats)</div>
         </div>
-        <div class="admin-stat-icon purple">
+      </div>
+      <div class="dashboard-kpi-icon-container">
+        <div class="dashboard-kpi-icon orange">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
         </div>
       </div>
     </div>
 
-    <div class="admin-stat-card">
-      <div class="admin-stat-header">
-        <div>
-          <div class="admin-stat-label">Alertes</div>
-          <div class="admin-stat-value">12</div>
-          <div class="admin-stat-change negative">↘ Nécessite attention</div>
+    <!-- Card 4: Budget Annuel Total -->
+    <div class="dashboard-kpi-card">
+      <div class="dashboard-kpi-content">
+        <div class="dashboard-kpi-label">Budget Annuel Total</div>
+        <div class="dashboard-kpi-value">847 500 €</div>
+        <div class="dashboard-kpi-subtitle positive">+6.2% vs année précédente</div>
+      </div>
+      <div class="dashboard-kpi-icon-container">
+        <div class="dashboard-kpi-icon purple">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
         </div>
-        <div class="admin-stat-icon coral">
+      </div>
+    </div>
+
+    <!-- Card 5: Économies Potentielles -->
+    <div class="dashboard-kpi-card">
+      <div class="dashboard-kpi-content">
+        <div class="dashboard-kpi-label">Économies Potentielles</div>
+        <div class="dashboard-kpi-value">127 350 €</div>
+        <div class="dashboard-kpi-subtitle positive">4.5% sur 58 contrats</div>
+      </div>
+      <div class="dashboard-kpi-icon-container">
+        <div class="dashboard-kpi-icon green">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6: Alertes Actives -->
+    <div class="dashboard-kpi-card">
+      <div class="dashboard-kpi-content">
+        <div class="dashboard-kpi-label">Alertes Actives</div>
+        <div class="dashboard-kpi-value">23</div>
+        <div class="dashboard-kpi-subtitle">12 à venir, 8 à risque</div>
+      </div>
+      <div class="dashboard-kpi-icon-container">
+        <div class="dashboard-kpi-icon light-blue">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Distribution and Top Contracts Section -->
+  <div style="display: grid; grid-template-columns: 1fr 2fr; gap: var(--space-lg); margin-bottom: var(--space-xl);">
+    <!-- Purchase Family Distribution -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+      <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+        Répartition par Famille d'Achats
+      </h3>
+      <div class="distribution-list">
+        <% [
+          {name: "Maintenance", percentage: 42, contracts: 78, amount: "1 195 350 €", color: "#667eea"},
+          {name: "Nettoyage et Hygiène", percentage: 22, contracts: 41, amount: "626 450 €", color: "#e879f9"},
+          {name: "Contrôles Techniques", percentage: 15, contracts: 28, amount: "427 125 €", color: "#3b82f6"},
+          {name: "Énergies/Fluides", percentage: 12, contracts: 22, amount: "341 700 €", color: "#10b981"},
+          {name: "Assurances", percentage: 5, contracts: 9, amount: "142 375 €", color: "#ec4899"},
+          {name: "Immobilier", percentage: 3, contracts: 5, amount: "85 425 €", color: "#f59e0b"},
+          {name: "Autres", percentage: 1, contracts: 3, amount: "29 075 €", color: "#06b6d4"}
+        ].each do |family| %>
+          <div class="distribution-item">
+            <div class="distribution-header">
+              <span class="distribution-name"><%= family[:name] %></span>
+              <span class="distribution-percentage"><%= family[:percentage] %>%</span>
+            </div>
+            <div class="distribution-bar-container">
+              <div class="distribution-bar" style="width: <%= family[:percentage] %>%; background-color: <%= family[:color] %>;"></div>
+            </div>
+            <div class="distribution-details">
+              <span><%= family[:contracts] %> contrats • <%= family[:amount] %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Top 10 Contracts by Value -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+      <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+        Top 10 Contrats par Valeur
+      </h3>
+      <div class="contracts-table-wrapper">
+        <table class="contracts-table">
+          <thead>
+            <tr>
+              <th>N° CONTRAT</th>
+              <th>TITRE</th>
+              <th>PRESTATAIRE</th>
+              <th>MONTANT TTC</th>
+              <th>SITE</th>
+              <th>ÉCHÉANCE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% [
+              {number: "CTR-2024-001", title: "Fourniture électricité", provider: "EDF Entreprises", amount: "125 000 €", site: "Tous sites", deadline: "31/12/2025"},
+              {number: "CTR-2024-HVAC-001", title: "Maintenance CVC", provider: "ENGIE Solutions", amount: "102 000 €", site: "Tour Montparnasse", deadline: "31/01/2027"},
+              {number: "CTR-2025-SEC-001", title: "Gardiennage 24/7", provider: "Securitas France", amount: "156 000 €", site: "Campus Grenoble", deadline: "31/12/2025"},
+              {number: "CTR-2024-ASS-001", title: "Assurance multi-risque", provider: "AXA Assurances", amount: "89 000 €", site: "Tous sites", deadline: "31/12/2025"},
+              {number: "CTR-2024-009", title: "Maintenance ascenseurs", provider: "OTIS France", amount: "73 600 €", site: "Campus La Défense", deadline: "15/06/2026"},
+              {number: "CTR-2024-CVC-002", title: "Climatisation", provider: "Daikin Service", amount: "62 400 €", site: "Centre Commercial", deadline: "28/02/2026"},
+              {number: "CTR-2025-SEC-001", title: "Gardiennage 24/7", provider: "Securitas France", amount: "156 000 €", site: "Campus Grenoble", deadline: "31/12/2025"},
+              {number: "CTR-2024-ASS-001", title: "Assurance multi-risque", provider: "AXA Assurances", amount: "89 000 €", site: "Tous sites", deadline: "31/12/2025"},
+              {number: "CTR-2024-009", title: "Maintenance ascenseurs", provider: "OTIS France", amount: "73 600 €", site: "Campus La Défense", deadline: "15/06/2026"},
+              {number: "CTR-2024-CVC-002", title: "Climatisation", provider: "Daikin Service", amount: "62 400 €", site: "Centre Commercial", deadline: "28/02/2026"}
+            ].each do |contract| %>
+              <tr>
+                <td><span class="contract-number"><%= contract[:number] %></span></td>
+                <td><%= contract[:title] %></td>
+                <td><%= contract[:provider] %></td>
+                <td class="amount"><%= contract[:amount] %></td>
+                <td><%= contract[:site] %></td>
+                <td><%= contract[:deadline] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -207,9 +325,6 @@
 <!-- Responsive CSS for mobile -->
 <style>
   @media (max-width: 1024px) {
-    div[style*="grid-template-columns: repeat(4, 1fr)"] {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
     div[style*="grid-template-columns: 2fr 1fr"] {
       grid-template-columns: 1fr !important;
     }

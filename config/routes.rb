@@ -116,7 +116,7 @@ Rails.application.routes.draw do
   end
   
   # Alerts Management (BRIQUE 2)
-  resources :alerts, only: [:index, :show] do
+  resources :alerts do
     member do
       patch :acknowledge
     end

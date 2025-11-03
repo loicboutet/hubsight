@@ -6,32 +6,63 @@
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Tableau de Bord des Alertes</h2>
       <p class="typo-body-small">Gérer les alertes contractuelles et échéances</p>
     </div>
-    <%= link_to settings_alerts_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-      Paramètres des Alertes
-    <% end %>
+    <div style="display: flex; gap: var(--space-md); align-items: center;">
+      <%= link_to new_alert_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        Ajouter/ modifier un Rappel
+      <% end %>
+      <%= link_to settings_alerts_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Paramètres des Alertes
+      <% end %>
+    </div>
   </div>
 
   <!-- Stats Cards -->
-  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
-    <div style="background: linear-gradient(135deg, rgba(245, 101, 101, 0.05) 0%, rgba(245, 101, 101, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #f56565;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">Alertes Actives</p>
-      <p style="color: #f56565; font-size: 1.4rem; font-weight: 700; margin: 0;">12</p>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
+    <div style="background-color: #e0f2fe; padding: var(--space-lg); border-radius: var(--space-md); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm);">
+        <div style="width: 40px; height: 40px; background-color: rgba(59, 130, 246, 0.2); border-radius: var(--space-sm); display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#3b82f6" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div>
+          <p style="color: var(--medium-gray); font-size: 0.75rem; margin: 0;">Total Contrats</p>
+          <p style="color: var(--dark-gray); font-size: 1.5rem; font-weight: 700; margin: 0;">0</p>
+        </div>
+      </div>
     </div>
-    <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.05) 0%, rgba(255, 193, 7, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #ffc107;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">À Venir</p>
-      <p style="color: #ffc107; font-size: 1.4rem; font-weight: 700; margin: 0;">8</p>
+    <div style="background-color: #fef3c7; padding: var(--space-lg); border-radius: var(--space-md); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm);">
+        <div style="width: 40px; height: 40px; background-color: rgba(251, 146, 60, 0.2); border-radius: var(--space-sm); display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fb923c" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <p style="color: var(--medium-gray); font-size: 0.75rem; margin: 0;">Attention</p>
+          <p style="color: var(--dark-gray); font-size: 1.5rem; font-weight: 700; margin: 0;">0</p>
+        </div>
+      </div>
     </div>
-    <div style="background: linear-gradient(135deg, rgba(220, 53, 69, 0.05) 0%, rgba(220, 53, 69, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #dc3545;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">En Risque</p>
-      <p style="color: #dc3545; font-size: 1.4rem; font-weight: 700; margin: 0;">3</p>
-    </div>
-    <div style="background: linear-gradient(135deg, rgba(72, 187, 120, 0.05) 0%, rgba(72, 187, 120, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #48bb78;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">Validées</p>
-      <p style="color: #48bb78; font-size: 1.4rem; font-weight: 700; margin: 0;">45</p>
+    <div style="background-color: #fed7d7; padding: var(--space-lg); border-radius: var(--space-md); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm);">
+        <div style="width: 40px; height: 40px; background-color: rgba(239, 68, 68, 0.2); border-radius: var(--space-sm); display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#ef4444" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div>
+          <p style="color: var(--medium-gray); font-size: 0.75rem; margin: 0;">Alerte</p>
+          <p style="color: var(--dark-gray); font-size: 1.5rem; font-weight: 700; margin: 0;">0</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -39,15 +70,41 @@
     
     <!-- Filters Section -->
     <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-md); align-items: end;">
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type d'Alerte</label>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+          <input type="text" placeholder="N° contrat, titre..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Site</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <option>Tous les sites</option>
+            <option>Tour Montparnasse</option>
+            <option>Campus La Défense</option>
+            <option>Site Industriel Lyon</option>
+        </select>
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Famille</label>
           <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
             <option>Toutes</option>
-            <option>À venir</option>
-            <option>En risque</option>
-            <option>Contrats manquants</option>
-          </select>
+            <option>Maintenance</option>
+            <option>Nettoyage</option>
+            <option>Contrôle réglementaire</option>
+        </select>
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Sous Famille</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <option>Toutes</option>
+            <option>Ascenseurs</option>
+            <option>CVC</option>
+            <option>Électricité</option>
+        </select>
+        </div>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Prestataire</label>
+          <input type="text" placeholder="Nom..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
@@ -56,115 +113,101 @@
             <option>Active</option>
             <option>Validée</option>
             <option>Ignorée</option>
-          </select>
+        </select>
         </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Site</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-            <option>Tous les sites</option>
-            <option>Tour Montparnasse</option>
-            <option>Campus La Défense</option>
-          </select>
+        <div style="grid-column: 1 / -1; display: flex; gap: var(--space-md); justify-content: flex-end;">
+          <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer
+          </button>
+          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filtrer
+          </button>
         </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Période</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-            <option>Toutes</option>
-            <option>7 prochains jours</option>
-            <option>30 prochains jours</option>
-            <option>Dépassées</option>
-          </select>
-        </div>
-        <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-          Effacer
-        </button>
-        <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-          </svg>
-          Filtrer
-        </button>
       </div>
     </div>
 
-    <!-- Alerts List -->
-    <div style="display: grid; gap: var(--space-md); margin-bottom: var(--space-xl);">
-      <%
-        alerts_list = [
-          {id: 1, type: 'En risque', title: 'Résiliation non effectuée - CTR-2024-156', contract: 'CTR-2024-156', site: 'Tour Montparnasse', date: 'Dépassé de 5 jours', deadline: '15/01/2025', status: 'Active', color: '#dc3545'},
-          {id: 2, type: 'À venir', title: 'Échéance contrat maintenance ascenseur', contract: 'CTR-2024-189', site: 'Campus La Défense', date: 'Dans 15 jours', deadline: '10/02/2025', status: 'Active', color: '#ffc107'},
-          {id: 3, type: 'Contrats manquants', title: 'Contrôle réglementaire CVC manquant', contract: '-', site: 'Site Industriel Lyon', date: 'Requis', deadline: '-', status: 'Active', color: '#f56565'},
-          {id: 4, type: 'À venir', title: 'Renouvellement contrat nettoyage', contract: 'CTR-2025-003', site: 'Tour Montparnasse', date: 'Dans 30 jours', deadline: '25/02/2025', status: 'Active', color: '#ffc107'},
-          {id: 5, type: 'En risque', title: 'Date limite résiliation dépassée', contract: 'CTR-2024-145', site: 'Campus La Défense', date: 'Dépassé de 2 jours', deadline: '23/01/2025', status: 'Active', color: '#dc3545'},
-          {id: 6, type: 'À venir', title: 'Contrôle technique réglementaire', contract: 'CTR-2024-201', site: 'Site Industriel Lyon', date: 'Dans 45 jours', deadline: '15/03/2025', status: 'Validée', color: '#48bb78'},
-        ]
-      %>
-
-      <% alerts_list.each do |alert| %>
-        <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md); border-left: 4px solid <%= alert[:color] %>;">
-          <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="<%= alert[:color] %>">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                <h5 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 0;"><%= alert[:title] %></h5>
-              </div>
-              
-              <div style="display: flex; gap: var(--space-lg); margin-bottom: var(--space-md);">
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    <!-- Alerts Table -->
+    <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+      <thead>
+        <tr style="border-bottom: 2px solid var(--pink-pale);">
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">N° Contrat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Organisation<br/>prestataire</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Famille achat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date du dernier<br/>renouvellement du contrat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date<br/>d'échéance<br/>du contrat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date limite<br/>de résiliation</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Montant<br/>annuel HT<br/><span style="font-weight: normal; font-size: 0.7rem;">(dépend du client)</span></th>
+          <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Statut</th>
+          <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% [
+          {id: 1, site: "Tour Montparnasse", site_detail: "Tour A", contract: "CTR-2025-001", organization: "OTIS France", family: "Maintenance ascenseurs", last_renewal: "15/01/2025", expiry: "14/01/2026", cancellation: "14/10/2025", amount: "24,500 €", status_icons: [:alert]},
+          {id: 2, site: "Campus La Défense", site_detail: "Bâtiment B", contract: "CTR-2024-189", organization: "Kone Services", family: "Maintenance ascenseurs", last_renewal: "10/02/2024", expiry: "10/02/2026", cancellation: "10/11/2025", amount: "18,200 €", status_icons: [:warning]},
+          {id: 3, site: "Site Industriel Lyon", site_detail: "Zone Prod", contract: "CTR-2024-201", organization: "Schneider Electric", family: "Contrôle réglementaire", last_renewal: "15/03/2024", expiry: "15/03/2026", cancellation: "15/12/2025", amount: "32,750 €", status_icons: [:warning]},
+          {id: 4, site: "Tour Montparnasse", site_detail: "Tour C", contract: "CTR-2025-003", organization: "ISS Facility Services", family: "Nettoyage", last_renewal: "25/02/2025", expiry: "25/02/2026", cancellation: "25/11/2025", amount: "45,000 €", status_icons: [:warning]},
+          {id: 5, site: "Campus La Défense", site_detail: "Hall Principal", contract: "CTR-2024-145", organization: "Dalkia", family: "CVC", last_renewal: "23/01/2024", expiry: "23/01/2026", cancellation: "23/10/2025", amount: "67,500 €", status_icons: [:alert]},
+        ].each do |alert| %>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: var(--space-md);">
+              <p class="typo-body-small" style="margin-bottom: 2px; color: #666;"><%= alert[:site] %></p>
+              <p class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= alert[:site_detail] %></p>
+            </td>
+            <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= alert[:contract] %></td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:organization] %></td>
+            <td style="padding: var(--space-md);">
+              <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                <%= alert[:family] %>
+              </span>
+            </td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:last_renewal] %></td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:expiry] %></td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:cancellation] %></td>
+            <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= alert[:amount] %></td>
+            <td style="padding: var(--space-md); text-align: center;">
+              <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
+                <% if alert[:status_icons].include?(:alert) %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#ef4444" stroke-width="2" style="flex-shrink: 0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
-                  <span class="typo-body-small" style="color: var(--medium-gray);">Contrat: <%= alert[:contract] %></span>
-                </div>
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                  <span class="typo-body-small" style="color: var(--medium-gray);">Site: <%= alert[:site] %></span>
-                </div>
-              </div>
-              
-              <div style="display: flex; gap: var(--space-lg); flex-wrap: wrap;">
-                <span style="display: inline-block; padding: 4px 10px; background-color: <%= alert[:color] %>20; color: <%= alert[:color] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                  <%= alert[:type] %>
-                </span>
-                <span style="display: inline-block; padding: 4px 10px; background-color: <%= alert[:status] == 'Active' ? '#fff3cd' : '#d4edda' %>; color: <%= alert[:status] == 'Active' ? '#856404' : '#155724' %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                  <%= alert[:status] %>
-                </span>
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span class="typo-body-small" style="color: var(--medium-gray); font-weight: 600;"><%= alert[:date] %></span>
-                </div>
-              </div>
-            </div>
-            
-            <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
-              <%= link_to alert_path(alert[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Voir
-              <% end %>
-              <% if alert[:status] == 'Active' %>
-                <%= link_to "#", class: "typo-btn-small typo-btn-small-primary", onclick: "return confirm('Valider cette alerte ?');" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Valider
                 <% end %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      <% end %>
+                <% if alert[:status_icons].include?(:warning) %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fb923c" stroke-width="2" style="flex-shrink: 0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                <% end %>
+              </div>
+            </td>
+            <td style="padding: var(--space-md);">
+              <div style="display: flex; gap: 6px; justify-content: center;">
+                <%= link_to edit_alert_path(alert[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Éditer
+                <% end %>
+                <%= link_to alert_path(alert[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Voir
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
     </div>
 
     <!-- Pagination -->
