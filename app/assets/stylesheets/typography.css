@@ -1693,9 +1693,9 @@ select:focus {
 .sidebar-collapse-toggle {
   position: absolute;
   top: var(--space-md);
-  right: calc(var(--space-md) * -1);
-  width: 32px;
-  height: 32px;
+  right: var(--space-md);
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--white);
   border: 2px solid #e5e7eb;
@@ -1715,8 +1715,8 @@ select:focus {
 }
 
 .sidebar-collapse-toggle svg {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   color: var(--medium-gray);
   transition: all 0.3s ease;
 }
