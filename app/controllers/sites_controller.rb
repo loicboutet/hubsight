@@ -12,6 +12,7 @@ class SitesController < ApplicationController
       code: "CCO-001",
       site_type: "commercial",
       total_area: 65000,
+      estimated_area: 68000,
       address: "2 Place de Lisbonne",
       city: "Montpellier",
       postal_code: "34000",
@@ -22,8 +23,49 @@ class SitesController < ApplicationController
       contact_email: "marie.dubois@odysseum.fr",
       contact_phone: "+33 4 67 13 50 00",
       status: "active",
-      description: "Grand centre commercial avec zones commerciales et loisirs"
+      description: "Grand centre commercial avec zones commerciales et loisirs",
+      cadastral_id: "34000-001-AB-1234",
+      rnb_id: "RNB-34-MTL-001",
+      gps_coordinates: "43.6055° N, 3.9197° E",
+      climate_zone: "H3 - Zone méditerranéenne",
+      buildings_count: 2,
+      buildings_names: ["Bâtiment A - Principal", "Bâtiment B - Annexe"]
     )
+    
+    @opening_hours = [
+      { day: "Lundi", open: true, from: "08:00", to: "20:00" },
+      { day: "Mardi", open: true, from: "08:00", to: "20:00" },
+      { day: "Mercredi", open: true, from: "08:00", to: "20:00" },
+      { day: "Jeudi", open: true, from: "08:00", to: "20:00" },
+      { day: "Vendredi", open: true, from: "08:00", to: "20:00" },
+      { day: "Samedi", open: true, from: "09:00", to: "21:00" },
+      { day: "Dimanche", open: true, from: "10:00", to: "19:00" },
+      { day: "Jours fériés", open: false, from: "Fermé", to: "Fermé" }
+    ]
+    
+    @contacts = [
+      {
+        name: "Marie Dubois",
+        role: "Responsable de Site",
+        phone: "+33 4 67 13 50 00",
+        email: "marie.dubois@odysseum.fr",
+        organization: "Centre Commercial Odysseum"
+      },
+      {
+        name: "Jean Martin",
+        role: "Responsable Technique",
+        phone: "+33 4 67 13 50 01",
+        email: "jean.martin@odysseum.fr",
+        organization: "Centre Commercial Odysseum"
+      },
+      {
+        name: "Sophie Bernard",
+        role: "Responsable Sécurité",
+        phone: "+33 4 67 13 50 02",
+        email: "sophie.bernard@odysseum.fr",
+        organization: "Centre Commercial Odysseum"
+      }
+    ]
   end
 
   def new

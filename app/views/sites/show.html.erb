@@ -110,136 +110,283 @@
     </div>
   </div>
 
-    <!-- Buildings Section -->
-    <div style="margin-bottom: var(--space-xl);">
-      
-
+  <!-- Two Column Layout: Client Requested Information + Opening Hours & Contacts -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-xl);">
+    
+    <!-- Left Column - Additional Site Information (Client Requested) -->
+    <div style="background-color: #f8f9fa; padding: var(--space-lg); border-radius: var(--space-md);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Informations Détaillées</h4>
       <div style="display: grid; gap: var(--space-md);">
-        <%
-          # Mock buildings data - replace with actual data when available
-          buildings = [
-            { id: 1, name: 'Bâtiment A - Principal', area: 12500, levels: 8, spaces: 98, equipment: 187, year: 2005 },
-            { id: 2, name: 'Bâtiment B - Annexe', area: 8200, levels: 4, spaces: 58, equipment: 137, year: 2010 }
-          ]
-        %>
+        
+        <!-- Nom du site -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Nom du site</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.name %></p>
+        </div>
 
-        <% buildings.each do |building| %>
-          <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md); border-left: 4px solid #10b981;">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-              <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
-                  <%= render 'shared/hierarchy_icons', type: 'building', size: 20, color: '#10b981' %>
-                  <%= link_to building_path(building[:id]), style: "text-decoration: none;" do %>
-                    <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= building[:name] %></h5>
-                  <% end %>
+        <!-- Adresse du site -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Adresse du site</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.address %>, <%= @site.city %> <%= @site.postal_code %></p>
+        </div>
+
+        <!-- Nombre de bâtiments -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Nombre de bâtiments</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.buildings_count %></p>
+        </div>
+
+        <!-- Nom des bâtiments associés -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Nom des bâtiments associés à ce site</p>
+          <ul style="margin: 0; padding-left: var(--space-md);">
+            <% @site.buildings_names.each do |building_name| %>
+              <li class="typo-body typo-bold" style="color: var(--dark-gray);"><%= building_name %></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <!-- Surface calculée -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Surface du site en m2 calculée à partir de la somme des espaces</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= number_with_delimiter(@site.total_area, delimiter: ' ') %> m²</p>
+        </div>
+
+        <!-- Surface estimée -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Surface du site en m2 estimé</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= number_with_delimiter(@site.estimated_area, delimiter: ' ') %> m²</p>
+        </div>
+
+        <!-- Identifiant cadastral -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Identifiant cadastral du site</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.cadastral_id %></p>
+        </div>
+
+        <!-- Identifiant RnB -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Identifiant RnB du site</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.rnb_id %></p>
+        </div>
+
+        <!-- Coordonnées GPS -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Coordonnées GPS</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.gps_coordinates %></p>
+        </div>
+
+        <!-- Zone climatique -->
+        <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Zone climatique</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.climate_zone %></p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right Column - Opening Hours & Contacts -->
+    <div>
+      
+      <!-- Opening Hours Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-md); text-align: center;">Horaire d'ouverture du site</h3>
+        <div style="background-color: white; border-radius: var(--space-md); overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f8f9fa;">
+                <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">Jour</th>
+                <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">Ouvert ?</th>
+                <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">De</th>
+                <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">à</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @opening_hours.each_with_index do |hours, index| %>
+                <tr style="<%= 'background-color: #f8f9fa;' if index.even? %>">
+                  <td style="padding: var(--space-sm) var(--space-md); color: #1f2937; font-weight: 500; border-bottom: 1px solid #e5e7eb;"><%= hours[:day] %></td>
+                  <td style="padding: var(--space-sm) var(--space-md); text-align: center; border-bottom: 1px solid #e5e7eb;">
+                    <% if hours[:open] %>
+                      <span style="display: inline-block; padding: 2px 8px; background-color: #d1fae5; color: #065f46; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ouvert</span>
+                    <% else %>
+                      <span style="display: inline-block; padding: 2px 8px; background-color: #fee2e2; color: #991b1b; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Fermé</span>
+                    <% end %>
+                  </td>
+                  <td style="padding: var(--space-sm) var(--space-md); text-align: center; color: #1f2937; border-bottom: 1px solid #e5e7eb;"><%= hours[:from] %></td>
+                  <td style="padding: var(--space-sm) var(--space-md); text-align: center; color: #1f2937; border-bottom: 1px solid #e5e7eb;"><%= hours[:to] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Contacts Section -->
+      <div>
+        <h3 class="typo-h3" style="margin-bottom: var(--space-md); text-align: center;">Contacts et interlocuteurs du site</h3>
+        <div style="display: grid; gap: var(--space-md);">
+          <% @contacts.each do |contact| %>
+            <div style="background-color: white; padding: var(--space-lg); border-radius: var(--space-md); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border-left: 4px solid #3b82f6;">
+              <div style="margin-bottom: var(--space-sm);">
+                <h4 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 4px;"><%= contact[:name] %></h4>
+                <p class="typo-body-small" style="color: #6b7280; font-style: italic; margin-bottom: 0;"><%= contact[:role] %></p>
+              </div>
+              <div style="display: grid; gap: var(--space-xs);">
+                <div style="display: flex; align-items: center; gap: var(--space-xs);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <a href="mailto:<%= contact[:email] %>" class="typo-body-small" style="color: #3b82f6; text-decoration: none;"><%= contact[:email] %></a>
                 </div>
-                <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
-                  <%= number_with_delimiter(building[:area], delimiter: ' ') %> m² • Construit en <%= building[:year] %>
-                </p>
-                
-                <div style="display: flex; gap: var(--space-lg);">
-                  <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                    <%= render 'shared/hierarchy_icons', type: 'level', size: 16, color: '#f59e0b' %>
-                    <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:levels] %></span>
-                    <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Niveaux</span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                    <%= render 'shared/hierarchy_icons', type: 'space', size: 16, color: '#8b5cf6' %>
-                    <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:spaces] %></span>
-                    <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Espaces</span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                    <%= render 'shared/hierarchy_icons', type: 'equipment', size: 16, color: '#6b7280' %>
-                    <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:equipment] %></span>
-                    <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Équipements</span>
-                  </div>
+                <div style="display: flex; align-items: center; gap: var(--space-xs);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <a href="tel:<%= contact[:phone] %>" class="typo-body-small" style="color: #1f2937; text-decoration: none;"><%= contact[:phone] %></a>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-xs);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <p class="typo-body-small" style="color: #6b7280; margin-bottom: 0;"><%= contact[:organization] %></p>
                 </div>
               </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Buildings Section -->
+  <div style="margin-bottom: var(--space-xl);">
+    <div style="display: grid; gap: var(--space-md);">
+      <%
+        # Mock buildings data - replace with actual data when available
+        buildings = [
+          { id: 1, name: 'Bâtiment A - Principal', area: 12500, levels: 8, spaces: 98, equipment: 187, year: 2005 },
+          { id: 2, name: 'Bâtiment B - Annexe', area: 8200, levels: 4, spaces: 58, equipment: 137, year: 2010 }
+        ]
+      %>
+
+      <% buildings.each do |building| %>
+        <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md); border-left: 4px solid #10b981;">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
+                <%= render 'shared/hierarchy_icons', type: 'building', size: 20, color: '#10b981' %>
+                <%= link_to building_path(building[:id]), style: "text-decoration: none;" do %>
+                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= building[:name] %></h5>
+                <% end %>
+              </div>
+              <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
+                <%= number_with_delimiter(building[:area], delimiter: ' ') %> m² • Construit en <%= building[:year] %>
+              </p>
               
-              <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
-                <%= link_to building_path(building[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Voir
-                <% end %>
-                <%= link_to edit_building_path(building[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Éditer
-                <% end %>
-                <%= link_to new_building_level_path(building[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                  </svg>
-                  Ajouter Niveau
-                <% end %>
-                
+              <div style="display: flex; gap: var(--space-lg);">
+                <div style="display: flex; align-items: center; gap: var(--space-xs);">
+                  <%= render 'shared/hierarchy_icons', type: 'level', size: 16, color: '#f59e0b' %>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:levels] %></span>
+                  <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Niveaux</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-xs);">
+                  <%= render 'shared/hierarchy_icons', type: 'space', size: 16, color: '#8b5cf6' %>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:spaces] %></span>
+                  <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Espaces</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-xs);">
+                  <%= render 'shared/hierarchy_icons', type: 'equipment', size: 16, color: '#6b7280' %>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:equipment] %></span>
+                  <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Équipements</span>
+                </div>
               </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Information Details -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-xl); margin-bottom: var(--space-xl);">
-      <!-- Address Section -->
-      <div>
-        <h4 class="typo-h4" style="padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-          Adresse
-        </h4>
-        <div style="display: grid; gap: var(--space-md);">
-          <div>
-            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Adresse</p>
-            <p class="typo-body-small typo-bold"><%= @site.address %></p>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Ville</p>
-              <p class="typo-body-small typo-bold"><%= @site.city %></p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Code Postal</p>
-              <p class="typo-body-small typo-bold"><%= @site.postal_code %></p>
-            </div>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Région</p>
-              <p class="typo-body-small typo-bold"><%= @site.region.capitalize %></p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Pays</p>
-              <p class="typo-body-small typo-bold"><%= @site.country %></p>
+            
+            <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
+              <%= link_to building_path(building[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Voir
+              <% end %>
+              <%= link_to edit_building_path(building[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Éditer
+              <% end %>
+              <%= link_to new_building_level_path(building[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Ajouter Niveau
+              <% end %>
+              
             </div>
           </div>
         </div>
-      </div>
+      <% end %>
+    </div>
+  </div>
 
-      <!-- Contact Section -->
-      <div>
-        <h4 class="typo-h4" style=" padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-          Gestion et Contact
-        </h4>
-        <div style="display: grid; gap: var(--space-md);">
+  <!-- Information Details -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-xl); margin-bottom: var(--space-xl);">
+    <!-- Address Section -->
+    <div>
+      <h4 class="typo-h4" style="padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Adresse
+      </h4>
+      <div style="display: grid; gap: var(--space-md);">
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Adresse</p>
+          <p class="typo-body-small typo-bold"><%= @site.address %></p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
           <div>
-            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Responsable de Site</p>
-            <p class="typo-body-small typo-bold"><%= @site.site_manager %></p>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Ville</p>
+            <p class="typo-body-small typo-bold"><%= @site.city %></p>
           </div>
           <div>
-            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Email</p>
-            <p class="typo-body-small typo-bold"><%= @site.contact_email %></p>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Code Postal</p>
+            <p class="typo-body-small typo-bold"><%= @site.postal_code %></p>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Région</p>
+            <p class="typo-body-small typo-bold"><%= @site.region.capitalize %></p>
           </div>
           <div>
-            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Téléphone</p>
-            <p class="typo-body-small typo-bold"><%= @site.contact_phone %></p>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Pays</p>
+            <p class="typo-body-small typo-bold"><%= @site.country %></p>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Contact Section -->
+    <div>
+      <h4 class="typo-h4" style=" padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Gestion et Contact
+      </h4>
+      <div style="display: grid; gap: var(--space-md);">
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Responsable de Site</p>
+          <p class="typo-body-small typo-bold"><%= @site.site_manager %></p>
+        </div>
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Email</p>
+          <p class="typo-body-small typo-bold"><%= @site.contact_email %></p>
+        </div>
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Téléphone</p>
+          <p class="typo-body-small typo-bold"><%= @site.contact_phone %></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Description Section -->
   <% if @site.description.present? %>
