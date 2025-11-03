@@ -16,11 +16,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--pink-pale);
   transition: all 0.3s ease;
-  min-height: 180px;
+  height: 200px;
   min-width: 300px;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
+  flex-direction: row;
+  gap: var(--space-md);
+  align-items: center;
 }
 
 .dashboard-kpi-card:hover {
@@ -28,12 +29,13 @@
   transform: translateY(-2px);
 }
 
-/* Row 1: Title (left) + Icon (right) */
-.dashboard-kpi-header {
+/* Left side: Content container */
+.dashboard-kpi-content {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
+  flex-direction: column;
+  gap: var(--space-sm);
+  justify-content: center;
 }
 
 .dashboard-kpi-label {
@@ -44,12 +46,11 @@
   letter-spacing: 0.5px;
 }
 
-/* Row 2: Number only */
-.dashboard-kpi-main {
-  flex: 1;
+/* Right side: Icon container */
+.dashboard-kpi-icon-container {
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: center;
 }
 
 .dashboard-kpi-value {
@@ -59,10 +60,6 @@
   line-height: 1.2;
 }
 
-/* Row 3: Additional content */
-.dashboard-kpi-footer {
-  width: 100%;
-}
 
 .dashboard-kpi-subtitle {
   font-size: 0.75rem;
@@ -123,6 +120,11 @@
   color: #1976d2;
 }
 
+.dashboard-kpi-card.complex .dashboard-kpi-details{
+  margin-top: 0;
+}
+
+
 .dashboard-kpi-details {
   font-size: 0.65rem;
   color: var(--medium-gray);
@@ -145,13 +147,20 @@
 }
 
 /* Responsive Design */
-/* Large screens: 6 cards per row (≥1900px) */
+/* Extra large screens: 6 cards per row (≥2400px) - only show 6 in a row when they fit without scroll */
 /* Default grid is already set to repeat(6, 1fr) above */
 
-/* Medium screens: 3 cards per row (900px - 1899px) */
-@media (max-width: 1899px) {
+/* Large screens: 3 cards per row (1200px - 2399px) - at 2000px shows 3 cards */
+@media (max-width: 2399px) {
   .dashboard-kpi-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Medium screens: 2 cards per row (900px - 1199px) */
+@media (max-width: 1199px) {
+  .dashboard-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -162,7 +171,7 @@
   }
   
   .dashboard-kpi-card {
-    min-height: 140px;
+    height: 140px;
     min-width: 300px;
   }
   
