@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <form action="<%= space_equipment_index_path(params[:space_id]) %>" method="post">
+  <form action="<%= params[:space_id].present? ? space_equipment_index_path(params[:space_id]) : equipment_index_path %>" method="post">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     
     <div style="background-color: var(--white); border-radius: var(--space-md);">
@@ -43,6 +43,32 @@
             </label>
             <input type="text" name="equipment[name]" placeholder="Ex: Climatiseur Daikin AC-500" required style="width: 100%;" />
           </div>
+
+          <% if params[:space_id].blank? %>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Espace <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[space_id]" required style="width: 100%;">
+              <option value="">Sélectionner un espace...</option>
+              <optgroup label="Tour Montparnasse - Bât. A - RDC">
+                <option value="1">Bureau 101</option>
+                <option value="2">Bureau 102</option>
+                <option value="3">Salle de réunion A</option>
+                <option value="4">Local technique RDC</option>
+              </optgroup>
+              <optgroup label="Tour Montparnasse - Bât. A - 1er étage">
+                <option value="5">Bureau 201</option>
+                <option value="6">Bureau 202</option>
+                <option value="7">Open space Nord</option>
+              </optgroup>
+              <optgroup label="Tour Montparnasse - Bât. B - RDC">
+                <option value="8">Hall d'accueil</option>
+                <option value="9">Local serveurs</option>
+              </optgroup>
+            </select>
+          </div>
+          <% end %>
 
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
@@ -276,7 +302,7 @@
 
       <!-- Action Buttons -->
       <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
-        <%= link_to space_path(params[:space_id]), class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <%= link_to (params[:space_id].present? ? space_path(params[:space_id]) : equipment_index_path), class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
