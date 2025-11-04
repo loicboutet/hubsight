@@ -1,0 +1,23 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h1 class="typo-h1">Modifier le Contact</h1>
+      <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-sm);">
+        Organisation: <%= @organization.name %>
+      </p>
+    </div>
+    
+    <div style="display: flex; gap: var(--space-md);">
+      <%= link_to organization_contacts_path(@organization), class: "typo-btn-secondary" do %>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: var(--space-xs);">
+          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Retour à la liste
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card">
+    <%= render 'form' %>
+  </div>
+</div>
