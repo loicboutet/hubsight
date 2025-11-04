@@ -1,4 +1,4 @@
-<%= form_tag organization_contacts_path(@organization), method: :post do %>
+<%= form_tag (@organization ? organization_contacts_path(@organization) : contacts_path), method: :post do %>
   <div style="background-color: var(--white); border-radius: var(--space-md);">
     
     <!-- Personal Information Section -->
@@ -24,12 +24,32 @@
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Organisation Affiliée
+            Organisation Affiliée <% if @organization.nil? %><span style="color: var(--coral-primary);">*</span><% end %>
           </label>
-          <%= text_field_tag 'contact[affiliated_organization]', @organization&.name, placeholder: "Rempli automatiquement", disabled: @organization.present?, style: "width: 100%;" %>
-          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
-            Le contact sera lié à cette organisation
-          </p>
+          <% if @organization.present? %>
+            <%= text_field_tag 'contact[affiliated_organization]', @organization.name, placeholder: "Rempli automatiquement", disabled: true, style: "width: 100%; background-color: #f8f9fa;" %>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+              Le contact sera lié à cette organisation
+            </p>
+          <% else %>
+            <%= select_tag 'contact[organization_id]', 
+                options_for_select([
+                  ['ENGIE Solutions', 'engie-solutions'],
+                  ['OTIS France', 'otis-france'],
+                  ['Daikin Service', 'daikin-service'],
+                  ['Bouygues Energies & Services', 'bouygues-energies'],
+                  ['Clean Pro Services', 'clean-pro'],
+                  ['Bureau Veritas', 'bureau-veritas'],
+                  ['Schindler France', 'schindler-france'],
+                  ['Veolia Propreté', 'veolia-proprete'],
+                  ['EDF Entreprises', 'edf-entreprises'],
+                  ['Securitas France', 'securitas-france']
+                ]), 
+                { prompt: 'Sélectionnez une organisation', required: true, style: "width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: var(--dark-gray); background-color: white;" } %>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+              Sélectionnez l'organisation à laquelle le contact appartient
+            </p>
+          <% end %>
         </div>
 
         <div>

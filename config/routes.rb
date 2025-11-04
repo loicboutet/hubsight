@@ -100,8 +100,8 @@ Rails.application.routes.draw do
     end
   end
   
-  # Contacts Management
-  resources :contacts, except: [:index, :new, :create] do
+  # Contacts Management (standalone index + nested actions)
+  resources :contacts do
     collection do
       get :search
     end

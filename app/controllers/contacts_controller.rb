@@ -1,9 +1,11 @@
 require 'ostruct'
 
 class ContactsController < ApplicationController
-  before_action :set_organization, only: [:index, :new, :create, :edit, :show, :update]
+  before_action :set_organization, only: [:new, :create], if: -> { params[:organization_id].present? }
+  before_action :set_organization_optional, only: [:index]
 
   def index
+    # Standalone contacts index with dummy data from all organizations
     # Renders contacts/index.html.erb
   end
 
@@ -37,7 +39,11 @@ class ContactsController < ApplicationController
 
   def create
     # Handle contact creation (dummy - just redirect with success message)
-    redirect_to organization_contacts_path(@organization), notice: 'Contact créé avec succès.'
+    if @organization.present?
+      redirect_to organization_contacts_path(@organization), notice: 'Contact créé avec succès.'
+    else
+      redirect_to contacts_path, notice: 'Contact créé avec succès.'
+    end
   end
 
   def show
@@ -65,8 +71,8 @@ class ContactsController < ApplicationController
   private
 
   def set_organization
-    # Use organization_id from params, or default to a sample organization
-    org_id = params[:organization_id] || "engie-solutions"
+    # Required when creating/editing contacts within organization context
+    org_id = params[:organization_id]
     
     @organization = OpenStruct.new(
       id: org_id,
@@ -77,6 +83,23 @@ class ContactsController < ApplicationController
     # Make to_param return the id for proper URL generation
     def @organization.to_param
       id.to_s
+    end
+  end
+
+  def set_organization_optional
+    # Optional organization context for index - allows both nested and standalone
+    if params[:organization_id].present?
+      org_id = params[:organization_id]
+      
+      @organization = OpenStruct.new(
+        id: org_id,
+        name: "ENGIE Solutions",
+        legal_name: "ENGIE Solutions SAS"
+      )
+      
+      def @organization.to_param
+        id.to_s
+      end
     end
   end
 end
