@@ -129,6 +129,15 @@ Rails.application.routes.draw do
   # Economic Analysis (BRIQUE 2)
   get 'savings', to: 'savings#index'
   get 'savings/report', to: 'savings#report'
+  
+  # User Management
+  resources :users
+  
+  # Settings
+  resources :settings, only: [:index, :update]
+  
+  # Referrals
+  resources :referrals, only: [:index, :create]
 
   # =============================================================================
   # SITE MANAGER ROUTES (Scoped to assigned sites)
