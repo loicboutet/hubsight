@@ -32,6 +32,12 @@
         </svg>
         Éditer
       <% end %>
+      <%= link_to equipment_path(1), method: :delete, class: "typo-btn-small typo-btn-small-danger", onclick: "return confirm('Êtes-vous sûr de vouloir supprimer cet équipement ? Cette action est irréversible.');" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Supprimer
+      <% end %>
       <%= link_to space_path(1), class: "typo-btn-cancel" do %>
         ← Retour à l'Espace
       <% end %>
@@ -96,6 +102,55 @@
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Référence BDD</p>
           <p class="typo-body-small typo-bold">EQ-2025-001</p>
         </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Référence OmniClass</p>
+          <p class="typo-body-small typo-bold">23-35 17 13 (Air Conditioning Equipment)</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Sous-domaine Achat</p>
+          <p class="typo-body-small typo-bold">CVC - Climatisation</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Emplacement</p>
+          <p class="typo-body-small typo-bold">Bureau 101, RDC, Bâtiment A</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Type d'Énergie</p>
+          <p class="typo-body-small typo-bold">Électricité</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Zone(s) Desservie(s)</p>
+          <p class="typo-body-small typo-bold">Bureau 101, Bureau 102, Salle de réunion A</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Alertes
+      </h4>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <div style="background-color: #fff3cd; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #f59e0b;">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <p class="typo-body-small typo-bold" style="color: #856404; margin-bottom: var(--space-xs);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-bottom; margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Maintenance Préventive à Venir
+              </p>
+              <p class="typo-body-small" style="color: #856404;">Échéance : 15/03/2025</p>
+            </div>
+            <span style="padding: 4px 10px; background-color: #f59e0b; color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">À venir</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -138,7 +193,7 @@
       </div>
     </div>
 
-    <!-- Dates Section -->
+    <!-- Dates Importantes Section -->
     <div style="margin-bottom: var(--space-xl);">
       <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
         Dates Importantes
@@ -163,6 +218,104 @@
         <div>
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Date Prochaine Maintenance</p>
           <p class="typo-body-small typo-bold">15/03/2025</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Installation & Warranty Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Installation et Garantie
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Nom de l'Installateur Initial</p>
+          <p class="typo-body-small typo-bold">SARL TechnoClim</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Date de Mise en Service</p>
+          <p class="typo-body-small typo-bold">01/03/2024</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Durée de Garantie</p>
+          <p class="typo-body-small typo-bold">3 ans</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Date Fin de Garantie</p>
+          <p class="typo-body-small typo-bold">01/03/2027</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contracts & Maintenance Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Contrats et Maintenance
+      </h4>
+      
+      <div style="display: grid; gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Contrat Associé</p>
+          <%= link_to "Contrat de Maintenance CVC 2024-2027", contract_path(1), class: "typo-body-small typo-bold", style: "color: var(--coral-primary); text-decoration: none;" %>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: 4px;">N° CONT-2024-CVC-001 | Famille: Maintenance CVC</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Fournisseur de Maintenance (Mainteneur)</p>
+          <%= link_to "ClimaTech Services", organization_path(1), class: "typo-body-small typo-bold", style: "color: var(--coral-primary); text-decoration: none;" %>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Date Prochaine Maintenance</p>
+          <p class="typo-body-small typo-bold">15/03/2025</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contacts Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Contacts
+      </h4>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 4px solid var(--coral-primary);">
+          <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);">Jean Dupont - Responsable Technique</p>
+          <p class="typo-body-small" style="color: var(--medium-gray);">ClimaTech Services</p>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: 4px;">
+            📧 j.dupont@climatech.fr | 📱 +33 6 12 34 56 78
+          </p>
+        </div>
+        
+        <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 4px solid var(--coral-primary);">
+          <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);">Marie Martin - Technicien SAV</p>
+          <p class="typo-body-small" style="color: var(--medium-gray);">Daikin France</p>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: 4px;">
+            📧 m.martin@daikin.fr | 📱 +33 6 98 76 54 32
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Characteristics Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Caractéristiques Spécifiques (BDD Équipement)
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Capacité de Refroidissement</p>
+          <p class="typo-body-small typo-bold">3500 W</p>
+        </div>
+
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Classe Énergétique</p>
+          <p class="typo-body-small typo-bold">A++</p>
         </div>
       </div>
     </div>

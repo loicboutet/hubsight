@@ -902,6 +902,72 @@ select:focus {
 }
 
 /* =============================================================================
+   AUTOCOMPLETE COMPONENTS
+   ============================================================================= */
+
+.autocomplete-suggestion-item {
+  padding: var(--space-md) var(--space-lg);
+  cursor: pointer;
+  color: var(--dark-gray);
+  font-size: 1.105rem;
+  border-bottom: 1px solid var(--pink-pale);
+  transition: background-color 0.2s ease;
+}
+
+.autocomplete-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-suggestion-item:hover {
+  background-color: var(--pink-light);
+  color: var(--coral-primary);
+}
+
+.autocomplete-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 6px 12px;
+  background-color: #e7f3ff;
+  color: #0066cc;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.autocomplete-badge:hover {
+  background-color: #d1e7ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 102, 204, 0.2);
+}
+
+.autocomplete-badge-remove {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #0066cc;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.autocomplete-badge-remove:hover {
+  background-color: rgba(0, 102, 204, 0.15);
+  color: #004999;
+}
+
+.autocomplete-badge-remove svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* =============================================================================
    ADMIN LAYOUT STYLES
    ============================================================================= */
 
@@ -1548,7 +1614,7 @@ select:focus {
 }
 
 .user-sidebar-header {
-  padding: var(--space-xl) var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   text-align: center;
   border-bottom: 1px solid #e5e7eb;
   transition: padding 0.3s ease;
@@ -1562,7 +1628,7 @@ select:focus {
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-xs);
   flex-direction: column;
 }
 
@@ -1706,6 +1772,13 @@ select:focus {
   transition: all 0.3s ease;
   z-index: 1001;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-sidebar.collapsed .sidebar-collapse-toggle {
+  position: relative;
+  top: auto;
+  right: auto;
+  margin: var(--space-sm) auto 0 auto;
 }
 
 .sidebar-collapse-toggle:hover {

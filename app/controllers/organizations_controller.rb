@@ -1,11 +1,16 @@
+require 'ostruct'
+
 class OrganizationsController < ApplicationController
   def index
     # Renders organizations/index.html.erb
   end
 
   def show
+    # Handle both numeric IDs and slugs
+    org_id = params[:id]
+    
     @organization = OpenStruct.new(
-      id: params[:id],
+      id: org_id,  # Keep the original ID/slug for routing
       name: "ENGIE Solutions",
       legal_name: "ENGIE Solutions SAS",
       siret: "552 081 317 00426",
@@ -21,6 +26,11 @@ class OrganizationsController < ApplicationController
       status: "active",
       notes: "Prestataire historique avec une excellente expertise en maintenance CVC et efficacité énergétique. Intervient sur la majorité de nos sites."
     )
+    
+    # Make to_param return the id for proper URL generation
+    def @organization.to_param
+      id.to_s
+    end
   end
 
   def new

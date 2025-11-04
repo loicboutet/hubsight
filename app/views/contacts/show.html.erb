@@ -1,0 +1,205 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h1 class="typo-h1"><%= @contact.first_name %> <%= @contact.last_name %></h1>
+      <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-sm);">
+        <%= @contact.position %> • <%= @organization.name %>
+      </p>
+    </div>
+    
+    <div style="display: flex; gap: var(--space-md);">
+      <%= link_to organization_contacts_path(@organization), class: "typo-btn-secondary" do %>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: var(--space-xs);">
+          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Retour à la liste
+      <% end %>
+      
+      <%= link_to edit_organization_contact_path(@organization, @contact.id), class: "typo-btn-primary" do %>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="margin-right: var(--space-xs);">
+          <path d="M14.5 2.5C14.8978 2.1022 15.4374 1.87868 16 1.87868C16.2786 1.87868 16.5544 1.93355 16.8118 2.04015C17.0692 2.14674 17.303 2.30301 17.5 2.5C17.697 2.69698 17.8533 2.9308 17.9598 3.18819C18.0665 3.44558 18.1213 3.72142 18.1213 4C18.1213 4.27857 18.0665 4.55442 17.9598 4.81181C17.8533 5.0692 17.697 5.30302 17.5 5.5L6.5 16.5L2 18L3.5 13.5L14.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Modifier
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card">
+    <!-- Personal Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations Personnelles
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Nom du contact
+          </label>
+          <p class="typo-body"><%= @contact.last_name || '-' %></p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Prénom du contact
+          </label>
+          <p class="typo-body"><%= @contact.first_name || '-' %></p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Nom de l'organisation associé
+          </label>
+          <p class="typo-body"><%= @contact.affiliated_organization || @organization.name %></p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Nom de l'agence associé
+          </label>
+          <p class="typo-body"><%= @contact.agency_name || '-' %></p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Fonction dans l'organisation
+          </label>
+          <p class="typo-body"><%= @contact.position || '-' %></p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Catégorie du contact
+          </label>
+          <p class="typo-body">
+            <% if @contact.category %>
+              <% category_labels = { 'accounting' => 'Comptabilité', 'technical' => 'technique', 'operations' => 'Exploitation', 'commercial' => 'Commercial' } %>
+              <span style="display: inline-block; padding: var(--space-xs) var(--space-md); background-color: var(--pink-pale); border-radius: var(--space-sm); font-size: 0.875rem;">
+                <%= category_labels[@contact.category] || @contact.category %>
+              </span>
+            <% else %>
+              -
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Coordonnées
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Téléphone fixe du contact
+          </label>
+          <p class="typo-body">
+            <% if @contact.fixed_phone.present? %>
+              <a href="tel:<%= @contact.fixed_phone %>" style="color: var(--coral-primary); text-decoration: none;">
+                <%= @contact.fixed_phone %>
+              </a>
+            <% else %>
+              -
+            <% end %>
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Téléphone mobile du contact
+          </label>
+          <p class="typo-body">
+            <% if @contact.mobile_phone.present? %>
+              <a href="tel:<%= @contact.mobile_phone %>" style="color: var(--coral-primary); text-decoration: none;">
+                <%= @contact.mobile_phone %>
+              </a>
+            <% else %>
+              -
+            <% end %>
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Email du contact
+          </label>
+          <p class="typo-body">
+            <% if @contact.email.present? %>
+              <a href="mailto:<%= @contact.email %>" style="color: var(--coral-primary); text-decoration: none;">
+                <%= @contact.email %>
+              </a>
+            <% else %>
+              -
+            <% end %>
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Email secondaire
+          </label>
+          <p class="typo-body">
+            <% if @contact.secondary_email.present? %>
+              <a href="mailto:<%= @contact.secondary_email %>" style="color: var(--coral-primary); text-decoration: none;">
+                <%= @contact.secondary_email %>
+              </a>
+            <% else %>
+              -
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations Complémentaires
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Disponibilité
+          </label>
+          <p class="typo-body" style="white-space: pre-wrap;"><%= @contact.availability || '-' %></p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Langues Parlées
+          </label>
+          <p class="typo-body"><%= @contact.languages || '-' %></p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">
+            Notes
+          </label>
+          <p class="typo-body" style="white-space: pre-wrap;"><%= @contact.notes || '-' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to organization_contacts_path(@organization), class: "typo-btn-secondary" do %>
+        Retour à la liste
+      <% end %>
+      
+      <%= link_to edit_organization_contact_path(@organization, @contact.id), class: "typo-btn-primary" do %>
+        Modifier ce contact
+      <% end %>
+      
+      <%= link_to organization_contact_path(@organization, @contact.id), 
+          method: :delete, 
+          data: { confirm: "Êtes-vous sûr de vouloir supprimer ce contact ?" },
+          class: "typo-btn-danger" do %>
+        Supprimer
+      <% end %>
+    </div>
+  </div>
+</div>

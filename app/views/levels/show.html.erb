@@ -32,6 +32,12 @@
       <%= link_to building_path(1), class: "typo-btn-cancel" do %>
         ← Retour au Bâtiment
       <% end %>
+      <%= link_to level_path(@level.id), method: :delete, class: "typo-btn-small typo-btn-small-danger", onclick: "return confirm('Êtes-vous sûr de vouloir supprimer ce niveau ?');" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Supprimer
+      <% end %>
     </div>
   </div>
 
@@ -45,13 +51,14 @@
       <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Surface</p>
       <p style="color: #22c55e; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">1,500 m²</p>
     </div>
-    <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #3b82f6; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Altitude</p>
-      <p style="color: #3b82f6; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">0 m</p>
-    </div>
+   
     <div style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.05) 0%, rgba(168, 85, 247, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #a855f7; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
       <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Espaces</p>
       <p style="color: #a855f7; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">15</p>
+    </div>
+     <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #3b82f6; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
+      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Occupation</p>
+      <p style="color: #3b82f6; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">60%</p>
     </div>
   </div>
 
@@ -181,12 +188,7 @@
                 </svg>
                 Ajouter Équipement
               <% end %>
-              <%= link_to space_path(space[:id]), method: :delete, data: { confirm: "ATTENTION : Cette action est irréversible !\n\nÊtes-vous sûr de vouloir supprimer définitivement cet espace ?\n\nTous les équipements associés seront également supprimés." }, class: "typo-btn-small typo-btn-small-danger" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Supprimer
-              <% end %>
+              
             </div>
           </div>
         </div>
