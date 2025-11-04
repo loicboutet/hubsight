@@ -1,7 +1,7 @@
 require 'ostruct'
 
 class ContactsController < ApplicationController
-  before_action :set_organization, only: [:index, :new, :create]
+  before_action :set_organization, only: [:index, :new, :create, :edit, :show, :update]
 
   def index
     # Renders contacts/index.html.erb
@@ -65,17 +65,18 @@ class ContactsController < ApplicationController
   private
 
   def set_organization
-    if params[:organization_id]
-      @organization = OpenStruct.new(
-        id: params[:organization_id],
-        name: "ENGIE Solutions",
-        legal_name: "ENGIE Solutions SAS"
-      )
-      
-      # Make to_param return the id for proper URL generation
-      def @organization.to_param
-        id.to_s
-      end
+    # Use organization_id from params, or default to a sample organization
+    org_id = params[:organization_id] || "engie-solutions"
+    
+    @organization = OpenStruct.new(
+      id: org_id,
+      name: "ENGIE Solutions",
+      legal_name: "ENGIE Solutions SAS"
+    )
+    
+    # Make to_param return the id for proper URL generation
+    def @organization.to_param
+      id.to_s
     end
   end
 end

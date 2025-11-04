@@ -1,5 +1,5 @@
 <%= form_tag organization_contacts_path(@organization), method: :post do %>
-  <div style="background-color: var(--white); border-radius: var(--space-md); ">
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
     
     <!-- Personal Information Section -->
     <div style="margin-bottom: var(--space-xl);">
@@ -162,8 +162,18 @@
 
     <!-- Action Buttons -->
     <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
-      <%= link_to "Annuler", @organization ? organization_contacts_path(@organization) : contacts_path, class: "typo-btn-cancel" %>
-      <%= submit_tag "Créer le Contact", class: "typo-btn-success" %>
+      <%= link_to @organization ? organization_contacts_path(@organization) : contacts_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        Créer le Contact
+      </button>
     </div>
   </div>
 <% end %>
