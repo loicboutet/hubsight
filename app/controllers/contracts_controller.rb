@@ -1,10 +1,12 @@
+require 'ostruct'
+
 class ContractsController < ApplicationController
   def index
     # Renders contracts/index.html.erb
   end
 
   def show
-    @contract = OpenStruct.new(
+    @contract = ::OpenStruct.new(
       id: params[:id],
       contract_number: "CTR-2024-HVAC-001",
       title: "Maintenance CVC - Climatisation et Chauffage",
@@ -66,7 +68,7 @@ class ContractsController < ApplicationController
   end
 
   def new
-    @contract = OpenStruct.new(
+    @contract = ::OpenStruct.new(
       contract_number: "",
       title: "",
       contract_type: "",
@@ -132,7 +134,7 @@ class ContractsController < ApplicationController
   end
 
   def edit
-    @contract = OpenStruct.new(
+    @contract = ::OpenStruct.new(
       id: params[:id],
       contract_number: "CTR-2024-HVAC-001",
       title: "Maintenance CVC - Climatisation et Chauffage",
