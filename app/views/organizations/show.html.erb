@@ -50,8 +50,13 @@
           </div>
           
           <div>
-            <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">SIRET</p>
+            <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Numéro de SIRET</p>
             <p class="typo-body typo-bold" style="color: var(--coral-primary);"><%= @organization.siret %></p>
+          </div>
+          
+          <div>
+            <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Code NAF</p>
+            <p class="typo-body typo-bold" style="color: var(--coral-primary);">62.02A</p>
           </div>
           
           <div>
@@ -110,6 +115,138 @@
               </a>
             </p>
           </div>
+        </div>
+      </div>
+
+      <!-- Activity and Scope -->
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Activité et Périmètre
+        </h3>
+        
+        <div style="margin-bottom: var(--space-lg);">
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Description de l'activité de l'organisation</p>
+          <p class="typo-body" style="line-height: 1.6;">
+            ENGIE Solutions accompagne les entreprises et les collectivités dans leur transition énergétique et environnementale. 
+            Nous concevons, réalisons et exploitons des solutions techniques globales pour améliorer la performance énergétique, 
+            développer les énergies renouvelables et optimiser les usages. Nos équipes interviennent sur l'ensemble du cycle de vie 
+            des installations : conseil, conception, réalisation, exploitation et maintenance.
+          </p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-sm);">Pays associé à l'activité de l'organisation</p>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-xs);">
+              <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+                🇫🇷 France
+              </span>
+              <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+                🇧🇪 Belgique
+              </span>
+              <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+                🇨🇭 Suisse
+              </span>
+            </div>
+          </div>
+          
+          <div>
+            <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-sm);">Départements associé à l'activité de l'organisation</p>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-xs);">
+              <span style="display: inline-block; padding: 6px 14px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.875rem;">
+                75 - Paris
+              </span>
+              <span style="display: inline-block; padding: 6px 14px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.875rem;">
+                92 - Hauts-de-Seine
+              </span>
+              <span style="display: inline-block; padding: 6px 14px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.875rem;">
+                69 - Rhône
+              </span>
+              <span style="display: inline-block; padding: 6px 14px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.875rem;">
+                13 - Bouches-du-Rhône
+              </span>
+              <span style="display: inline-block; padding: 6px 14px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.875rem;">
+                44 - Loire-Atlantique
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Purchase Families -->
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Familles et Sous-Familles Achat
+        </h3>
+        
+        <div style="margin-bottom: var(--space-lg);">
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-sm);">Familles achat associé à l'organisation</p>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+            <span style="display: inline-block; padding: 8px 16px; background-color: #fff3cd; color: #856404; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
+              Maintenance Technique
+            </span>
+            <span style="display: inline-block; padding: 8px 16px; background-color: #d1ecf1; color: #0c5460; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
+              Énergie et Fluides
+            </span>
+            <span style="display: inline-block; padding: 8px 16px; background-color: #d4edda; color: #155724; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
+              Génie Climatique
+            </span>
+            <span style="display: inline-block; padding: 8px 16px; background-color: #f8d7da; color: #721c24; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
+              Sécurité Incendie
+            </span>
+          </div>
+        </div>
+        
+        <div>
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-sm);">Sous familles achats associé à l'organisation</p>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-xs);">
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              CVC - Chauffage
+            </span>
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              CVC - Ventilation
+            </span>
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              CVC - Climatisation
+            </span>
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              Plomberie
+            </span>
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              GTB/GTC
+            </span>
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              Électricité CFO/CFA
+            </span>
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              Désenfumage
+            </span>
+            <span style="display: inline-block; padding: 6px 14px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.875rem;">
+              SSI - Système de Sécurité Incendie
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accreditations -->
+      <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-border: 2px solid var(--pink-pale);">
+          Accréditations et Certifications
+        </h3>
+        
+        <div>
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Description des accréditations de l'organisation</p>
+          <p class="typo-body" style="line-height: 1.6; margin-bottom: var(--space-md);">
+            ENGIE Solutions dispose de plusieurs certifications et accréditations attestant de son expertise et de son engagement qualité :
+          </p>
+          <ul style="margin-left: var(--space-lg); line-height: 1.8;">
+            <li class="typo-body"><strong>ISO 9001:2015</strong> - Certification Qualité pour la gestion des services énergétiques</li>
+            <li class="typo-body"><strong>ISO 14001:2015</strong> - Certification Environnement pour la gestion environnementale</li>
+            <li class="typo-body"><strong>ISO 50001:2018</strong> - Certification Énergie pour le système de management de l'énergie</li>
+            <li class="typo-body"><strong>Qualibat</strong> - Qualification pour les entreprises du bâtiment</li>
+            <li class="typo-body"><strong>RGE</strong> - Reconnu Garant de l'Environnement pour les travaux d'efficacité énergétique</li>
+            <li class="typo-body"><strong>MASE</strong> - Manuel d'Amélioration Sécurité des Entreprises</li>
+          </ul>
         </div>
       </div>
 
