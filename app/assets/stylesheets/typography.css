@@ -1614,7 +1614,7 @@ select:focus {
 }
 
 .user-sidebar-header {
-  padding: var(--space-xl) var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   text-align: center;
   border-bottom: 1px solid #e5e7eb;
   transition: padding 0.3s ease;
@@ -1628,7 +1628,7 @@ select:focus {
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-xs);
   flex-direction: column;
 }
 
@@ -1772,6 +1772,13 @@ select:focus {
   transition: all 0.3s ease;
   z-index: 1001;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-sidebar.collapsed .sidebar-collapse-toggle {
+  position: relative;
+  top: auto;
+  right: auto;
+  margin: var(--space-sm) auto 0 auto;
 }
 
 .sidebar-collapse-toggle:hover {
