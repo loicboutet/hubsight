@@ -19,6 +19,12 @@
         </svg>
         Créer Manuellement
       </a>
+      <a href="<%= exports_contracts_path %>" class="typo-btn-primary" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Exporter
+      </a>
     </div>
   </div>
 
@@ -84,57 +90,53 @@
     </div>
 
     <!-- Contracts Table -->
-    <div class="table-responsive">
-    <table style="width: 100%; border-collapse: collapse;">
+    <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
       <thead>
         <tr style="border-bottom: 2px solid var(--pink-pale);">
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">N° Contrat</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Titre / Prestataire</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Famille</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Montant TTC</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Dates</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">N° Contrat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Organisation prestataire</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Famille achat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date du dernier renouvellement du contrat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date d'échéance du contrat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date limite de résiliation</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Montant annuel HT</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Statut</th>
           <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
         </tr>
       </thead>
       <tbody>
         <% [
-          {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", site: "Tour Montparnasse", family: "Maintenance", amount: "24,500 €", start: "15/01/2025", end: "14/01/2026", status: "Actif"},
-          {number: "CTR-2025-002", title: "Nettoyage bureaux quotidien", provider: "Clean Pro Services", site: "Campus La Défense", family: "Nettoyage", amount: "12,800 €", start: "10/01/2025", end: "09/01/2026", status: "Actif"},
-          {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", site: "Centre Commercial", family: "Contrôle", amount: "8,500 €", start: "05/01/2025", end: "04/01/2026", status: "Terminé"},
-          {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", site: "Site Industriel", family: "Maintenance", amount: "31,200 €", start: "02/01/2025", end: "01/01/2026", status: "Actif"},
-          {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature SARL", site: "Résidence Le Parc", family: "Nettoyage", amount: "6,400 €", start: "28/12/2024", end: "27/12/2025", status: "Actif"},
-          {number: "CTR-2025-004", title: "Contrôle légionelle annuel", provider: "ALS Laboratoires", site: "Campus La Défense", family: "Contrôle", amount: "4,200 €", start: "20/01/2025", end: "19/01/2026", status: "En cours"},
-          {number: "CTR-2024-187", title: "Maintenance portes automatiques", provider: "Portalp Service", site: "Tour Montparnasse", family: "Maintenance", amount: "8,900 €", start: "15/12/2024", end: "14/12/2025", status: "Actif"},
-          {number: "CTR-2025-005", title: "Nettoyage vitrerie extérieure", provider: "Vitres Pro", site: "Immeuble Haussmann", family: "Nettoyage", amount: "3,600 €", start: "18/01/2025", end: "17/01/2026", status: "Actif"},
-          {number: "CTR-2024-186", title: "Fourniture électricité", provider: "EDF Entreprises", site: "Tous sites", family: "Énergies", amount: "125,000 €", start: "01/01/2025", end: "31/12/2025", status: "Actif"},
-          {number: "CTR-2025-006", title: "Dératisation / Désinsectisation", provider: "3D Nuisibles", site: "Centre Commercial", family: "Nettoyage", amount: "2,800 €", start: "12/01/2025", end: "11/01/2026", status: "Actif"},
-          {number: "CTR-2024-185", title: "Maintenance extincteurs", provider: "Sicli Sécurité", site: "Site Industriel", family: "Sécurité", amount: "5,400 €", start: "10/12/2024", end: "09/12/2025", status: "Actif"},
-          {number: "CTR-2025-007", title: "Climatisation - Entretien", provider: "Climatic Services", site: "Centre Médical", family: "Maintenance", amount: "18,600 €", start: "22/01/2025", end: "21/01/2026", status: "Actif"},
-          {number: "CTR-2024-184", title: "Assurance multi-risque", provider: "AXA Assurances", site: "Tous sites", family: "Assurance", amount: "89,000 €", start: "01/01/2025", end: "31/12/2025", status: "Actif"},
-          {number: "CTR-2025-008", title: "Gardiennage 24/7", provider: "Securitas France", site: "Campus Grenoble", family: "Sécurité", amount: "156,000 €", start: "01/01/2025", end: "31/12/2025", status: "Actif"},
-          {number: "CTR-2024-183", title: "Plomberie - Dépannage", provider: "Artiplomb SAS", site: "Parc Roissy", family: "Maintenance", amount: "12,000 €", start: "05/12/2024", end: "04/12/2025", status: "Actif"}
+          {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", site: "Tour Montparnasse\nTour A", family: "Maintenance ascenseurs", amount: "24,500 €", start: "15/01/2025", end: "14/01/2026", termination: "14/10/2025", status: "Actif"},
+          {number: "CTR-2025-002", title: "Nettoyage bureaux quotidien", provider: "Clean Pro Services", site: "Campus La Défense", family: "Nettoyage", amount: "12,800 €", start: "10/01/2025", end: "09/01/2026", termination: "09/10/2025", status: "Actif"},
+          {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", site: "Centre Commercial", family: "Contrôle", amount: "8,500 €", start: "05/01/2025", end: "04/01/2026", termination: "04/10/2025", status: "Terminé"},
+          {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", site: "Site Industriel", family: "Maintenance", amount: "31,200 €", start: "02/01/2025", end: "01/01/2026", termination: "01/10/2025", status: "Actif"},
+          {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature SARL", site: "Résidence Le Parc", family: "Nettoyage", amount: "6,400 €", start: "28/12/2024", end: "27/12/2025", termination: "27/09/2025", status: "Actif"},
+          {number: "CTR-2025-004", title: "Contrôle légionelle annuel", provider: "ALS Laboratoires", site: "Campus La Défense", family: "Contrôle", amount: "4,200 €", start: "20/01/2025", end: "19/01/2026", termination: "19/10/2025", status: "En cours"},
+          {number: "CTR-2024-187", title: "Maintenance portes automatiques", provider: "Portalp Service", site: "Tour Montparnasse", family: "Maintenance", amount: "8,900 €", start: "15/12/2024", end: "14/12/2025", termination: "14/09/2025", status: "Actif"},
+          {number: "CTR-2025-005", title: "Nettoyage vitrerie extérieure", provider: "Vitres Pro", site: "Immeuble Haussmann", family: "Nettoyage", amount: "3,600 €", start: "18/01/2025", end: "17/01/2026", termination: "17/10/2025", status: "Actif"},
+          {number: "CTR-2024-186", title: "Fourniture électricité", provider: "EDF Entreprises", site: "Tous sites", family: "Énergies", amount: "125,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+          {number: "CTR-2025-006", title: "Dératisation / Désinsectisation", provider: "3D Nuisibles", site: "Centre Commercial", family: "Nettoyage", amount: "2,800 €", start: "12/01/2025", end: "11/01/2026", termination: "11/10/2025", status: "Actif"},
+          {number: "CTR-2024-185", title: "Maintenance extincteurs", provider: "Sicli Sécurité", site: "Site Industriel", family: "Sécurité", amount: "5,400 €", start: "10/12/2024", end: "09/12/2025", termination: "09/09/2025", status: "Actif"},
+          {number: "CTR-2025-007", title: "Climatisation - Entretien", provider: "Climatic Services", site: "Centre Médical", family: "Maintenance", amount: "18,600 €", start: "22/01/2025", end: "21/01/2026", termination: "21/10/2025", status: "Actif"},
+          {number: "CTR-2024-184", title: "Assurance multi-risque", provider: "AXA Assurances", site: "Tous sites", family: "Assurance", amount: "89,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+          {number: "CTR-2025-008", title: "Gardiennage 24/7", provider: "Securitas France", site: "Campus Grenoble", family: "Sécurité", amount: "156,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+          {number: "CTR-2024-183", title: "Plomberie - Dépannage", provider: "Artiplomb SAS", site: "Parc Roissy", family: "Maintenance", amount: "12,000 €", start: "05/12/2024", end: "04/12/2025", termination: "04/09/2025", status: "Actif"}
         ].each do |contract| %>
           <tr style="border-bottom: 1px solid #eee;">
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
             <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= contract[:number] %></td>
-            <td style="padding: var(--space-md);">
-              <%= link_to contract_path(contract[:number].parameterize), style: "text-decoration: none;" do %>
-                <p class="typo-body-small typo-bold" style="margin-bottom: 2px; color: var(--coral-primary); transition: color 0.2s;"><%= contract[:title] %></p>
-              <% end %>
-              <p class="typo-body-small" style="color: #999; font-size: 0.75rem;"><%= contract[:provider] %></p>
-            </td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:site] %></td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:provider] %></td>
             <td style="padding: var(--space-md);">
               <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
                 <%= contract[:family] %>
               </span>
             </td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:start] %></td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:end] %></td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:termination] %></td>
             <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:amount] %></td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666; font-size: 0.8rem;">
-              <%= contract[:start] %><br/>
-              → <%= contract[:end] %>
-            </td>
             <td style="padding: var(--space-md);">
               <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; <%= contract[:status] == 'Actif' ? 'background-color: #d4edda; color: #155724;' : contract[:status] == 'En cours' ? 'background-color: #fff3cd; color: #856404;' : 'background-color: #e2e8f0; color: #4a5568;' %>">
                 <%= contract[:status] %>
