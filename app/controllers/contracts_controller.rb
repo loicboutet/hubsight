@@ -8,6 +8,9 @@ class ContractsController < ApplicationController
   def show
     @contract = ::OpenStruct.new(
       id: params[:id],
+      contract_classification: "initial",
+      parent_contract_id: nil,
+      pdf_url: "/sample_contract.png",
       contract_number: "CTR-2024-HVAC-001",
       title: "Maintenance CVC - Climatisation et Chauffage",
       contract_type: "Maintenance mixte",
@@ -133,10 +136,41 @@ class ContractsController < ApplicationController
       # Notes
       notes: "Contrat renouvelé pour la 3ème fois. Prestataire historique avec une excellente connaissance du parc. Prévoir une renégociation tarifaire avant la prochaine reconduction."
     )
+    
+    # Mock related contracts (amendments and framework agreements)
+    @amendments = [
+      OpenStruct.new(
+        id: "avenant-1",
+        contract_number: "AVN-2024-001",
+        title: "Avenant N°1 - Extension périmètre",
+        signature_date: Date.new(2024, 6, 15),
+        status: "active"
+      ),
+      OpenStruct.new(
+        id: "avenant-2",
+        contract_number: "AVN-2024-002",
+        title: "Avenant N°2 - Révision tarifaire",
+        signature_date: Date.new(2024, 9, 1),
+        status: "active"
+      )
+    ]
+    
+    @framework_agreements = [
+      OpenStruct.new(
+        id: "framework-1",
+        contract_number: "ACC-2024-001",
+        title: "Accord cadre - Prestations exceptionnelles",
+        signature_date: Date.new(2024, 3, 1),
+        status: "active"
+      )
+    ]
   end
 
   def new
     @contract = ::OpenStruct.new(
+      contract_classification: "",
+      parent_contract_id: "",
+      pdf_url: nil,
       contract_number: "",
       title: "",
       contract_type: "",
@@ -204,6 +238,9 @@ class ContractsController < ApplicationController
   def edit
     @contract = ::OpenStruct.new(
       id: params[:id],
+      contract_classification: "initial",
+      parent_contract_id: "",
+      pdf_url: "/sample_contract.png",
       contract_number: "CTR-2024-HVAC-001",
       title: "Maintenance CVC - Climatisation et Chauffage",
       contract_type: "Maintenance mixte",

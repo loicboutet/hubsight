@@ -1,6 +1,78 @@
 <div style="background-color: var(--white); border-radius: var(--space-md);">
   <%= form_with(url: contract.respond_to?(:id) && contract.id.present? ? contract_path(contract.id) : contracts_path, method: contract.respond_to?(:id) && contract.id.present? ? :patch : :post, local: true) do |f| %>
     
+    <!-- Contract Classification Section -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: var(--pink-pale); border-radius: var(--space-sm);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">
+        Type de Contrat
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Choix lors de l'input d'un nouveau contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :contract_classification,
+            [
+              ['Contrat initial', 'initial'],
+              ['Avenant', 'amendment'],
+              ['Accord cadre', 'framework']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.contract_classification },
+            { 
+              required: true, 
+              style: "width: 100%;",
+              id: 'contract_classification_select',
+              onchange: 'toggleParentContractField()'
+            } %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary);">
+            <strong>Contrat initial:</strong> Contrat principal<br>
+            <strong>Avenant:</strong> Modification d'un contrat initial (association obligatoire)<br>
+            <strong>Accord cadre:</strong> Peut être associé à des contrats (optionnel)
+          </p>
+        </div>
+
+        <div id="parent_contract_field" style="<%= (contract.contract_classification == 'amendment' || contract.contract_classification == 'framework') ? '' : 'display: none;' %>">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Contrat Initial Associé <span id="parent_contract_required" style="color: var(--coral-primary); <%= contract.contract_classification == 'amendment' ? '' : 'display: none;' %>">*</span>
+          </label>
+          <%= f.text_field :parent_contract_id, 
+            value: contract.parent_contract_id, 
+            placeholder: "Numéro du contrat initial", 
+            style: "width: 100%;",
+            id: 'parent_contract_input' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary);">
+            On doit pouvoir visualiser les avenants et accord cadre associés à un contrat initial
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDF Document Upload Section -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #fff3e0; border-radius: var(--space-sm);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">
+        Document PDF du Contrat
+      </h4>
+      <p class="typo-body-small" style="margin-bottom: var(--space-md); color: var(--grey-primary);">
+        Il faut pouvoir retrouver la version PDF importé du contrat dans la fiche contrat (et donc une zone où sont stockés les contrats au format PDF)
+      </p>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          Importer le PDF du Contrat
+        </label>
+        <%= f.file_field :pdf_file, 
+          accept: 'application/pdf',
+          style: "width: 100%;" %>
+        <% if contract.respond_to?(:pdf_url) && contract.pdf_url.present? %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--green-primary);">
+            📄 Document PDF existant : 
+            <%= link_to "Voir le PDF", contract.pdf_url, target: '_blank', class: 'typo-link' %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+    
     <!-- Identification Section -->
     <div style="margin-bottom: var(--space-xl);">
       <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
@@ -458,3 +530,39 @@
     </div>
   <% end %>
 </div>
+
+<script>
+function toggleParentContractField() {
+  const select = document.getElementById('contract_classification_select');
+  const parentField = document.getElementById('parent_contract_field');
+  const requiredIndicator = document.getElementById('parent_contract_required');
+  const parentInput = document.getElementById('parent_contract_input');
+  
+  if (!select || !parentField) return;
+  
+  const value = select.value;
+  
+  if (value === 'amendment' || value === 'framework') {
+    parentField.style.display = 'block';
+    
+    if (value === 'amendment') {
+      // Required for amendments
+      if (requiredIndicator) requiredIndicator.style.display = 'inline';
+      if (parentInput) parentInput.required = true;
+    } else {
+      // Optional for framework agreements
+      if (requiredIndicator) requiredIndicator.style.display = 'none';
+      if (parentInput) parentInput.required = false;
+    }
+  } else {
+    // Hide for initial contracts
+    parentField.style.display = 'none';
+    if (parentInput) parentInput.required = false;
+  }
+}
+
+// Run on page load
+document.addEventListener('DOMContentLoaded', function() {
+  toggleParentContractField();
+});
+</script>
