@@ -352,3 +352,180 @@
     white-space: nowrap;
   }
 }
+
+/* =============================================================================
+   MULTI-SELECT TAGS SYSTEM
+   ============================================================================= */
+
+/* Container for tag options */
+.tag-options-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+/* Individual tag option (clickable) */
+.tag-option {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  background-color: #f5f5f5;
+  color: #666;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.tag-option:hover {
+  background-color: #e8e8e8;
+  border-color: #d0d0d0;
+  transform: translateY(-1px);
+}
+
+.tag-option.selected {
+  background-color: #e7f3ff;
+  color: #0066cc;
+  border-color: #0066cc;
+}
+
+.tag-option.selected:hover {
+  background-color: #d4e9ff;
+  border-color: #0052a3;
+}
+
+/* Container for selected badges */
+.tag-badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  min-height: 32px;
+}
+
+/* Selected tag badge */
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 6px 12px;
+  background-color: #e7f3ff;
+  color: #0066cc;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Remove button in badge */
+.tag-badge-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: none;
+  border: none;
+  color: #0066cc;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  margin-left: 2px;
+}
+
+.tag-badge-remove:hover {
+  background-color: rgba(0, 102, 204, 0.15);
+  color: #004080;
+}
+
+.tag-badge-remove svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+/* Autocomplete badge (for the autocomplete controller) */
+.autocomplete-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 6px 12px;
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.autocomplete-badge-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  margin-left: 2px;
+}
+
+.autocomplete-badge-remove:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.autocomplete-badge-remove svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+/* Autocomplete suggestion item */
+.autocomplete-suggestion-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-size: 0.875rem;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.autocomplete-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-suggestion-item:hover {
+  background-color: #f5f5f5;
+}
+
+.autocomplete-suggestion-item:active {
+  background-color: #e8e8e8;
+}
+
+/* Responsive adjustments for tags */
+@media (max-width: 768px) {
+  .tag-option {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+  
+  .tag-badge,
+  .autocomplete-badge {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .tag-badge-remove svg,
+  .autocomplete-badge-remove svg {
+    width: 12px;
+    height: 12px;
+  }
+}
