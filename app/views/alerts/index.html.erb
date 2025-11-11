@@ -70,14 +70,23 @@
     
     <!-- Filters Section -->
     <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
-      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-md); align-items: end;">
+      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-md); align-items: end;">
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
           <input type="text" placeholder="N° contrat, titre..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
         </div>
         <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type d'Alerte</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
+            <option>Tous les types</option>
+            <option>Échéance proche</option>
+            <option>Résiliation urgente</option>
+            <option>Renouvellement</option>
+          </select>
+        </div>
+        <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Site</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
             <option>Tous les sites</option>
             <option>Tour Montparnasse</option>
             <option>Campus La Défense</option>
@@ -86,7 +95,7 @@
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Famille</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
             <option>Toutes</option>
             <option>Maintenance</option>
             <option>Nettoyage</option>
@@ -95,7 +104,7 @@
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Sous Famille</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
             <option>Toutes</option>
             <option>Ascenseurs</option>
             <option>CVC</option>
@@ -108,7 +117,7 @@
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
             <option>Tous</option>
             <option>Active</option>
             <option>Validée</option>
@@ -137,42 +146,45 @@
     <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
       <thead>
         <tr style="border-bottom: 2px solid var(--pink-pale);">
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Type d'Alerte</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">N° Contrat</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Organisation<br/>prestataire</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Famille achat</th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Famille</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date du dernier<br/>renouvellement du contrat</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date<br/>d'échéance<br/>du contrat</th>
           <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date limite<br/>de résiliation</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Montant<br/>annuel HT<br/><span style="font-weight: normal; font-size: 0.7rem;">(dépend du client)</span></th>
+          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Montant<br/>annuel HT<br/></th>
           <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Statut</th>
           <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
         </tr>
       </thead>
       <tbody>
         <% [
-          {id: 1, site: "Tour Montparnasse", site_detail: "Tour A", contract: "CTR-2025-001", organization: "OTIS France", family: "Maintenance ascenseurs", last_renewal: "15/01/2025", expiry: "14/01/2026", cancellation: "14/10/2025", amount: "24,500 €", status_icons: [:alert]},
-          {id: 2, site: "Campus La Défense", site_detail: "Bâtiment B", contract: "CTR-2024-189", organization: "Kone Services", family: "Maintenance ascenseurs", last_renewal: "10/02/2024", expiry: "10/02/2026", cancellation: "10/11/2025", amount: "18,200 €", status_icons: [:warning]},
-          {id: 3, site: "Site Industriel Lyon", site_detail: "Zone Prod", contract: "CTR-2024-201", organization: "Schneider Electric", family: "Contrôle réglementaire", last_renewal: "15/03/2024", expiry: "15/03/2026", cancellation: "15/12/2025", amount: "32,750 €", status_icons: [:warning]},
-          {id: 4, site: "Tour Montparnasse", site_detail: "Tour C", contract: "CTR-2025-003", organization: "ISS Facility Services", family: "Nettoyage", last_renewal: "25/02/2025", expiry: "25/02/2026", cancellation: "25/11/2025", amount: "45,000 €", status_icons: [:warning]},
-          {id: 5, site: "Campus La Défense", site_detail: "Hall Principal", contract: "CTR-2024-145", organization: "Dalkia", family: "CVC", last_renewal: "23/01/2024", expiry: "23/01/2026", cancellation: "23/10/2025", amount: "67,500 €", status_icons: [:alert]},
+          {id: 1, alert_type: "Résiliation urgente", site: "Tour Montparnasse", site_detail: "Tour A", contract: "CTR-2025-001", organization: "OTIS France", family: "Maintenance", sous_famille: "ascenseurs", last_renewal: "15/01/2025", expiry: "14/01/2026", cancellation: "14/10/2025", amount: "24,500 €", status_icons: [:alert]},
+          {id: 2, alert_type: "Échéance proche", site: "Campus La Défense", site_detail: "Bâtiment B", contract: "CTR-2024-189", organization: "Kone Services", family: "Maintenance", sous_famille: "ascenseurs", last_renewal: "10/02/2024", expiry: "10/02/2026", cancellation: "10/11/2025", amount: "18,200 €", status_icons: [:warning]},
+          {id: 3, alert_type: "Renouvellement", site: "Site Industriel Lyon", site_detail: "Zone Prod", contract: "CTR-2024-201", organization: "Schneider Electric", family: "Contrôle réglementaire", sous_famille: "", last_renewal: "15/03/2024", expiry: "15/03/2026", cancellation: "15/12/2025", amount: "32,750 €", status_icons: [:warning]},
+          {id: 4, alert_type: "Échéance proche", site: "Tour Montparnasse", site_detail: "Tour C", contract: "CTR-2025-003", organization: "ISS Facility Services", family: "Nettoyage", sous_famille: "", last_renewal: "25/02/2025", expiry: "25/02/2026", cancellation: "25/11/2025", amount: "45,000 €", status_icons: [:warning]},
+          {id: 5, alert_type: "Résiliation urgente", site: "Campus La Défense", site_detail: "Hall Principal", contract: "CTR-2024-145", organization: "Dalkia", family: "CVC", sous_famille: "", last_renewal: "23/01/2024", expiry: "23/01/2026", cancellation: "23/10/2025", amount: "67,500 €", status_icons: [:alert]},
         ].each do |alert| %>
           <tr style="border-bottom: 1px solid #eee;">
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:alert_type] %></td>
             <td style="padding: var(--space-md);">
               <p class="typo-body-small" style="margin-bottom: 2px; color: #666;"><%= alert[:site] %></p>
               <p class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= alert[:site_detail] %></p>
             </td>
             <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= alert[:contract] %></td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:organization] %></td>
+            <td class="typo-body-small" style="padding: var(--space-md); color: #666;  font-size: 0.75rem; font-weight: 600;"><%= alert[:organization] %></td>
             <td style="padding: var(--space-md);">
               <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
                 <%= alert[:family] %>
               </span>
             </td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:last_renewal] %></td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:expiry] %></td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= alert[:cancellation] %></td>
-            <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= alert[:amount] %></td>
+            
+            <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #666;"><%= alert[:last_renewal] %></td>
+            <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #666;"><%= alert[:expiry] %></td>
+            <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #666;"><%= alert[:cancellation] %></td>
+            <td class="typo-body-small typo-bold" style="padding: var(--space-md); font-size: 1rem;"><%= alert[:amount] %></td>
             <td style="padding: var(--space-md); text-align: center;">
               <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
                 <% if alert[:status_icons].include?(:alert) %>
