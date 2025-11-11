@@ -6,7 +6,13 @@
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Économies Potentielles</h2>
       <p class="typo-body-small">Identifiez les opportunités d'optimisation en comparant vos contrats avec nos prix de référence</p>
     </div>
-    <div class="button-group-responsive">
+    <div class="button-group-responsive" style="display: flex; gap: var(--space-md);">
+      <a href="<%= users_path %>" style="display: inline-flex; align-items: center; gap: var(--space-sm); background-color: var(--coral-primary); color: var(--white); padding: 0 32px; height: 3.315rem; font-size: 1.105rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(240, 107, 95, 0.3); text-decoration: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        Vue utilisateurs HubSight
+      </a>
       <a href="<%= exports_contracts_path %>" style="display: inline-flex; align-items: center; gap: var(--space-sm); background-color: var(--medium-gray); color: var(--white); padding: 0 32px; height: 3.315rem; font-size: 1.105rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(102, 102, 102, 0.2); text-decoration: none;">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -27,7 +33,7 @@
           .filters-grid-savings { grid-template-columns: 1fr !important; }
         }
       </style>
-      <div class="filters-grid-savings" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-md); align-items: end;">
+      <div class="filters-grid-savings" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-md); align-items: end;">
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
           <input type="text" placeholder="N° contrat, titre..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
@@ -54,6 +60,12 @@
           </select>
         </div>
         <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Sous Famille</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
+            <option>Toutes</option>
+          </select>
+        </div>
+        <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Prestataire</label>
           <input type="text" placeholder="Nom..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
         </div>
@@ -64,6 +76,12 @@
             <option>Actif</option>
             <option>En cours</option>
             <option>Terminé</option>
+          </select>
+        </div>
+        <div style="grid-column: 1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type d'Alerte *</label>
+          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
+            <option>Toutes</option>
           </select>
         </div>
         <div style="grid-column: 1 / -1; display: flex; gap: var(--space-md); justify-content: flex-end;">
@@ -88,54 +106,80 @@
       <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
         <thead>
           <tr style="border-bottom: 2px solid var(--pink-pale);">
-            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 10%;">Site</th>
-            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 8%;">N° Contrat</th>
-            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 12%;">Organisation prestataire</th>
-            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 12%;">Famille achat</th>
-            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 10%;">Montant annuel HT</th>
-            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 15%;">Économies estimatives HT sur nos prix de référence</th>
-            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 8%;">%</th>
-            <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666; width: 15%;">Actions</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 8%;">Site</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 7%;">N° Contrat</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 10%;">Organisation<br>prestataire</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 10%;">Famille<br>Sous Famille</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 8%;">Montant<br>annuel HT</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 12%;">Fourchette d'économies constatées<br>Chez nos adhérents</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 8%;">Date limite<br>de résiliation</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; width: 7%;">Montant<br>annuel HT</th>
+            <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666; width: 8%;">Statut</th>
+            <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666; width: 12%;">Actions</th>
           </tr>
         </thead>
         <tbody>
           <% [
-            {number: "CTR-2025-001", site: "Tour Montparnasse\nTour A", provider: "OTIS France", family: "Maintenance", subfamily: "ascenseurs", amount: 24500, savings: 4300, percentage: 23.2},
-            {number: "CTR-2025-002", site: "Campus La Défense", provider: "Clean Pro Services", family: "Nettoyage", subfamily: "Bureaux", amount: 12800, savings: 2100, percentage: 19.6},
-            {number: "CTR-2024-189", site: "Centre Commercial", provider: "Bureau Veritas", family: "Contrôle", subfamily: "Électricité", amount: 8500, savings: 1200, percentage: 16.5},
-            {number: "CTR-2025-003", site: "Site Industriel", provider: "Daikin Service", family: "Maintenance", subfamily: "CVC", amount: 31200, savings: 7800, percentage: 33.3},
-            {number: "CTR-2024-188", site: "Résidence Le Parc", provider: "Vert Nature SARL", family: "Nettoyage", subfamily: "Espaces verts", amount: 6400, savings: 900, percentage: 16.4},
-            {number: "CTR-2025-004", site: "Campus La Défense", provider: "ALS Laboratoires", family: "Contrôle", subfamily: "Légionelle", amount: 4200, savings: 650, percentage: 18.3},
-            {number: "CTR-2024-187", site: "Tour Montparnasse", provider: "Portalp Service", family: "Maintenance", subfamily: "Portes", amount: 8900, savings: 1400, percentage: 18.7},
-            {number: "CTR-2025-005", site: "Immeuble Haussmann", provider: "Vitres Pro", family: "Nettoyage", subfamily: "Vitrerie", amount: 3600, savings: 580, percentage: 19.2},
-            {number: "CTR-2024-186", site: "Tous sites", provider: "EDF Entreprises", family: "Énergies", subfamily: "Électricité", amount: 125000, savings: 18500, percentage: 17.4},
-            {number: "CTR-2025-006", site: "Centre Commercial", provider: "3D Nuisibles", family: "Nettoyage", subfamily: "Nuisibles", amount: 2800, savings: 420, percentage: 17.6},
-            {number: "CTR-2024-185", site: "Site Industriel", provider: "Sicli Sécurité", family: "Sécurité", subfamily: "Incendie", amount: 5400, savings: 980, percentage: 22.2},
-            {number: "CTR-2025-007", site: "Centre Médical", provider: "Climatic Services", family: "Maintenance", subfamily: "Climatisation", amount: 18600, savings: 3200, percentage: 20.8},
-            {number: "CTR-2024-184", site: "Tous sites", provider: "AXA Assurances", family: "Assurance", subfamily: "Multi-risque", amount: 89000, savings: 12400, percentage: 16.2},
-            {number: "CTR-2025-008", site: "Campus Grenoble", provider: "Securitas France", family: "Sécurité", subfamily: "Gardiennage", amount: 156000, savings: 28600, percentage: 22.5},
-            {number: "CTR-2024-183", site: "Parc Roissy", provider: "Artiplomb SAS", family: "Maintenance", subfamily: "Plomberie", amount: 12000, savings: 2300, percentage: 23.8}
-          ].each do |contract| %>
+            {number: "CTR-2025-001", site: "Tour Montparnasse\nTour A", provider: "OTIS France", family: "Maintenance", subfamily: "ascenseurs", amount: 24500, price_min: 18000, price_max: 22000, savings: 4300, termination_date: "31/03/2025"},
+            {number: "CTR-2025-002", site: "Campus La Défense", provider: "Clean Pro Services", family: "Nettoyage", subfamily: "Bureaux", amount: 12800, price_min: 9500, price_max: 11500, savings: 2100, termination_date: "15/04/2025"},
+            {number: "CTR-2024-189", site: "Centre Commercial", provider: "Bureau Veritas", family: "Contrôle", subfamily: "Électricité", amount: 8500, price_min: 6800, price_max: 7800, savings: 1200, termination_date: "30/06/2025"},
+            {number: "CTR-2025-003", site: "Site Industriel", provider: "Daikin Service", family: "Maintenance", subfamily: "CVC", amount: 31200, price_min: 21000, price_max: 25000, savings: 7800, termination_date: "28/02/2025"},
+            {number: "CTR-2024-188", site: "Résidence Le Parc", provider: "Vert Nature SARL", family: "Nettoyage", subfamily: "Espaces verts", amount: 6400, price_min: 5000, price_max: 5800, savings: 900, termination_date: "31/05/2025"},
+            {number: "CTR-2025-004", site: "Campus La Défense", provider: "ALS Laboratoires", family: "Contrôle", subfamily: "Légionelle", amount: 4200, price_min: 3200, price_max: 3800, savings: 650, termination_date: "30/04/2025"},
+            {number: "CTR-2024-187", site: "Tour Montparnasse", provider: "Portalp Service", family: "Maintenance", subfamily: "Portes", amount: 8900, price_min: 7000, price_max: 7900, savings: 1400, termination_date: "31/07/2025"},
+            {number: "CTR-2025-005", site: "Immeuble Haussmann", provider: "Vitres Pro", family: "Nettoyage", subfamily: "Vitrerie", amount: 3600, price_min: 2800, price_max: 3200, savings: 580, termination_date: "15/03/2025"},
+            {number: "CTR-2024-186", site: "Tous sites", provider: "EDF Entreprises", family: "Énergies", subfamily: "Électricité", amount: 125000, price_min: 98000, price_max: 112000, savings: 18500, termination_date: "31/12/2025"},
+            {number: "CTR-2025-006", site: "Centre Commercial", provider: "3D Nuisibles", family: "Nettoyage", subfamily: "Nuisibles", amount: 2800, price_min: 2200, price_max: 2500, savings: 420, termination_date: "30/09/2025"},
+            {number: "CTR-2024-185", site: "Site Industriel", provider: "Sicli Sécurité", family: "Sécurité", subfamily: "Incendie", amount: 5400, price_min: 4100, price_max: 4700, savings: 980, termination_date: "31/08/2025"},
+            {number: "CTR-2025-007", site: "Centre Médical", provider: "Climatic Services", family: "Maintenance", subfamily: "Climatisation", amount: 18600, price_min: 14000, price_max: 16200, savings: 3200, termination_date: "30/06/2025"},
+            {number: "CTR-2024-184", site: "Tous sites", provider: "AXA Assurances", family: "Assurance", subfamily: "Multi-risque", amount: 89000, price_min: 72000, price_max: 79000, savings: 12400, termination_date: "31/12/2025"},
+            {number: "CTR-2025-008", site: "Campus Grenoble", provider: "Securitas France", family: "Sécurité", subfamily: "Gardiennage", amount: 156000, price_min: 118000, price_max: 135000, savings: 28600, termination_date: "31/01/2026"},
+            {number: "CTR-2024-183", site: "Parc Roissy", provider: "Artiplomb SAS", family: "Maintenance", subfamily: "Plomberie", amount: 12000, price_min: 8800, price_max: 10200, savings: 2300, termination_date: "30/04/2025"}
+          ].each_with_index do |contract, index| %>
             <tr style="border-bottom: 1px solid #eee;">
               <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
               <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= contract[:number] %></td>
               <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:provider] %></td>
               <td style="padding: var(--space-md);">
-                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                  <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <span style="display: inline-block; padding: 6px 14px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.875rem; font-weight: 700;">
                     <%= contract[:family] %>
                   </span>
-                  <span style="display: inline-block; padding: 4px 10px; background-color: #ffe5e5; color: #d63031; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                  <span style="display: inline-block; padding: 6px 14px; background-color: #ffe5e5; color: #d63031; border-radius: 4px; font-size: 0.875rem; font-weight: 700;">
                     <%= contract[:subfamily] %>
                   </span>
                 </div>
               </td>
               <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= number_to_currency(contract[:amount], unit: '', precision: 0, delimiter: ' ') %> €</td>
-              <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #22c55e;"><%= number_to_currency(contract[:savings], unit: '', precision: 0, delimiter: ' ') %> €</td>
               <td style="padding: var(--space-md);">
-                <span style="display: inline-block; padding: 6px 12px; background-color: #d4edda; color: #155724; border-radius: 4px; font-size: 0.875rem; font-weight: 700;">
-                  <%= number_to_percentage(contract[:percentage], precision: 1, strip_insignificant_zeros: false) %>
-                </span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="display: inline-block; padding: 6px 12px; background-color: #d4edda; color: #155724; border-radius: 4px; font-size: 0.875rem; font-weight: 700;">
+                    <%= number_to_percentage(((contract[:price_min].to_f / contract[:amount]) * 100 - 100).abs, precision: 1) %>
+                  </span>
+                  <span style="display: inline-block; padding: 6px 12px; background-color: #d4edda; color: #155724; border-radius: 4px; font-size: 0.875rem; font-weight: 700;">
+                    <%= number_to_percentage(((contract[:price_max].to_f / contract[:amount]) * 100 - 100).abs, precision: 1) %>
+                  </span>
+                </div>
+              </td>
+              <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #333; font-size: 0.95rem;">
+                <%= contract[:termination_date] %>
+              </td>
+              <td class="typo-body-small typo-bold" style="padding: var(--space-md);">
+                <%= number_to_currency(contract[:amount], unit: '', precision: 0, delimiter: ' ') %> €
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <% if index.even? %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                <% else %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                <% end %>
               </td>
               <td style="padding: var(--space-md);">
                 <div style="display: flex; gap: 6px; justify-content: center;">
