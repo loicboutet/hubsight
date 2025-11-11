@@ -120,86 +120,258 @@
       </div>
     </div>
 
-    <!-- Contracts Table -->
-    <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
-      <thead>
-        <tr style="border-bottom: 2px solid var(--pink-pale);">
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">N° Contrat</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Organisation prestataire</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Famille achat</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date du dernier renouvellement du contrat</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date d'échéance du contrat</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date limite de résiliation</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Montant annuel HT</th>
-          <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Statut</th>
-          <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% [
-          {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", site: "Tour Montparnasse\nTour A", family: "Maintenance", subfamily: "ascenseurs", amount: "24,500 €", start: "15/01/2025", end: "14/01/2026", termination: "14/10/2025", status: "Actif"},
-          {number: "CTR-2025-002", title: "Nettoyage bureaux quotidien", provider: "Clean Pro Services", site: "Campus La Défense", family: "Nettoyage", subfamily: "Bureaux", amount: "12,800 €", start: "10/01/2025", end: "09/01/2026", termination: "09/10/2025", status: "Actif"},
-          {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", site: "Centre Commercial", family: "Contrôle", subfamily: "Électricité", amount: "8,500 €", start: "05/01/2025", end: "04/01/2026", termination: "04/10/2025", status: "Terminé"},
-          {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", site: "Site Industriel", family: "Maintenance", subfamily: "CVC", amount: "31,200 €", start: "02/01/2025", end: "01/01/2026", termination: "01/10/2025", status: "Actif"},
-          {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature SARL", site: "Résidence Le Parc", family: "Nettoyage", subfamily: "Espaces verts", amount: "6,400 €", start: "28/12/2024", end: "27/12/2025", termination: "27/09/2025", status: "Actif"},
-          {number: "CTR-2025-004", title: "Contrôle légionelle annuel", provider: "ALS Laboratoires", site: "Campus La Défense", family: "Contrôle", subfamily: "Légionelle", amount: "4,200 €", start: "20/01/2025", end: "19/01/2026", termination: "19/10/2025", status: "En cours"},
-          {number: "CTR-2024-187", title: "Maintenance portes automatiques", provider: "Portalp Service", site: "Tour Montparnasse", family: "Maintenance", subfamily: "Portes", amount: "8,900 €", start: "15/12/2024", end: "14/12/2025", termination: "14/09/2025", status: "Actif"},
-          {number: "CTR-2025-005", title: "Nettoyage vitrerie extérieure", provider: "Vitres Pro", site: "Immeuble Haussmann", family: "Nettoyage", subfamily: "Vitrerie", amount: "3,600 €", start: "18/01/2025", end: "17/01/2026", termination: "17/10/2025", status: "Actif"},
-          {number: "CTR-2024-186", title: "Fourniture électricité", provider: "EDF Entreprises", site: "Tous sites", family: "Énergies", subfamily: "Électricité", amount: "125,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
-          {number: "CTR-2025-006", title: "Dératisation / Désinsectisation", provider: "3D Nuisibles", site: "Centre Commercial", family: "Nettoyage", subfamily: "Nuisibles", amount: "2,800 €", start: "12/01/2025", end: "11/01/2026", termination: "11/10/2025", status: "Actif"},
-          {number: "CTR-2024-185", title: "Maintenance extincteurs", provider: "Sicli Sécurité", site: "Site Industriel", family: "Sécurité", subfamily: "Incendie", amount: "5,400 €", start: "10/12/2024", end: "09/12/2025", termination: "09/09/2025", status: "Actif"},
-          {number: "CTR-2025-007", title: "Climatisation - Entretien", provider: "Climatic Services", site: "Centre Médical", family: "Maintenance", subfamily: "Climatisation", amount: "18,600 €", start: "22/01/2025", end: "21/01/2026", termination: "21/10/2025", status: "Actif"},
-          {number: "CTR-2024-184", title: "Assurance multi-risque", provider: "AXA Assurances", site: "Tous sites", family: "Assurance", subfamily: "Multi-risque", amount: "89,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
-          {number: "CTR-2025-008", title: "Gardiennage 24/7", provider: "Securitas France", site: "Campus Grenoble", family: "Sécurité", subfamily: "Gardiennage", amount: "156,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
-          {number: "CTR-2024-183", title: "Plomberie - Dépannage", provider: "Artiplomb SAS", site: "Parc Roissy", family: "Maintenance", subfamily: "Plomberie", amount: "12,000 €", start: "05/12/2024", end: "04/12/2025", termination: "04/09/2025", status: "Actif"}
-        ].each do |contract| %>
-          <tr style="border-bottom: 1px solid #eee;">
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
-            <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= contract[:number] %></td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:provider] %></td>
-            <td style="padding: var(--space-md);">
-              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                  <%= contract[:family] %>
-                </span>
-                <span style="display: inline-block; padding: 4px 10px; background-color: #ffe5e5; color: #d63031; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                  <%= contract[:subfamily] %>
-                </span>
-              </div>
-            </td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:start] %></td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:end] %></td>
-            <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:termination] %></td>
-            <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:amount] %></td>
-            <td style="padding: var(--space-md);">
-              <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; <%= contract[:status] == 'Actif' ? 'background-color: #d4edda; color: #155724;' : contract[:status] == 'En cours' ? 'background-color: #fff3cd; color: #856404;' : 'background-color: #e2e8f0; color: #4a5568;' %>">
-                <%= contract[:status] %>
-              </span>
-            </td>
-            <td style="padding: var(--space-md);">
-              <div style="display: flex; gap: 6px; justify-content: center;">
-                <%= link_to edit_contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #4a5568; color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease;" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Éditer
-                <% end %>
-                <%= link_to contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: var(--coral-primary); color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease;" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Voir
-                <% end %>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    </div>
+    <% 
+      # Define contracts data
+      all_contracts = [
+        {number: "BAIL-2025-001", title: "Bail commercial Tour A", provider: "SCI Montparnasse", site: "Tour Montparnasse\nTour A", family: "Baux", subfamily: "Commercial", amount: "45,000 €", monthly: "3,750 €", start: "01/01/2025", end: "31/12/2033", termination: "31/12/2031", indexation: "ILC", status: "Actif"},
+        {number: "BAIL-2024-089", title: "Bail habitation Bureaux", provider: "Foncière Défense", site: "Campus La Défense", family: "Baux", subfamily: "Habitation", amount: "28,000 €", monthly: "2,333 €", start: "15/03/2024", end: "14/03/2030", termination: "14/03/2029", indexation: "IRL", status: "Actif"},
+        {number: "PROP-2023-012", title: "Acquisition Centre Commercial", provider: "SCI Investissement", site: "Centre Commercial Rosny", family: "Actes de propriété", subfamily: "Commercial", amount: "2,500,000 €", surface: "3,200 m²", acquisition: "12/06/2023", notary: "Me. Durand", status: "Actif"},
+        {number: "PROP-2024-005", title: "Achat Bureaux Haussmann", provider: "Foncière Paris", site: "Immeuble Haussmann", family: "Actes de propriété", subfamily: "Bureaux", amount: "1,800,000 €", surface: "850 m²", acquisition: "20/01/2024", notary: "Me. Martin", status: "Actif"},
+        {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", site: "Tour Montparnasse\nTour A", family: "Maintenance", subfamily: "Ascenseurs", amount: "24,500 €", start: "15/01/2025", end: "14/01/2026", termination: "14/10/2025", status: "Actif"},
+        {number: "CTR-2025-002", title: "Nettoyage bureaux quotidien", provider: "Clean Pro Services", site: "Campus La Défense", family: "Nettoyage", subfamily: "Bureaux", amount: "12,800 €", start: "10/01/2025", end: "09/01/2026", termination: "09/10/2025", status: "Actif"},
+        {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", site: "Centre Commercial", family: "Contrôle", subfamily: "Électricité", amount: "8,500 €", start: "05/01/2025", end: "04/01/2026", termination: "04/10/2025", status: "Terminé"},
+        {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", site: "Site Industriel", family: "Maintenance", subfamily: "CVC", amount: "31,200 €", start: "02/01/2025", end: "01/01/2026", termination: "01/10/2025", status: "Actif"},
+        {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature SARL", site: "Résidence Le Parc", family: "Nettoyage", subfamily: "Espaces verts", amount: "6,400 €", start: "28/12/2024", end: "27/12/2025", termination: "27/09/2025", status: "Actif"},
+        {number: "CTR-2025-004", title: "Contrôle légionelle annuel", provider: "ALS Laboratoires", site: "Campus La Défense", family: "Contrôle", subfamily: "Légionelle", amount: "4,200 €", start: "20/01/2025", end: "19/01/2026", termination: "19/10/2025", status: "En cours"},
+        {number: "CTR-2024-187", title: "Maintenance portes automatiques", provider: "Portalp Service", site: "Tour Montparnasse", family: "Maintenance", subfamily: "Portes", amount: "8,900 €", start: "15/12/2024", end: "14/12/2025", termination: "14/09/2025", status: "Actif"},
+        {number: "CTR-2025-005", title: "Nettoyage vitrerie extérieure", provider: "Vitres Pro", site: "Immeuble Haussmann", family: "Nettoyage", subfamily: "Vitrerie", amount: "3,600 €", start: "18/01/2025", end: "17/01/2026", termination: "17/10/2025", status: "Actif"},
+        {number: "CTR-2024-186", title: "Fourniture électricité", provider: "EDF Entreprises", site: "Tous sites", family: "Énergies", subfamily: "Électricité", amount: "125,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+        {number: "CTR-2025-006", title: "Dératisation / Désinsectisation", provider: "3D Nuisibles", site: "Centre Commercial", family: "Nettoyage", subfamily: "Nuisibles", amount: "2,800 €", start: "12/01/2025", end: "11/01/2026", termination: "11/10/2025", status: "Actif"},
+        {number: "CTR-2024-185", title: "Maintenance extincteurs", provider: "Sicli Sécurité", site: "Site Industriel", family: "Sécurité", subfamily: "Incendie", amount: "5,400 €", start: "10/12/2024", end: "09/12/2025", termination: "09/09/2025", status: "Actif"},
+        {number: "CTR-2025-007", title: "Climatisation - Entretien", provider: "Climatic Services", site: "Centre Médical", family: "Maintenance", subfamily: "Climatisation", amount: "18,600 €", start: "22/01/2025", end: "21/01/2026", termination: "21/10/2025", status: "Actif"},
+        {number: "CTR-2024-184", title: "Assurance multi-risque", provider: "AXA Assurances", site: "Tous sites", family: "Assurance", subfamily: "Multi-risque", amount: "89,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+        {number: "CTR-2025-008", title: "Gardiennage 24/7", provider: "Securitas France", site: "Campus Grenoble", family: "Sécurité", subfamily: "Gardiennage", amount: "156,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+        {number: "CTR-2024-183", title: "Plomberie - Dépannage", provider: "Artiplomb SAS", site: "Parc Roissy", family: "Maintenance", subfamily: "Plomberie", amount: "12,000 €", start: "05/12/2024", end: "04/12/2025", termination: "04/09/2025", status: "Actif"}
+      ]
+      
+      # Group contracts by family
+      leases = all_contracts.select { |c| c[:family] == "Baux" }
+      property_deeds = all_contracts.select { |c| c[:family] == "Actes de propriété" }
+      service_contracts = all_contracts.reject { |c| ["Baux", "Actes de propriété"].include?(c[:family]) }
+    %>
+
+    <!-- BAUX (Leases) Section -->
+    <% if leases.any? %>
+      <div style="margin-bottom: var(--space-xxl);">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid var(--coral-primary);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="var(--coral-primary)" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          <h3 class="typo-h3" style="margin: 0;">Baux</h3>
+          <span class="typo-body-small" style="color: #666;">(<%= leases.count %> contrat<%= leases.count > 1 ? 's' : '' %>)</span>
+        </div>
+        
+        <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--pink-pale);">
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">N° Contrat</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Bailleur / Locataire</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Type</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Loyer Mensuel</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Loyer Annuel</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date début</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date fin</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Indexation</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Statut</th>
+                <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% leases.each do |contract| %>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= contract[:number] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:provider] %></td>
+                  <td style="padding: var(--space-md);">
+                    <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                      <%= contract[:subfamily] %>
+                    </span>
+                  </td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:monthly] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:amount] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:start] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:end] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:indexation] %></td>
+                  <td style="padding: var(--space-md);">
+                    <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; <%= contract[:status] == 'Actif' ? 'background-color: #d4edda; color: #155724;' : contract[:status] == 'En cours' ? 'background-color: #fff3cd; color: #856404;' : 'background-color: #e2e8f0; color: #4a5568;' %>">
+                      <%= contract[:status] %>
+                    </span>
+                  </td>
+                  <td style="padding: var(--space-md);">
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                      <%= link_to edit_contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #4a5568; color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none;" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Éditer
+                      <% end %>
+                      <%= link_to contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: var(--coral-primary); color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none;" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Voir
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- ACTES DE PROPRIÉTÉ (Property Deeds) Section -->
+    <% if property_deeds.any? %>
+      <div style="margin-bottom: var(--space-xxl);">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid #8b5cf6;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#8b5cf6" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="typo-h3" style="margin: 0;">Actes de propriété</h3>
+          <span class="typo-body-small" style="color: #666;">(<%= property_deeds.count %> document<%= property_deeds.count > 1 ? 's' : '' %>)</span>
+        </div>
+        
+        <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--pink-pale);">
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site / Bien</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Référence</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Vendeur / Acheteur</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Type</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Surface</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Prix d'acquisition</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date d'acquisition</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Notaire</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Statut</th>
+                <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% property_deeds.each do |contract| %>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #8b5cf6;"><%= contract[:number] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:provider] %></td>
+                  <td style="padding: var(--space-md);">
+                    <span style="display: inline-block; padding: 4px 10px; background-color: #ede9fe; color: #7c3aed; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                      <%= contract[:subfamily] %>
+                    </span>
+                  </td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:surface] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:amount] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:acquisition] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:notary] %></td>
+                  <td style="padding: var(--space-md);">
+                    <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background-color: #d4edda; color: #155724;">
+                      <%= contract[:status] %>
+                    </span>
+                  </td>
+                  <td style="padding: var(--space-md);">
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                      <%= link_to edit_contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #4a5568; color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none;" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Éditer
+                      <% end %>
+                      <%= link_to contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #8b5cf6; color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none;" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Voir
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- CONTRATS DE SERVICES (Service Contracts) Section -->
+    <% if service_contracts.any? %>
+      <div style="margin-bottom: var(--space-xxl);">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid #10b981;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#10b981" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+          </svg>
+          <h3 class="typo-h3" style="margin: 0;">Contrats de Services</h3>
+          <span class="typo-body-small" style="color: #666;">(<%= service_contracts.count %> contrat<%= service_contracts.count > 1 ? 's' : '' %>)</span>
+        </div>
+        
+        <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--pink-pale);">
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">N° Contrat</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Prestataire</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Famille / Sous-famille</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date renouvellement</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date échéance</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date résiliation</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Montant annuel HT</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Statut</th>
+                <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% service_contracts.each do |contract| %>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #10b981;"><%= contract[:number] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:provider] %></td>
+                  <td style="padding: var(--space-md);">
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                        <%= contract[:family] %>
+                      </span>
+                      <span style="display: inline-block; padding: 4px 10px; background-color: #ffe5e5; color: #d63031; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                        <%= contract[:subfamily] %>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:start] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:end] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:termination] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:amount] %></td>
+                  <td style="padding: var(--space-md);">
+                    <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; <%= contract[:status] == 'Actif' ? 'background-color: #d4edda; color: #155724;' : contract[:status] == 'En cours' ? 'background-color: #fff3cd; color: #856404;' : 'background-color: #e2e8f0; color: #4a5568;' %>">
+                      <%= contract[:status] %>
+                    </span>
+                  </td>
+                  <td style="padding: var(--space-md);">
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                      <%= link_to edit_contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #4a5568; color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none;" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Éditer
+                      <% end %>
+                      <%= link_to contract_path(contract[:number].parameterize), style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #10b981; color: white; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-decoration: none;" do %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Voir
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
 
     <!-- Pagination -->
     <div style="margin-top: var(--space-xl);">
