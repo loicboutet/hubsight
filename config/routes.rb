@@ -129,6 +129,7 @@ Rails.application.routes.draw do
   # Economic Analysis (BRIQUE 2)
   get 'savings', to: 'savings#index'
   get 'savings/report', to: 'savings#report'
+  post 'savings/export_selection', to: 'savings#export_selection', as: :export_selection_savings
   
   # User Management
   resources :users
