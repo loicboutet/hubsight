@@ -3,169 +3,189 @@
 <div class="section">
   <div class="page-header-responsive">
     <div>
-      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Tableau de Bord Analytique</h2>
-      <p class="typo-body-small">Vue d'ensemble du portefeuille et indicateurs clés de performance</p>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Analytics d'Usage de la Plateforme</h2>
+      <p class="typo-body-small">Statistiques d'utilisation et activité des utilisateurs</p>
     </div>
   </div>
 
-  <!-- KPI Cards Section -->
+  <!-- USER ACTIVITY KPI CARDS -->
   <div class="admin-stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
-    <!-- Card 1: Total Budget -->
+    <!-- Total Active Users -->
     <div class="admin-stat-card">
       <div class="admin-stat-header">
         <div>
-          <div class="admin-stat-label">Budget Annuel Total</div>
-          <div class="admin-stat-value"><%= number_to_currency(@total_budget, unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %></div>
-          <div class="admin-stat-change positive"><%= @budget_trend %> vs année précédente</div>
+          <div class="admin-stat-label">Utilisateurs Actifs</div>
+          <div class="admin-stat-value"><%= @total_active_users %></div>
+          <div class="admin-stat-change">sur <%= @total_users %> utilisateurs totaux</div>
         </div>
         <div class="admin-stat-icon purple">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
         </div>
       </div>
     </div>
 
-    <!-- Card 2: Active Contracts -->
+    <!-- New Users This Week -->
     <div class="admin-stat-card">
       <div class="admin-stat-header">
         <div>
-          <div class="admin-stat-label">Contrats Actifs</div>
-          <div class="admin-stat-value"><%= @total_contracts %></div>
-          <div class="admin-stat-change"><%= @coverage_percentage %>% du portfolio couvert</div>
-        </div>
-        <div class="admin-stat-icon coral">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 3: Potential Savings -->
-    <div class="admin-stat-card">
-      <div class="admin-stat-header">
-        <div>
-          <div class="admin-stat-label">Économies Potentielles</div>
-          <div class="admin-stat-value"><%= number_to_currency(@potential_savings, unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %></div>
-          <div class="admin-stat-change positive"><%= @savings_percentage %>% sur <%= @analyzed_contracts %> contrats</div>
+          <div class="admin-stat-label">Nouveaux Utilisateurs</div>
+          <div class="admin-stat-value"><%= @new_users_this_week %></div>
+          <div class="admin-stat-change">cette semaine</div>
         </div>
         <div class="admin-stat-icon green">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
           </svg>
         </div>
       </div>
     </div>
 
-    <!-- Card 4: Active Alerts -->
+    <!-- Connections This Week -->
     <div class="admin-stat-card">
       <div class="admin-stat-header">
         <div>
-          <div class="admin-stat-label">Alertes Actives</div>
-          <div class="admin-stat-value"><%= @total_alerts %></div>
-          <div class="admin-stat-change"><%= @upcoming_alerts %> à venir, <%= @at_risk_alerts %> à risque</div>
+          <div class="admin-stat-label">Connexions Semaine</div>
+          <div class="admin-stat-value"><%= @connections_this_week %></div>
+          <div class="admin-stat-change">Durée moy.: <%= @avg_session_duration %></div>
         </div>
         <div class="admin-stat-icon blue">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connections This Month -->
+    <div class="admin-stat-card">
+      <div class="admin-stat-header">
+        <div>
+          <div class="admin-stat-label">Connexions Mois</div>
+          <div class="admin-stat-value"><%= @connections_this_month %></div>
+          <div class="admin-stat-change">Moyenne: <%= (@connections_this_month / 30.0).round %>/jour</div>
+        </div>
+        <div class="admin-stat-icon coral">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Charts Section -->
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-2xl);" class="analytics-charts-grid">
-    <!-- Pie Chart: Contract Distribution by Family -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); ">
-      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        Répartition par Famille d'Achats
-      </h3>
-      
-      <div style="margin-bottom: var(--space-lg);">
-        <% colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'] %>
-        <% @contract_distribution.each_with_index do |item, index| %>
-          <div style="margin-bottom: var(--space-md);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs);">
-              <div style="display: flex; align-items: center; gap: var(--space-sm);">
-                <div style="width: 16px; height: 16px; border-radius: 4px; background-color: <%= colors[index] %>;"></div>
-                <span class="typo-body-small typo-bold"><%= item[:family] %></span>
-              </div>
-              <span class="typo-body-small" style="color: #666;"><%= item[:percentage] %>%</span>
-            </div>
-            <div style="background-color: #f0f0f0; height: 8px; border-radius: 4px; overflow: hidden;">
-              <div style="background-color: <%= colors[index] %>; height: 100%; width: <%= item[:percentage] %>%; transition: width 0.3s ease;"></div>
-            </div>
-            <p class="typo-body-small" style="color: #999; margin-top: 4px; font-size: 0.75rem;">
-              <%= item[:count] %> contrats • <%= number_to_currency(item[:amount], unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %>
-            </p>
-          </div>
-        <% end %>
+  <!-- CONTRACT ENTRY ACTIVITY SECTION -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      Activité de Saisie des Contrats
+    </h3>
+    
+    <!-- Quick Stats -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); margin-bottom: var(--space-xl);">
+      <div style="text-align: center; padding: var(--space-md); background-color: #f0f9ff; border-radius: var(--space-sm);">
+        <p class="typo-body-small" style="color: #666; margin-bottom: var(--space-xs);">24 dernières heures</p>
+        <p class="typo-h2" style="margin: 0; color: #0369a1;"><%= @contracts_last_24h %></p>
+      </div>
+      <div style="text-align: center; padding: var(--space-md); background-color: #f0fdf4; border-radius: var(--space-sm);">
+        <p class="typo-body-small" style="color: #666; margin-bottom: var(--space-xs);">48 dernières heures</p>
+        <p class="typo-h2" style="margin: 0; color: #15803d;"><%= @contracts_last_48h %></p>
+      </div>
+      <div style="text-align: center; padding: var(--space-md); background-color: #fef3c7; border-radius: var(--space-sm);">
+        <p class="typo-body-small" style="color: #666; margin-bottom: var(--space-xs);">Cette semaine</p>
+        <p class="typo-h2" style="margin: 0; color: #ca8a04;"><%= @contracts_this_week %></p>
+      </div>
+      <div style="text-align: center; padding: var(--space-md); background-color: #fce7f3; border-radius: var(--space-sm);">
+        <p class="typo-body-small" style="color: #666; margin-bottom: var(--space-xs);">Ce mois</p>
+        <p class="typo-h2" style="margin: 0; color: var(--coral-primary);"><%= @contracts_this_month %></p>
       </div>
     </div>
 
-    <!-- Bar Chart: Monthly Expirations -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); ">
-      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        Échéances Mensuelles 2025
-      </h3>
-      
-      <div style="display: flex; align-items-end; justify-content: space-between; height: 200px; gap: 8px;">
-        <% max_count = @monthly_expirations.map { |m| m[:count] }.max %>
-        <% @monthly_expirations.each do |month_data| %>
-          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
-            <div style="position: relative; width: 100%; display: flex; flex-direction: column; align-items: center;">
-              <span class="typo-body-small typo-bold" style="margin-bottom: 4px; color: var(--coral-primary);"><%= month_data[:count] %></span>
-              <div style="background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); width: 100%; height: <%= (month_data[:count].to_f / max_count * 180).round %>px; border-radius: 4px 4px 0 0; transition: height 0.3s ease;"></div>
+    <!-- Charts Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+      <!-- Weekly Trend -->
+      <div>
+        <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Tendance Hebdomadaire</h4>
+        <div style="display: flex; align-items-end; justify-content: space-between; height: 180px; gap: 8px;">
+          <% max_count = @weekly_contract_trend.map { |w| w[:count] }.max %>
+          <% @weekly_contract_trend.each do |week_data| %>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+              <span class="typo-body-small typo-bold" style="margin-bottom: 4px; color: var(--coral-primary);"><%= week_data[:count] %></span>
+              <div style="background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); width: 100%; height: <%= (week_data[:count].to_f / max_count * 150).round %>px; border-radius: 4px 4px 0 0;"></div>
+              <p class="typo-body-small" style="margin-top: var(--space-xs); font-size: 0.75rem; color: #666;"><%= week_data[:week] %></p>
             </div>
-            <p class="typo-body-small" style="margin-top: var(--space-xs); font-size: 0.65rem; transform: rotate(-45deg); transform-origin: top left; white-space: nowrap; color: #666;">
-              <%= month_data[:month].split(' ')[0] %>
-            </p>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Daily Trend (Current Week) -->
+      <div>
+        <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Activité de la Semaine</h4>
+        <div style="display: flex; align-items-end; justify-content: space-between; height: 180px; gap: 8px;">
+          <% max_daily = @daily_contract_trend.map { |d| d[:count] }.max %>
+          <% max_daily = 1 if max_daily == 0 %>
+          <% @daily_contract_trend.each do |day_data| %>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+              <span class="typo-body-small typo-bold" style="margin-bottom: 4px; color: #10b981;"><%= day_data[:count] %></span>
+              <div style="background: linear-gradient(180deg, #10b981 0%, #059669 100%); width: 100%; height: <%= day_data[:count] > 0 ? (day_data[:count].to_f / max_daily * 150).round : 0 %>px; border-radius: 4px 4px 0 0;"></div>
+              <p class="typo-body-small" style="margin-top: var(--space-xs); font-size: 0.75rem; color: #666;"><%= day_data[:day] %></p>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Top Contracts Table -->
-  <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-xl);">
+  <!-- ACTIVITY BY PORTFOLIO CLIENT -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
     <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-      Top 10 Contrats par Valeur
+      Activité par Portefeuille Client
     </h3>
     
     <div class="table-responsive">
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">N° CONTRAT</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TITRE</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">PRESTATAIRE</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">MONTANT TTC</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SITE</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ÉCHÉANCE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CLIENT</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">24H</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">48H</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SEMAINE</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">MOIS</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">UTILISATEURS ACTIFS</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DERNIÈRE ACTIVITÉ</th>
           </tr>
         </thead>
         <tbody>
-          <% @top_contracts.each_with_index do |contract, index| %>
+          <% @client_activity.each_with_index do |client, index| %>
             <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
               <td style="padding: var(--space-md);">
-                <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= contract[:number] %></span>
+                <span class="typo-body-small typo-bold"><%= client[:name] %></span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= client[:contracts_24h] > 0 ? '#dbeafe' : '#f3f4f6' %>; color: <%= client[:contracts_24h] > 0 ? '#1e40af' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= client[:contracts_24h] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= client[:contracts_48h] > 0 ? '#dbeafe' : '#f3f4f6' %>; color: <%= client[:contracts_48h] > 0 ? '#1e40af' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= client[:contracts_48h] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= client[:contracts_week] > 0 ? '#fef3c7' : '#f3f4f6' %>; color: <%= client[:contracts_week] > 0 ? '#92400e' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= client[:contracts_week] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= client[:contracts_month] > 0 ? '#fce7f3' : '#f3f4f6' %>; color: <%= client[:contracts_month] > 0 ? '#9f1239' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= client[:contracts_month] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= client[:active_users] %></span>
               </td>
               <td style="padding: var(--space-md);">
-                <span class="typo-body-small"><%= contract[:title] %></span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small"><%= contract[:provider] %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: right;">
-                <span class="typo-body-small typo-bold"><%= number_to_currency(contract[:amount], unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %></span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small" style="color: #666;"><%= contract[:site] %></span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small"><%= contract[:expiry] %></span>
+                <span class="typo-body-small" style="color: #666;">Il y a <%= client[:last_activity] %></span>
               </td>
             </tr>
           <% end %>
@@ -174,45 +194,118 @@
     </div>
   </div>
 
-  <!-- Savings Opportunities Table -->
-  <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-xl);">
+  <!-- ACTIVITY BY SITE -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
     <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-      Opportunités d'Économies (BRIQUE 2)
+      Activité par Site
     </h3>
     
     <div class="table-responsive">
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CONTRAT</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">FAMILLE</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">PRIX ACTUEL</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">PRIX RÉFÉRENCE</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ÉCONOMIE POT.</th>
-            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">%</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SITE</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">24H</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">48H</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SEMAINE</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">MOIS</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">UTIL. LE PLUS ACTIF</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DERNIÈRE ACTIVITÉ</th>
           </tr>
         </thead>
         <tbody>
-          <% @savings_opportunities.each_with_index do |saving, index| %>
+          <% @site_activity.each_with_index do |site, index| %>
             <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
               <td style="padding: var(--space-md);">
-                <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= saving[:number] %></span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small"><%= saving[:family] %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: right;">
-                <span class="typo-body-small"><%= number_to_currency(saving[:current_price], unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: right;">
-                <span class="typo-body-small" style="color: #10b981;"><%= number_to_currency(saving[:reference_price], unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: right;">
-                <span class="typo-body-small typo-bold" style="color: #10b981;"><%= number_to_currency(saving[:saving], unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %></span>
+                <span class="typo-body-small typo-bold"><%= site[:name] %></span>
               </td>
               <td style="padding: var(--space-md); text-align: center;">
-                <span style="display: inline-block; padding: 4px 10px; background-color: #d1fae5; color: #065f46; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-                  <%= saving[:percentage] %>%
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= site[:contracts_24h] > 0 ? '#dbeafe' : '#f3f4f6' %>; color: <%= site[:contracts_24h] > 0 ? '#1e40af' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= site[:contracts_24h] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= site[:contracts_48h] > 0 ? '#dbeafe' : '#f3f4f6' %>; color: <%= site[:contracts_48h] > 0 ? '#1e40af' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= site[:contracts_48h] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= site[:contracts_week] > 0 ? '#fef3c7' : '#f3f4f6' %>; color: <%= site[:contracts_week] > 0 ? '#92400e' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= site[:contracts_week] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= site[:contracts_month] > 0 ? '#fce7f3' : '#f3f4f6' %>; color: <%= site[:contracts_month] > 0 ? '#9f1239' : '#6b7280' %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= site[:contracts_month] %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small"><%= site[:most_active_user] %></span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small" style="color: #666;">Il y a <%= site[:last_activity] %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PERSONALIZED ALERTS WITH DEADLINES (GREEN HIGHLIGHTING) -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      Échéances Alertes Personnalisées
+    </h3>
+    
+    <div class="table-responsive">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TYPE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DESCRIPTION</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SITE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ÉCHÉANCE</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">JOURS RESTANTS</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">PRIORITÉ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @personalized_alerts.each_with_index do |alert, index| %>
+            <% 
+              # Green highlighting for upcoming deadlines (within 7 days)
+              highlight_green = alert[:days_remaining] <= 7
+              row_bg = highlight_green ? '#d1fae5' : (index.even? ? '#fafbfc' : '#ffffff')
+            %>
+            <tr style="border-bottom: 1px solid #e9ecef; background-color: <%= row_bg %>;">
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small typo-bold" style="color: <%= highlight_green ? '#065f46' : '#374151' %>;"><%= alert[:type] %></span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small" style="color: <%= highlight_green ? '#065f46' : '#4b5563' %>;"><%= alert[:description] %></span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small" style="color: #666;"><%= alert[:site] %></span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small" style="color: <%= highlight_green ? '#065f46' : '#374151' %>;"><%= alert[:deadline].strftime('%d/%m/%Y') %></span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= highlight_green ? '#10b981' : '#fbbf24' %>; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                  <%= alert[:days_remaining] %> jours
+                </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <% 
+                  priority_colors = {
+                    'high' => { bg: '#fee2e2', text: '#991b1b' },
+                    'medium' => { bg: '#fef3c7', text: '#92400e' },
+                    'low' => { bg: '#dbeafe', text: '#1e40af' }
+                  }
+                  colors = priority_colors[alert[:priority]]
+                %>
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= colors[:bg] %>; color: <%= colors[:text] %>; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: capitalize;">
+                  <%= alert[:priority] == 'high' ? 'Haute' : (alert[:priority] == 'medium' ? 'Moyenne' : 'Basse') %>
                 </span>
               </td>
             </tr>
@@ -222,99 +315,52 @@
     </div>
   </div>
 
-  <!-- Site Distribution Table -->
-  <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-xl);">
-    <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-      Répartition par Site
-    </h3>
-    
-    <div class="table-responsive">
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SITE</th>
-            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CONTRATS</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">MONTANT TOTAL</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SURFACE</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">COÛT/M²</th>
-            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ÉQUIPEMENTS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @site_distribution.each_with_index do |site, index| %>
-            <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small typo-bold"><%= site[:name] %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: center;">
-                <span class="typo-body-small typo-bold"><%= site[:contracts] %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: right;">
-                <span class="typo-body-small"><%= number_to_currency(site[:amount], unit: '€', separator: ' ', delimiter: ' ', format: '%n %u', precision: 0) %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: right;">
-                <span class="typo-body-small" style="color: #666;"><%= number_with_delimiter(site[:area], delimiter: ' ') %> m²</span>
-              </td>
-              <td style="padding: var(--space-md); text-align: right;">
-                <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= number_to_currency(site[:cost_per_sqm], unit: '€', separator: ',', delimiter: ' ', format: '%n %u') %></span>
-              </td>
-              <td style="padding: var(--space-md); text-align: center;">
-                <span class="typo-body-small"><%= site[:equipment] %></span>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Additional Metrics -->
-  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);" class="analytics-metrics-grid">
-    <!-- Equipment Coverage -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); ">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Couverture Équipements</h4>
-      <div style="margin-bottom: var(--space-md);">
-        <p class="typo-h2" style="margin: 0; color: var(--coral-primary);"><%= number_with_delimiter(@total_equipment, delimiter: ' ') %></p>
-        <p class="typo-body-small" style="color: #999;">Total équipements</p>
-      </div>
-      <div style="margin-bottom: var(--space-sm);">
-        <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
-          <span class="typo-body-small">Sous contrat</span>
-          <span class="typo-body-small typo-bold"><%= @equipment_coverage %>%</span>
-        </div>
-        <div style="background-color: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
-          <div style="background-color: #10b981; height: 100%; width: <%= @equipment_coverage %>%;"></div>
-        </div>
-      </div>
-      <p class="typo-body-small" style="color: #666;"><%= number_with_delimiter(@equipment_under_contract, delimiter: ' ') %> couverts • <%= number_with_delimiter(@equipment_no_contract, delimiter: ' ') %> sans contrat</p>
-    </div>
-
-    <!-- Service Providers -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); ">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Prestataires</h4>
-      <div style="margin-bottom: var(--space-md);">
-        <p class="typo-h2" style="margin: 0; color: var(--coral-primary);"><%= @active_organizations %></p>
-        <p class="typo-body-small" style="color: #999;">Organisations actives</p>
-      </div>
-      <div style="margin-bottom: var(--space-sm);">
-        <p class="typo-body-small">Moy. contrats/prestataire: <span class="typo-bold"><%= @avg_contracts_per_provider %></span></p>
-        <p class="typo-body-small">Top prestataire: <span class="typo-bold"><%= @top_provider[:name] %></span> (<%= @top_provider[:contracts] %> contrats)</p>
-      </div>
-    </div>
-
-    <!-- Geographic Distribution -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); ">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Répartition Géographique</h4>
-      <% @geographic_distribution.each do |region| %>
+  <!-- ADDITIONAL METRICS -->
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+    <!-- Peak Usage Hours -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Heures de Pointe</h4>
+      <% @peak_usage_hours.each do |period| %>
         <div style="margin-bottom: var(--space-sm);">
           <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
-            <span class="typo-body-small"><%= region[:region] %></span>
-            <span class="typo-body-small typo-bold"><%= region[:percentage] %>%</span>
+            <span class="typo-body-small"><%= period[:hour] %></span>
+            <span class="typo-body-small typo-bold"><%= period[:percentage] %>%</span>
           </div>
-          <div style="background-color: #e0e0e0; height: 6px; border-radius: 3px; overflow: hidden;">
-            <div style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); height: 100%; width: <%= region[:percentage] %>%;"></div>
+          <div style="background-color: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
+            <div style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); height: 100%; width: <%= period[:percentage] %>%;"></div>
           </div>
-          <p class="typo-body-small" style="color: #999; margin-top: 2px; font-size: 0.7rem;"><%= region[:count] %> contrats</p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Most Active Users -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Utilisateurs les Plus Actifs</h4>
+      <% @most_active_users.each_with_index do |user, index| %>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-sm) 0; border-bottom: <%= index == @most_active_users.length - 1 ? 'none' : '1px solid #e9ecef' %>;">
+          <div>
+            <p class="typo-body-small typo-bold" style="margin: 0; margin-bottom: 2px;"><%= user[:name] %></p>
+            <p class="typo-body-small" style="margin: 0; color: #666; font-size: 0.75rem;"><%= user[:role] %></p>
+          </div>
+          <span style="display: inline-block; padding: 4px 10px; background-color: var(--pink-pale); color: var(--coral-primary); border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+            <%= user[:actions] %>
+          </span>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Feature Usage -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Fonctionnalités les Plus Utilisées</h4>
+      <% @feature_usage.each do |feature| %>
+        <div style="margin-bottom: var(--space-sm);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-xs);">
+            <span class="typo-body-small"><%= feature[:feature] %></span>
+            <span class="typo-body-small typo-bold"><%= feature[:views] %></span>
+          </div>
+          <div style="background-color: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
+            <div style="background-color: var(--coral-primary); height: 100%; width: <%= feature[:percentage] %>%;"></div>
+          </div>
         </div>
       <% end %>
     </div>
