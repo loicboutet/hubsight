@@ -253,6 +253,9 @@
 .contracts-table .amount {
   font-weight: 700;
   color: var(--dark-gray);
+  vertical-align: top;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
 }
 
 /* Responsive Design */

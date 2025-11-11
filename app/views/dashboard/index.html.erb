@@ -2,11 +2,6 @@
 <%= stylesheet_link_tag "dashboard", "data-turbo-track": "reload" %>
 
 <div class="section">
-  <div style="margin-bottom: var(--space-xl);">
-    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Tableau de Bord</h2>
-    <p class="typo-body-small">Vue d'ensemble du portefeuille immobilier</p>
-  </div>
-
   <!-- KPI Cards -->
   <div class="dashboard-kpi-grid">
     <!-- Card 1: Sites Total -->
@@ -41,10 +36,30 @@
       </div>
     </div>
 
-    <!-- Card 3: Organisations -->
+    <!-- Card 3: Prestataires -->
     <div class="dashboard-kpi-card complex">
       <div class="dashboard-kpi-content">
-        <div class="dashboard-kpi-label">Prestataires at Autres Organisations</div>
+        <div class="dashboard-kpi-label">PRESTATAIRES</div>
+        <div class="dashboard-kpi-value">45</div>
+        <div class="dashboard-kpi-details">
+          <div>Organisations actives</div>
+          <div>Moy. contrats/prestataire: <strong>4.1</strong></div>
+          <div>Top prestataire: <strong>ENGIE Solutions</strong> (12 contrats)</div>
+        </div>
+      </div>
+      <div class="dashboard-kpi-icon-container">
+        <div class="dashboard-kpi-icon orange">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Prestataires at Autres Organisations -->
+    <div class="dashboard-kpi-card complex">
+      <div class="dashboard-kpi-content">
+        <div class="dashboard-kpi-label">PRESTATAIRES AT AUTRES ORGANISATIONS</div>
         <div class="dashboard-kpi-value">0</div>
         <div class="dashboard-kpi-details">
           <div>Fournisseurs et tiers</div>
@@ -61,7 +76,7 @@
       </div>
     </div>
 
-    <!-- Card 4: Budget Annuel Total -->
+    <!-- Card 5: Budget Annuel Total -->
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Budget Annuel Total</div>
@@ -77,7 +92,7 @@
       </div>
     </div>
 
-    <!-- Card 5: Économies Potentielles -->
+    <!-- Card 6: Économies Potentielles -->
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Économies Potentielles</div>
@@ -93,7 +108,7 @@
       </div>
     </div>
 
-    <!-- Card 6: Alertes Actives -->
+    <!-- Card 7: Alertes Actives -->
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Alertes Actives</div>
@@ -155,7 +170,7 @@
               <th>N° CONTRAT</th>
               <th>TITRE</th>
               <th>PRESTATAIRE</th>
-              <th>MONTANT TTC</th>
+              <th>MONTANT HT</th>
               <th>SITE</th>
               <th>ÉCHÉANCE</th>
             </tr>
@@ -177,7 +192,12 @@
                 <td><span class="contract-number"><%= contract[:number] %></span></td>
                 <td><%= contract[:title] %></td>
                 <td><%= contract[:provider] %></td>
-                <td class="amount"><%= contract[:amount] %></td>
+                <td class="amount">
+                  <div><%= contract[:amount] %></div>
+                  <div style="font-size: 0.7rem; color: var(--medium-gray); font-weight: normal; margin-top: 2px;">
+                    HT Contrat initial + HT Avenant 1 + HT Avenant 2
+                  </div>
+                </td>
                 <td><%= contract[:site] %></td>
                 <td><%= contract[:deadline] %></td>
               </tr>
@@ -220,6 +240,9 @@
               </div>
               <div style="text-align: right;">
                 <p class="typo-body-small typo-bold" style="color: var(--dark-gray); margin-bottom: var(--space-xs);"><%= contract[:amount] %></p>
+                <div style="font-size: 0.7rem; color: var(--medium-gray); font-weight: normal; margin-top: 2px; margin-bottom: var(--space-xs);">
+                  HT Contrat initial + HT Avenant 1 + HT Avenant 2
+                </div>
                 <span style="display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; background-color: <%= contract[:status_color] %>; color: <%= contract[:status_text] %>;">
                   <%= contract[:status] %>
                 </span>
