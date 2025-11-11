@@ -1,5 +1,20 @@
 <% content_for :header, "Recommander Hubsight" %>
 
+<%
+  # Mock referral data - in production this would come from the database
+  mock_referrals = [
+    {email: "jane.smith@company.com", sent_date: "25/10/2024", status: "accepted"},
+    {email: "mike.johnson@startup.io", sent_date: "20/10/2024", status: "pending"},
+    {email: "sarah.williams@enterprise.fr", sent_date: "15/10/2024", status: "accepted"},
+    {email: "david.brown@business.com", sent_date: "10/10/2024", status: "pending"},
+    {email: "emma.davis@corp.net", sent_date: "05/10/2024", status: "expired"},
+    {email: "james.wilson@org.fr", sent_date: "01/10/2024", status: "accepted"},
+  ]
+  
+  # Calculate total successful referrals
+  successful_referrals_count = mock_referrals.count { |r| r[:status] == "accepted" }
+%>
+
 <div class="section">
   <div class="page-header-responsive">
     <div>
@@ -60,8 +75,8 @@ Cordialement,</textarea>
         </div>
 
         <div style="padding: var(--space-lg); background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 100%); border-radius: var(--space-md); text-align: center;">
-          <p class="typo-body-small typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-sm); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Total des parrainages</p>
-          <p style="font-size: 3rem; font-weight: 700; color: var(--coral-primary); margin: 0; line-height: 1;">12</p>
+          <p class="typo-body-small typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-sm); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Vos parrainages</p>
+          <p style="font-size: 3rem; font-weight: 700; color: var(--coral-primary); margin: 0; line-height: 1;"><%= successful_referrals_count %></p>
           <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-sm); font-size: 0.85rem;">invitations réussies</p>
         </div>
       </div>
@@ -111,14 +126,7 @@ Cordialement,</textarea>
           </tr>
         </thead>
         <tbody>
-          <% [
-            {email: "jane.smith@company.com", sent_date: "25/10/2024", status: "accepted"},
-            {email: "mike.johnson@startup.io", sent_date: "20/10/2024", status: "pending"},
-            {email: "sarah.williams@enterprise.fr", sent_date: "15/10/2024", status: "accepted"},
-            {email: "david.brown@business.com", sent_date: "10/10/2024", status: "pending"},
-            {email: "emma.davis@corp.net", sent_date: "05/10/2024", status: "expired"},
-            {email: "james.wilson@org.fr", sent_date: "01/10/2024", status: "accepted"},
-          ].each_with_index do |referral, index| %>
+          <% mock_referrals.each_with_index do |referral, index| %>
             <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
               <td style="padding: var(--space-md);">
                 <p class="typo-body-small" style="color: var(--dark-gray);"><%= referral[:email] %></p>
