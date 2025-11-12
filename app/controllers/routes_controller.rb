@@ -20,7 +20,6 @@ class RoutesController < ApplicationController
         # Resources Section
         { name: 'Organisations', path: '/organizations?role=admin', edit_path: '/organizations/1/edit', description: 'Manage organizations (contractors, suppliers)' },
         { name: 'Types d\'Équipement', path: '/equipment_types?role=admin', description: 'View equipment type catalog (OmniClass)' },
-        { name: 'Familles de Contrats', path: '/contract_families?role=admin', description: 'View contract families & subfamilies' },
         
         # Monitoring Section (BRIQUE 2)
         { name: 'Alertes', path: '/alerts?role=admin', edit_path: '/alerts/1/edit', description: 'Dashboard of all alerts across all portfolios' },
@@ -42,7 +41,6 @@ class RoutesController < ApplicationController
         { name: 'Économies (vue utilisateurs)', path: '/savings', description: 'View potential savings per contract', exclude_leases: true },
         { name: 'Historisation des Modifications', path: '/audit_trail', description: 'View modification history' },
         { name: 'Types d\'Équipement', path: '/equipment_types', description: 'List equipment type catalog (OmniClass)' },
-        { name: 'Familles de Contrats', path: '/contract_families', description: 'List contract families & subfamilies' },
         { name: 'Recherche', path: '/search', description: 'Global search across all entities' }
       ],
       'Site Manager (Responsable de Site)' => [
