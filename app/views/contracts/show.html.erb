@@ -49,6 +49,96 @@
       </div>
     </div>
 
+  <!-- Contract Type & PDF Section -->
+  <% if @contract.contract_classification.present? %>
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-lg); background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg); color: white;">
+        <div>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">TYPE DE CONTRAT</p>
+          <p class="typo-h3" style="color: white;">
+            <% case @contract.contract_classification %>
+            <% when 'initial' %>
+              📋 Contrat Initial
+            <% when 'amendment' %>
+              📝 Avenant
+            <% when 'framework' %>
+              📑 Accord Cadre
+            <% end %>
+          </p>
+        </div>
+        <div>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">DOCUMENT PDF</p>
+          <% if @contract.pdf_url.present? %>
+            <%= link_to @contract.pdf_url, target: '_blank', style: "color: white; text-decoration: underline; font-weight: bold;" do %>
+              📄 Voir le PDF du contrat →
+            <% end %>
+          <% else %>
+            <p style="color: rgba(255,255,255,0.6);">Aucun PDF disponible</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Related Contracts Section (only for initial contracts) -->
+  <% if @contract.contract_classification == 'initial' && (@amendments.any? || @framework_agreements.any?) %>
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Contrats Associés
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <!-- Amendments Column -->
+        <div>
+          <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">
+            📝 Avenants (<%= @amendments.count %>)
+          </h5>
+          <% if @amendments.any? %>
+            <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+              <% @amendments.each do |amendment| %>
+                <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 3px solid var(--coral-primary);">
+                  <%= link_to contract_path(amendment.id), style: "text-decoration: none; color: inherit;" do %>
+                    <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);"><%= amendment.contract_number %></p>
+                    <p class="typo-body-small" style="margin-bottom: var(--space-xs);"><%= amendment.title %></p>
+                    <p class="typo-body-small" style="color: var(--grey-primary);">
+                      Signé le <%= amendment.signature_date.strftime("%d/%m/%Y") %>
+                    </p>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="typo-body-small" style="color: var(--grey-primary);">Aucun avenant associé</p>
+          <% end %>
+        </div>
+
+        <!-- Framework Agreements Column -->
+        <div>
+          <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">
+            📑 Accords Cadres (<%= @framework_agreements.count %>)
+          </h5>
+          <% if @framework_agreements.any? %>
+            <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+              <% @framework_agreements.each do |framework| %>
+                <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 3px solid #667eea;">
+                  <%= link_to contract_path(framework.id), style: "text-decoration: none; color: inherit;" do %>
+                    <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);"><%= framework.contract_number %></p>
+                    <p class="typo-body-small" style="margin-bottom: var(--space-xs);"><%= framework.title %></p>
+                    <p class="typo-body-small" style="color: var(--grey-primary);">
+                      Signé le <%= framework.signature_date.strftime("%d/%m/%Y") %>
+                    </p>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="typo-body-small" style="color: var(--grey-primary);">Aucun accord cadre associé</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <!-- Identification Section -->
   <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
     <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">

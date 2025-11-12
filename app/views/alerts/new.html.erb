@@ -34,13 +34,37 @@
 
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Organisation prestataire
+            </label>
+            <select name="alert[provider_organization]" style="width: 100%;">
+              <option value="">Toutes</option>
+              <option value="org1">Entreprise A</option>
+              <option value="org2">Entreprise B</option>
+              <option value="org3">Entreprise C</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Sans Famille
+            </label>
+            <select name="alert[family]" style="width: 100%;">
+              <option value="">Toutes</option>
+              <option value="family1">Famille 1</option>
+              <option value="family2">Famille 2</option>
+              <option value="family3">Famille 3</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
               Type d'Alerte <span style="color: var(--coral-primary);">*</span>
             </label>
             <select name="alert[alert_type]" required style="width: 100%;">
               <option value="">Sélectionner...</option>
-              <option value="upcoming">À venir</option>
-              <option value="at_risk">En risque</option>
-              <option value="missing_contract">Contrat manquant</option>
+              <option value="monitor">À surveiller</option>
+              <option value="tender">Appel d'offre à prévoir</option>
+              <option value="terminate">À résilier</option>
             </select>
           </div>
 
@@ -112,11 +136,16 @@
         <div style="display: grid; gap: var(--space-md);">
           <div style="display: flex; align-items: center; gap: var(--space-sm);">
             <input type="checkbox" name="alert[send_email]" id="send_email" value="1" checked />
-            <label for="send_email" class="typo-body-small">Envoyer une notification par email</label>
+            <label for="send_email" class="typo-body-small" style="margin-bottom: 0">Envoyer une notification par email</label>
           </div>
           <div style="display: flex; align-items: center; gap: var(--space-sm);">
             <input type="checkbox" name="alert[send_reminder]" id="send_reminder" value="1" />
-            <label for="send_reminder" class="typo-body-small">Envoyer un rappel 7 jours avant l'échéance</label>
+            <label for="send_reminder" class="typo-body-small" style="margin-bottom: 0">Envoyer un rappel</label>
+            <select name="alert[reminder_days]" id="reminder_days" style="margin-left: var(--space-sm); width: auto;">
+              <option value="15">15 jours</option>
+              <option value="30">30 jours</option>
+            </select>
+            <span class="typo-body-small" style="margin-bottom: 0">avant la date limite de résiliation (plutôt que la date d'échéance)</span>
           </div>
         </div>
       </div>

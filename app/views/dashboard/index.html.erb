@@ -2,11 +2,6 @@
 <%= stylesheet_link_tag "dashboard", "data-turbo-track": "reload" %>
 
 <div class="section">
-  <div style="margin-bottom: var(--space-xl);">
-    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Tableau de Bord</h2>
-    <p class="typo-body-small">Vue d'ensemble du portefeuille immobilier</p>
-  </div>
-
   <!-- KPI Cards -->
   <div class="dashboard-kpi-grid">
     <!-- Card 1: Sites Total -->
@@ -41,15 +36,15 @@
       </div>
     </div>
 
-    <!-- Card 3: Organisations -->
+    <!-- Card 3: Prestataires -->
     <div class="dashboard-kpi-card complex">
       <div class="dashboard-kpi-content">
-        <div class="dashboard-kpi-label">Prestataires at Autres Organisations</div>
-        <div class="dashboard-kpi-value">0</div>
+        <div class="dashboard-kpi-label">PRESTATAIRES</div>
+        <div class="dashboard-kpi-value">45</div>
         <div class="dashboard-kpi-details">
-          <div>Fournisseurs et tiers</div>
+          <div>Organisations actives</div>
           <div>Moy. contrats/prestataire: <strong>4.1</strong></div>
-          <div>Top: <strong>ENGIE Solutions</strong> (75 contrats)</div>
+          <div>Top prestataire: <strong>ENGIE Solutions</strong> (12 contrats)</div>
         </div>
       </div>
       <div class="dashboard-kpi-icon-container">
@@ -61,7 +56,9 @@
       </div>
     </div>
 
-    <!-- Card 4: Budget Annuel Total -->
+    
+
+    <!-- Card 5: Budget Annuel Total -->
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Budget Annuel Total</div>
@@ -77,7 +74,7 @@
       </div>
     </div>
 
-    <!-- Card 5: Économies Potentielles -->
+    <!-- Card 6: Économies Potentielles -->
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Économies Potentielles</div>
@@ -93,7 +90,7 @@
       </div>
     </div>
 
-    <!-- Card 6: Alertes Actives -->
+    <!-- Card 7: Alertes Actives -->
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Alertes Actives</div>
@@ -155,7 +152,7 @@
               <th>N° CONTRAT</th>
               <th>TITRE</th>
               <th>PRESTATAIRE</th>
-              <th>MONTANT TTC</th>
+              <th>MONTANT HT</th>
               <th>SITE</th>
               <th>ÉCHÉANCE</th>
             </tr>
@@ -177,7 +174,12 @@
                 <td><span class="contract-number"><%= contract[:number] %></span></td>
                 <td><%= contract[:title] %></td>
                 <td><%= contract[:provider] %></td>
-                <td class="amount"><%= contract[:amount] %></td>
+                <td class="amount">
+                  <div><%= contract[:amount] %></div>
+                  <div style="font-size: 0.7rem; color: var(--medium-gray); font-weight: normal; margin-top: 2px;">
+                    HT Contrat initial + HT Avenant 1 + HT Avenant 2
+                  </div>
+                </td>
                 <td><%= contract[:site] %></td>
                 <td><%= contract[:deadline] %></td>
               </tr>
@@ -191,80 +193,62 @@
   <!-- Main Content Grid -->
   <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-lg);">
     <!-- Recent Contracts -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
-        <h3 class="typo-h4" style="margin: 0;">Contrats Récents</h3>
-        <%= link_to contracts_path, class: "typo-body-small", style: "color: var(--coral-primary); text-decoration: none; font-weight: 600;" do %>
-          Voir tous →
-        <% end %>
+    <div style="background-color: var(--white); border-radius: var(--space-md);">
+      <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+        Contrats Récents
+      </h3>
+      <div class="contracts-table-wrapper">
+        <table class="contracts-table">
+          <thead>
+            <tr>
+              <th>N° CONTRAT</th>
+              <th>TITRE</th>
+              <th>PRESTATAIRE</th>
+              <th>MONTANT HT</th>
+              <th>SITE</th>
+              <th>DATE</th>
+              <th>STATUT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% [
+              {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", amount: "24,500 €", site: "Tour Montparnasse", date: "15 Jan 2025", status: "Actif"},
+              {number: "CTR-2025-002", title: "Nettoyage bureaux - Site Paris", provider: "Clean Pro Services", amount: "12,800 €", site: "Campus La Défense", date: "10 Jan 2025", status: "Actif"},
+              {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", amount: "8,500 €", site: "Centre Commercial", date: "05 Jan 2025", status: "Terminé"},
+              {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", amount: "31,200 €", site: "Site Industriel", date: "02 Jan 2025", status: "Actif"},
+              {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature", amount: "6,400 €", site: "Résidence Le Parc", date: "28 Dec 2024", status: "Actif"}
+            ].each do |contract| %>
+              <tr>
+                <td><span class="contract-number"><%= contract[:number] %></span></td>
+                <td><%= contract[:title] %></td>
+                <td><%= contract[:provider] %></td>
+                <td class="amount">
+                  <div><%= contract[:amount] %></div>
+                  <div style="font-size: 0.7rem; color: var(--medium-gray); font-weight: normal; margin-top: 2px;">
+                    HT Contrat initial + HT Avenant 1 + HT Avenant 2
+                  </div>
+                </td>
+                <td><%= contract[:site] %></td>
+                <td><%= contract[:date] %></td>
+                <td>
+                  <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; <%= contract[:status] == 'Actif' ? 'background-color: #d4edda; color: #155724;' : 'background-color: #e2e8f0; color: #4a5568;' %>">
+                    <%= contract[:status] %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
-      <div>
-        <% [
-          {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", amount: "24,500 €", status: "Actif", date: "15 Jan 2025", status_color: "#d4edda", status_text: "#155724"},
-          {number: "CTR-2025-002", title: "Nettoyage bureaux - Site Paris", provider: "Clean Pro Services", amount: "12,800 €", status: "Actif", date: "10 Jan 2025", status_color: "#d4edda", status_text: "#155724"},
-          {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", amount: "8,500 €", status: "Terminé", date: "05 Jan 2025", status_color: "#e2e8f0", status_text: "#4a5568"},
-          {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", amount: "31,200 €", status: "Actif", date: "02 Jan 2025", status_color: "#d4edda", status_text: "#155724"},
-          {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature", amount: "6,400 €", status: "Actif", date: "28 Dec 2024", status_color: "#d4edda", status_text: "#155724"}
-        ].each do |contract| %>
-          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); margin-bottom: var(--space-md);">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-sm);">
-              <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#667eea">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span class="typo-body-small typo-bold" style="color: var(--coral-primary);"><%= contract[:number] %></span>
-                </div>
-                <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);"><%= contract[:title] %></p>
-                <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.8rem;"><%= contract[:provider] %></p>
-              </div>
-              <div style="text-align: right;">
-                <p class="typo-body-small typo-bold" style="color: var(--dark-gray); margin-bottom: var(--space-xs);"><%= contract[:amount] %></p>
-                <span style="display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; background-color: <%= contract[:status_color] %>; color: <%= contract[:status_text] %>;">
-                  <%= contract[:status] %>
-                </span>
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: var(--space-xs);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#999">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; margin: 0;"><%= contract[:date] %></p>
-            </div>
-          </div>
+      <div style="margin-top: var(--space-lg); text-align: right; padding-right: var(--space-md);">
+        <%= link_to contracts_path, class: "typo-body-small", style: "color: var(--coral-primary); text-decoration: none; font-weight: 600;" do %>
+          Voir tous les contrats →
         <% end %>
       </div>
     </div>
 
     <!-- Sidebar -->
     <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
-      <!-- Administration -->
-      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
-          <h3 class="typo-h4" style="margin: 0;">Administration</h3>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
-          <%= link_to admin_portfolio_managers_path, style: "text-decoration: none; display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); transition: background-color 0.2s;" do %>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#667eea" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <span class="typo-body-small typo-bold" style="color: var(--dark-gray);">Portfolio Managers</span>
-          <% end %>
-          <%= link_to admin_clients_path, style: "text-decoration: none; display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); transition: background-color 0.2s;" do %>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#10b981" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
-            <span class="typo-body-small typo-bold" style="color: var(--dark-gray);">Client Data Access</span>
-          <% end %>
-          <%= link_to admin_price_references_path, style: "text-decoration: none; display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); transition: background-color 0.2s;" do %>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#f59e0b" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-            </svg>
-            <span class="typo-body-small typo-bold" style="color: var(--dark-gray);">Price References</span>
-          <% end %>
-        </div>
-      </div>
-
       <!-- Alerts -->
       <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">

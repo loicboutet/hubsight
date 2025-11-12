@@ -26,7 +26,7 @@
           </div>
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Trier par</label>
-            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
               <option>Nom (A-Z)</option>
               <option>Poste</option>
               <option>Récemment ajouté</option>
@@ -155,6 +155,9 @@
       <!-- Filters Section -->
       <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
         <style>
+          @media (max-width: 1400px) {
+            .filters-grid-contacts { grid-template-columns: 1fr 1fr 1fr auto auto !important; }
+          }
           @media (max-width: 1200px) {
             .filters-grid-contacts { grid-template-columns: 1fr 1fr auto auto !important; }
           }
@@ -162,14 +165,14 @@
             .filters-grid-contacts { grid-template-columns: 1fr !important; }
           }
         </style>
-        <div class="filters-grid-contacts" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+        <div class="filters-grid-contacts" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
             <input type="text" placeholder="Nom, email, téléphone..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
           </div>
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Organisation</label>
-            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
               <option>Toutes</option>
               <option>ENGIE Solutions</option>
               <option>OTIS France</option>
@@ -179,7 +182,7 @@
           </div>
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Fonction</label>
-            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
               <option>Toutes</option>
               <option>Directeur</option>
               <option>Responsable</option>
@@ -188,8 +191,18 @@
             </select>
           </div>
           <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Catégorie du contact</label>
+            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
+              <option>Toutes</option>
+              <option>Comptabilité</option>
+              <option>Technique</option>
+              <option>Exploitation</option>
+              <option>Commercial</option>
+            </select>
+          </div>
+          <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Disponibilité</label>
-            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+            <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
               <option>Tous</option>
               <option>Disponible</option>
               <option>Indisponible</option>
@@ -218,6 +231,7 @@
               <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CONTACT</th>
               <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ORGANISATION</th>
               <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">FONCTION</th>
+              <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CATÉGORIE</th>
               <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">COORDONNÉES</th>
               <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
               <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
@@ -225,18 +239,18 @@
           </thead>
           <tbody>
             <% [
-              {id: 1, first_name: "Marie", last_name: "Dubois", organization: "ENGIE Solutions", position: "Directrice Technique", email: "m.dubois@engie.com", phone: "+33 1 40 06 20 01", mobile: "+33 6 12 34 56 78", available: true},
-              {id: 2, first_name: "Jean", last_name: "Martin", organization: "OTIS France", position: "Responsable Maintenance", email: "j.martin@otis.com", phone: "+33 1 55 47 80 01", mobile: "+33 6 98 76 54 32", available: true},
-              {id: 3, first_name: "Sophie", last_name: "Bernard", organization: "Daikin Service", position: "Chef de Projet CVC", email: "s.bernard@daikin.fr", phone: "+33 1 45 16 27 28", mobile: "+33 6 11 22 33 44", available: false},
-              {id: 4, first_name: "Pierre", last_name: "Lefebvre", organization: "Bouygues Energies & Services", position: "Technicien Senior", email: "p.lefebvre@bouygues-es.com", phone: "+33 1 30 60 33 01", mobile: "+33 6 55 66 77 88", available: true},
-              {id: 5, first_name: "Anne", last_name: "Moreau", organization: "Clean Pro Services", position: "Responsable Sécurité", email: "a.moreau@cleanpro.fr", phone: "+33 1 42 35 78 91", mobile: "+33 6 99 88 77 66", available: true},
-              {id: 6, first_name: "Thomas", last_name: "Petit", organization: "Bureau Veritas", position: "Ingénieur Contrôle", email: "t.petit@bureauveritas.com", phone: "+33 1 45 17 70 01", mobile: "+33 6 44 33 22 11", available: false},
-              {id: 7, first_name: "Caroline", last_name: "Dupont", organization: "Schindler France", position: "Responsable Technique", email: "c.dupont@schindler.fr", phone: "+33 1 41 02 52 01", mobile: "+33 6 77 88 99 00", available: true},
-              {id: 8, first_name: "Laurent", last_name: "Rousseau", organization: "Veolia Propreté", position: "Chef d'Équipe", email: "l.rousseau@veolia.com", phone: "+33 1 71 75 00 01", mobile: "+33 6 22 33 44 55", available: true},
-              {id: 9, first_name: "Isabelle", last_name: "Garnier", organization: "EDF Entreprises", position: "Conseiller Énergie", email: "i.garnier@edf.fr", phone: "+33 1 40 42 22 23", mobile: "+33 6 88 99 00 11", available: true},
-              {id: 10, first_name: "Michel", last_name: "Fontaine", organization: "Securitas France", position: "Responsable Sécurité", email: "m.fontaine@securitas.fr", phone: "+33 1 55 07 41 01", mobile: "+33 6 33 44 55 66", available: false},
-              {id: 11, first_name: "Nathalie", last_name: "Legrand", organization: "Vert Nature SARL", position: "Responsable Espaces Verts", email: "n.legrand@vertnature.fr", phone: "+33 1 48 56 32 11", mobile: "+33 6 11 00 99 88", available: true},
-              {id: 12, first_name: "Philippe", last_name: "Marchand", organization: "Climatic Services", position: "Ingénieur Frigoriste", email: "p.marchand@climatic.fr", phone: "+33 1 39 74 82 01", mobile: "+33 6 66 77 88 99", available: true},
+              {id: 1, first_name: "Marie", last_name: "Dubois", organization: "ENGIE Solutions", position: "Directrice Technique", category: "Technique", email: "m.dubois@engie.com", phone: "+33 1 40 06 20 01", mobile: "+33 6 12 34 56 78", available: true},
+              {id: 2, first_name: "Jean", last_name: "Martin", organization: "OTIS France", position: "Responsable Maintenance", category: "Technique", email: "j.martin@otis.com", phone: "+33 1 55 47 80 01", mobile: "+33 6 98 76 54 32", available: true},
+              {id: 3, first_name: "Sophie", last_name: "Bernard", organization: "Daikin Service", position: "Chef de Projet CVC", category: "Exploitation", email: "s.bernard@daikin.fr", phone: "+33 1 45 16 27 28", mobile: "+33 6 11 22 33 44", available: false},
+              {id: 4, first_name: "Pierre", last_name: "Lefebvre", organization: "Bouygues Energies & Services", position: "Technicien Senior", category: "Technique", email: "p.lefebvre@bouygues-es.com", phone: "+33 1 30 60 33 01", mobile: "+33 6 55 66 77 88", available: true},
+              {id: 5, first_name: "Anne", last_name: "Moreau", organization: "Clean Pro Services", position: "Responsable Sécurité", category: "Exploitation", email: "a.moreau@cleanpro.fr", phone: "+33 1 42 35 78 91", mobile: "+33 6 99 88 77 66", available: true},
+              {id: 6, first_name: "Thomas", last_name: "Petit", organization: "Bureau Veritas", position: "Ingénieur Contrôle", category: "Technique", email: "t.petit@bureauveritas.com", phone: "+33 1 45 17 70 01", mobile: "+33 6 44 33 22 11", available: false},
+              {id: 7, first_name: "Caroline", last_name: "Dupont", organization: "Schindler France", position: "Responsable Technique", category: "Technique", email: "c.dupont@schindler.fr", phone: "+33 1 41 02 52 01", mobile: "+33 6 77 88 99 00", available: true},
+              {id: 8, first_name: "Laurent", last_name: "Rousseau", organization: "Veolia Propreté", position: "Chef d'Équipe", category: "Exploitation", email: "l.rousseau@veolia.com", phone: "+33 1 71 75 00 01", mobile: "+33 6 22 33 44 55", available: true},
+              {id: 9, first_name: "Isabelle", last_name: "Garnier", organization: "EDF Entreprises", position: "Conseiller Énergie", category: "Commercial", email: "i.garnier@edf.fr", phone: "+33 1 40 42 22 23", mobile: "+33 6 88 99 00 11", available: true},
+              {id: 10, first_name: "Michel", last_name: "Fontaine", organization: "Securitas France", position: "Responsable Sécurité", category: "Exploitation", email: "m.fontaine@securitas.fr", phone: "+33 1 55 07 41 01", mobile: "+33 6 33 44 55 66", available: false},
+              {id: 11, first_name: "Nathalie", last_name: "Legrand", organization: "Vert Nature SARL", position: "Responsable Espaces Verts", category: "Exploitation", email: "n.legrand@vertnature.fr", phone: "+33 1 48 56 32 11", mobile: "+33 6 11 00 99 88", available: true},
+              {id: 12, first_name: "Philippe", last_name: "Marchand", organization: "Climatic Services", position: "Ingénieur Frigoriste", category: "Technique", email: "p.marchand@climatic.fr", phone: "+33 1 39 74 82 01", mobile: "+33 6 66 77 88 99", available: true},
             ].each_with_index do |contact, index| %>
               <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
                 <!-- Contact Name -->
@@ -264,6 +278,22 @@
                 <td style="padding: var(--space-md);">
                   <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
                     <%= contact[:position] %>
+                  </span>
+                </td>
+                
+                <!-- Category -->
+                <td style="padding: var(--space-md);">
+                  <% 
+                    category_styles = {
+                      "Comptabilité" => "background-color: #fff3cd; color: #856404;",
+                      "Technique" => "background-color: #d4edda; color: #155724;",
+                      "Exploitation" => "background-color: #f8d7da; color: #721c24;",
+                      "Commercial" => "background-color: #e7d3f7; color: #5a1a7a;"
+                    }
+                    style = category_styles[contact[:category]] || "background-color: #e9ecef; color: #495057;"
+                  %>
+                  <span style="display: inline-block; padding: 4px 12px; <%= style %> border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                    <%= contact[:category] %>
                   </span>
                 </td>
                 

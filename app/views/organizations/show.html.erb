@@ -61,9 +61,29 @@
           
           <div>
             <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Type d'Organisation</p>
-            <span style="display: inline-block; padding: 6px 14px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
-              <%= @organization.organization_type %>
-            </span>
+            <p style="color: #0066cc; font-size: 0.813rem; margin-bottom: var(--space-sm); font-weight: 500;">
+              💡 Cliquez sur les options ci-dessous pour sélectionner un ou plusieurs types
+            </p>
+            <div data-controller="multi-select-tags" data-multi-select-tags-selected-value='["<%= @organization.organization_type %>"]'>
+              <!-- Clickable options grid -->
+              <div class="tag-options-grid">
+                <div class="tag-option" data-multi-select-tags-target="option" data-value="Prestataire" data-action="click->multi-select-tags#toggle">
+                  Prestataire
+                </div>
+                <div class="tag-option" data-multi-select-tags-target="option" data-value="Proprietaire" data-action="click->multi-select-tags#toggle">
+                  Proprietaire
+                </div>
+                <div class="tag-option" data-multi-select-tags-target="option" data-value="Occupant" data-action="click->multi-select-tags#toggle">
+                  Occupant
+                </div>
+                <div class="tag-option" data-multi-select-tags-target="option" data-value="Locataire" data-action="click->multi-select-tags#toggle">
+                  Locataire
+                </div>
+              </div>
+              
+              <!-- Selected badges container -->
+              <div class="tag-badges-container" data-multi-select-tags-target="badgesContainer" style="display: none;"></div>
+            </div>
           </div>
           
           <div style="grid-column: 1 / -1;">
@@ -180,25 +200,50 @@
         </h3>
         
         <div style="margin-bottom: var(--space-lg);">
-          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-sm);">Familles achat associé à l'organisation</p>
-          <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
-            <span style="display: inline-block; padding: 8px 16px; background-color: #fff3cd; color: #856404; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
-              Maintenance Technique
-            </span>
-            <span style="display: inline-block; padding: 8px 16px; background-color: #d1ecf1; color: #0c5460; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
-              Énergie et Fluides
-            </span>
-            <span style="display: inline-block; padding: 8px 16px; background-color: #d4edda; color: #155724; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
-              Génie Climatique
-            </span>
-            <span style="display: inline-block; padding: 8px 16px; background-color: #f8d7da; color: #721c24; border-radius: 16px; font-size: 0.875rem; font-weight: 600;">
-              Sécurité Incendie
-            </span>
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Familles achat associé à l'organisation</p>
+          <p style="color: #0066cc; font-size: 0.813rem; margin-bottom: var(--space-sm); font-weight: 500;">
+            💡 Sélectionnez une ou plusieurs familles d'achat (cliquez pour sélectionner/désélectionner)
+          </p>
+          
+          <div data-controller="multi-select-tags" data-multi-select-tags-selected-value='["Maintenance Technique", "Énergie et Fluides", "Génie Climatique", "Sécurité Incendie"]'>
+            <!-- Clickable options grid -->
+            <div class="tag-options-grid">
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Maintenance Technique" data-action="click->multi-select-tags#toggle">
+                Maintenance Technique
+              </div>
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Énergie et Fluides" data-action="click->multi-select-tags#toggle">
+                Énergie et Fluides
+              </div>
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Génie Climatique" data-action="click->multi-select-tags#toggle">
+                Génie Climatique
+              </div>
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Sécurité Incendie" data-action="click->multi-select-tags#toggle">
+                Sécurité Incendie
+              </div>
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Plomberie" data-action="click->multi-select-tags#toggle">
+                Plomberie
+              </div>
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Électricité" data-action="click->multi-select-tags#toggle">
+                Électricité
+              </div>
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Nettoyage" data-action="click->multi-select-tags#toggle">
+                Nettoyage
+              </div>
+              <div class="tag-option" data-multi-select-tags-target="option" data-value="Espaces Verts" data-action="click->multi-select-tags#toggle">
+                Espaces Verts
+              </div>
+            </div>
+            
+            <!-- Selected badges container -->
+            <div class="tag-badges-container" data-multi-select-tags-target="badgesContainer" style="display: none;"></div>
           </div>
         </div>
         
         <div>
-          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-sm);">Sous familles achats associé à l'organisation</p>
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-xs);">Sous familles achats associé à l'organisation</p>
+          <p style="color: #0066cc; font-size: 0.813rem; margin-bottom: var(--space-sm); font-weight: 500;">
+            💡 Tapez pour rechercher et ajouter plusieurs sous-familles à la liste ci-dessous
+          </p>
           
           <!-- Autocomplete Input Section -->
           <div data-controller="autocomplete" style="position: relative;">
@@ -206,7 +251,7 @@
               type="text" 
               data-autocomplete-target="input"
               data-action="input->autocomplete#filter keydown->autocomplete#keydown"
-              placeholder="Ajouter une prestation..."
+              placeholder="Rechercher une sous-famille (ex: CVC, Plomberie, SSI...)..."
               style="width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: var(--dark-gray); transition: border-color 0.2s ease; margin-bottom: var(--space-md);"
               onfocus="this.style.borderColor='var(--coral-primary)'; this.style.boxShadow='0 0 0 3px rgba(255, 107, 107, 0.1)';"
               onblur="this.style.borderColor='var(--light-gray)'; this.style.boxShadow='none';"

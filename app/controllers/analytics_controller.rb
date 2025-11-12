@@ -1,109 +1,246 @@
 class AnalyticsController < ApplicationController
   def index
-    # KPI Cards Data
-    @total_budget = 847_500
-    @budget_trend = "+5.2%"
+    # NOTE: This is mock data for prototype. Replace with real database queries when models are implemented.
     
-    @total_contracts = 186
-    @active_contracts = 154
-    @renewal_contracts = 18
-    @terminated_contracts = 14
-    @coverage_percentage = 92
+    # ===========================================
+    # USER ACTIVITY METRICS (KPI Cards)
+    # ===========================================
+    # TODO: Replace with User.where(last_sign_in_at: 30.days.ago..Time.now).count
+    @total_active_users = 47
+    @total_users = 52
     
-    @potential_savings = 127_350
-    @savings_percentage = 4.5
-    @analyzed_contracts = 58
+    # TODO: Replace with User.where(created_at: 7.days.ago..Time.now).count
+    @new_users_this_week = 3
     
-    @total_alerts = 23
-    @upcoming_alerts = 12
-    @at_risk_alerts = 8
-    @missing_contracts_alerts = 3
+    # TODO: Replace with connection/session tracking
+    @connections_this_week = 156
+    @connections_this_month = 634
     
-    # Contract Distribution by Purchase Family (Pie Chart Data)
-    @contract_distribution = [
-      { family: 'Maintenance', percentage: 42, count: 78, amount: 1_195_350 },
-      { family: 'Nettoyage et Hygiène', percentage: 22, count: 41, amount: 626_450 },
-      { family: 'Contrôles Techniques', percentage: 15, count: 28, amount: 427_125 },
-      { family: 'Énergies/Fluides', percentage: 12, count: 22, amount: 341_700 },
-      { family: 'Assurances', percentage: 5, count: 9, amount: 142_375 },
-      { family: 'Immobilier', percentage: 3, count: 6, amount: 85_425 },
-      { family: 'Autres', percentage: 1, count: 2, amount: 29_075 }
+    # TODO: Calculate average from session data
+    @avg_session_duration = "12m 34s"
+    
+    # ===========================================
+    # CONTRACT ENTRY ACTIVITY
+    # ===========================================
+    # TODO: Replace with Contract.where(created_at: ...).count queries
+    @contracts_last_24h = 8
+    @contracts_last_48h = 15
+    @contracts_this_week = 42
+    @contracts_this_month = 178
+    
+    # Weekly trend data for chart
+    # TODO: Replace with Contract.group_by_week(:created_at).count
+    @weekly_contract_trend = [
+      { week: 'Sem 44', count: 35 },
+      { week: 'Sem 45', count: 42 },
+      { week: 'Sem 46', count: 38 },
+      { week: 'Sem 47', count: 41 },
+      { week: 'Sem 48', count: 45 },
+      { week: 'Sem 49', count: 42 },
+      { week: 'Sem 50', count: 48 }
     ]
     
-    # Monthly Contract Expirations (Bar Chart Data)
-    @monthly_expirations = [
-      { month: 'Jan 2025', count: 8 },
-      { month: 'Fév 2025', count: 12 },
-      { month: 'Mar 2025', count: 15 },
-      { month: 'Avr 2025', count: 9 },
-      { month: 'Mai 2025', count: 18 },
-      { month: 'Juin 2025', count: 14 },
-      { month: 'Juil 2025', count: 6 },
-      { month: 'Août 2025', count: 4 },
-      { month: 'Sept 2025', count: 11 },
-      { month: 'Oct 2025', count: 16 },
-      { month: 'Nov 2025', count: 13 },
-      { month: 'Déc 2025', count: 10 }
+    # Daily trend for current week
+    # TODO: Replace with Contract.where(created_at: 7.days.ago..Time.now).group_by_day(:created_at).count
+    @daily_contract_trend = [
+      { day: 'Lun', count: 8 },
+      { day: 'Mar', count: 6 },
+      { day: 'Mer', count: 7 },
+      { day: 'Jeu', count: 9 },
+      { day: 'Ven', count: 12 },
+      { day: 'Sam', count: 0 },
+      { day: 'Dim', count: 0 }
     ]
     
-    # Top 10 Contracts by Value
-    @top_contracts = [
-      { number: 'CTR-2024-001', title: 'Fourniture électricité', provider: 'EDF Entreprises', amount: 125_000, site: 'Tous sites', expiry: '31/12/2025' },
-      { number: 'CTR-2024-HVAC-001', title: 'Maintenance CVC', provider: 'ENGIE Solutions', amount: 102_000, site: 'Tour Montparnasse', expiry: '31/01/2027' },
-      { number: 'CTR-2025-SEC-001', title: 'Gardiennage 24/7', provider: 'Securitas France', amount: 156_000, site: 'Campus Grenoble', expiry: '31/12/2025' },
-      { number: 'CTR-2024-ASS-001', title: 'Assurance multi-risque', provider: 'AXA Assurances', amount: 89_000, site: 'Tous sites', expiry: '31/12/2025' },
-      { number: 'CTR-2024-009', title: 'Maintenance ascenseurs', provider: 'OTIS France', amount: 73_500, site: 'Campus La Défense', expiry: '15/06/2026' },
-      { number: 'CTR-2024-CVC-002', title: 'Climatisation', provider: 'Daikin Service', amount: 62_400, site: 'Centre Commercial', expiry: '28/02/2026' },
-      { number: 'CTR-2024-005', title: 'Nettoyage bureaux', provider: 'Clean Pro Services', amount: 48_900, site: 'Campus La Défense', expiry: '09/01/2026' },
-      { number: 'CTR-2024-012', title: 'Maintenance multi-technique', provider: 'Bouygues ES', amount: 95_600, site: 'Parc Roissy', expiry: '15/08/2026' },
-      { number: 'CTR-2024-PLO-003', title: 'Plomberie et chauffage', provider: 'Artiplomb SAS', amount: 38_200, site: 'Site Industriel', expiry: '04/12/2025' },
-      { number: 'CTR-2024-ASC-007', title: 'Maintenance ascenseurs', provider: 'Schindler France', amount: 55_800, site: 'Centre Médical', expiry: '22/03/2026' }
+    # ===========================================
+    # ACTIVITY BY PORTFOLIO CLIENT
+    # ===========================================
+    # TODO: Replace with real client/contract relationship queries
+    @client_activity = [
+      { 
+        name: 'Groupe Immobilier Paris', 
+        contracts_24h: 2, 
+        contracts_48h: 4, 
+        contracts_week: 12, 
+        contracts_month: 45,
+        active_users: 8,
+        last_activity: '2 heures'
+      },
+      { 
+        name: 'Foncière Atlantique', 
+        contracts_24h: 1, 
+        contracts_48h: 3, 
+        contracts_week: 8, 
+        contracts_month: 32,
+        active_users: 5,
+        last_activity: '5 heures'
+      },
+      { 
+        name: 'Patrimoine Lyon Métropole', 
+        contracts_24h: 3, 
+        contracts_48h: 5, 
+        contracts_week: 15, 
+        contracts_month: 58,
+        active_users: 12,
+        last_activity: '1 heure'
+      },
+      { 
+        name: 'Résidences du Sud-Ouest', 
+        contracts_24h: 0, 
+        contracts_48h: 1, 
+        contracts_week: 4, 
+        contracts_month: 18,
+        active_users: 3,
+        last_activity: '1 jour'
+      },
+      { 
+        name: 'Bureaux Défense Gestion', 
+        contracts_24h: 2, 
+        contracts_48h: 2, 
+        contracts_week: 3, 
+        contracts_month: 25,
+        active_users: 6,
+        last_activity: '3 heures'
+      }
     ]
     
-    # Top Savings Opportunities (BRIQUE 2)
-    @savings_opportunities = [
-      { number: 'CTR-2024-CLN-012', family: 'Nettoyage', current_price: 18_500, reference_price: 14_200, saving: 4_300, percentage: 23.2 },
-      { number: 'CTR-2024-MNT-045', family: 'Maintenance', current_price: 25_000, reference_price: 21_500, saving: 3_500, percentage: 14.0 },
-      { number: 'CTR-2024-PLO-008', family: 'Plomberie', current_price: 12_800, reference_price: 10_200, saving: 2_600, percentage: 20.3 },
-      { number: 'CTR-2024-ELE-015', family: 'Électricité', current_price: 16_400, reference_price: 14_200, saving: 2_200, percentage: 13.4 },
-      { number: 'CTR-2024-CVC-019', family: 'CVC', current_price: 22_100, reference_price: 20_000, saving: 2_100, percentage: 9.5 },
-      { number: 'CTR-2024-SEC-023', family: 'Sécurité', current_price: 19_800, reference_price: 17_950, saving: 1_850, percentage: 9.3 },
-      { number: 'CTR-2024-CLN-028', family: 'Nettoyage', current_price: 14_500, reference_price: 12_900, saving: 1_600, percentage: 11.0 },
-      { number: 'CTR-2024-MNT-032', family: 'Maintenance', current_price: 18_700, reference_price: 17_250, saving: 1_450, percentage: 7.8 },
-      { number: 'CTR-2024-CTR-035', family: 'Contrôle', current_price: 9_800, reference_price: 8_550, saving: 1_250, percentage: 12.8 },
-      { number: 'CTR-2024-VER-041', family: 'Espaces verts', current_price: 11_200, reference_price: 10_100, saving: 1_100, percentage: 9.8 }
+    # ===========================================
+    # ACTIVITY BY SITE
+    # ===========================================
+    # TODO: Replace with real site/contract relationship queries
+    @site_activity = [
+      { 
+        name: 'Tour Montparnasse', 
+        contracts_24h: 2, 
+        contracts_48h: 3, 
+        contracts_week: 8, 
+        contracts_month: 28,
+        most_active_user: 'Sophie Martin',
+        last_activity: '1 heure'
+      },
+      { 
+        name: 'Campus La Défense', 
+        contracts_24h: 3, 
+        contracts_48h: 6, 
+        contracts_week: 14, 
+        contracts_month: 52,
+        most_active_user: 'Marc Dubois',
+        last_activity: '2 heures'
+      },
+      { 
+        name: 'Centre Commercial Odysseum', 
+        contracts_24h: 1, 
+        contracts_48h: 2, 
+        contracts_week: 5, 
+        contracts_month: 22,
+        most_active_user: 'Julie Petit',
+        last_activity: '4 heures'
+      },
+      { 
+        name: 'Site Industriel Lyon Nord', 
+        contracts_24h: 0, 
+        contracts_48h: 1, 
+        contracts_week: 6, 
+        contracts_month: 31,
+        most_active_user: 'Pierre Rousseau',
+        last_activity: '6 heures'
+      },
+      { 
+        name: 'Campus Universitaire Grenoble', 
+        contracts_24h: 2, 
+        contracts_48h: 3, 
+        contracts_week: 9, 
+        contracts_month: 45,
+        most_active_user: 'Claire Bernard',
+        last_activity: '30 min'
+      }
     ]
     
-    # Contract Distribution by Site
-    @site_distribution = [
-      { name: 'Tour Montparnasse', contracts: 23, amount: 385_600, area: 120_000, cost_per_sqm: 3.21, equipment: 487 },
-      { name: 'Campus La Défense', contracts: 34, amount: 512_800, area: 85_500, cost_per_sqm: 6.00, equipment: 892 },
-      { name: 'Centre Commercial Odysseum', contracts: 18, amount: 298_400, area: 65_000, cost_per_sqm: 4.59, equipment: 324 },
-      { name: 'Site Industriel Lyon Nord', contracts: 29, amount: 445_200, area: 45_000, cost_per_sqm: 9.89, equipment: 567 },
-      { name: 'Résidence Le Parc', contracts: 12, amount: 156_800, area: 12_500, cost_per_sqm: 12.54, equipment: 156 },
-      { name: 'Parc d\'Activités Roissy', contracts: 21, amount: 378_900, area: 95_000, cost_per_sqm: 3.99, equipment: 445 },
-      { name: 'Immeuble Haussmann', contracts: 8, amount: 98_500, area: 8_200, cost_per_sqm: 12.01, equipment: 89 },
-      { name: 'Centre Médical Pasteur', contracts: 16, amount: 245_300, area: 15_600, cost_per_sqm: 15.72, equipment: 234 },
-      { name: 'Campus Universitaire Grenoble', contracts: 27, amount: 456_700, area: 42_000, cost_per_sqm: 10.87, equipment: 678 },
-      { name: 'Zone Commerciale Atlantis', contracts: 19, amount: 312_400, area: 52_000, cost_per_sqm: 6.01, equipment: 298 }
+    # ===========================================
+    # PERSONALIZED ALERTS WITH DEADLINES
+    # ===========================================
+    # TODO: Replace with Alert.where(user_id: current_user.id, alert_type: 'personalized')
+    @personalized_alerts = [
+      { 
+        type: 'Renouvellement Contrat',
+        description: 'CTR-2024-HVAC-001 - Maintenance CVC',
+        deadline: Date.today + 5.days,
+        days_remaining: 5,
+        priority: 'high',
+        site: 'Tour Montparnasse'
+      },
+      { 
+        type: 'Révision Tarifaire',
+        description: 'CTR-2024-SEC-001 - Gardiennage 24/7',
+        deadline: Date.today + 12.days,
+        days_remaining: 12,
+        priority: 'medium',
+        site: 'Campus Grenoble'
+      },
+      { 
+        type: 'Audit Annuel',
+        description: 'Contrôle technique ascenseurs',
+        deadline: Date.today + 3.days,
+        days_remaining: 3,
+        priority: 'high',
+        site: 'Campus La Défense'
+      },
+      { 
+        type: 'Renouvellement Contrat',
+        description: 'CTR-2024-001 - Fourniture électricité',
+        deadline: Date.today + 18.days,
+        days_remaining: 18,
+        priority: 'medium',
+        site: 'Tous sites'
+      },
+      { 
+        type: 'Fin de Garantie',
+        description: 'Équipements CVC Zone B',
+        deadline: Date.today + 7.days,
+        days_remaining: 7,
+        priority: 'low',
+        site: 'Centre Commercial'
+      },
+      { 
+        type: 'Révision Tarifaire',
+        description: 'CTR-2024-CLN-012 - Nettoyage bureaux',
+        deadline: Date.today + 25.days,
+        days_remaining: 25,
+        priority: 'low',
+        site: 'Campus La Défense'
+      }
     ]
     
-    # Additional Metrics
-    @total_equipment = 3_947
-    @equipment_under_contract = 3_254
-    @equipment_no_contract = 693
-    @equipment_coverage = 82
+    # ===========================================
+    # USAGE PATTERNS & TRENDS
+    # ===========================================
+    # Peak hours analysis
+    # TODO: Replace with session/activity tracking grouped by hour
+    @peak_usage_hours = [
+      { hour: '8h-10h', percentage: 25 },
+      { hour: '10h-12h', percentage: 35 },
+      { hour: '14h-16h', percentage: 30 },
+      { hour: '16h-18h', percentage: 10 }
+    ]
     
-    @active_organizations = 45
-    @avg_contracts_per_provider = 4.1
-    @top_provider = { name: 'ENGIE Solutions', contracts: 12 }
+    # Most active users
+    # TODO: Replace with User activity tracking
+    @most_active_users = [
+      { name: 'Sophie Martin', role: 'Gestionnaire', actions: 234 },
+      { name: 'Marc Dubois', role: 'Responsable Site', actions: 189 },
+      { name: 'Claire Bernard', role: 'Gestionnaire', actions: 156 },
+      { name: 'Pierre Rousseau', role: 'Technicien', actions: 142 },
+      { name: 'Julie Petit', role: 'Responsable Site', actions: 128 }
+    ]
     
-    # Geographic Distribution
-    @geographic_distribution = [
-      { region: 'Île-de-France', percentage: 58, count: 108 },
-      { region: 'PACA', percentage: 15, count: 28 },
-      { region: 'Auvergne-Rhône-Alpes', percentage: 18, count: 33 },
-      { region: 'Autres régions', percentage: 9, count: 17 }
+    # Feature usage statistics
+    # TODO: Track feature/page access
+    @feature_usage = [
+      { feature: 'Contrats', views: 1245, percentage: 32 },
+      { feature: 'Équipements', views: 876, percentage: 23 },
+      { feature: 'Sites', views: 654, percentage: 17 },
+      { feature: 'Alertes', views: 543, percentage: 14 },
+      { feature: 'Tableau de Bord', views: 532, percentage: 14 }
     ]
   end
 end
