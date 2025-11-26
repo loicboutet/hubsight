@@ -100,6 +100,8 @@
           </label>
           <%= f.select :contract_type,
             [
+              ['Bail (Lease)', 'lease'],
+              ['Acte de propriété (Property Deed)', 'property_deed'],
               ['Maintenance préventive', 'preventive_maintenance'],
               ['Maintenance corrective', 'corrective_maintenance'],
               ['Maintenance mixte', 'mixed_maintenance'],
@@ -110,7 +112,7 @@
               ['Autre', 'other']
             ],
             { include_blank: 'Sélectionner...', selected: contract.contract_type },
-            { required: true, style: "width: 100%;" } %>
+            { required: true, style: "width: 100%;", id: 'contract_type_select', onchange: 'toggleContractTypeFields()' } %>
         </div>
 
         <div>
@@ -402,6 +404,127 @@
       </div>
     </div>
 
+    <!-- Item 5: Lease-Specific Fields Section -->
+    <div id="lease_fields_section" style="margin-bottom: var(--space-xl); display: none;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--coral-primary);">
+        📋 Informations Spécifiques au Bail
+      </h4>
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--grey-primary);">
+        Complétez les informations spécifiques pour un contrat de type Bail
+      </p>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Bail <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :lease_type,
+            [
+              ['Commercial', 'commercial'],
+              ['Habitation', 'residential'],
+              ['Bureau', 'office'],
+              ['Industriel', 'industrial'],
+              ['Mixte', 'mixed']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.lease_type },
+            { style: "width: 100%;", class: 'lease-field' } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Surface (m²) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :lease_area, value: contract.lease_area, placeholder: "Ex: 250", step: 0.01, min: 0, style: "width: 100%;", class: 'lease-field' %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Loyer Mensuel HT (€) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :monthly_rent_excl_tax, value: contract.monthly_rent_excl_tax, placeholder: "Ex: 3750", step: 0.01, min: 0, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Loyer hors charges et hors taxes
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Charges Mensuelles (€)
+          </label>
+          <%= f.number_field :monthly_charges, value: contract.monthly_charges, placeholder: "Ex: 450", step: 0.01, min: 0, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Charges locatives mensuelles
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type d'Indexation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :indexation_type,
+            [
+              ['ILC - Indice des Loyers Commerciaux', 'ILC'],
+              ['ILAT - Indice des Loyers des Activités Tertiaires', 'ILAT'],
+              ['IRL - Indice de Référence des Loyers', 'IRL'],
+              ['ICC - Indice du Coût de la Construction', 'ICC'],
+              ['Autre', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.indexation_type },
+            { style: "width: 100%;", class: 'lease-field' } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Taux d'Indexation (%)
+          </label>
+          <%= f.number_field :indexation_rate, value: contract.indexation_rate, placeholder: "Ex: 2.5", step: 0.01, min: 0, max: 100, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Taux annuel d'évolution de l'indice
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Prise d'Effet <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :lease_effective_date, value: contract.lease_effective_date, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Date de début du bail (peut différer de la signature)
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Durée du Bail (mois) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :lease_duration_months, value: contract.lease_duration_months, placeholder: "Ex: 108 (9 ans)", min: 1, style: "width: 100%;", class: 'lease-field', id: 'lease_duration_field', onchange: 'calculateNextDeadline()' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Durée totale du bail en mois
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prochaine Échéance de Bail
+          </label>
+          <%= f.date_field :next_lease_deadline, value: contract.next_lease_deadline, style: "width: 100%;", class: 'lease-field', id: 'next_lease_deadline_field', readonly: true %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Calculée automatiquement (triennal pour bail commercial)
+          </p>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Alertes / Notifications
+          </label>
+          <%= f.text_area :lease_alerts, value: contract.lease_alerts, rows: 2, placeholder: "Ex: Renouvellement proche, Indexation à venir, Documents manquants...", style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Alertes spécifiques pour ce bail (renouvellement, indexation, etc.)
+          </p>
+        </div>
+      </div>
+    </div>
+
     <!-- Services & SLA Section -->
     <div style="margin-bottom: var(--space-xl);">
       <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
@@ -561,8 +684,74 @@ function toggleParentContractField() {
   }
 }
 
+// Item 5: Toggle lease-specific fields based on contract type
+function toggleContractTypeFields() {
+  const contractTypeSelect = document.getElementById('contract_type_select');
+  const leaseFieldsSection = document.getElementById('lease_fields_section');
+  const leaseFields = document.querySelectorAll('.lease-field');
+  
+  if (!contractTypeSelect || !leaseFieldsSection) return;
+  
+  const contractType = contractTypeSelect.value;
+  
+  if (contractType === 'lease') {
+    // Show lease fields section
+    leaseFieldsSection.style.display = 'block';
+    // Make lease fields required
+    leaseFields.forEach(field => {
+      if (field.hasAttribute('data-required') || field.previousElementSibling?.textContent.includes('*')) {
+        field.required = true;
+      }
+    });
+  } else {
+    // Hide lease fields section
+    leaseFieldsSection.style.display = 'none';
+    // Remove required attribute from lease fields
+    leaseFields.forEach(field => {
+      field.required = false;
+    });
+  }
+  
+  // TODO: Add similar logic for property_deed type when implemented
+  // if (contractType === 'property_deed') { ... }
+}
+
+// Calculate next lease deadline (triennial for commercial leases)
+function calculateNextDeadline() {
+  const effectiveDateField = document.querySelector('[name*="lease_effective_date"]');
+  const durationField = document.getElementById('lease_duration_field');
+  const nextDeadlineField = document.getElementById('next_lease_deadline_field');
+  
+  if (!effectiveDateField || !durationField || !nextDeadlineField) return;
+  
+  const effectiveDate = effectiveDateField.value;
+  const duration = parseInt(durationField.value);
+  
+  if (effectiveDate && duration) {
+    // Parse the effective date
+    const date = new Date(effectiveDate);
+    
+    // For commercial leases, calculate triennial deadline (36 months)
+    // Note: This is a simplified version. Backend should handle actual calculation
+    const triennialMonths = 36;
+    const nextDeadline = new Date(date);
+    nextDeadline.setMonth(nextDeadline.getMonth() + triennialMonths);
+    
+    // Format as YYYY-MM-DD for date input
+    const formattedDate = nextDeadline.toISOString().split('T')[0];
+    nextDeadlineField.value = formattedDate;
+  }
+}
+
 // Run on page load
 document.addEventListener('DOMContentLoaded', function() {
   toggleParentContractField();
+  toggleContractTypeFields();
+  
+  // Add event listener for effective date changes
+  const effectiveDateField = document.querySelector('[name*="lease_effective_date"]');
+  if (effectiveDateField) {
+    effectiveDateField.addEventListener('change', calculateNextDeadline);
+  }
 });
 </script>
