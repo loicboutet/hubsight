@@ -255,7 +255,7 @@
 
     <!-- BAUX (Leases) Section -->
     <% if leases.any? %>
-      <div style="margin-bottom: var(--space-xxl); max-width: 100%; overflow: hidden;">
+      <div style="margin-bottom: var(--space-xxl);">
         <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid var(--coral-primary);">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="var(--coral-primary)" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -265,7 +265,7 @@
         </div>
         
         <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-          <table style="width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 1800px;">
+          <table style="width: 100%; border-collapse: collapse; min-width: 1600px;">
             <thead>
               <tr style="border-bottom: 2px solid var(--pink-pale);">
                 <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
@@ -356,7 +356,7 @@
       </div>
     <% end %>
 
-    <!-- ACTES DE PROPRIÉTÉ (Property Deeds) Section -->
+    <!-- ACTES DE PROPRIÉTÉ (Property Deeds) Section - Item 8 -->
     <% if property_deeds.any? %>
       <div style="margin-bottom: var(--space-xxl);">
         <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid #8b5cf6;">
@@ -368,40 +368,55 @@
         </div>
         
         <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-          <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+          <table style="width: 100%; border-collapse: collapse; min-width: 1200px;">
             <thead>
               <tr style="border-bottom: 2px solid var(--pink-pale);">
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site / Bien</th>
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Référence</th>
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Vendeur / Acheteur</th>
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Type</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Site</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date acq.</th>
                 <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Surface</th>
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Prix d'acquisition</th>
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Date d'acquisition</th>
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Notaire</th>
-                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Statut</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Usage</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Propriété</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Prix acq.</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Valeur act.</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">MAJ</th>
+                <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Alertes</th>
                 <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
               </tr>
             </thead>
             <tbody>
-              <% property_deeds.each do |contract| %>
+              <% 
+                # Item 8: Property deed data with all 9 required columns
+                property_deed_data = [
+                  {number: "PROP-2023-012", site: "Centre Commercial Rosny", acquisition_date: "12/06/2023", area: "3,200 m²", usage_type: "Commercial", property_type: "Pleine propriété", acquisition_price: "2,500,000 €", current_value: "2,650,000 €", last_update: "15/01/2025", alert: ""},
+                  {number: "PROP-2024-005", site: "Immeuble Haussmann", acquisition_date: "20/01/2024", area: "850 m²", usage_type: "Bureaux", property_type: "Pleine propriété", acquisition_price: "1,800,000 €", current_value: "1,820,000 €", last_update: "10/01/2025", alert: "Diagnostic manquant"}
+                ]
+                
+                property_deed_data.each do |contract| 
+              %>
                 <tr style="border-bottom: 1px solid #eee;">
-                  <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
-                  <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #8b5cf6;"><%= contract[:number] %></td>
-                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:provider] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #8b5cf6;"><%= contract[:site] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:acquisition_date] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:area] %></td>
                   <td style="padding: var(--space-md);">
                     <span style="display: inline-block; padding: 4px 10px; background-color: #ede9fe; color: #7c3aed; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                      <%= contract[:subfamily] %>
+                      <%= contract[:usage_type] %>
                     </span>
                   </td>
-                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:surface] %></td>
-                  <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:amount] %></td>
-                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:acquisition] %></td>
-                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:notary] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:property_type] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md);"><%= contract[:acquisition_price] %></td>
+                  <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= contract[:current_value] %></td>
+                  <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:last_update] %></td>
                   <td style="padding: var(--space-md);">
-                    <span style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; background-color: #d4edda; color: #155724;">
-                      <%= contract[:status] %>
-                    </span>
+                    <% if contract[:alert].present? %>
+                      <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background-color: #fff3cd; color: #856404; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <%= contract[:alert] %>
+                      </span>
+                    <% else %>
+                      <span style="color: #999; font-size: 0.75rem;">-</span>
+                    <% end %>
                   </td>
                   <td style="padding: var(--space-md);">
                     <div style="display: flex; gap: 6px; justify-content: center;">

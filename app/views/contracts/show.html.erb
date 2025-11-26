@@ -139,6 +139,107 @@
     </div>
   <% end %>
 
+  <!-- Item 7: Lease-Specific Display Section -->
+  <% if @contract.contract_type == 'lease' %>
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-lg); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+      <h4 class="typo-h3" style="margin-bottom: var(--space-lg); color: white;">
+        📋 Informations Spécifiques au Bail
+      </h4>
+      
+      <div style="background-color: rgba(255,255,255,0.95); padding: var(--space-lg); border-radius: var(--space-sm);">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Site</p>
+            <p class="typo-body typo-bold"><%= @contract.covered_sites || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Propriétaire (Organisation)</p>
+            <p class="typo-body typo-bold"><%= @contract.contractor_organization || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Type de Bail</p>
+            <p class="typo-body"><%= @contract.lease_type&.capitalize || '-' %></p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Surface (m²)</p>
+            <p class="typo-body typo-bold" style="color: var(--coral-primary); font-size: 1.25rem;"><%= @contract.lease_area || '-' %> m²</p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Loyer Mensuel HT (€)</p>
+            <p class="typo-body typo-bold" style="color: var(--coral-primary); font-size: 1.25rem;">
+              <%= number_to_currency(@contract.monthly_rent_excl_tax, unit: "€", separator: ",", delimiter: " ", format: "%n %u") if @contract.monthly_rent_excl_tax %>
+            </p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Charges Mensuelles (€)</p>
+            <p class="typo-body typo-bold" style="font-size: 1.25rem;">
+              <%= number_to_currency(@contract.monthly_charges, unit: "€", separator: ",", delimiter: " ", format: "%n %u") if @contract.monthly_charges %>
+            </p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Type d'Indexation</p>
+            <p class="typo-body"><%= @contract.indexation_type || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Taux d'Indexation (%)</p>
+            <p class="typo-body"><%= @contract.indexation_rate || '-' %>%</p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Signature</p>
+            <p class="typo-body"><%= @contract.signature_date&.strftime("%d/%m/%Y") || '-' %></p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Prise d'Effet</p>
+            <p class="typo-body"><%= @contract.lease_effective_date&.strftime("%d/%m/%Y") || @contract.effective_date&.strftime("%d/%m/%Y") || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Durée du Bail (mois)</p>
+            <p class="typo-body"><%= @contract.lease_duration_months || '-' %> mois</p>
+          </div>
+          <div style="background-color: #fff3cd; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #ffc107;">
+            <p class="typo-body-small typo-bold" style="color: #856404; margin-bottom: var(--space-xs);">⏰ Prochaine Échéance de Bail</p>
+            <p class="typo-body typo-bold" style="color: #856404; font-size: 1.125rem;"><%= @contract.next_lease_deadline&.strftime("%d/%m/%Y") || '-' %></p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Statut</p>
+            <span class="<%= @contract.status == 'active' ? 'typo-badge-success' : 'typo-badge-warning' %>">
+              <%= @contract.status %>
+            </span>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Alertes / Notifications</p>
+            <% if @contract.lease_alerts.present? %>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+                <% @contract.lease_alerts.split(',').each do |alert| %>
+                  <span style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #fff3cd; color: #856404; border-radius: 4px; font-size: 0.875rem; font-weight: 600;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <%= alert.strip %>
+                  </span>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="typo-body-small" style="color: #999;">Aucune alerte</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <!-- Identification Section -->
   <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
     <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">

@@ -525,6 +525,115 @@
       </div>
     </div>
 
+    <!-- Items 9 & 10: Property Deed-Specific Fields Section -->
+    <div id="property_deed_fields_section" style="margin-bottom: var(--space-xl); display: none;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid #8b5cf6;">
+        🏢 Informations Spécifiques à l'Acte de Propriété
+      </h4>
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--grey-primary);">
+        Complétez les informations spécifiques pour un contrat de type Acte de Propriété
+      </p>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date d'Acquisition <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :property_acquisition_date, value: contract.property_acquisition_date, style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Date d'acquisition du bien immobilier
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Surface (m²) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :property_area, value: contract.property_area, placeholder: "Ex: 850", step: 0.01, min: 0, style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Surface totale du bien en mètres carrés
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type d'Usage <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :property_usage_type,
+            [
+              ['Bureaux', 'office'],
+              ['Résidentiel', 'residential'],
+              ['Commercial', 'commercial'],
+              ['Industriel', 'industrial'],
+              ['Mixte', 'mixed']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.property_usage_type },
+            { style: "width: 100%;", class: 'property-deed-field' } %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Type d'utilisation principale du bien
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Propriété <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :property_ownership_type,
+            [
+              ['Pleine propriété', 'full_ownership'],
+              ['Usufruit', 'usufruct'],
+              ['Nue-propriété', 'bare_ownership'],
+              ['Copropriété', 'co_ownership']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.property_ownership_type },
+            { style: "width: 100%;", class: 'property-deed-field' } %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Nature juridique de la propriété
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prix d'Acquisition (€) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :property_acquisition_price, value: contract.property_acquisition_price, placeholder: "Ex: 1800000", step: 0.01, min: 0, style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Prix d'achat initial du bien
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Valeur de Marché Actuelle (€)
+          </label>
+          <%= f.number_field :property_current_market_value, value: contract.property_current_market_value, placeholder: "Ex: 1850000", step: 0.01, min: 0, style: "width: 100%;", class: 'property-deed-field', id: 'property_current_market_value_field', onchange: 'updateMarketValueDate()' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Estimation actuelle de la valeur du bien
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date MAJ Valeur de Marché
+          </label>
+          <%= f.date_field :property_market_value_last_update, value: contract.property_market_value_last_update, style: "width: 100%;", class: 'property-deed-field', id: 'property_market_value_last_update_field', readonly: true %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Date de dernière mise à jour de la valeur (auto)
+          </p>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Alertes (Annexe Diagnostic Manquante)
+          </label>
+          <%= f.text_area :property_deed_alerts, value: contract.property_deed_alerts, rows: 2, placeholder: "Ex: Diagnostic de performance énergétique manquant, Diagnostic amiante à renouveler...", style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Alertes concernant les documents ou diagnostics manquants
+          </p>
+        </div>
+      </div>
+    </div>
+
     <!-- Services & SLA Section -->
     <div style="margin-bottom: var(--space-xl);">
       <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
@@ -684,36 +793,47 @@ function toggleParentContractField() {
   }
 }
 
-// Item 5: Toggle lease-specific fields based on contract type
+// Items 5, 9 & 10: Toggle lease and property deed fields based on contract type
 function toggleContractTypeFields() {
   const contractTypeSelect = document.getElementById('contract_type_select');
   const leaseFieldsSection = document.getElementById('lease_fields_section');
+  const propertyDeedFieldsSection = document.getElementById('property_deed_fields_section');
   const leaseFields = document.querySelectorAll('.lease-field');
+  const propertyDeedFields = document.querySelectorAll('.property-deed-field');
   
-  if (!contractTypeSelect || !leaseFieldsSection) return;
+  if (!contractTypeSelect) return;
   
   const contractType = contractTypeSelect.value;
   
+  // Handle Lease fields
   if (contractType === 'lease') {
-    // Show lease fields section
-    leaseFieldsSection.style.display = 'block';
-    // Make lease fields required
+    if (leaseFieldsSection) leaseFieldsSection.style.display = 'block';
     leaseFields.forEach(field => {
-      if (field.hasAttribute('data-required') || field.previousElementSibling?.textContent.includes('*')) {
+      if (field.previousElementSibling?.textContent.includes('*')) {
         field.required = true;
       }
     });
   } else {
-    // Hide lease fields section
-    leaseFieldsSection.style.display = 'none';
-    // Remove required attribute from lease fields
+    if (leaseFieldsSection) leaseFieldsSection.style.display = 'none';
     leaseFields.forEach(field => {
       field.required = false;
     });
   }
   
-  // TODO: Add similar logic for property_deed type when implemented
-  // if (contractType === 'property_deed') { ... }
+  // Handle Property Deed fields
+  if (contractType === 'property_deed') {
+    if (propertyDeedFieldsSection) propertyDeedFieldsSection.style.display = 'block';
+    propertyDeedFields.forEach(field => {
+      if (field.previousElementSibling?.textContent.includes('*')) {
+        field.required = true;
+      }
+    });
+  } else {
+    if (propertyDeedFieldsSection) propertyDeedFieldsSection.style.display = 'none';
+    propertyDeedFields.forEach(field => {
+      field.required = false;
+    });
+  }
 }
 
 // Calculate next lease deadline (triennial for commercial leases)
@@ -743,10 +863,32 @@ function calculateNextDeadline() {
   }
 }
 
+// Detect if we're editing a lease or property deed contract and set the contract type
+function detectAndSetContractType() {
+  const contractTypeSelect = document.getElementById('contract_type_select');
+  if (!contractTypeSelect) return;
+  
+  // Check if we're editing a known lease contract (BAIL prefix)
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/bail-') || currentPath.includes('/BAIL-')) {
+    contractTypeSelect.value = 'lease';
+    toggleContractTypeFields();
+  }
+  // Check if we're editing a known property deed contract (PROP prefix)
+  else if (currentPath.includes('/prop-') || currentPath.includes('/PROP-')) {
+    contractTypeSelect.value = 'property_deed';
+    toggleContractTypeFields();
+  }
+  // Otherwise, use whatever is already selected
+  else if (contractTypeSelect.value) {
+    toggleContractTypeFields();
+  }
+}
+
 // Run on page load
 document.addEventListener('DOMContentLoaded', function() {
   toggleParentContractField();
-  toggleContractTypeFields();
+  detectAndSetContractType();
   
   // Add event listener for effective date changes
   const effectiveDateField = document.querySelector('[name*="lease_effective_date"]');
