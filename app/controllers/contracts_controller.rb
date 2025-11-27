@@ -6,14 +6,17 @@ class ContractsController < ApplicationController
   end
 
   def show
+    # Check if this is a property deed contract (for item 11 testing)
+    contract_type = params[:id] == "property-deed" ? "property_deed" : "Maintenance mixte"
+    
     @contract = ::OpenStruct.new(
       id: params[:id],
       contract_classification: "initial",
       parent_contract_id: nil,
       pdf_url: "/sample_contract.png",
-      contract_number: "CTR-2024-HVAC-001",
-      title: "Maintenance CVC - Climatisation et Chauffage",
-      contract_type: "Maintenance mixte",
+      contract_number: contract_type == "property_deed" ? "PROP-2023-001" : "CTR-2024-HVAC-001",
+      title: contract_type == "property_deed" ? "Acte de Propriété - Tour Montparnasse" : "Maintenance CVC - Climatisation et Chauffage",
+      contract_type: contract_type,
       purchase_family: "Maintenance",
       purchase_subfamily: "CVC (Chauffage, Ventilation, Climatisation)",
       status: "active",
@@ -134,7 +137,27 @@ class ContractsController < ApplicationController
       kpi: "Taux de disponibilité > 98%, Temps de réponse < 4h, Satisfaction client > 95%",
       
       # Notes
-      notes: "Contrat renouvelé pour la 3ème fois. Prestataire historique avec une excellente connaissance du parc. Prévoir une renégociation tarifaire avant la prochaine reconduction."
+      notes: "Contrat renouvelé pour la 3ème fois. Prestataire historique avec une excellente connaissance du parc. Prévoir une renégociation tarifaire avant la prochaine reconduction.",
+      
+      # Item 11: Property Deed specific fields (only shown when contract_type == 'property_deed')
+      property_deed_site: "Tour Montparnasse",
+      property_deed_acquisition_date: "15/03/2023",
+      property_deed_area: 2500,
+      property_deed_usage_type: "Bureau / Commercial",
+      property_deed_type: "Pleine Propriété",
+      property_deed_acquisition_price: 4500000.00,
+      property_deed_current_value: 5200000.00,
+      property_deed_value_update_date: "01/01/2025",
+      property_deed_alerts: "Annexe diagnostic manquant",
+      
+      # Item 12: Data Source Tracking fields
+      created_by: "John Wick",
+      created_at: "02/05/2026 à 14:30",
+      updated_by: "Marie Dubois", 
+      updated_at: "15/11/2026 à 09:15",
+      import_source: "Excel",
+      import_date: "01/05/2026 à 10:00",
+      import_user: "Admin"
     )
     
     # Mock related contracts (amendments and framework agreements)

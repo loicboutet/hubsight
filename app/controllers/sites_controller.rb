@@ -29,7 +29,16 @@ class SitesController < ApplicationController
       gps_coordinates: "43.6055° N, 3.9197° E",
       climate_zone: "H3 - Zone méditerranéenne",
       buildings_count: 2,
-      buildings_names: ["Bâtiment A - Principal", "Bâtiment B - Annexe"]
+      buildings_names: ["Bâtiment A - Principal", "Bâtiment B - Annexe"],
+      
+      # Item 14: Data Source Tracking fields
+      created_by: "Laurent Blanc",
+      created_at: "18/01/2023 à 09:00",
+      updated_by: "Claire Rousseau",
+      updated_at: "05/12/2024 à 15:30",
+      import_source: "Excel",
+      import_date: "15/01/2023 à 08:00",
+      import_user: "Administrateur"
     )
     
     @opening_hours = [
