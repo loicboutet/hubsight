@@ -2,7 +2,45 @@ require 'ostruct'
 
 class ContractsController < ApplicationController
   def index
-    # Renders contracts/index.html.erb
+    # Mock contracts data for Item 28 - Deletion Confirmation
+    @all_contracts = [
+      {number: "BAIL-2025-001", title: "Bail commercial Tour A", provider: "SCI Montparnasse", site: "Tour Montparnasse\nTour A", family: "Baux", subfamily: "Commercial", amount: "45,000 €", monthly: "3,750 €", start: "01/01/2025", end: "31/12/2033", termination: "31/12/2031", indexation: "ILC", status: "Actif"},
+      {number: "BAIL-2024-089", title: "Bail habitation Bureaux", provider: "Foncière Défense", site: "Campus La Défense", family: "Baux", subfamily: "Habitation", amount: "28,000 €", monthly: "2,333 €", start: "15/03/2024", end: "14/03/2030", termination: "14/03/2029", indexation: "IRL", status: "Actif"},
+      {number: "PROP-2023-012", title: "Acquisition Centre Commercial", provider: "SCI Investissement", site: "Centre Commercial Rosny", family: "Actes de propriété", subfamily: "Commercial", amount: "2,500,000 €", surface: "3,200 m²", acquisition: "12/06/2023", notary: "Me. Durand", status: "Actif"},
+      {number: "PROP-2024-005", title: "Achat Bureaux Haussmann", provider: "Foncière Paris", site: "Immeuble Haussmann", family: "Actes de propriété", subfamily: "Bureaux", amount: "1,800,000 €", surface: "850 m²", acquisition: "20/01/2024", notary: "Me. Martin", status: "Actif"},
+      {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", site: "Tour Montparnasse\nTour A", family: "Maintenance", subfamily: "Ascenseurs", amount: "24,500 €", start: "15/01/2025", end: "14/01/2026", termination: "14/10/2025", status: "Actif"},
+      {number: "CTR-2025-002", title: "Nettoyage bureaux quotidien", provider: "Clean Pro Services", site: "Campus La Défense", family: "Nettoyage", subfamily: "Bureaux", amount: "12,800 €", start: "10/01/2025", end: "09/01/2026", termination: "09/10/2025", status: "Actif"},
+      {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", site: "Centre Commercial", family: "Contrôle", subfamily: "Électricité", amount: "8,500 €", start: "05/01/2025", end: "04/01/2026", termination: "04/10/2025", status: "Terminé"},
+      {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", site: "Site Industriel", family: "Maintenance", subfamily: "CVC", amount: "31,200 €", start: "02/01/2025", end: "01/01/2026", termination: "01/10/2025", status: "Actif"},
+      {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature SARL", site: "Résidence Le Parc", family: "Nettoyage", subfamily: "Espaces verts", amount: "6,400 €", start: "28/12/2024", end: "27/12/2025", termination: "27/09/2025", status: "Actif"},
+      {number: "CTR-2025-004", title: "Contrôle légionelle annuel", provider: "ALS Laboratoires", site: "Campus La Défense", family: "Contrôle", subfamily: "Légionelle", amount: "4,200 €", start: "20/01/2025", end: "19/01/2026", termination: "19/10/2025", status: "En cours"},
+      {number: "CTR-2024-187", title: "Maintenance portes automatiques", provider: "Portalp Service", site: "Tour Montparnasse", family: "Maintenance", subfamily: "Portes", amount: "8,900 €", start: "15/12/2024", end: "14/12/2025", termination: "14/09/2025", status: "Actif"},
+      {number: "CTR-2025-005", title: "Nettoyage vitrerie extérieure", provider: "Vitres Pro", site: "Immeuble Haussmann", family: "Nettoyage", subfamily: "Vitrerie", amount: "3,600 €", start: "18/01/2025", end: "17/01/2026", termination: "17/10/2025", status: "Actif"},
+      {number: "CTR-2024-186", title: "Fourniture électricité", provider: "EDF Entreprises", site: "Tous sites", family: "Énergies", subfamily: "Électricité", amount: "125,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+      {number: "CTR-2025-006", title: "Dératisation / Désinsectisation", provider: "3D Nuisibles", site: "Centre Commercial", family: "Nettoyage", subfamily: "Nuisibles", amount: "2,800 €", start: "12/01/2025", end: "11/01/2026", termination: "11/10/2025", status: "Actif"},
+      {number: "CTR-2024-185", title: "Maintenance extincteurs", provider: "Sicli Sécurité", site: "Site Industriel", family: "Sécurité", subfamily: "Incendie", amount: "5,400 €", start: "10/12/2024", end: "09/12/2025", termination: "09/09/2025", status: "Actif"},
+      {number: "CTR-2025-007", title: "Climatisation - Entretien", provider: "Climatic Services", site: "Centre Médical", family: "Maintenance", subfamily: "Climatisation", amount: "18,600 €", start: "22/01/2025", end: "21/01/2026", termination: "21/10/2025", status: "Actif"},
+      {number: "CTR-2024-184", title: "Assurance multi-risque", provider: "AXA Assurances", site: "Tous sites", family: "Assurance", subfamily: "Multi-risque", amount: "89,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+      {number: "CTR-2025-008", title: "Gardiennage 24/7", provider: "Securitas France", site: "Campus Grenoble", family: "Sécurité", subfamily: "Gardiennage", amount: "156,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
+      {number: "CTR-2024-183", title: "Plomberie - Dépannage", provider: "Artiplomb SAS", site: "Parc Roissy", family: "Maintenance", subfamily: "Plomberie", amount: "12,000 €", start: "05/12/2024", end: "04/12/2025", termination: "04/09/2025", status: "Actif"}
+    ]
+    
+    # Group contracts by family
+    @leases = @all_contracts.select { |c| c[:family] == "Baux" }
+    @property_deeds = @all_contracts.select { |c| c[:family] == "Actes de propriété" }
+    @service_contracts = @all_contracts.reject { |c| ["Baux", "Actes de propriété"].include?(c[:family]) }
+    
+    # Lease-specific data with extended fields
+    @lease_data = [
+      {number: "BAIL-2025-001", title: "Bail commercial Tour A", provider: "SCI Montparnasse", site: "Tour Montparnasse\nTour A", family: "Baux", subfamily: "Commercial", amount: "45,000 €", monthly: "3,750 €", charges: "450 €", surface: "250 m²", signature: "15/11/2024", start: "01/01/2025", end: "31/12/2033", duration: "108", next_deadline: "31/12/2031", indexation: "ILC", status: "Actif", alert: ""},
+      {number: "BAIL-2024-089", title: "Bail habitation Bureaux", provider: "Foncière Défense", site: "Campus La Défense", family: "Baux", subfamily: "Habitation", amount: "28,000 €", monthly: "2,333 €", charges: "280 €", surface: "180 m²", signature: "01/03/2024", start: "15/03/2024", end: "14/03/2030", duration: "72", next_deadline: "14/03/2029", indexation: "IRL", status: "Actif", alert: "Renouvellement proche"}
+    ]
+    
+    # Property deed data with extended fields
+    @property_deed_data = [
+      {number: "PROP-2023-012", site: "Centre Commercial Rosny", acquisition_date: "12/06/2023", area: "3,200 m²", usage_type: "Commercial", property_type: "Pleine propriété", acquisition_price: "2,500,000 €", current_value: "2,650,000 €", last_update: "15/01/2025", alert: ""},
+      {number: "PROP-2024-005", site: "Immeuble Haussmann", acquisition_date: "20/01/2024", area: "850 m²", usage_type: "Bureaux", property_type: "Pleine propriété", acquisition_price: "1,800,000 €", current_value: "1,820,000 €", last_update: "10/01/2025", alert: "Diagnostic manquant"}
+    ]
   end
 
   def show

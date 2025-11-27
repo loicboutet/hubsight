@@ -266,45 +266,15 @@
     })();
     </script>
 
-    <% 
-      # Define contracts data
-      all_contracts = [
-        {number: "BAIL-2025-001", title: "Bail commercial Tour A", provider: "SCI Montparnasse", site: "Tour Montparnasse\nTour A", family: "Baux", subfamily: "Commercial", amount: "45,000 €", monthly: "3,750 €", start: "01/01/2025", end: "31/12/2033", termination: "31/12/2031", indexation: "ILC", status: "Actif"},
-        {number: "BAIL-2024-089", title: "Bail habitation Bureaux", provider: "Foncière Défense", site: "Campus La Défense", family: "Baux", subfamily: "Habitation", amount: "28,000 €", monthly: "2,333 €", start: "15/03/2024", end: "14/03/2030", termination: "14/03/2029", indexation: "IRL", status: "Actif"},
-        {number: "PROP-2023-012", title: "Acquisition Centre Commercial", provider: "SCI Investissement", site: "Centre Commercial Rosny", family: "Actes de propriété", subfamily: "Commercial", amount: "2,500,000 €", surface: "3,200 m²", acquisition: "12/06/2023", notary: "Me. Durand", status: "Actif"},
-        {number: "PROP-2024-005", title: "Achat Bureaux Haussmann", provider: "Foncière Paris", site: "Immeuble Haussmann", family: "Actes de propriété", subfamily: "Bureaux", amount: "1,800,000 €", surface: "850 m²", acquisition: "20/01/2024", notary: "Me. Martin", status: "Actif"},
-        {number: "CTR-2025-001", title: "Maintenance ascenseurs Tour A", provider: "OTIS France", site: "Tour Montparnasse\nTour A", family: "Maintenance", subfamily: "Ascenseurs", amount: "24,500 €", start: "15/01/2025", end: "14/01/2026", termination: "14/10/2025", status: "Actif"},
-        {number: "CTR-2025-002", title: "Nettoyage bureaux quotidien", provider: "Clean Pro Services", site: "Campus La Défense", family: "Nettoyage", subfamily: "Bureaux", amount: "12,800 €", start: "10/01/2025", end: "09/01/2026", termination: "09/10/2025", status: "Actif"},
-        {number: "CTR-2024-189", title: "Contrôle électrique réglementaire", provider: "Bureau Veritas", site: "Centre Commercial", family: "Contrôle", subfamily: "Électricité", amount: "8,500 €", start: "05/01/2025", end: "04/01/2026", termination: "04/10/2025", status: "Terminé"},
-        {number: "CTR-2025-003", title: "CVC - Maintenance préventive", provider: "Daikin Service", site: "Site Industriel", family: "Maintenance", subfamily: "CVC", amount: "31,200 €", start: "02/01/2025", end: "01/01/2026", termination: "01/10/2025", status: "Actif"},
-        {number: "CTR-2024-188", title: "Entretien espaces verts", provider: "Vert Nature SARL", site: "Résidence Le Parc", family: "Nettoyage", subfamily: "Espaces verts", amount: "6,400 €", start: "28/12/2024", end: "27/12/2025", termination: "27/09/2025", status: "Actif"},
-        {number: "CTR-2025-004", title: "Contrôle légionelle annuel", provider: "ALS Laboratoires", site: "Campus La Défense", family: "Contrôle", subfamily: "Légionelle", amount: "4,200 €", start: "20/01/2025", end: "19/01/2026", termination: "19/10/2025", status: "En cours"},
-        {number: "CTR-2024-187", title: "Maintenance portes automatiques", provider: "Portalp Service", site: "Tour Montparnasse", family: "Maintenance", subfamily: "Portes", amount: "8,900 €", start: "15/12/2024", end: "14/12/2025", termination: "14/09/2025", status: "Actif"},
-        {number: "CTR-2025-005", title: "Nettoyage vitrerie extérieure", provider: "Vitres Pro", site: "Immeuble Haussmann", family: "Nettoyage", subfamily: "Vitrerie", amount: "3,600 €", start: "18/01/2025", end: "17/01/2026", termination: "17/10/2025", status: "Actif"},
-        {number: "CTR-2024-186", title: "Fourniture électricité", provider: "EDF Entreprises", site: "Tous sites", family: "Énergies", subfamily: "Électricité", amount: "125,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
-        {number: "CTR-2025-006", title: "Dératisation / Désinsectisation", provider: "3D Nuisibles", site: "Centre Commercial", family: "Nettoyage", subfamily: "Nuisibles", amount: "2,800 €", start: "12/01/2025", end: "11/01/2026", termination: "11/10/2025", status: "Actif"},
-        {number: "CTR-2024-185", title: "Maintenance extincteurs", provider: "Sicli Sécurité", site: "Site Industriel", family: "Sécurité", subfamily: "Incendie", amount: "5,400 €", start: "10/12/2024", end: "09/12/2025", termination: "09/09/2025", status: "Actif"},
-        {number: "CTR-2025-007", title: "Climatisation - Entretien", provider: "Climatic Services", site: "Centre Médical", family: "Maintenance", subfamily: "Climatisation", amount: "18,600 €", start: "22/01/2025", end: "21/01/2026", termination: "21/10/2025", status: "Actif"},
-        {number: "CTR-2024-184", title: "Assurance multi-risque", provider: "AXA Assurances", site: "Tous sites", family: "Assurance", subfamily: "Multi-risque", amount: "89,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
-        {number: "CTR-2025-008", title: "Gardiennage 24/7", provider: "Securitas France", site: "Campus Grenoble", family: "Sécurité", subfamily: "Gardiennage", amount: "156,000 €", start: "01/01/2025", end: "31/12/2025", termination: "30/09/2025", status: "Actif"},
-        {number: "CTR-2024-183", title: "Plomberie - Dépannage", provider: "Artiplomb SAS", site: "Parc Roissy", family: "Maintenance", subfamily: "Plomberie", amount: "12,000 €", start: "05/12/2024", end: "04/12/2025", termination: "04/09/2025", status: "Actif"}
-      ]
-      
-      # Group contracts by family
-      leases = all_contracts.select { |c| c[:family] == "Baux" }
-      property_deeds = all_contracts.select { |c| c[:family] == "Actes de propriété" }
-      service_contracts = all_contracts.reject { |c| ["Baux", "Actes de propriété"].include?(c[:family]) }
-    %>
-
     <!-- BAUX (Leases) Section -->
-    <% if leases.any? %>
+    <% if @leases.any? %>
       <div style="margin-bottom: var(--space-xxl);">
         <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid var(--coral-primary);">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="var(--coral-primary)" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
           <h3 class="typo-h3" style="margin: 0;">Baux</h3>
-          <span class="typo-body-small" style="color: #666;">(<%= leases.count %> contrat<%= leases.count > 1 ? 's' : '' %>)</span>
+          <span class="typo-body-small" style="color: #666;">(<%= @leases.count %> contrat<%= @leases.count > 1 ? 's' : '' %>)</span>
         </div>
         
         <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
@@ -330,15 +300,7 @@
               </tr>
             </thead>
             <tbody>
-              <% 
-                # Item 4: Add lease-specific data with new columns
-                lease_data = [
-                  {number: "BAIL-2025-001", title: "Bail commercial Tour A", provider: "SCI Montparnasse", site: "Tour Montparnasse\nTour A", family: "Baux", subfamily: "Commercial", amount: "45,000 €", monthly: "3,750 €", charges: "450 €", surface: "250 m²", signature: "15/11/2024", start: "01/01/2025", end: "31/12/2033", duration: "108", next_deadline: "31/12/2031", indexation: "ILC", status: "Actif", alert: ""},
-                  {number: "BAIL-2024-089", title: "Bail habitation Bureaux", provider: "Foncière Défense", site: "Campus La Défense", family: "Baux", subfamily: "Habitation", amount: "28,000 €", monthly: "2,333 €", charges: "280 €", surface: "180 m²", signature: "01/03/2024", start: "15/03/2024", end: "14/03/2030", duration: "72", next_deadline: "14/03/2029", indexation: "IRL", status: "Actif", alert: "Renouvellement proche"}
-                ]
-                
-                lease_data.each do |contract| 
-              %>
+              <% @lease_data.each do |contract| %>
                 <tr style="border-bottom: 1px solid #eee;">
                   <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
                   <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: var(--coral-primary);"><%= contract[:number] %></td>
@@ -389,25 +351,43 @@
                         </svg>
                         Voir
                       <% end %>
+                      <button type="button" data-action="open-delete-modal" data-modal-id="deletion-modal-<%= contract[:number].parameterize %>" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #dc2626; color: white; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Supprimer
+                      </button>
                     </div>
                   </td>
                 </tr>
-              <% end %>
+                <% end %>
             </tbody>
           </table>
         </div>
+        
+        <!-- Deletion Modals for Leases -->
+        <% @lease_data.each do |contract| %>
+          <%= render 'shared/deletion_confirmation_modal',
+            entity_type: 'le bail',
+            entity_name: "#{contract[:number]} - #{contract[:title]}",
+            entity_id: contract[:number].parameterize,
+            affected_items: { 'équipements' => 3, 'alertes' => 1 },
+            requires_extra_confirmation: false,
+            delete_path: contract_path(contract[:number].parameterize)
+          %>
+        <% end %>
       </div>
     <% end %>
 
     <!-- ACTES DE PROPRIÉTÉ (Property Deeds) Section - Item 8 -->
-    <% if property_deeds.any? %>
+    <% if @property_deeds.any? %>
       <div style="margin-bottom: var(--space-xxl);">
         <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid #8b5cf6;">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#8b5cf6" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           <h3 class="typo-h3" style="margin: 0;">Actes de propriété</h3>
-          <span class="typo-body-small" style="color: #666;">(<%= property_deeds.count %> document<%= property_deeds.count > 1 ? 's' : '' %>)</span>
+          <span class="typo-body-small" style="color: #666;">(<%= @property_deeds.count %> document<%= @property_deeds.count > 1 ? 's' : '' %>)</span>
         </div>
         
         <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
@@ -427,15 +407,7 @@
               </tr>
             </thead>
             <tbody>
-              <% 
-                # Item 8: Property deed data with all 9 required columns
-                property_deed_data = [
-                  {number: "PROP-2023-012", site: "Centre Commercial Rosny", acquisition_date: "12/06/2023", area: "3,200 m²", usage_type: "Commercial", property_type: "Pleine propriété", acquisition_price: "2,500,000 €", current_value: "2,650,000 €", last_update: "15/01/2025", alert: ""},
-                  {number: "PROP-2024-005", site: "Immeuble Haussmann", acquisition_date: "20/01/2024", area: "850 m²", usage_type: "Bureaux", property_type: "Pleine propriété", acquisition_price: "1,800,000 €", current_value: "1,820,000 €", last_update: "10/01/2025", alert: "Diagnostic manquant"}
-                ]
-                
-                property_deed_data.each do |contract| 
-              %>
+              <% @property_deed_data.each do |contract| %>
                 <tr style="border-bottom: 1px solid #eee;">
                   <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #8b5cf6;"><%= contract[:site] %></td>
                   <td class="typo-body-small" style="padding: var(--space-md); color: #666;"><%= contract[:acquisition_date] %></td>
@@ -476,6 +448,12 @@
                         </svg>
                         Voir
                       <% end %>
+                      <button type="button" data-action="open-delete-modal" data-modal-id="deletion-modal-<%= contract[:number].parameterize %>" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #dc2626; color: white; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Supprimer
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -483,18 +461,30 @@
             </tbody>
           </table>
         </div>
+        
+        <!-- Deletion Modals for Property Deeds -->
+        <% @property_deed_data.each do |contract| %>
+          <%= render 'shared/deletion_confirmation_modal',
+            entity_type: 'l\'acte de propriété',
+            entity_name: "#{contract[:site]}",
+            entity_id: contract[:number].parameterize,
+            affected_items: { 'diagnostics manquants' => 1 },
+            requires_extra_confirmation: false,
+            delete_path: contract_path(contract[:number].parameterize)
+          %>
+        <% end %>
       </div>
     <% end %>
 
     <!-- CONTRATS DE SERVICES (Service Contracts) Section -->
-    <% if service_contracts.any? %>
+    <% if @service_contracts.any? %>
       <div style="margin-bottom: var(--space-xxl);">
         <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 3px solid #10b981;">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#10b981" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
           <h3 class="typo-h3" style="margin: 0;">Contrats de Services</h3>
-          <span class="typo-body-small" style="color: #666;">(<%= service_contracts.count %> contrat<%= service_contracts.count > 1 ? 's' : '' %>)</span>
+          <span class="typo-body-small" style="color: #666;">(<%= @service_contracts.count %> contrat<%= @service_contracts.count > 1 ? 's' : '' %>)</span>
         </div>
         
         <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
@@ -514,7 +504,7 @@
               </tr>
             </thead>
             <tbody>
-              <% service_contracts.each do |contract| %>
+              <% @service_contracts.each do |contract| %>
                 <tr style="border-bottom: 1px solid #eee;">
                   <td class="typo-body-small" style="padding: var(--space-md); color: #666; white-space: pre-line;"><%= contract[:site] %></td>
                   <td class="typo-body-small typo-bold" style="padding: var(--space-md); color: #10b981;"><%= contract[:number] %></td>
@@ -553,6 +543,12 @@
                         </svg>
                         Voir
                       <% end %>
+                      <button type="button" data-action="open-delete-modal" data-modal-id="deletion-modal-<%= contract[:number].parameterize %>" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #dc2626; color: white; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Supprimer
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -560,6 +556,18 @@
             </tbody>
           </table>
         </div>
+        
+        <!-- Deletion Modals for Service Contracts -->
+        <% @service_contracts.each do |contract| %>
+          <%= render 'shared/deletion_confirmation_modal',
+            entity_type: 'le contrat',
+            entity_name: "#{contract[:number]} - #{contract[:title]}",
+            entity_id: contract[:number].parameterize,
+            affected_items: { 'équipements couverts' => 5, 'alertes' => 2 },
+            requires_extra_confirmation: false,
+            delete_path: contract_path(contract[:number].parameterize)
+          %>
+        <% end %>
       </div>
     <% end %>
 
@@ -574,3 +582,6 @@
     </div>
   </div>
 </div>
+
+<!-- Initialize deletion confirmation controller -->
+<div data-controller="deletion-confirmation"></div>
