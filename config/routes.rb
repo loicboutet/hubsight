@@ -141,6 +141,14 @@ Rails.application.routes.draw do
   # User Management
   resources :users
   
+  # Profile Management
+  get 'profile/edit', to: 'users#edit_profile', as: :edit_profile
+  patch 'profile', to: 'users#update_profile', as: :update_profile
+  
+  # Session Management
+  get 'sessions', to: 'sessions#index', as: :sessions
+  delete 'sessions/:id', to: 'sessions#destroy', as: :session
+  
   # Settings
   resources :settings, only: [:index, :update]
   

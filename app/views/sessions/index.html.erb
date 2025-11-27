@@ -1,0 +1,204 @@
+<% content_for :header, "Sessions Actives" %>
+
+<div class="section">
+  <div class="page-header-responsive">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Sessions Actives</h2>
+      <p class="typo-body-small">Gérer les appareils et navigateurs connectés à votre compte</p>
+    </div>
+    <%= link_to edit_profile_path, class: "typo-btn-secondary", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Retour au Profil
+    <% end %>
+  </div>
+
+  <% if @sessions.empty? %>
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-2xl); text-align: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="#cbd5e0" style="margin: 0 auto var(--space-lg);">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+      <h3 class="typo-h3" style="margin-bottom: var(--space-sm); color: #6c757d;">Aucune session active</h3>
+      <p class="typo-body-small" style="color: #6c757d;">Vous n'avez aucune session active pour le moment.</p>
+    </div>
+  <% else %>
+    <div style="background-color: #e7f3ff; border-left: 4px solid #0066cc; padding: var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-lg);">
+      <div style="display: flex; align-items: start; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#0066cc" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <p class="typo-body-small" style="color: #004085; margin: 0; line-height: 1.5;">
+            <strong>Sessions Actives: <%= @sessions.count %></strong><br>
+            Voici la liste de tous les appareils et navigateurs actuellement connectés à votre compte. Vous pouvez terminer n'importe quelle session suspecte ou non utilisée.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; gap: var(--space-lg);">
+      <% @sessions.each do |session| %>
+        <% 
+          # Parse user agent to extract browser and OS info
+          user_agent = session.user_agent || "Unknown"
+          is_current = (session.user_agent == request.user_agent && session.ip_address == request.remote_ip)
+          
+          # Simple browser detection
+          browser = if user_agent.include?("Firefox")
+            "Firefox"
+          elsif user_agent.include?("Chrome") && !user_agent.include?("Edge")
+            "Chrome"
+          elsif user_agent.include?("Safari") && !user_agent.include?("Chrome")
+            "Safari"
+          elsif user_agent.include?("Edge")
+            "Edge"
+          else
+            "Navigateur inconnu"
+          end
+          
+          # Simple OS detection
+          os = if user_agent.include?("Windows")
+            "Windows"
+          elsif user_agent.include?("Mac")
+            "macOS"
+          elsif user_agent.include?("Linux")
+            "Linux"
+          elsif user_agent.include?("Android")
+            "Android"
+          elsif user_agent.include?("iOS") || user_agent.include?("iPhone") || user_agent.include?("iPad")
+            "iOS"
+          else
+            "Système inconnu"
+          end
+          
+          # Device type
+          device_type = if user_agent.include?("Mobile") || user_agent.include?("Android") || user_agent.include?("iPhone")
+            "Mobile"
+          elsif user_agent.include?("Tablet") || user_agent.include?("iPad")
+            "Tablette"
+          else
+            "Ordinateur"
+          end
+        %>
+        
+        <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); <%= 'border: 2px solid var(--coral-primary);' if is_current %>">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-lg);">
+            <div style="display: flex; align-items: start; gap: var(--space-lg);">
+              <!-- Device Icon -->
+              <div style="width: 48px; height: 48px; background-color: #f8f9fa; border-radius: var(--space-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <% if device_type == "Mobile" %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#495057" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                <% elsif device_type == "Tablette" %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#495057" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                <% else %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#495057" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                <% end %>
+              </div>
+              
+              <!-- Session Info -->
+              <div>
+                <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+                  <h3 class="typo-h3" style="margin: 0;"><%= browser %> sur <%= os %></h3>
+                  <% if is_current %>
+                    <span style="display: inline-block; padding: 4px 10px; background-color: #d4edda; color: #155724; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                      Session Actuelle
+                    </span>
+                  <% end %>
+                </div>
+                
+                <p class="typo-body-small" style="color: #6c757d; margin-bottom: var(--space-md);">
+                  <%= device_type %>
+                </p>
+                
+                <div style="display: grid; grid-template-columns: auto auto; gap: var(--space-md) var(--space-xl); width: fit-content;">
+                  <div>
+                    <span class="typo-body-small" style="color: #6c757d; display: block; margin-bottom: 4px;">Adresse IP</span>
+                    <span class="typo-body-small typo-bold" style="font-family: monospace;"><%= session.ip_address %></span>
+                  </div>
+                  
+                  <div>
+                    <span class="typo-body-small" style="color: #6c757d; display: block; margin-bottom: 4px;">Première connexion</span>
+                    <span class="typo-body-small typo-bold"><%= l(session.created_at, format: :long) rescue session.created_at.strftime("%d/%m/%Y à %H:%M") %></span>
+                  </div>
+                  
+                  <div>
+                    <span class="typo-body-small" style="color: #6c757d; display: block; margin-bottom: 4px;">Dernière activité</span>
+                    <span class="typo-body-small typo-bold"><%= time_ago_in_words(session.updated_at) %> ago</span>
+                  </div>
+                  
+                  <div>
+                    <span class="typo-body-small" style="color: #6c757d; display: block; margin-bottom: 4px;">Durée</span>
+                    <span class="typo-body-small typo-bold"><%= distance_of_time_in_words(session.created_at, Time.current) %></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Actions -->
+            <% unless is_current %>
+              <%= button_to session_path(session), method: :delete, 
+                  data: { turbo_confirm: "Êtes-vous sûr de vouloir terminer cette session ?" },
+                  class: "typo-btn-small",
+                  style: "background-color: #dc2626; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 6px; font-size: 0.875rem; font-weight: 600;" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Terminer
+              <% end %>
+            <% else %>
+              <span class="typo-body-small" style="color: #6c757d; font-style: italic;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-top;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Session en cours
+              </span>
+            <% end %>
+          </div>
+          
+          <!-- User Agent (collapsed by default, can be expanded) -->
+          <details style="margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid #e9ecef;">
+            <summary class="typo-body-small" style="cursor: pointer; color: #6c757d; user-select: none;">
+              Informations techniques
+            </summary>
+            <div style="margin-top: var(--space-sm); padding: var(--space-sm); background-color: #f8f9fa; border-radius: var(--space-sm);">
+              <p class="typo-body-small" style="color: #495057; font-family: monospace; word-break: break-all; margin: 0; font-size: 0.75rem;">
+                <%= session.user_agent %>
+              </p>
+            </div>
+          </details>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Security Notice -->
+    <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: var(--space-md); border-radius: var(--space-sm); margin-top: var(--space-lg);">
+      <div style="display: flex; align-items: start; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#856404" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+          <p class="typo-body-small" style="color: #856404; margin: 0; line-height: 1.5;">
+            <strong>Conseil de sécurité:</strong> Si vous remarquez une session que vous ne reconnaissez pas, terminez-la immédiatement et changez votre mot de passe. Les sessions expirent automatiquement après 30 minutes d'inactivité.
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  details summary::marker {
+    color: var(--coral-primary);
+  }
+  
+  details[open] summary {
+    margin-bottom: var(--space-sm);
+  }
+</style>

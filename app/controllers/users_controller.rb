@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :ensure_portfolio_manager!
+  before_action :ensure_portfolio_manager!, except: [:edit_profile, :update_profile]
 
   def index
     # Portfolio managers see site managers of their organization
@@ -66,6 +67,56 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: "Responsable de site supprimé avec succès."
   end
 
+  # Profile Management Actions
+  def edit_profile
+    @user = current_user
+  end
+
+  def update_profile
+    @user = current_user
+    
+    # Build notification preferences hash if provided
+    if params[:user][:notification_preferences].present?
+      notification_prefs = {
+        email_alerts: params[:user][:notification_preferences][:email_alerts] == '1',
+        email_upcoming: params[:user][:notification_preferences][:email_upcoming] == '1',
+        email_at_risk: params[:user][:notification_preferences][:email_at_risk] == '1',
+        email_missing_contracts: params[:user][:notification_preferences][:email_missing_contracts] == '1'
+      }
+      profile_params = profile_user_params
+      profile_params[:notification_preferences] = notification_prefs
+    else
+      profile_params = profile_user_params
+    end
+    
+    # Handle password update separately
+    if profile_params[:password].present?
+      # Require current password for password change
+      if @user.valid_password?(params[:user][:current_password])
+        if @user.update(profile_params)
+          bypass_sign_in(@user) # Keep user signed in after password change
+          redirect_to edit_profile_path, notice: "Profil mis à jour avec succès."
+        else
+          render :edit_profile, status: :unprocessable_entity
+        end
+      else
+        @user.errors.add(:current_password, "est incorrect")
+        render :edit_profile, status: :unprocessable_entity
+      end
+    else
+      # Update without password change
+      profile_params.delete(:password)
+      profile_params.delete(:password_confirmation)
+      profile_params.delete(:current_password)
+      
+      if @user.update(profile_params)
+        redirect_to edit_profile_path, notice: "Profil mis à jour avec succès."
+      else
+        render :edit_profile, status: :unprocessable_entity
+      end
+    end
+  end
+
   private
 
   def set_user
@@ -84,6 +135,20 @@ class UsersController < ApplicationController
       :status,
       :password,
       :password_confirmation
+    )
+  end
+  
+  def profile_user_params
+    params.require(:user).permit(
+      :first_name,
+      :last_name,
+      :email,
+      :phone,
+      :department,
+      :language,
+      :password,
+      :password_confirmation,
+      :current_password
     )
   end
   

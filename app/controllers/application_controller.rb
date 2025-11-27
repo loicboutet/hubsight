@@ -2,6 +2,9 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   
+  # Session tracking
+  before_action :track_session
+  
   # Use user layout for all controllers by default
   # Admin controllers will override this with their own layout
   layout :layout_by_resource
@@ -33,7 +36,34 @@ class ApplicationController < ActionController::Base
   
   # Redirect to dashboard after successful login
   def after_sign_in_path_for(resource)
+    create_active_session
     dashboard_path
+  end
+  
+  # Track active sessions
+  def track_session
+    return unless user_signed_in?
+    
+    # Find or create active session for this device/IP
+    @current_active_session ||= current_user.active_sessions.find_or_create_by(
+      user_agent: request.user_agent,
+      ip_address: request.remote_ip
+    ) do |session|
+      session.created_at = Time.current
+    end
+    
+    # Update last activity
+    @current_active_session.update(updated_at: Time.current)
+  end
+  
+  def create_active_session
+    return unless user_signed_in?
+    
+    ActiveSession.create(
+      user: current_user,
+      user_agent: request.user_agent,
+      ip_address: request.remote_ip
+    )
   end
   
   # TODO: PHASE 2 - Add authorization checks
