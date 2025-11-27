@@ -10,6 +10,9 @@ puts "🌱 Starting seed process..."
 
 puts "\n👤 Creating test users..."
 
+# Strong password for all users (meets requirements: 8+ chars, uppercase, lowercase, digit, special char)
+strong_password = 'Password123!'
+
 # Admin User
 admin = User.find_or_initialize_by(email: 'admin@hubsight.com')
 admin.assign_attributes(
@@ -19,15 +22,15 @@ admin.assign_attributes(
   phone: '+33 1 23 45 67 89',
   status: 'active',
   department: 'Administration',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if admin.new_record?
   admin.save!
-  puts "  ✓ Created admin: admin@hubsight.com / pw54321"
+  puts "  ✓ Created admin: admin@hubsight.com"
 else
   admin.save!
-  puts "  ✓ Updated admin: admin@hubsight.com / pw54321"
+  puts "  ✓ Updated admin: admin@hubsight.com"
 end
 
 # Portfolio Manager 1 - Organization 1
@@ -40,15 +43,15 @@ pm1.assign_attributes(
   organization_id: 1,
   status: 'active',
   department: 'Gestion Immobilière',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if pm1.new_record?
   pm1.save!
-  puts "  ✓ Created portfolio manager: portfolio@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Created portfolio manager: portfolio@hubsight.com (Organization 1)"
 else
   pm1.save!
-  puts "  ✓ Updated portfolio manager: portfolio@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Updated portfolio manager: portfolio@hubsight.com (Organization 1)"
 end
 
 # Portfolio Manager 2 - Organization 2
@@ -61,15 +64,15 @@ pm2.assign_attributes(
   organization_id: 2,
   status: 'active',
   department: 'Gestion de Patrimoine',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if pm2.new_record?
   pm2.save!
-  puts "  ✓ Created portfolio manager: portfolio2@hubsight.com / pw54321 (Organization 2)"
+  puts "  ✓ Created portfolio manager: portfolio2@hubsight.com (Organization 2)"
 else
   pm2.save!
-  puts "  ✓ Updated portfolio manager: portfolio2@hubsight.com / pw54321 (Organization 2)"
+  puts "  ✓ Updated portfolio manager: portfolio2@hubsight.com (Organization 2)"
 end
 
 # Site Manager 1 - Organization 1
@@ -82,15 +85,15 @@ sm1.assign_attributes(
   organization_id: 1,
   status: 'active',
   department: 'Gestion de Site',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if sm1.new_record?
   sm1.save!
-  puts "  ✓ Created site manager: sitemanager@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Created site manager: sitemanager@hubsight.com (Organization 1)"
 else
   sm1.save!
-  puts "  ✓ Updated site manager: sitemanager@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Updated site manager: sitemanager@hubsight.com (Organization 1)"
 end
 
 # Site Manager 2 - Organization 1
@@ -103,15 +106,15 @@ sm2.assign_attributes(
   organization_id: 1,
   status: 'active',
   department: 'Gestion de Site',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if sm2.new_record?
   sm2.save!
-  puts "  ✓ Created site manager: sitemanager2@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Created site manager: sitemanager2@hubsight.com (Organization 1)"
 else
   sm2.save!
-  puts "  ✓ Updated site manager: sitemanager2@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Updated site manager: sitemanager2@hubsight.com (Organization 1)"
 end
 
 # Site Manager 3 - Organization 2
@@ -124,15 +127,15 @@ sm3.assign_attributes(
   organization_id: 2,
   status: 'active',
   department: 'Gestion de Site',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if sm3.new_record?
   sm3.save!
-  puts "  ✓ Created site manager: sitemanager3@hubsight.com / pw54321 (Organization 2)"
+  puts "  ✓ Created site manager: sitemanager3@hubsight.com (Organization 2)"
 else
   sm3.save!
-  puts "  ✓ Updated site manager: sitemanager3@hubsight.com / pw54321 (Organization 2)"
+  puts "  ✓ Updated site manager: sitemanager3@hubsight.com (Organization 2)"
 end
 
 # Technician 1 - Organization 1
@@ -145,15 +148,15 @@ tech1.assign_attributes(
   organization_id: 1,
   status: 'active',
   department: 'Maintenance',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if tech1.new_record?
   tech1.save!
-  puts "  ✓ Created technician: technician@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Created technician: technician@hubsight.com (Organization 1)"
 else
   tech1.save!
-  puts "  ✓ Updated technician: technician@hubsight.com / pw54321 (Organization 1)"
+  puts "  ✓ Updated technician: technician@hubsight.com (Organization 1)"
 end
 
 # Inactive User Example
@@ -166,15 +169,15 @@ inactive.assign_attributes(
   organization_id: 1,
   status: 'inactive',
   department: 'Test',
-  password: 'pw54321',
-  password_confirmation: 'pw54321'
+  password: strong_password,
+  password_confirmation: strong_password
 )
 if inactive.new_record?
   inactive.save!
-  puts "  ✓ Created inactive user: inactive@hubsight.com / pw54321 (for testing)"
+  puts "  ✓ Created inactive user: inactive@hubsight.com (for testing)"
 else
   inactive.save!
-  puts "  ✓ Updated inactive user: inactive@hubsight.com / pw54321 (for testing)"
+  puts "  ✓ Updated inactive user: inactive@hubsight.com (for testing)"
 end
 
 puts "\n✅ Seed completed successfully!"
@@ -182,41 +185,42 @@ puts "\n📝 Test Users Created:"
 puts "=" * 80
 puts "  ADMIN:"
 puts "    Email: admin@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: admin"
 puts ""
 puts "  PORTFOLIO MANAGERS:"
 puts "    Email: portfolio@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: portfolio_manager (Organization 1)"
 puts ""
 puts "    Email: portfolio2@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: portfolio_manager (Organization 2)"
 puts ""
 puts "  SITE MANAGERS:"
 puts "    Email: sitemanager@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: site_manager (Organization 1)"
 puts ""
 puts "    Email: sitemanager2@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: site_manager (Organization 1)"
 puts ""
 puts "    Email: sitemanager3@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: site_manager (Organization 2)"
 puts ""
 puts "  TECHNICIAN:"
 puts "    Email: technician@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: technician (Organization 1)"
 puts ""
 puts "  INACTIVE USER (for testing):"
 puts "    Email: inactive@hubsight.com"
-puts "    Password: pw54321"
+puts "    Password: Password123!"
 puts "    Role: site_manager (inactive status)"
 puts "=" * 80
-puts "\n🔐 All users have the same password: pw54321"
+puts "\n🔐 All users have the same password: Password123!"
 puts "🌐 Login at: http://localhost:3000/login"
+puts "\n📧 Email Preview (letter_opener): Check your browser for email previews"
 puts ""

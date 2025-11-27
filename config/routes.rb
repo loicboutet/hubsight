@@ -10,6 +10,10 @@ Rails.application.routes.draw do
     confirmation: 'confirmation'
   }
   
+  # Invitations
+  get 'invitations/accept/:token', to: 'invitations#show', as: :accept_invitation
+  put 'invitations/accept/:token', to: 'invitations#update'
+  
   # Role-based dashboard redirect
   get 'dashboard', to: 'dashboard#index', as: :dashboard
 

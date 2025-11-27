@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_27_124109) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_27_144001) do
+  create_table "active_sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "session_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "last_activity_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_activity_at"], name: "index_active_sessions_on_last_activity_at"
+    t.index ["session_id"], name: "index_active_sessions_on_session_id", unique: true
+    t.index ["user_id"], name: "index_active_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -26,10 +39,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_124109) do
     t.integer "organization_id"
     t.string "status", default: "active"
     t.string "department"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invited_by_id"
+    t.string "invited_by_type"
+    t.json "notification_preferences", default: {"email_alerts"=>true, "email_upcoming"=>true, "email_at_risk"=>true, "email_missing_contracts"=>true}
+    t.string "language", default: "fr"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["organization_id"], name: "index_users_on_organization_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_users_on_role"
     t.index ["status"], name: "index_users_on_status"
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
+
+  add_foreign_key "active_sessions", "users"
 end

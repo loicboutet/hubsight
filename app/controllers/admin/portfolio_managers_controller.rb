@@ -23,18 +23,20 @@ module Admin
     def create
       @portfolio_manager = User.new(portfolio_manager_params)
       @portfolio_manager.role = User::ROLES[:portfolio_manager]
+      @portfolio_manager.invited_by = current_user
+      @portfolio_manager.status = 'active'
       
-      # Generate a temporary password if not provided
-      if params[:user][:password].blank?
-        generated_password = SecureRandom.alphanumeric(12)
-        @portfolio_manager.password = generated_password
-        @portfolio_manager.password_confirmation = generated_password
-      end
+      # Skip password validation - user will set it via invitation
+      @portfolio_manager.password = SecureRandom.hex(20)
+      @portfolio_manager.password_confirmation = @portfolio_manager.password
       
-      if @portfolio_manager.save
-        # TODO: Send email with login credentials
+      if @portfolio_manager.save(validate: false)
+        # Generate invitation token and send email
+        @portfolio_manager.generate_invitation_token!
+        @portfolio_manager.send_invitation_email
+        
         redirect_to admin_portfolio_managers_path, 
-                    notice: "Gestionnaire de portefeuille créé avec succès."
+                    notice: "Invitation envoyée à #{@portfolio_manager.email}"
       else
         render :new, status: :unprocessable_entity
       end

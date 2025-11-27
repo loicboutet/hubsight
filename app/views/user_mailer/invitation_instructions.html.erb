@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background-color: #0066cc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 5px 5px 0 0;
+    }
+    .content {
+      background-color: #f9f9f9;
+      padding: 30px;
+      border: 1px solid #ddd;
+      border-top: none;
+    }
+    .button {
+      display: inline-block;
+      background-color: #0066cc;
+      color: white !important;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+      font-size: 12px;
+      color: #666;
+    }
+    .info-box {
+      background-color: #e7f3ff;
+      border-left: 4px solid #0066cc;
+      padding: 15px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>HubSight</h1>
+    <p>Plateforme de Gestion Contractuelle</p>
+  </div>
+
+  <div class="content">
+    <h2>Bienvenue sur HubSight !</h2>
+    
+    <p>Bonjour <%= @user.first_name %>,</p>
+    
+    <p>
+      <% if @invited_by.present? %>
+        <strong><%= @invited_by.full_name %></strong> vous invite à rejoindre HubSight,
+        la plateforme de gestion et de pilotage contractuel.
+      <% else %>
+        Vous avez été invité(e) à rejoindre HubSight,
+        la plateforme de gestion et de pilotage contractuel.
+      <% end %>
+    </p>
+
+    <div class="info-box">
+      <strong>Votre compte:</strong><br>
+      Email: <%= @user.email %><br>
+      Rôle: <%= @user.role.humanize %>
+    </div>
+
+    <p>Pour activer votre compte et définir votre mot de passe, cliquez sur le bouton ci-dessous:</p>
+
+    <div style="text-align: center;">
+      <a href="<%= @accept_url %>" class="button">Activer mon compte</a>
+    </div>
+
+    <p style="font-size: 14px; color: #666; margin-top: 30px;">
+      Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur:<br>
+      <a href="<%= @accept_url %>"><%= @accept_url %></a>
+    </p>
+
+    <div class="info-box" style="background-color: #fff3cd; border-left-color: #ffc107;">
+      <strong>⚠️ Important:</strong><br>
+      Cette invitation expire dans 7 jours.<br>
+      Votre mot de passe doit contenir:
+      <ul style="margin: 10px 0;">
+        <li>Au moins 8 caractères</li>
+        <li>Une lettre majuscule</li>
+        <li>Une lettre minuscule</li>
+        <li>Un chiffre</li>
+        <li>Un caractère spécial (!@#$%^&*)</li>
+      </ul>
+    </div>
+
+    <p>
+      Une fois votre compte activé, vous pourrez accéder à la plateforme et commencer à:
+    </p>
+    <ul>
+      <li>Gérer vos contrats de maintenance et d'entretien</li>
+      <li>Suivre les échéances contractuelles</li>
+      <li>Visualiser les économies potentielles</li>
+      <% if @user.portfolio_manager? %>
+      <li>Créer et gérer votre structure patrimoniale</li>
+      <li>Inviter des responsables de site</li>
+      <% elsif @user.site_manager? %>
+      <li>Consulter les contrats de vos sites assignés</li>
+      <li>Uploader des contrats pour votre périmètre</li>
+      <% end %>
+    </ul>
+
+    <p>Si vous avez des questions, n'hésitez pas à contacter votre administrateur.</p>
+
+    <p>
+      Cordialement,<br>
+      L'équipe HubSight
+    </p>
+  </div>
+
+  <div class="footer">
+    <p>
+      Cet email a été envoyé depuis HubSight.<br>
+      Si vous n'avez pas demandé cette invitation, vous pouvez ignorer cet email.
+    </p>
+  </div>
+</body>
+</html>

@@ -23,17 +23,20 @@ class SiteManagersController < ApplicationController
     @site_manager = User.new(site_manager_params)
     @site_manager.role = User::ROLES[:site_manager]
     @site_manager.organization_id = current_user.organization_id
+    @site_manager.invited_by = current_user
+    @site_manager.status = 'active'
     
-    # Generate a temporary password if not provided
-    if params[:user][:password].blank?
-      generated_password = SecureRandom.alphanumeric(12)
-      @site_manager.password = generated_password
-      @site_manager.password_confirmation = generated_password
-    end
+    # Skip password validation - user will set it via invitation
+    @site_manager.password = SecureRandom.hex(20)
+    @site_manager.password_confirmation = @site_manager.password
     
-    if @site_manager.save
-      # TODO: Send email with login credentials
-      redirect_to site_managers_path, notice: "Responsable de site créé avec succès."
+    if @site_manager.save(validate: false)
+      # Generate invitation token and send email
+      @site_manager.generate_invitation_token!
+      @site_manager.send_invitation_email
+      
+      redirect_to site_managers_path, 
+                  notice: "Invitation envoyée à #{@site_manager.email}"
     else
       render :new, status: :unprocessable_entity
     end

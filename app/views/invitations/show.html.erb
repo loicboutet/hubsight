@@ -1,0 +1,81 @@
+<div style="text-align: center; margin-bottom: var(--space-2xl);">
+  <%= link_to root_path, style: "display: inline-block; margin-bottom: var(--space-lg);" do %>
+    <%= image_tag "hugsight_logo.png", alt: "HubSight Logo", style: "height: 60px; width: auto; display: block;" %>
+  <% end %>
+  
+  <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Activation de votre compte</h2>
+  
+  <p class="typo-body" style="color: #495057; margin-bottom: var(--space-md); line-height: 1.6; font-size: 1rem;">
+    Bienvenue <%= @user.first_name %> ! Définissez votre mot de passe pour activer votre compte.
+  </p>
+</div>
+
+<div class="section" style="background-color: var(--white); border-radius: var(--space-md); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);">
+  <div style="background-color: #e7f3ff; border-left: 4px solid #0066cc; padding: var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-lg);">
+    <div style="display: flex; align-items: start; gap: var(--space-sm);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#0066cc" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <p class="typo-body-small" style="color: #004085; margin: 0; line-height: 1.5;">
+          <strong>Email :</strong> <%= @user.email %><br>
+          <strong>Rôle :</strong> <%= @user.role.humanize %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <%= form_with(model: @user, url: accept_invitation_path(token: params[:token]), method: :put, local: true) do |f| %>
+    <% if @user.errors.any? %>
+      <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-lg);">
+        <h3 style="margin-top: 0; font-size: 1.1rem;">
+          <%= pluralize(@user.errors.count, "erreur") %> ont empêché l'activation de votre compte:
+        </h3>
+        <ul style="margin-bottom: 0;">
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div style="margin-bottom: var(--space-lg);">
+      <%= f.label :password, "Mot de passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+      <%= f.password_field :password, 
+          autocomplete: "new-password",
+          placeholder: "Entrez votre mot de passe",
+          style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+    </div>
+
+    <div style="margin-bottom: var(--space-lg);">
+      <%= f.label :password_confirmation, "Confirmation du mot de passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+      <%= f.password_field :password_confirmation,
+          autocomplete: "new-password",
+          placeholder: "Confirmez votre mot de passe",
+          style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+    </div>
+
+    <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-xl);">
+      <p class="typo-body-small" style="margin: 0 0 var(--space-sm) 0; font-weight: bold; color: #856404;">
+        Exigences du mot de passe:
+      </p>
+      <ul class="typo-body-small" style="margin: 0; padding-left: var(--space-lg); color: #856404;">
+        <li>Au moins 8 caractères</li>
+        <li>Au moins une lettre majuscule</li>
+        <li>Au moins une lettre minuscule</li>
+        <li>Au moins un chiffre</li>
+        <li>Au moins un caractère spécial (!@#$%^&*)</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom: var(--space-lg);">
+      <%= f.submit "Activer mon compte", class: "typo-btn-success", style: "width: 100%; cursor: pointer; justify-content: center;" %>
+    </div>
+  <% end %>
+</div>
+
+<div style="text-align: center; margin-top: var(--space-lg);">
+  <p class="typo-body-small" style="color: #6c757d;">
+    <%= link_to "Retour à la page de connexion", new_user_session_path, style: "color: #0066cc; text-decoration: none;" %>
+  </p>
+</div>
