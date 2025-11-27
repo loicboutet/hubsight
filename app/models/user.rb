@@ -15,6 +15,7 @@ class User < ApplicationRecord
 
   # Associations
   has_many :active_sessions, dependent: :destroy
+  has_many :sites, dependent: :destroy
   belongs_to :invited_by, class_name: 'User', optional: true
   belongs_to :organization, optional: true
 

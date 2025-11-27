@@ -146,11 +146,15 @@
         <!-- Nom des bâtiments associés -->
         <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Nom des bâtiments associés à ce site</p>
-          <ul style="margin: 0; padding-left: var(--space-md);">
-            <% @site.buildings_names.each do |building_name| %>
-              <li class="typo-body typo-bold" style="color: var(--dark-gray);"><%= building_name %></li>
-            <% end %>
-          </ul>
+          <% if @site.buildings.any? %>
+            <ul style="margin: 0; padding-left: var(--space-md);">
+              <% @site.buildings.each do |building| %>
+                <li class="typo-body typo-bold" style="color: var(--dark-gray);"><%= building.name %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="typo-body" style="color: var(--medium-gray); font-style: italic;">Aucun bâtiment associé</p>
+          <% end %>
         </div>
 
         <!-- Surface calculée -->
@@ -162,31 +166,31 @@
         <!-- Surface estimée -->
         <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Surface du site en m2 estimé</p>
-          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= number_with_delimiter(@site.estimated_area, delimiter: ' ') %> m²</p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.estimated_area ? "#{number_with_delimiter(@site.estimated_area, delimiter: ' ')} m²" : 'N/A' %></p>
         </div>
 
         <!-- Identifiant cadastral -->
         <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Identifiant cadastral du site</p>
-          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.cadastral_id %></p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.cadastral_id.present? ? @site.cadastral_id : 'N/A' %></p>
         </div>
 
         <!-- Identifiant RnB -->
         <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Identifiant RnB du site</p>
-          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.rnb_id %></p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.rnb_id.present? ? @site.rnb_id : 'N/A' %></p>
         </div>
 
         <!-- Coordonnées GPS -->
         <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Coordonnées GPS</p>
-          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.gps_coordinates %></p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.gps_coordinates.present? ? @site.gps_coordinates : 'N/A' %></p>
         </div>
 
         <!-- Zone climatique -->
         <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Zone climatique</p>
-          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.climate_zone %></p>
+          <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.climate_zone.present? ? @site.climate_zone : 'N/A' %></p>
         </div>
 
       </div>
@@ -422,12 +426,12 @@
           </svg>
           Créé par
         </p>
-        <p class="typo-body" style="color: #0d6efd; font-weight: 600;">Laurent Blanc</p>
+        <p class="typo-body" style="color: #0d6efd; font-weight: 600;"><%= @site.created_by_name || @site.user.full_name %></p>
         <p class="typo-body-small" style="color: var(--medium-gray); margin-top: 4px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-bottom;">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          18/01/2023 à 09:00
+          <%= @site.created_at.strftime("%d/%m/%Y à %H:%M") %>
         </p>
       </div>
 
@@ -438,24 +442,30 @@
           </svg>
           Dernière modification par
         </p>
-        <p class="typo-body" style="color: #198754; font-weight: 600;">Claire Rousseau</p>
+        <p class="typo-body" style="color: #198754; font-weight: 600;"><%= @site.updated_by_name || @site.user.full_name %></p>
         <p class="typo-body-small" style="color: var(--medium-gray); margin-top: 4px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-bottom;">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          05/12/2024 à 15:30
+          <%= @site.updated_at.strftime("%d/%m/%Y à %H:%M") %>
         </p>
       </div>
 
-      <div style="grid-column: 1 / -1; background-color: #e7f3ff; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #0dcaf0;">
-        <p class="typo-body-small typo-bold" style="color: #055160; margin-bottom: var(--space-xs); display: flex; align-items: center; gap: 6px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-          Source d'importation
-        </p>
-        <p class="typo-body" style="color: #055160;">Importé depuis Excel le 15/01/2023 à 08:00 par Administrateur</p>
-      </div>
+      <% if @site.import_source.present? %>
+        <div style="grid-column: 1 / -1; background-color: #e7f3ff; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #0dcaf0;">
+          <p class="typo-body-small typo-bold" style="color: #055160; margin-bottom: var(--space-xs); display: flex; align-items: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            Source d'importation
+          </p>
+          <p class="typo-body" style="color: #055160;">
+            Importé depuis <%= @site.import_source %> 
+            <%= "le #{@site.import_date.strftime('%d/%m/%Y à %H:%M')}" if @site.import_date %>
+            <%= "par #{@site.import_user}" if @site.import_user %>
+          </p>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_27_173708) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_27_173710) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -24,16 +24,42 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_173708) do
     t.index ["user_id"], name: "index_active_sessions_on_user_id"
   end
 
-  create_table "organizations", force: :cascade do |t|
+  create_table "sites", force: :cascade do |t|
     t.string "name", null: false
-    t.string "legal_name"
-    t.string "siret"
+    t.string "code"
+    t.string "site_type", null: false
     t.string "status", default: "active", null: false
+    t.text "description"
+    t.string "address", null: false
+    t.string "city", null: false
+    t.string "postal_code", null: false
+    t.string "department"
+    t.string "region"
+    t.string "country", default: "France"
+    t.decimal "total_area", precision: 10, scale: 2
+    t.decimal "estimated_area", precision: 10, scale: 2
+    t.string "site_manager"
+    t.string "contact_email"
+    t.string "contact_phone"
+    t.string "gps_coordinates"
+    t.string "climate_zone"
+    t.string "cadastral_id"
+    t.string "rnb_id"
+    t.string "created_by_name"
+    t.string "updated_by_name"
+    t.string "import_source"
+    t.datetime "import_date"
+    t.string "import_user"
+    t.integer "user_id", null: false
+    t.integer "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_organizations_on_name", unique: true
-    t.index ["siret"], name: "index_organizations_on_siret"
-    t.index ["status"], name: "index_organizations_on_status"
+    t.index ["organization_id"], name: "index_sites_on_organization_id"
+    t.index ["region"], name: "index_sites_on_region"
+    t.index ["site_type"], name: "index_sites_on_site_type"
+    t.index ["status"], name: "index_sites_on_status"
+    t.index ["user_id", "name"], name: "index_sites_on_user_id_and_name", unique: true
+    t.index ["user_id"], name: "index_sites_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -83,4 +109,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_173708) do
   end
 
   add_foreign_key "active_sessions", "users"
+  add_foreign_key "sites", "users"
 end

@@ -1,46 +1,32 @@
-require 'ostruct'
-
 class SitesController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_site, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_portfolio_manager, except: [:index, :show]
+  
   def index
-    # Renders sites/index.html.erb
+    @sites = current_user.sites
+                        .includes(:buildings)
+                        .page(params[:page])
+                        .per(10)
+    
+    # Apply filters
+    @sites = @sites.search_by_name(params[:search]) if params[:search].present?
+    @sites = @sites.search_by_city(params[:search]) if params[:search].present?
+    @sites = @sites.by_type(params[:site_type]) if params[:site_type].present?
+    @sites = @sites.by_region(params[:region]) if params[:region].present?
+    
+    # Apply sorting
+    case params[:sort_by]
+    when 'area'
+      @sites = @sites.order(total_area: :desc)
+    when 'buildings_count'
+      @sites = @sites.left_joins(:buildings).group(:id).order('COUNT(buildings.id) DESC')
+    else
+      @sites = @sites.ordered_by_name
+    end
   end
 
   def show
-    @site = OpenStruct.new(
-      id: params[:id],
-      name: "Centre Commercial Odysseum",
-      code: "CCO-001",
-      site_type: "commercial",
-      total_area: 65000,
-      estimated_area: 68000,
-      address: "2 Place de Lisbonne",
-      city: "Montpellier",
-      postal_code: "34000",
-      department: "34",
-      region: "occitanie",
-      country: "France",
-      site_manager: "Marie Dubois",
-      contact_email: "marie.dubois@odysseum.fr",
-      contact_phone: "+33 4 67 13 50 00",
-      status: "active",
-      description: "Grand centre commercial avec zones commerciales et loisirs",
-      cadastral_id: "34000-001-AB-1234",
-      rnb_id: "RNB-34-MTL-001",
-      gps_coordinates: "43.6055° N, 3.9197° E",
-      climate_zone: "H3 - Zone méditerranéenne",
-      buildings_count: 2,
-      buildings_names: ["Bâtiment A - Principal", "Bâtiment B - Annexe"],
-      
-      # Item 14: Data Source Tracking fields
-      created_by: "Laurent Blanc",
-      created_at: "18/01/2023 à 09:00",
-      updated_by: "Claire Rousseau",
-      updated_at: "05/12/2024 à 15:30",
-      import_source: "Excel",
-      import_date: "15/01/2023 à 08:00",
-      import_user: "Administrateur"
-    )
-    
     @opening_hours = [
       { day: "Lundi", open: true, from: "08:00", to: "20:00" },
       { day: "Mardi", open: true, from: "08:00", to: "20:00" },
@@ -54,82 +40,84 @@ class SitesController < ApplicationController
     
     @contacts = [
       {
-        name: "Marie Dubois",
+        name: @site.site_manager || "N/A",
         role: "Responsable de Site",
-        phone: "+33 4 67 13 50 00",
-        email: "marie.dubois@odysseum.fr",
-        organization: "Centre Commercial Odysseum"
-      },
-      {
-        name: "Jean Martin",
-        role: "Responsable Technique",
-        phone: "+33 4 67 13 50 01",
-        email: "jean.martin@odysseum.fr",
-        organization: "Centre Commercial Odysseum"
-      },
-      {
-        name: "Sophie Bernard",
-        role: "Responsable Sécurité",
-        phone: "+33 4 67 13 50 02",
-        email: "sophie.bernard@odysseum.fr",
-        organization: "Centre Commercial Odysseum"
+        phone: @site.contact_phone || "N/A",
+        email: @site.contact_email || "N/A",
+        organization: @site.name
       }
     ]
   end
 
   def new
-    @site = OpenStruct.new(
-      name: "",
-      code: "",
-      site_type: "",
-      total_area: nil,
-      address: "",
-      city: "",
-      postal_code: "",
-      department: "",
-      region: "",
-      country: "France",
-      site_manager: "",
-      contact_email: "",
-      contact_phone: "",
-      status: "active",
-      description: ""
-    )
+    @site = current_user.sites.build(status: 'active', country: 'France')
   end
 
   def create
-    # Handle site creation
-    redirect_to sites_path, notice: "Site créé avec succès"
+    @site = current_user.sites.build(site_params)
+    
+    if @site.save
+      redirect_to sites_path, notice: "Site créé avec succès"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
-    @site = OpenStruct.new(
-      id: params[:id],
-      name: "Centre Commercial Odysseum",
-      code: "CCO-001",
-      site_type: "commercial",
-      total_area: 65000,
-      address: "2 Place de Lisbonne",
-      city: "Montpellier",
-      postal_code: "34000",
-      department: "34",
-      region: "occitanie",
-      country: "France",
-      site_manager: "Marie Dubois",
-      contact_email: "marie.dubois@odysseum.fr",
-      contact_phone: "+33 4 67 13 50 00",
-      status: "active",
-      description: "Grand centre commercial avec zones commerciales et loisirs"
-    )
   end
 
   def update
-    # Handle site update
-    redirect_to site_path(params[:id]), notice: "Site mis à jour avec succès"
+    if @site.update(site_params)
+      redirect_to site_path(@site), notice: "Site mis à jour avec succès"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
-    # Handle site deletion
-    redirect_to sites_path, notice: "Site supprimé avec succès"
+    if @site.destroy
+      redirect_to sites_path, notice: "Site supprimé avec succès"
+    else
+      redirect_to sites_path, alert: "Impossible de supprimer le site"
+    end
+  end
+  
+  private
+  
+  def set_site
+    @site = current_user.sites.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to sites_path, alert: "Site introuvable"
+  end
+  
+  def authorize_portfolio_manager
+    unless current_user.admin? || current_user.portfolio_manager?
+      redirect_to sites_path, alert: "Vous n'avez pas l'autorisation d'effectuer cette action"
+    end
+  end
+  
+  def site_params
+    params.require(:site).permit(
+      :name,
+      :code,
+      :site_type,
+      :status,
+      :description,
+      :address,
+      :city,
+      :postal_code,
+      :department,
+      :region,
+      :country,
+      :total_area,
+      :estimated_area,
+      :site_manager,
+      :contact_email,
+      :contact_phone,
+      :gps_coordinates,
+      :climate_zone,
+      :cadastral_id,
+      :rnb_id
+    )
   end
 end
