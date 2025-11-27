@@ -1,7 +1,9 @@
 class Site < ApplicationRecord
   # Associations
   belongs_to :user
+  belongs_to :organization
   has_many :buildings, dependent: :destroy
+  has_many :levels, through: :buildings
   has_many :site_assignments, dependent: :destroy
   has_many :site_managers, through: :site_assignments, source: :user
   

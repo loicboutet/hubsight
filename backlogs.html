@@ -184,13 +184,31 @@
                     <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Go to a site detail page (e.g., /sites/1). Click 'Bâtiments' tab to view list of buildings. Click 'Nouveau Bâtiment' - fill required fields (name, code, construction year, area, status) and optional fields (description, cadastral reference, renovation year, number of levels, height, structure type, ERP category/type, capacity, PMR accessibility, environmental certification, energy consumption, DPE rating, GHG rating, notes). Click 'Créer'. View building details page showing all information and data source tracking (created by, updated by, import source). Click 'Éditer' to update building. Test delete functionality. Verify buildings list shows area, levels count, spaces count, equipment count, construction year, and status.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">15</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create and Manage Levels</td>
+                    <td class="title-col">PM - Create and Manage Levels<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Full CRUD functionality for levels (floors) nested under buildings, including level number, altitude, and floor area</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/buildings/:building_id/levels">/buildings/:building_id/levels</a></td>
+                    <td class="test-col">PREREQUISITES: Task 14 (Buildings) must be completed first. Login as portfolio manager (portfolio@hubsight.com / Password123!). 
+                    
+CREATE TEST: Go to /sites, select a site, click 'Bâtiments' tab, select a building. On building detail page, look for 'Niveaux' section or navigate directly to /buildings/:building_id/levels. Click 'Nouveau Niveau' button. Fill REQUIRED field: name (examples: "Rez-de-chaussée", "1er étage", "2ème étage", "Sous-sol -1"). Fill OPTIONAL fields: level_number (numeric: -2=basement 2, -1=basement 1, 0=ground floor, 1=floor 1, 2=floor 2, etc.), altitude in meters (e.g., -3.5 for basement, 0 for ground, 3.2 for 1st floor), area in m² (e.g., 850.5). Add description if desired. Click 'Créer le Niveau'. Verify: success flash message "Niveau créé avec succès.", redirected to building detail page showing updated levels count, new level appears in levels list on building page.
+
+VIEW/SHOW TEST: From levels list, click on level name to view detail page. Verify displays: level name, level_number with proper formatting, altitude (formatted as "X m" or blank if not set), area (formatted as "XXX m²" or blank if not set), parent building name with link, site breadcrumb navigation, spaces count (shows 0 initially), equipment count (shows 0 initially), created_by_name, timestamps, description.
+
+UPDATE/EDIT TEST: On level detail page, click 'Éditer' button. Modify fields: change name (e.g., "Rez-de-chaussée" to "Ground Floor"), update level_number, change altitude value, update area. Click 'Mettre à Jour le Niveau'. Verify: success message "Niveau mis à jour avec succès.", redirected to building detail page, changes persist when viewing level again, updated_by_name field populated with current user's name.
+
+ORDERING TEST: Create multiple levels with different level_numbers: create "Sous-sol -1" (level_number: -1), "Rez-de-chaussée" (level_number: 0), "1er étage" (level_number: 1), "2ème étage" (level_number: 2). View levels list on building page. Verify levels display in ascending order by level_number: basement first, then ground floor, then upper floors.
+
+DELETE TEST: On level detail page or from levels list, click 'Supprimer' button. Confirm deletion in dialog. Verify: success message "Niveau supprimé avec succès.", redirected to building detail page, level removed from levels list, building's levels count decremented.
+
+VALIDATION TESTS: Try creating level without name - should fail with validation error "Name can't be blank". Try creating level with negative area (e.g., -100) - should fail with validation error. Try invalid level_number format (e.g., "abc") - should fail. All required field validations must prevent save.
+
+AUTHORIZATION TEST: Logout, login as different portfolio manager (portfolio2@hubsight.com / Password123!). Navigate to a building from Organization 1 (try /buildings/1). Verify redirected with error "Accès non autorisé." Cannot view, create, edit, or delete levels from other organizations' buildings.
+
+ORGANIZATION ISOLATION TEST: Create level in Organization 1's building while logged in as portfolio@hubsight.com. Level should have organization_id matching building's organization_id. Login as portfolio2@hubsight.com, create level in Organization 2's building. Verify each organization sees only their own levels. Database check: confirm levels.organization_id matches parent building.organization_id.
+
+DATA SOURCE TRACKING: When creating level, verify created_by_name field populated with current user's full name. When updating, verify updated_by_name field updated. These fields support import tracking (import_source, import_date) for future Excel import functionality.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>

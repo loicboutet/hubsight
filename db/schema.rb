@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_27_203148) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_27_211338) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -37,6 +37,44 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_203148) do
     t.datetime "updated_at", null: false
     t.index ["admin_user_id"], name: "index_admin_access_logs_on_admin_user_id"
     t.index ["organization_id"], name: "index_admin_access_logs_on_organization_id"
+  end
+
+  create_table "buildings", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "code"
+    t.text "description"
+    t.integer "construction_year"
+    t.integer "renovation_year"
+    t.decimal "area", precision: 10, scale: 2
+    t.integer "number_of_levels"
+    t.decimal "height_m", precision: 10, scale: 2
+    t.string "structure_type"
+    t.string "erp_category"
+    t.string "erp_type"
+    t.integer "capacity"
+    t.boolean "pmr_accessibility"
+    t.string "environmental_certification"
+    t.decimal "energy_consumption", precision: 10, scale: 2
+    t.string "dpe_rating"
+    t.string "ghg_rating"
+    t.string "status", default: "active", null: false
+    t.integer "site_id", null: false
+    t.integer "organization_id"
+    t.integer "user_id", null: false
+    t.string "cadastral_reference"
+    t.string "created_by_name"
+    t.string "updated_by_name"
+    t.string "import_source"
+    t.datetime "import_date"
+    t.string "import_user"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_buildings_on_organization_id"
+    t.index ["site_id", "name"], name: "index_buildings_on_site_id_and_name"
+    t.index ["site_id"], name: "index_buildings_on_site_id"
+    t.index ["status"], name: "index_buildings_on_status"
+    t.index ["user_id"], name: "index_buildings_on_user_id"
   end
 
   create_table "contracts", force: :cascade do |t|
@@ -69,6 +107,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_203148) do
     t.index ["equipment_type"], name: "index_equipment_on_equipment_type"
     t.index ["organization_id"], name: "index_equipment_on_organization_id"
     t.index ["site_id"], name: "index_equipment_on_site_id"
+  end
+
+  create_table "levels", force: :cascade do |t|
+    t.string "name", null: false
+    t.decimal "altitude", precision: 10, scale: 2
+    t.decimal "area", precision: 10, scale: 2
+    t.integer "level_number"
+    t.integer "building_id", null: false
+    t.integer "organization_id"
+    t.string "created_by_name"
+    t.string "updated_by_name"
+    t.string "import_source"
+    t.datetime "import_date"
+    t.string "import_user"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["building_id", "level_number"], name: "index_levels_on_building_id_and_level_number"
+    t.index ["building_id"], name: "index_levels_on_building_id"
+    t.index ["organization_id"], name: "index_levels_on_organization_id"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -180,6 +238,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_203148) do
   end
 
   add_foreign_key "active_sessions", "users"
+  add_foreign_key "buildings", "organizations"
+  add_foreign_key "buildings", "sites"
+  add_foreign_key "buildings", "users"
+  add_foreign_key "levels", "buildings"
+  add_foreign_key "levels", "organizations"
   add_foreign_key "site_assignments", "sites"
   add_foreign_key "site_assignments", "users"
   add_foreign_key "sites", "users"
