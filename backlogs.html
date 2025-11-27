@@ -29,6 +29,10 @@
         .test-col { min-width: 350px; font-size: 13px; color: #555; }
         .video-col { width: 120px; text-align: center; }
         .empty-cell { color: #bdc3c7; font-style: italic; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+        .status-done { background-color: #4caf50; color: white; }
+        tr.implemented { background-color: #e8f5e9; }
+        tr.implemented:hover { background-color: #c8e6c9; }
         @media (max-width: 768px) { .container { padding: 15px; } h1 { font-size: 1.8em; } table { font-size: 12px; } th, td { padding: 8px 6px; } }
     </style>
 </head>
@@ -171,13 +175,13 @@
                     <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Click 'Sites' in sidebar menu. View list of 13 sites with pagination (10 per page). Click 'Nouveau Site' - fill required fields (name, type, address, city, postal code) and optional fields (code, area, contact info, GPS, climate zone, etc.), submit. Click site name to view details. Click 'Éditer' to update. Test filters: search by name/city, filter by site type (8 types), filter by region (13 regions), sort options. Click 'Supprimer' and confirm deletion. Navigate pages 1-2 to verify pagination. Login as portfolio2@hubsight.com to verify multi-tenancy (sees only their 12 sites). Verify sites menu accessible from both Admin and User layouts.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">14</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create and Manage Buildings</td>
+                    <td class="title-col">PM - Create and Manage Buildings<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Full CRUD functionality for buildings nested under sites, including construction year, area, ERP classification, energy data, etc.</td>
                     <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Go to a site detail page (e.g., /sites/1). Click 'Bâtiments' tab to view list of buildings. Click 'Nouveau Bâtiment' - fill required fields (name, code, construction year, area, status) and optional fields (description, cadastral reference, renovation year, number of levels, height, structure type, ERP category/type, capacity, PMR accessibility, environmental certification, energy consumption, DPE rating, GHG rating, notes). Click 'Créer'. View building details page showing all information and data source tracking (created by, updated by, import source). Click 'Éditer' to update building. Test delete functionality. Verify buildings list shows area, levels count, spaces count, equipment count, construction year, and status.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
