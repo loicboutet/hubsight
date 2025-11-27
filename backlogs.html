@@ -43,7 +43,7 @@
         <div class="stats">
             <div class="stat-card"><div class="stat-number">56</div><div class="stat-label">Total Tasks</div></div>
             <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Brick Phase</div></div>
-            <div class="stat-card"><div class="stat-number">9</div><div class="stat-label">Tasks Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">10</div><div class="stat-label">Tasks Implemented</div></div>
         </div>
         <table>
             <thead>
@@ -153,17 +153,17 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">PM - Create Site Manager Profiles</td>
                     <td class="description-col">Portfolio Manager can create and manage Site Manager profiles for their organization with role-based permissions</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/site_managers">/site_managers</a></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Navigate to /site_managers to view list of site managers. Click 'Nouveau Responsable' button. Fill required fields: email, first_name, last_name, phone. Fill optional fields: department, status (active/inactive). Click 'Créer le Responsable'. Verify success message appears. Check letter_opener - invitation email should open with activation link. Verify site manager appears in list with 'Invitation en attente' badge. Click site manager name to view profile - verify all details displayed correctly including invitation status. Click 'Renvoyer l'invitation' button - verify new invitation email sent. Click invitation link, set strong password (8+ chars, uppercase, lowercase, digit, special char), activate account. Login as new site manager - verify access granted. Logout, login as portfolio manager. Click 'Éditer' on site manager - update first_name, last_name, phone, department, status. Save changes - verify updates persist. Test filters: search by name/email, filter by status (active/inactive/pending), filter by sites assigned. Click 'Sites' button - verify redirects to /site_managers/:id/assign_sites (site assignment feature from task 12). Test authorization: logout, login as site_manager - verify cannot access /site_managers (redirected with error). Test organization isolation: login as portfolio2@hubsight.com - verify sees only their organization's site managers (not Organization 1's site managers).</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">12</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Assign Sites to Site Managers</td>
+                    <td class="title-col">PM - Assign Sites to Site Managers<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Implement site assignment functionality allowing Portfolio Managers to assign specific sites to Site Manager users</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/site_managers/:id/assign_sites">/site_managers/:id/assign_sites</a></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Navigate to /site_managers to view list of site managers. Click on a site manager (e.g., Pierre Bernard). On the profile page, click "Gérer les Sites" button. Verify you're redirected to /site_managers/:id/assign_sites. View available sites from your organization with checkboxes. Test "Tout sélectionner/Tout désélectionner" to select/deselect all sites. Verify counter updates in real-time showing "X site(s) sélectionné(s)". Select specific sites by checking individual boxes. Verify counter increments/decrements correctly. Click "Enregistrer les Assignations". Verify success message "Sites assignés avec succès." Verify redirect back to site manager profile (/site_managers/:id). Verify "Sites Assignés" section now displays assigned sites count (no longer hardcoded 0). Test unassigning: click "Gérer les Sites" again, uncheck some sites, save. Verify assignments update correctly. Test with multiple site managers to ensure independent assignments. Verify database: check site_assignments table has records with user_id, site_id, assigned_by_name. Test site manager access: login as assigned site manager, go to /my_sites, verify only assigned sites visible (see task 47 for full SM testing).</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
