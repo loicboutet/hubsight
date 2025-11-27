@@ -3,7 +3,7 @@ module Admin
     include AdminAuthorization
     
     layout 'admin'
-    before_action :set_portfolio_manager, only: [:show, :edit, :update, :destroy]
+    before_action :set_portfolio_manager, only: [:show, :edit, :update, :destroy, :resend_invitation]
     
     # GET /admin/portfolio_managers
     def index
@@ -120,6 +120,24 @@ module Admin
       @portfolio_manager.destroy
       redirect_to admin_portfolio_managers_path, 
                   notice: "Gestionnaire de portefeuille supprimé avec succès."
+    end
+    
+    # POST /admin/portfolio_managers/:id/resend_invitation
+    def resend_invitation
+      if @portfolio_manager.invitation_pending?
+        # Generate new invitation token and resend email
+        @portfolio_manager.generate_invitation_token!
+        @portfolio_manager.send_invitation_email
+        
+        # Log for audit trail (Phase 4 - Item 9)
+        Rails.logger.info("Admin #{current_user.email} resent invitation to: #{@portfolio_manager.email}")
+        
+        redirect_to admin_portfolio_manager_path(@portfolio_manager), 
+                    notice: "Invitation renvoyée avec succès à #{@portfolio_manager.email}."
+      else
+        redirect_to admin_portfolio_manager_path(@portfolio_manager), 
+                    alert: "Cette invitation a déjà été acceptée."
+      end
     end
     
     private

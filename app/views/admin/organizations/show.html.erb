@@ -1,0 +1,218 @@
+<div style="padding: var(--space-2xl);">
+  <div style="margin-bottom: var(--space-2xl);">
+    <a href="<%= admin_organizations_path %>" style="color: var(--coral-primary); text-decoration: none; display: inline-flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-lg);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Retour à la liste
+    </a>
+    
+    <div style="display: flex; justify-content: space-between; align-items: start;">
+      <div>
+        <h1 class="typo-h2" style="margin-bottom: var(--space-sm);"><%= @organization.name %></h1>
+        <p style="color: var(--gray); margin: 0;">Organisation Cliente</p>
+      </div>
+      <div style="display: flex; gap: var(--space-sm);">
+        <a href="<%= edit_admin_organization_path(@organization) %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Modifier
+        </a>
+        <%= form_tag toggle_status_admin_organization_path(@organization), method: :post, style: "display: inline;" do %>
+          <button type="submit" class="<%= @organization.active? ? 'typo-btn-cancel' : 'typo-btn-success' %>" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <% if @organization.active? %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              </svg>
+              Désactiver
+            <% else %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Activer
+            <% end %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-xl);">
+    <!-- Main Information Column -->
+    <div style="display: flex; flex-direction: column; gap: var(--space-xl);">
+      <!-- Organization Information -->
+      <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          Informations de l'Organisation
+        </h3>
+        
+        <dl style="display: grid; grid-template-columns: 1fr 2fr; gap: var(--space-md); margin: 0;">
+          <dt style="font-weight: 600; color: var(--dark-gray);">Nom:</dt>
+          <dd style="margin: 0; color: var(--gray);"><%= @organization.name %></dd>
+          
+          <dt style="font-weight: 600; color: var(--dark-gray);">Raison Sociale:</dt>
+          <dd style="margin: 0; color: var(--gray);"><%= @organization.legal_name || '-' %></dd>
+          
+          <dt style="font-weight: 600; color: var(--dark-gray);">SIRET:</dt>
+          <dd style="margin: 0; color: var(--gray); font-family: monospace;"><%= @organization.siret || '-' %></dd>
+          
+          <dt style="font-weight: 600; color: var(--dark-gray);">Statut:</dt>
+          <dd style="margin: 0;">
+            <% if @organization.active? %>
+              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Actif
+              </span>
+            <% else %>
+              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #ffebee; color: #c62828; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Inactif
+              </span>
+            <% end %>
+          </dd>
+          
+          <dt style="font-weight: 600; color: var(--dark-gray);">Date de création:</dt>
+          <dd style="margin: 0; color: var(--gray);"><%= @organization.created_at.strftime('%d/%m/%Y à %H:%M') %></dd>
+        </dl>
+      </div>
+
+      <!-- Portfolio Managers -->
+      <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Gestionnaires de Portefeuille (<%= @portfolio_managers.count %>)
+        </h3>
+        
+        <% if @portfolio_managers.any? %>
+          <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+            <% @portfolio_managers.each do |pm| %>
+              <div style="padding: var(--space-md); border: 1px solid var(--light-gray); border-radius: var(--space-sm); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-weight: 500;"><%= pm.full_name %></div>
+                  <div style="font-size: 0.875rem; color: var(--gray); margin-top: 2px;"><%= pm.email %></div>
+                  <% if pm.department.present? %>
+                    <div style="font-size: 0.875rem; color: var(--gray); margin-top: 2px;"><%= pm.department %></div>
+                  <% end %>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                  <% if pm.status == 'active' %>
+                    <span style="padding: 4px 8px; background-color: #e8f5e9; color: #2e7d32; border-radius: 8px; font-size: 0.75rem; font-weight: 500;">Actif</span>
+                  <% else %>
+                    <span style="padding: 4px 8px; background-color: #ffebee; color: #c62828; border-radius: 8px; font-size: 0.75rem; font-weight: 500;">Inactif</span>
+                  <% end %>
+                  <a href="<%= admin_portfolio_manager_path(pm) %>" style="padding: 6px 12px; background-color: var(--blue-pale); color: var(--blue-primary); border-radius: var(--space-sm); text-decoration: none; font-size: 0.875rem;">Voir</a>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p style="color: var(--gray); font-style: italic; margin: 0;">Aucun gestionnaire de portefeuille associé</p>
+        <% end %>
+      </div>
+
+      <!-- Site Managers -->
+      <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Gestionnaires de Sites (<%= @site_managers.count %>)
+        </h3>
+        
+        <% if @site_managers.any? %>
+          <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+            <% @site_managers.each do |sm| %>
+              <div style="padding: var(--space-md); border: 1px solid var(--light-gray); border-radius: var(--space-sm); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-weight: 500;"><%= sm.full_name %></div>
+                  <div style="font-size: 0.875rem; color: var(--gray); margin-top: 2px;"><%= sm.email %></div>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                  <% if sm.status == 'active' %>
+                    <span style="padding: 4px 8px; background-color: #e8f5e9; color: #2e7d32; border-radius: 8px; font-size: 0.75rem; font-weight: 500;">Actif</span>
+                  <% else %>
+                    <span style="padding: 4px 8px; background-color: #ffebee; color: #c62828; border-radius: 8px; font-size: 0.75rem; font-weight: 500;">Inactif</span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p style="color: var(--gray); font-style: italic; margin: 0;">Aucun gestionnaire de site associé</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar Column -->
+    <div style="display: flex; flex-direction: column; gap: var(--space-xl);">
+      <!-- Statistics -->
+      <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Statistiques
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+          <div style="text-align: center; padding: var(--space-lg); background-color: var(--blue-pale); border-radius: var(--space-sm);">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--blue-primary);"><%= @users_count %></div>
+            <div style="font-size: 0.875rem; color: var(--dark-gray); margin-top: var(--space-xs);">Total Utilisateurs</div>
+          </div>
+          
+          <div style="text-align: center; padding: var(--space-lg); background-color: var(--pink-pale); border-radius: var(--space-sm);">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--coral-primary);"><%= @portfolio_managers.count %></div>
+            <div style="font-size: 0.875rem; color: var(--dark-gray); margin-top: var(--space-xs);">Gestionnaires de Portefeuille</div>
+          </div>
+          
+          <div style="text-align: center; padding: var(--space-lg); background-color: #e8f5e9; border-radius: var(--space-sm);">
+            <div style="font-size: 2rem; font-weight: 700; color: #2e7d32;"><%= @site_managers.count %></div>
+            <div style="font-size: 0.875rem; color: var(--dark-gray); margin-top: var(--space-xs);">Gestionnaires de Sites</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Actions
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+          <a href="<%= edit_admin_organization_path(@organization) %>" style="padding: var(--space-md); background-color: var(--pink-pale); color: var(--coral-primary); border-radius: var(--space-sm); text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Modifier l'Organisation
+          </a>
+          
+          <% if @users_count == 0 %>
+            <%= link_to admin_organization_path(@organization), method: :delete, data: { confirm: 'Êtes-vous sûr de vouloir supprimer cette organisation ?' }, style: "padding: var(--space-md); background-color: #ffebee; color: #c62828; border-radius: var(--space-sm); text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; gap: var(--space-sm);" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Supprimer l'Organisation
+            <% end %>
+          <% else %>
+            <div style="padding: var(--space-md); background-color: #fff3cd; color: #856404; border-radius: var(--space-sm); text-align: center; font-size: 0.875rem;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Impossible de supprimer: utilisateurs associés
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

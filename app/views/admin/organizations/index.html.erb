@@ -1,0 +1,131 @@
+<div style="padding: var(--space-2xl);">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
+    <div>
+      <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Organisations</h1>
+      <p style="color: var(--gray); margin: 0;">Gérer les organisations clientes</p>
+    </div>
+    <a href="<%= new_admin_organization_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+      Nouvelle Organisation
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <form action="<%= admin_organizations_path %>" method="get" style="display: flex; gap: var(--space-md); align-items: end;">
+      <div style="flex: 1;">
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Rechercher</label>
+        <input type="text" name="search" value="<%= params[:search] %>" placeholder="Nom, raison sociale, SIRET..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+      </div>
+      <div style="width: 200px;">
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
+        <select name="status" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <option value="">Tous</option>
+          <option value="active" <%= 'selected' if params[:status] == 'active' %>>Actif</option>
+          <option value="inactive" <%= 'selected' if params[:status] == 'inactive' %>>Inactif</option>
+        </select>
+      </div>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer;">Filtrer</button>
+      <% if params[:search].present? || params[:status].present? %>
+        <a href="<%= admin_organizations_path %>" style="padding: 10px 20px; background-color: var(--light-gray); color: var(--dark-gray); border-radius: var(--space-sm); text-decoration: none;">Réinitialiser</a>
+      <% end %>
+    </form>
+  </div>
+
+  <% if @organizations.any? %>
+  <div style="background: var(--white); border-radius: var(--space-md); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead style="background-color: var(--pink-pale);">
+        <tr>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Nom</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Raison Sociale</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">SIRET</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Utilisateurs</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Statut</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Date de création</th>
+          <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray);">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @organizations.each do |org| %>
+        <tr style="border-bottom: 1px solid var(--light-gray);">
+          <td style="padding: var(--space-md);">
+            <div style="font-weight: 500;"><%= org.name %></div>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="color: var(--gray);"><%= org.legal_name || '-' %></div>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="color: var(--gray); font-family: monospace;"><%= org.siret || '-' %></div>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="color: var(--gray);"><%= org.users.count %></div>
+          </td>
+          <td style="padding: var(--space-md);">
+            <% if org.active? %>
+              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Actif
+              </span>
+            <% else %>
+              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #ffebee; color: #c62828; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Inactif
+              </span>
+            <% end %>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="font-size: 0.875rem; color: var(--gray);">
+              <%= org.created_at.strftime('%d/%m/%Y') %>
+            </div>
+          </td>
+          <td style="padding: var(--space-md); text-align: center;">
+            <div style="display: inline-flex; gap: var(--space-sm);">
+              <a href="<%= admin_organization_path(org) %>" style="padding: 6px 12px; background-color: var(--blue-pale); color: var(--blue-primary); border-radius: var(--space-sm); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Voir
+              </a>
+              <a href="<%= edit_admin_organization_path(org) %>" style="padding: 6px 12px; background-color: var(--pink-pale); color: var(--coral-primary); border-radius: var(--space-sm); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Modifier
+              </a>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <% else %>
+  <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-2xl); text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); color: var(--gray);">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
+    <h3 class="typo-h4" style="margin-bottom: var(--space-sm); color: var(--dark-gray);">
+      <%= params[:search].present? || params[:status].present? ? 'Aucune organisation trouvée' : 'Aucune Organisation' %>
+    </h3>
+    <p style="color: var(--gray); margin-bottom: var(--space-lg);">
+      <%= params[:search].present? || params[:status].present? ? 'Essayez de modifier vos filtres de recherche' : 'Commencez par créer votre première organisation' %>
+    </p>
+    <% unless params[:search].present? || params[:status].present? %>
+      <a href="<%= new_admin_organization_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Créer une Organisation
+      </a>
+    <% end %>
+  </div>
+  <% end %>
+</div>

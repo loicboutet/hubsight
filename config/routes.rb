@@ -23,7 +23,18 @@ Rails.application.routes.draw do
   
   namespace :admin do
     # Portfolio Managers Management
-    resources :portfolio_managers
+    resources :portfolio_managers do
+      member do
+        post :resend_invitation
+      end
+    end
+    
+    # Organizations Management
+    resources :organizations do
+      member do
+        post :toggle_status
+      end
+    end
     
     # Client Data Access
     resources :clients, only: [:index] do
