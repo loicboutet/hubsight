@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_27_200608) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_27_203148) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -37,6 +37,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_200608) do
     t.datetime "updated_at", null: false
     t.index ["admin_user_id"], name: "index_admin_access_logs_on_admin_user_id"
     t.index ["organization_id"], name: "index_admin_access_logs_on_organization_id"
+  end
+
+  create_table "contracts", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.integer "site_id"
+    t.string "contract_number"
+    t.string "contract_family"
+    t.string "status", default: "active"
+    t.decimal "annual_amount", precision: 12, scale: 2
+    t.date "start_date"
+    t.date "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contract_family"], name: "index_contracts_on_contract_family"
+    t.index ["organization_id"], name: "index_contracts_on_organization_id"
+    t.index ["site_id"], name: "index_contracts_on_site_id"
+    t.index ["start_date"], name: "index_contracts_on_start_date"
+    t.index ["status"], name: "index_contracts_on_status"
+  end
+
+  create_table "equipment", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.integer "site_id"
+    t.string "equipment_type"
+    t.string "equipment_category"
+    t.date "commissioning_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commissioning_date"], name: "index_equipment_on_commissioning_date"
+    t.index ["equipment_type"], name: "index_equipment_on_equipment_type"
+    t.index ["organization_id"], name: "index_equipment_on_organization_id"
+    t.index ["site_id"], name: "index_equipment_on_site_id"
   end
 
   create_table "organizations", force: :cascade do |t|

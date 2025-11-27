@@ -365,4 +365,268 @@
       <% end %>
     </div>
   </div>
+
+  <!-- ========================================== -->
+  <!-- CONTRACT DISTRIBUTION ANALYSIS -->
+  <!-- ========================================== -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      📊 Analyse de la Distribution des Contrats
+    </h3>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2xl);">
+      <!-- Contract Distribution by Family -->
+      <div>
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Répartition par Famille de Contrats</h4>
+        <div style="display: flex; gap: var(--space-xl);">
+          <!-- Donut Chart -->
+          <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+            <div style="position: relative; width: 200px; height: 200px;">
+              <svg width="200" height="200" viewBox="0 0 200 200">
+                <% total = @contract_by_family.sum { |c| c[:count] } %>
+                <% start_angle = -90 %>
+                <% @contract_by_family.each do |contract| %>
+                  <% angle = (contract[:count].to_f / total) * 360 %>
+                  <% end_angle = start_angle + angle %>
+                  <% start_rad = start_angle * Math::PI / 180 %>
+                  <% end_rad = end_angle * Math::PI / 180 %>
+                  <% outer_radius = 100 %>
+                  <% inner_radius = 60 %>
+                  <% x1 = 100 + outer_radius * Math.cos(start_rad) %>
+                  <% y1 = 100 + outer_radius * Math.sin(start_rad) %>
+                  <% x2 = 100 + outer_radius * Math.cos(end_rad) %>
+                  <% y2 = 100 + outer_radius * Math.sin(end_rad) %>
+                  <% x3 = 100 + inner_radius * Math.cos(end_rad) %>
+                  <% y3 = 100 + inner_radius * Math.sin(end_rad) %>
+                  <% x4 = 100 + inner_radius * Math.cos(start_rad) %>
+                  <% y4 = 100 + inner_radius * Math.sin(start_rad) %>
+                  <% large_arc = angle > 180 ? 1 : 0 %>
+                  <path d="M <%= x1 %>,<%= y1 %> A <%= outer_radius %>,<%= outer_radius %> 0 <%= large_arc %>,1 <%= x2 %>,<%= y2 %> L <%= x3 %>,<%= y3 %> A <%= inner_radius %>,<%= inner_radius %> 0 <%= large_arc %>,0 <%= x4 %>,<%= y4 %> Z" fill="<%= contract[:color] %>" opacity="0.9" />
+                  <% start_angle = end_angle %>
+                <% end %>
+              </svg>
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                <div class="typo-h2" style="margin: 0; color: var(--coral-primary);"><%= total %></div>
+                <div class="typo-body-small" style="color: #666;">contrats</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Legend -->
+          <div style="flex: 1;">
+            <% @contract_by_family.each do |contract| %>
+              <div style="display: flex; align-items: center; margin-bottom: var(--space-md); padding: var(--space-sm); background-color: #f8f9fa; border-radius: var(--space-sm);">
+                <div style="width: 16px; height: 16px; background-color: <%= contract[:color] %>; border-radius: 4px; margin-right: var(--space-sm); flex-shrink: 0;"></div>
+                <div style="flex: 1; min-width: 0;">
+                  <div class="typo-body-small typo-bold" style="color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= contract[:family] %></div>
+                  <div class="typo-body-small" style="color: #666; font-size: 0.75rem;"><%= contract[:count] %> contrats · <%= contract[:percentage] %>%</div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contract Distribution by Status -->
+      <div>
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Répartition par Statut</h4>
+        <div style="display: flex; gap: var(--space-xl);">
+          <!-- Donut Chart -->
+          <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+            <div style="position: relative; width: 200px; height: 200px;">
+              <svg width="200" height="200" viewBox="0 0 200 200">
+                <% total_status = @contract_by_status.sum { |c| c[:count] } %>
+                <% start_angle = -90 %>
+                <% @contract_by_status.each do |status| %>
+                  <% angle = (status[:count].to_f / total_status) * 360 %>
+                  <% end_angle = start_angle + angle %>
+                  <% start_rad = start_angle * Math::PI / 180 %>
+                  <% end_rad = end_angle * Math::PI / 180 %>
+                  <% outer_radius = 100 %>
+                  <% inner_radius = 60 %>
+                  <% x1 = 100 + outer_radius * Math.cos(start_rad) %>
+                  <% y1 = 100 + outer_radius * Math.sin(start_rad) %>
+                  <% x2 = 100 + outer_radius * Math.cos(end_rad) %>
+                  <% y2 = 100 + outer_radius * Math.sin(end_rad) %>
+                  <% x3 = 100 + inner_radius * Math.cos(end_rad) %>
+                  <% y3 = 100 + inner_radius * Math.sin(end_rad) %>
+                  <% x4 = 100 + inner_radius * Math.cos(start_rad) %>
+                  <% y4 = 100 + inner_radius * Math.sin(start_rad) %>
+                  <% large_arc = angle > 180 ? 1 : 0 %>
+                  <path d="M <%= x1 %>,<%= y1 %> A <%= outer_radius %>,<%= outer_radius %> 0 <%= large_arc %>,1 <%= x2 %>,<%= y2 %> L <%= x3 %>,<%= y3 %> A <%= inner_radius %>,<%= inner_radius %> 0 <%= large_arc %>,0 <%= x4 %>,<%= y4 %> Z" fill="<%= status[:color] %>" opacity="0.9" />
+                  <% start_angle = end_angle %>
+                <% end %>
+              </svg>
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                <div class="typo-h2" style="margin: 0; color: var(--coral-primary);"><%= total_status %></div>
+                <div class="typo-body-small" style="color: #666;">contrats</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Legend -->
+          <div style="flex: 1;">
+            <% @contract_by_status.each do |status| %>
+              <div style="display: flex; align-items: center; margin-bottom: var(--space-md); padding: var(--space-sm); background-color: #f8f9fa; border-radius: var(--space-sm);">
+                <div style="width: 16px; height: 16px; background-color: <%= status[:color] %>; border-radius: 4px; margin-right: var(--space-sm); flex-shrink: 0;"></div>
+                <div style="flex: 1; min-width: 0;">
+                  <div class="typo-body-small typo-bold" style="color: #333;"><%= status[:status] %></div>
+                  <div class="typo-body-small" style="color: #666; font-size: 0.75rem;"><%= status[:count] %> contrats · <%= status[:percentage] %>%</div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SPENDING TRENDS ANALYSIS -->
+  <!-- ========================================== -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      💰 Analyse des Tendances de Dépenses
+    </h3>
+
+    <!-- Summary Cards -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div class="typo-body-small" style="opacity: 0.9; margin-bottom: var(--space-xs);">Budget Total Annuel</div>
+        <div class="typo-h2" style="margin: 0;"><%= number_to_currency(@budget_total, unit: '€', separator: ' ', delimiter: ' ', format: '%n %u') %></div>
+      </div>
+      <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div class="typo-body-small" style="opacity: 0.9; margin-bottom: var(--space-xs);">Dépenses Actuelles</div>
+        <div class="typo-h2" style="margin: 0;"><%= number_to_currency(@total_annual_spending, unit: '€', separator: ' ', delimiter: ' ', format: '%n %u') %></div>
+      </div>
+      <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div class="typo-body-small" style="opacity: 0.9; margin-bottom: var(--space-xs);">Utilisation Budget</div>
+        <div class="typo-h2" style="margin: 0;"><%= @budget_used_percentage %>%</div>
+      </div>
+    </div>
+
+    <!-- Monthly Spending Trend Chart -->
+    <div style="margin-bottom: var(--space-2xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Évolution Mensuelle des Dépenses</h4>
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 250px; gap: 8px; padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md);">
+        <% max_amount = @monthly_spending.map { |m| [m[:amount], m[:budget]].max }.max %>
+        <% @monthly_spending.each do |month_data| %>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative;">
+            <!-- Budget bar (background) -->
+            <div style="position: absolute; bottom: 0; width: 100%; display: flex; flex-direction: column; align-items: center;">
+              <span class="typo-body-small" style="margin-bottom: 4px; font-size: 0.65rem; color: #999;"><%= number_to_human(month_data[:budget], format: '%n%u', units: {thousand: 'k', million: 'M'}) %></span>
+              <div style="background-color: #e0e0e0; width: 80%; height: <%= (month_data[:budget].to_f / max_amount * 200).round %>px; border-radius: 4px 4px 0 0; opacity: 0.5;"></div>
+            </div>
+            <!-- Actual spending bar -->
+            <div style="position: absolute; bottom: 0; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1;">
+              <span class="typo-body-small typo-bold" style="margin-bottom: 4px; font-size: 0.7rem; color: <%= month_data[:amount] > month_data[:budget] ? '#ef4444' : '#10b981' %>;"><%= number_to_human(month_data[:amount], format: '%n%u', units: {thousand: 'k', million: 'M'}) %></span>
+              <div style="background: <%= month_data[:amount] > month_data[:budget] ? 'linear-gradient(180deg, #ef4444 0%, #dc2626 100%)' : 'linear-gradient(180deg, #10b981 0%, #059669 100%)' %>; width: 60%; height: <%= (month_data[:amount].to_f / max_amount * 200).round %>px; border-radius: 4px 4px 0 0;"></div>
+            </div>
+            <p class="typo-body-small" style="margin-top: var(--space-sm); font-size: 0.75rem; color: #666;"><%= month_data[:month] %></p>
+          </div>
+        <% end %>
+      </div>
+      <div style="display: flex; justify-content: center; gap: var(--space-xl); margin-top: var(--space-md);">
+        <div style="display: flex; align-items: center; gap: var(--space-xs);">
+          <div style="width: 20px; height: 12px; background: linear-gradient(90deg, #10b981 0%, #059669 100%); border-radius: 2px;"></div>
+          <span class="typo-body-small" style="color: #666;">Dépenses réelles</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--space-xs);">
+          <div style="width: 20px; height: 12px; background-color: #e0e0e0; opacity: 0.5; border-radius: 2px;"></div>
+          <span class="typo-body-small" style="color: #666;">Budget</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spending by Family -->
+    <div>
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Dépenses par Famille de Contrats</h4>
+      <% @spending_by_family.each do |family| %>
+        <div style="margin-bottom: var(--space-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs);">
+            <span class="typo-body-small typo-bold"><%= family[:family] %></span>
+            <div style="text-align: right;">
+              <span class="typo-body-small typo-bold" style="color: <%= family[:color] %>;"><%= number_to_currency(family[:amount], unit: '€', separator: ' ', delimiter: ' ', format: '%n %u') %></span>
+              <span class="typo-body-small" style="color: #666; margin-left: var(--space-sm);"><%= family[:percentage] %>%</span>
+            </div>
+          </div>
+          <div style="background-color: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden;">
+            <div style="background-color: <%= family[:color] %>; height: 100%; width: <%= family[:percentage] %>%; border-radius: 6px;"></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- EQUIPMENT DISTRIBUTION ANALYSIS -->
+  <!-- ========================================== -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      🔧 Analyse de la Distribution des Équipements
+    </h3>
+
+    <!-- Total Equipment Count -->
+    <div style="text-align: center; background-color: #f0f9ff; padding: var(--space-lg); border-radius: var(--space-md); margin-bottom: var(--space-2xl);">
+      <div class="typo-body-small" style="color: #666; margin-bottom: var(--space-xs);">Total d'Équipements</div>
+      <div class="typo-display" style="margin: 0; color: var(--coral-primary); font-size: 3rem;"><%= @total_equipment_count %></div>
+    </div>
+
+    <!-- Equipment by Type -->
+    <div style="margin-bottom: var(--space-2xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Répartition par Type d'Équipement</h4>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
+        <% @equipment_by_type.each do |equipment| %>
+          <div style="padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 4px solid <%= equipment[:color] %>;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs);">
+              <span class="typo-body-small typo-bold" style="color: #333;"><%= equipment[:type] %></span>
+              <span class="typo-body-small typo-bold" style="color: <%= equipment[:color] %>;"><%= equipment[:count] %></span>
+            </div>
+            <div style="background-color: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
+              <div style="background-color: <%= equipment[:color] %>; height: 100%; width: <%= equipment[:percentage] %>%;"></div>
+            </div>
+            <div class="typo-body-small" style="color: #666; margin-top: var(--space-xs); font-size: 0.75rem;"><%= equipment[:percentage] %>% du total</div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Equipment by Site (Top 10) -->
+    <div style="margin-bottom: var(--space-2xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Top 10 Sites par Nombre d'Équipements</h4>
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 220px; gap: 8px; padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md);">
+        <% max_equipment = @equipment_by_site.map { |s| s[:count] }.max %>
+        <% @equipment_by_site.each_with_index do |site_data, index| %>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+            <span class="typo-body-small typo-bold" style="margin-bottom: 4px; color: var(--coral-primary); font-size: 0.75rem;"><%= site_data[:count] %></span>
+            <div style="background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); width: 100%; height: <%= (site_data[:count].to_f / max_equipment * 180).round %>px; border-radius: 4px 4px 0 0;"></div>
+            <p class="typo-body-small" style="margin-top: var(--space-xs); font-size: 0.65rem; color: #666; writing-mode: vertical-rl; text-orientation: mixed; max-height: 80px; overflow: hidden; text-overflow: ellipsis;"><%= site_data[:site] %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Equipment Age Distribution -->
+    <div>
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Répartition par Âge des Équipements</h4>
+      <div style="display: flex; gap: var(--space-sm); height: 60px; border-radius: var(--space-md); overflow: hidden;">
+        <% @equipment_age_distribution.each do |age| %>
+          <div style="flex: <%= age[:percentage] %>; background-color: <%= age[:color] %>; display: flex; align-items: center; justify-content: center; position: relative; min-width: 60px;">
+            <div style="text-align: center; color: white; padding: var(--space-xs);">
+              <div class="typo-body-small typo-bold" style="font-size: 0.75rem;"><%= age[:count] %></div>
+              <div class="typo-body-small" style="font-size: 0.65rem; opacity: 0.9;"><%= age[:percentage] %>%</div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div style="display: flex; justify-content: space-around; margin-top: var(--space-md); flex-wrap: wrap; gap: var(--space-sm);">
+        <% @equipment_age_distribution.each do |age| %>
+          <div style="display: flex; align-items: center; gap: var(--space-xs);">
+            <div style="width: 16px; height: 16px; background-color: <%= age[:color] %>; border-radius: 4px;"></div>
+            <span class="typo-body-small" style="color: #666; font-size: 0.75rem;"><%= age[:age_range] %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
