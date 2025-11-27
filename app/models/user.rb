@@ -16,6 +16,7 @@ class User < ApplicationRecord
   # Associations
   has_many :active_sessions, dependent: :destroy
   belongs_to :invited_by, class_name: 'User', optional: true
+  belongs_to :organization, optional: true
 
   # Validations
   validates :email, presence: true, uniqueness: true
@@ -30,6 +31,7 @@ class User < ApplicationRecord
   scope :active, -> { where(status: 'active') }
   scope :inactive, -> { where(status: 'inactive') }
   scope :by_role, ->(role) { where(role: role) }
+  scope :by_organization, ->(organization_id) { where(organization_id: organization_id) }
 
   # Role helper methods
   def admin?
