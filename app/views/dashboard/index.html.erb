@@ -74,21 +74,80 @@
       </div>
     </div>
 
-    <!-- Card 6: Économies Potentielles -->
-    <div class="dashboard-kpi-card">
-      <div class="dashboard-kpi-content">
-        <div class="dashboard-kpi-label">Économies Potentielles</div>
-        <div class="dashboard-kpi-value">127 350 €</div>
-        <div class="dashboard-kpi-subtitle positive">4.5% sur 58 contrats</div>
-      </div>
-      <div class="dashboard-kpi-icon-container">
-        <div class="dashboard-kpi-icon green">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-          </svg>
+    <!-- Card 6: Économies Potentielles (Items 34 & 36) -->
+    <!-- 
+      BACKEND REQUIRED: This card requires the following variables from DashboardController:
+      @contracts_count = Total number of contracts for current user/organization
+      @savings_unlocked = Boolean: true if @contracts_count >= 5
+      @contracts_needed = [5 - @contracts_count, 0].max
+      @progress_percentage = (@contracts_count * 100 / 5).clamp(0, 100)
+      
+      For now, using placeholder values for demonstration:
+    -->
+    <% 
+      # TODO: Remove these placeholder values once backend is implemented
+      contracts_count = 2  # Replace with: @contracts_count
+      savings_unlocked = false  # Replace with: @savings_unlocked
+      contracts_needed = 3  # Replace with: @contracts_needed
+      progress_percentage = 40  # Replace with: @progress_percentage
+    %>
+    
+    <% if savings_unlocked %>
+      <!-- UNLOCKED STATE: Show regular card with link to savings -->
+      <%= link_to savings_path, style: "text-decoration: none; color: inherit;" do %>
+        <div class="dashboard-kpi-card" style="cursor: pointer; transition: transform 0.2s ease;">
+          <div class="dashboard-kpi-content">
+            <div class="dashboard-kpi-label">Économies Potentielles</div>
+            <div class="dashboard-kpi-value">127 350 €</div>
+            <div class="dashboard-kpi-subtitle positive">4.5% sur 58 contrats</div>
+          </div>
+          <div class="dashboard-kpi-icon-container">
+            <div class="dashboard-kpi-icon green">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- LOCKED STATE: Show grayed-out card with progress (Items 34 & 36) -->
+      <div class="dashboard-kpi-card" style="opacity: 0.6; position: relative; cursor: not-allowed; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <div class="dashboard-kpi-content">
+          <div class="dashboard-kpi-label" style="color: #6c757d;">Économies Potentielles</div>
+          <div class="dashboard-kpi-value" style="color: #adb5bd;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#adb5bd" stroke-width="2" style="display: inline-block;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <div class="dashboard-kpi-subtitle" style="color: #6c757d; font-size: 0.75rem; margin-top: 8px;">
+            <!-- Progress Bar (Item 36) -->
+            <div style="margin-bottom: 8px;">
+              <% 
+                filled_blocks = contracts_count
+                empty_blocks = 5 - contracts_count
+              %>
+              <div style="font-family: monospace; font-size: 1.2rem; letter-spacing: 2px;">
+                <span style="color: #28a745;"><%= '█' * filled_blocks %></span><span style="color: #e0e0e0;"><%= '░' * empty_blocks %></span>
+              </div>
+            </div>
+            <div style="font-weight: 600; color: #495057;">
+              <%= contracts_count %>/5 contrats — <%= contracts_needed %> <%= contracts_needed == 1 ? 'de plus' : 'de plus' %> pour déverrouiller
+            </div>
+            <div style="margin-top: 4px; font-size: 0.7rem; color: #868e96;">
+              l'analyse des économies
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-kpi-icon-container">
+          <div class="dashboard-kpi-icon" style="background-color: #adb5bd;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
 
     <!-- Card 7: Alertes Actives -->
     <div class="dashboard-kpi-card">
