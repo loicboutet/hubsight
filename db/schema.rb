@@ -24,6 +24,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_173710) do
     t.index ["user_id"], name: "index_active_sessions_on_user_id"
   end
 
+  create_table "organizations", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "legal_name"
+    t.string "siret"
+    t.string "status", default: "active", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_organizations_on_name", unique: true
+    t.index ["siret"], name: "index_organizations_on_siret"
+    t.index ["status"], name: "index_organizations_on_status"
+  end
+
   create_table "sites", force: :cascade do |t|
     t.string "name", null: false
     t.string "code"

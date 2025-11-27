@@ -34,7 +34,7 @@
 </div>
 
 <div class="section" style="background-color: var(--white); border-radius: var(--space-md);  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);">
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <%= form_for(resource, as: resource_name, url: user_session_path) do |f| %>
     <div style="margin-bottom: var(--space-lg);">
       <%= f.label :email, "Adresse Email", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
       <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "votre.email@example.com", style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
