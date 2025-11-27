@@ -130,6 +130,7 @@ Rails.application.routes.draw do
     member do
       get :assign_sites
       patch :assign_sites, action: :update_site_assignments
+      post :resend_invitation
     end
   end
   

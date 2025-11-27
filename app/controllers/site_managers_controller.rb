@@ -1,6 +1,7 @@
 class SiteManagersController < ApplicationController
-  before_action :set_site_manager, only: [:show, :edit, :update, :destroy, :assign_sites, :update_site_assignments]
-  before_action :ensure_portfolio_manager!
+  include PortfolioManagerAuthorization
+  
+  before_action :set_site_manager, only: [:show, :edit, :update, :destroy, :resend_invitation]
 
   def index
     # Portfolio managers see site managers of their organization
@@ -30,16 +31,21 @@ class SiteManagersController < ApplicationController
     @site_manager.password = SecureRandom.hex(20)
     @site_manager.password_confirmation = @site_manager.password
     
-    if @site_manager.save(validate: false)
-      # Generate invitation token and send email
-      @site_manager.generate_invitation_token!
-      @site_manager.send_invitation_email
-      
-      redirect_to site_managers_path, 
-                  notice: "Invitation envoyée à #{@site_manager.email}"
-    else
-      render :new, status: :unprocessable_entity
+    ActiveRecord::Base.transaction do
+      if @site_manager.save(validate: false)
+        # Generate invitation token and send email
+        @site_manager.generate_invitation_token!
+        @site_manager.send_invitation_email
+        
+        redirect_to site_managers_path, 
+                    notice: "Responsable de site créé avec succès. Invitation envoyée à #{@site_manager.email}."
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
+  rescue ActiveRecord::RecordInvalid => e
+    flash.now[:alert] = "Erreur lors de la création: #{e.message}"
+    render :new, status: :unprocessable_entity
   end
 
   def edit
@@ -69,9 +75,27 @@ class SiteManagersController < ApplicationController
     redirect_to site_managers_path, notice: "Responsable de site supprimé avec succès."
   end
 
+  def resend_invitation
+    if @site_manager.invitation_pending?
+      # Generate new invitation token and resend email
+      @site_manager.generate_invitation_token!
+      @site_manager.send_invitation_email
+      
+      # Log for audit trail
+      Rails.logger.info("Portfolio Manager #{current_user.email} resent invitation to: #{@site_manager.email}")
+      
+      redirect_to site_manager_path(@site_manager), 
+                  notice: "Invitation renvoyée avec succès à #{@site_manager.email}."
+    else
+      redirect_to site_manager_path(@site_manager), 
+                  alert: "Cette invitation a déjà été acceptée."
+    end
+  end
+
   def assign_sites
-    # TODO: Load available sites from the organization
-    # @available_sites = Site.where(organization_id: current_user.organization_id)
+    # Load available sites from the organization
+    @available_sites = Site.where(organization_id: current_user.organization_id).order(:name)
+    # TODO: Implement site assignments relationship
     # @assigned_sites = @site_manager.assigned_sites
   end
 
@@ -101,11 +125,5 @@ class SiteManagersController < ApplicationController
       :password,
       :password_confirmation
     )
-  end
-  
-  def ensure_portfolio_manager!
-    # TODO: Implement proper authorization
-    # For now, just a placeholder
-    # redirect_to root_path, alert: "Accès non autorisé" unless current_user&.portfolio_manager?
   end
 end
