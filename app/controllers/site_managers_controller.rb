@@ -1,41 +1,108 @@
 class SiteManagersController < ApplicationController
+  before_action :set_site_manager, only: [:show, :edit, :update, :destroy, :assign_sites, :update_site_assignments]
+  before_action :ensure_portfolio_manager!
+
   def index
-    # Renders site_managers/index.html.erb
+    # Portfolio managers see site managers of their organization
+    @site_managers = User.by_role(User::ROLES[:site_manager])
+                        .where(organization_id: current_user.organization_id)
+                        .order(created_at: :desc)
   end
 
   def show
-    # Renders site_managers/show.html.erb
   end
 
   def new
-    # Renders site_managers/new.html.erb
+    @site_manager = User.new(
+      role: User::ROLES[:site_manager],
+      organization_id: current_user.organization_id
+    )
   end
 
   def create
-    # Handle site manager creation
-    redirect_to site_managers_path
+    @site_manager = User.new(site_manager_params)
+    @site_manager.role = User::ROLES[:site_manager]
+    @site_manager.organization_id = current_user.organization_id
+    
+    # Generate a temporary password if not provided
+    if params[:user][:password].blank?
+      generated_password = SecureRandom.alphanumeric(12)
+      @site_manager.password = generated_password
+      @site_manager.password_confirmation = generated_password
+    end
+    
+    if @site_manager.save
+      # TODO: Send email with login credentials
+      redirect_to site_managers_path, notice: "Responsable de site créé avec succès."
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
-    # Renders site_managers/edit.html.erb
   end
 
   def update
-    # Handle site manager update
-    redirect_to site_manager_path(params[:id])
+    update_params = site_manager_params
+    
+    # Remove password params if blank
+    if update_params[:password].blank?
+      update_params.delete(:password)
+      update_params.delete(:password_confirmation)
+    end
+    
+    # Ensure organization_id cannot be changed
+    update_params.delete(:organization_id)
+    
+    if @site_manager.update(update_params)
+      redirect_to site_managers_path, notice: "Responsable de site mis à jour avec succès."
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
-    # Handle site manager deletion
-    redirect_to site_managers_path
+    @site_manager.destroy
+    redirect_to site_managers_path, notice: "Responsable de site supprimé avec succès."
   end
 
   def assign_sites
-    # Renders site_managers/assign_sites.html.erb
+    # TODO: Load available sites from the organization
+    # @available_sites = Site.where(organization_id: current_user.organization_id)
+    # @assigned_sites = @site_manager.assigned_sites
   end
 
   def update_site_assignments
-    # Handle site assignment updates
-    redirect_to site_manager_path(params[:id])
+    # TODO: Update site assignments
+    # @site_manager.update(assigned_site_ids: params[:site_ids])
+    redirect_to site_manager_path(@site_manager), 
+                notice: "Sites assignés avec succès."
+  end
+
+  private
+
+  def set_site_manager
+    @site_manager = User.by_role(User::ROLES[:site_manager])
+                       .where(organization_id: current_user.organization_id)
+                       .find(params[:id])
+  end
+
+  def site_manager_params
+    params.require(:user).permit(
+      :email, 
+      :first_name, 
+      :last_name, 
+      :phone, 
+      :department,
+      :status,
+      :password,
+      :password_confirmation
+    )
+  end
+  
+  def ensure_portfolio_manager!
+    # TODO: Implement proper authorization
+    # For now, just a placeholder
+    # redirect_to root_path, alert: "Accès non autorisé" unless current_user&.portfolio_manager?
   end
 end

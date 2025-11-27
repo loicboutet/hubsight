@@ -18,15 +18,23 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  # TODO: PHASE 2 - Replace URL parameter with actual user authentication
-  # This method currently checks ?role=admin parameter or admin namespace
-  # Later: Replace with current_user.admin? or similar authorization check
+  # Check if current context should use admin layout
+  # Returns true only if current user has admin role
+  # This ensures:
+  # - admin@hubsight.com (admin role) → admin layout
+  # - portfolio@hubsight.com (portfolio_manager role) → user layout
+  # - sitemanager@hubsight.com (site_manager role) → user layout
   def admin_context?
-    params[:role] == 'admin' || self.class.module_parent == Admin
+    current_user&.admin?
   end
   
   # Make admin_context? available in views
   helper_method :admin_context?
+  
+  # Redirect to dashboard after successful login
+  def after_sign_in_path_for(resource)
+    dashboard_path
+  end
   
   # TODO: PHASE 2 - Add authorization checks
   # Add methods like:
