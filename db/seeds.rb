@@ -316,7 +316,7 @@ sites_pm1 = [
 
 sites_pm1.each do |site_data|
   site = pm1.sites.find_or_initialize_by(name: site_data[:name])
-  site.assign_attributes(site_data)
+  site.assign_attributes(site_data.merge(organization_id: org1.id))
   if site.new_record?
     site.save!
     puts "  ✓ Created site: #{site.name} (#{site.city})"
@@ -412,7 +412,7 @@ sites_pm2 = [
 
 sites_pm2.each do |site_data|
   site = pm2.sites.find_or_initialize_by(name: site_data[:name])
-  site.assign_attributes(site_data)
+  site.assign_attributes(site_data.merge(organization_id: org2.id))
   if site.new_record?
     site.save!
     puts "  ✓ Created site: #{site.name} (#{site.city})"
@@ -556,7 +556,7 @@ additional_sites_pm1 = [
 
 additional_sites_pm1.each do |site_data|
   site = pm1.sites.find_or_initialize_by(name: site_data[:name])
-  site.assign_attributes(site_data)
+  site.assign_attributes(site_data.merge(organization_id: org1.id))
   if site.new_record?
     site.save!
     puts "  ✓ Created site: #{site.name} (#{site.city})"
@@ -684,7 +684,7 @@ additional_sites_pm2 = [
 
 additional_sites_pm2.each do |site_data|
   site = pm2.sites.find_or_initialize_by(name: site_data[:name])
-  site.assign_attributes(site_data)
+  site.assign_attributes(site_data.merge(organization_id: org2.id))
   if site.new_record?
     site.save!
     puts "  ✓ Created site: #{site.name} (#{site.city})"
@@ -697,6 +697,59 @@ end
 puts "\n📊 Total sites created: #{Site.count}"
 puts "   - Portfolio Manager 1: #{pm1.sites.count} sites"
 puts "   - Portfolio Manager 2: #{pm2.sites.count} sites"
+
+# ============================================================================
+# SITE ASSIGNMENTS - Assign sites to site managers
+# ============================================================================
+
+puts "\n🔗 Creating site assignments..."
+
+# Get sites for Organization 1
+org1_sites = Site.where(organization_id: org1.id).order(:name).to_a
+
+# Assign first 5 sites to Site Manager 1 (Organization 1)
+if org1_sites.length >= 5
+  org1_sites[0..4].each do |site|
+    assignment = SiteAssignment.find_or_initialize_by(user: sm1, site: site)
+    assignment.assigned_by_name = pm1.full_name
+    if assignment.new_record?
+      assignment.save!
+      puts "  ✓ Assigned #{site.name} to #{sm1.full_name}"
+    end
+  end
+end
+
+# Assign sites 6-10 to Site Manager 2 (Organization 1)
+if org1_sites.length >= 10
+  org1_sites[5..9].each do |site|
+    assignment = SiteAssignment.find_or_initialize_by(user: sm2, site: site)
+    assignment.assigned_by_name = pm1.full_name
+    if assignment.new_record?
+      assignment.save!
+      puts "  ✓ Assigned #{site.name} to #{sm2.full_name}"
+    end
+  end
+end
+
+# Get sites for Organization 2
+org2_sites = Site.where(organization_id: org2.id).order(:name).to_a
+
+# Assign first 4 sites to Site Manager 3 (Organization 2)
+if org2_sites.length >= 4
+  org2_sites[0..3].each do |site|
+    assignment = SiteAssignment.find_or_initialize_by(user: sm3, site: site)
+    assignment.assigned_by_name = pm2.full_name
+    if assignment.new_record?
+      assignment.save!
+      puts "  ✓ Assigned #{site.name} to #{sm3.full_name}"
+    end
+  end
+end
+
+puts "\n📊 Total site assignments created: #{SiteAssignment.count}"
+puts "   - #{sm1.full_name}: #{sm1.assigned_sites.count} sites"
+puts "   - #{sm2.full_name}: #{sm2.assigned_sites.count} sites"
+puts "   - #{sm3.full_name}: #{sm3.assigned_sites.count} sites"
 
 puts "\n✅ Seed completed successfully!"
 puts "\n📝 Test Users Created:"

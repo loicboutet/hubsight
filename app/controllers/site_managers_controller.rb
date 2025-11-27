@@ -95,15 +95,33 @@ class SiteManagersController < ApplicationController
   def assign_sites
     # Load available sites from the organization
     @available_sites = Site.where(organization_id: current_user.organization_id).order(:name)
-    # TODO: Implement site assignments relationship
-    # @assigned_sites = @site_manager.assigned_sites
+    @assigned_site_ids = @site_manager.assigned_sites.pluck(:id)
   end
 
   def update_site_assignments
-    # TODO: Update site assignments
-    # @site_manager.update(assigned_site_ids: params[:site_ids])
+    site_ids = params[:site_ids] || []
+    
+    ActiveRecord::Base.transaction do
+      # Remove all existing assignments
+      @site_manager.site_assignments.destroy_all
+      
+      # Create new assignments
+      site_ids.each do |site_id|
+        site = Site.find_by(id: site_id, organization_id: current_user.organization_id)
+        if site
+          @site_manager.site_assignments.create!(
+            site: site,
+            assigned_by_name: current_user.full_name
+          )
+        end
+      end
+    end
+    
     redirect_to site_manager_path(@site_manager), 
                 notice: "Sites assignés avec succès."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to assign_sites_site_manager_path(@site_manager),
+                alert: "Erreur lors de l'assignation: #{e.message}"
   end
 
   private

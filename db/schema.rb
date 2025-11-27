@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_27_181426) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_27_200608) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -49,6 +49,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_181426) do
     t.index ["name"], name: "index_organizations_on_name", unique: true
     t.index ["siret"], name: "index_organizations_on_siret"
     t.index ["status"], name: "index_organizations_on_status"
+  end
+
+  create_table "site_assignments", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "site_id", null: false
+    t.datetime "assigned_at"
+    t.string "assigned_by_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_site_assignments_on_site_id"
+    t.index ["user_id", "site_id"], name: "index_site_assignments_on_user_id_and_site_id", unique: true
+    t.index ["user_id"], name: "index_site_assignments_on_user_id"
   end
 
   create_table "sites", force: :cascade do |t|
@@ -136,5 +148,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_181426) do
   end
 
   add_foreign_key "active_sessions", "users"
+  add_foreign_key "site_assignments", "sites"
+  add_foreign_key "site_assignments", "users"
   add_foreign_key "sites", "users"
 end

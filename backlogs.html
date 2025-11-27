@@ -477,8 +477,8 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">SM - View Assigned Sites</td>
                     <td class="description-col">Site Manager can view only sites assigned to them by Portfolio Manager with restricted access to other sites</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/my_sites">/my_sites</a></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Go to /site_managers, click on a site manager (e.g., Pierre Bernard). Click "Gérer les Sites" button. Select/deselect sites using checkboxes (try "Tout sélectionner"). Verify counter updates. Click "Enregistrer les Assignations". Verify success message and assigned sites list appears on profile. Logout. Login as site manager (sitemanager@hubsight.com / Password123!). Go to /my_sites. Verify ONLY 5 assigned sites visible (not all 13 from organization). Click on an assigned site - should work. Try manually accessing a non-assigned site ID in URL - should redirect with "Vous n'avez pas accès à ce site" error. Verify site manager cannot see unassigned sites. Test with sitemanager2@hubsight.com to verify different assignments (5 different sites). Test organization isolation: sitemanager3@hubsight.com should only see 4 sites from Organization 2.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>

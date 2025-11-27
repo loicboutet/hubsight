@@ -2,6 +2,8 @@ class Site < ApplicationRecord
   # Associations
   belongs_to :user
   has_many :buildings, dependent: :destroy
+  has_many :site_assignments, dependent: :destroy
+  has_many :site_managers, through: :site_assignments, source: :user
   
   # Validations
   validates :name, presence: true, uniqueness: { scope: :user_id }
