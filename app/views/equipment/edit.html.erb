@@ -25,7 +25,51 @@
     </div>
   </div>
 
-  <form action="<%= equipment_path(1) %>" method="post">
+  <% 
+    # Prepare hierarchy data for cascading dropdowns (BACKEND: This should come from controller)
+    # Mock current equipment location data (BACKEND: This should come from @equipment)
+    current_site_id = 1
+    current_building_id = 1
+    current_level_id = 1
+    current_space_id = 1
+    
+    hierarchy_data = {
+      sites: [
+        { id: 1, name: "Tour Montparnasse" },
+        { id: 2, name: "Immeuble La Défense" }
+      ],
+      buildings: [
+        { id: 1, site_id: 1, name: "Bât. A" },
+        { id: 2, site_id: 1, name: "Bât. B" },
+        { id: 3, site_id: 2, name: "Bât. Principal" }
+      ],
+      levels: [
+        { id: 1, building_id: 1, name: "RDC" },
+        { id: 2, building_id: 1, name: "1er étage" },
+        { id: 3, building_id: 2, name: "RDC" },
+        { id: 4, building_id: 3, name: "RDC" }
+      ],
+      spaces: [
+        { id: 1, level_id: 1, name: "Bureau 101" },
+        { id: 2, level_id: 1, name: "Bureau 102" },
+        { id: 3, level_id: 1, name: "Salle de réunion A" },
+        { id: 4, level_id: 1, name: "Local technique RDC" },
+        { id: 5, level_id: 2, name: "Bureau 201" },
+        { id: 6, level_id: 2, name: "Bureau 202" },
+        { id: 7, level_id: 2, name: "Open space Nord" },
+        { id: 8, level_id: 3, name: "Hall d'accueil" },
+        { id: 9, level_id: 3, name: "Local serveurs" }
+      ]
+    }
+  %>
+
+  <form action="<%= equipment_path(1) %>" method="post"
+        data-controller="equipment-location"
+        data-equipment-location-hierarchy-value="<%= hierarchy_data.to_json %>"
+        data-equipment-location-selected-site-value="<%= current_site_id %>"
+        data-equipment-location-selected-building-value="<%= current_building_id %>"
+        data-equipment-location-selected-level-value="<%= current_level_id %>"
+        data-equipment-location-selected-space-value="<%= current_space_id %>">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <%= hidden_field_tag :_method, 'patch' %>
     
@@ -44,7 +88,80 @@
             </label>
             <input type="text" name="equipment[name]" value="Climatiseur Daikin AC-500" required style="width: 100%;" />
           </div>
+        </div>
+      </div>
 
+      <!-- Location Hierarchy Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Localisation <span style="color: var(--coral-primary);">*</span>
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              <%= render 'shared/hierarchy_icons', type: 'site', size: 14 %>
+              Site <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[site_id]" 
+                    data-equipment-location-target="site"
+                    data-action="change->equipment-location#siteChanged"
+                    required 
+                    style="width: 100%;">
+              <option value="">Sélectionner un site...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              <%= render 'shared/hierarchy_icons', type: 'building', size: 14 %>
+              Bâtiment <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[building_id]" 
+                    data-equipment-location-target="building"
+                    data-action="change->equipment-location#buildingChanged"
+                    required 
+                    style="width: 100%;">
+              <option value="">Sélectionner un bâtiment...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              <%= render 'shared/hierarchy_icons', type: 'level', size: 14 %>
+              Niveau <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[level_id]" 
+                    data-equipment-location-target="level"
+                    data-action="change->equipment-location#levelChanged"
+                    required 
+                    style="width: 100%;">
+              <option value="">Sélectionner un niveau...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              <%= render 'shared/hierarchy_icons', type: 'space', size: 14 %>
+              Espace <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[space_id]" 
+                    data-equipment-location-target="space"
+                    required 
+                    style="width: 100%;">
+              <option value="">Sélectionner un espace...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Basic Information Section (continued) -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations de Base (suite)
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
               Type d'Équipement <span style="color: var(--coral-primary);">*</span>
