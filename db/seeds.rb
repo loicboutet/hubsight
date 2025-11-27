@@ -5,6 +5,38 @@
 puts "🌱 Starting seed process..."
 
 # ============================================================================
+# ORGANIZATIONS - Create organizations first
+# ============================================================================
+
+puts "\n🏢 Creating organizations..."
+
+# Organization 1
+org1 = Organization.find_or_initialize_by(name: 'Immobilière Centrale')
+org1.assign_attributes(
+  status: 'active'
+)
+if org1.new_record?
+  org1.save!
+  puts "  ✓ Created organization: #{org1.name}"
+else
+  org1.save!
+  puts "  ✓ Updated organization: #{org1.name}"
+end
+
+# Organization 2
+org2 = Organization.find_or_initialize_by(name: 'Patrimoine & Gestion')
+org2.assign_attributes(
+  status: 'active'
+)
+if org2.new_record?
+  org2.save!
+  puts "  ✓ Created organization: #{org2.name}"
+else
+  org2.save!
+  puts "  ✓ Updated organization: #{org2.name}"
+end
+
+# ============================================================================
 # USERS - Test users for each role
 # ============================================================================
 
@@ -25,6 +57,7 @@ admin.assign_attributes(
   password: strong_password,
   password_confirmation: strong_password
 )
+admin.skip_confirmation!
 if admin.new_record?
   admin.save!
   puts "  ✓ Created admin: admin@hubsight.com"
@@ -40,12 +73,13 @@ pm1.assign_attributes(
   first_name: 'Jean',
   last_name: 'Dupont',
   phone: '+33 6 12 34 56 78',
-  organization_id: 1,
+  organization_id: org1.id,
   status: 'active',
   department: 'Gestion Immobilière',
   password: strong_password,
   password_confirmation: strong_password
 )
+pm1.skip_confirmation!
 if pm1.new_record?
   pm1.save!
   puts "  ✓ Created portfolio manager: portfolio@hubsight.com (Organization 1)"
@@ -61,12 +95,13 @@ pm2.assign_attributes(
   first_name: 'Marie',
   last_name: 'Martin',
   phone: '+33 6 98 76 54 32',
-  organization_id: 2,
+  organization_id: org2.id,
   status: 'active',
   department: 'Gestion de Patrimoine',
   password: strong_password,
   password_confirmation: strong_password
 )
+pm2.skip_confirmation!
 if pm2.new_record?
   pm2.save!
   puts "  ✓ Created portfolio manager: portfolio2@hubsight.com (Organization 2)"
@@ -82,12 +117,13 @@ sm1.assign_attributes(
   first_name: 'Pierre',
   last_name: 'Bernard',
   phone: '+33 6 11 22 33 44',
-  organization_id: 1,
+  organization_id: org1.id,
   status: 'active',
   department: 'Gestion de Site',
   password: strong_password,
   password_confirmation: strong_password
 )
+sm1.skip_confirmation!
 if sm1.new_record?
   sm1.save!
   puts "  ✓ Created site manager: sitemanager@hubsight.com (Organization 1)"
@@ -103,12 +139,13 @@ sm2.assign_attributes(
   first_name: 'Sophie',
   last_name: 'Leroy',
   phone: '+33 6 55 66 77 88',
-  organization_id: 1,
+  organization_id: org1.id,
   status: 'active',
   department: 'Gestion de Site',
   password: strong_password,
   password_confirmation: strong_password
 )
+sm2.skip_confirmation!
 if sm2.new_record?
   sm2.save!
   puts "  ✓ Created site manager: sitemanager2@hubsight.com (Organization 1)"
@@ -124,12 +161,13 @@ sm3.assign_attributes(
   first_name: 'Luc',
   last_name: 'Moreau',
   phone: '+33 6 99 88 77 66',
-  organization_id: 2,
+  organization_id: org2.id,
   status: 'active',
   department: 'Gestion de Site',
   password: strong_password,
   password_confirmation: strong_password
 )
+sm3.skip_confirmation!
 if sm3.new_record?
   sm3.save!
   puts "  ✓ Created site manager: sitemanager3@hubsight.com (Organization 2)"
@@ -145,12 +183,13 @@ tech1.assign_attributes(
   first_name: 'Thomas',
   last_name: 'Petit',
   phone: '+33 6 44 55 66 77',
-  organization_id: 1,
+  organization_id: org1.id,
   status: 'active',
   department: 'Maintenance',
   password: strong_password,
   password_confirmation: strong_password
 )
+tech1.skip_confirmation!
 if tech1.new_record?
   tech1.save!
   puts "  ✓ Created technician: technician@hubsight.com (Organization 1)"
@@ -166,12 +205,13 @@ inactive.assign_attributes(
   first_name: 'Inactive',
   last_name: 'User',
   phone: '+33 6 00 00 00 00',
-  organization_id: 1,
+  organization_id: org1.id,
   status: 'inactive',
   department: 'Test',
   password: strong_password,
   password_confirmation: strong_password
 )
+inactive.skip_confirmation!
 if inactive.new_record?
   inactive.save!
   puts "  ✓ Created inactive user: inactive@hubsight.com (for testing)"
