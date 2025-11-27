@@ -172,11 +172,52 @@
       </h4>
       
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-        <div>
+        <!-- Items 22-23: Replace text field with autocomplete dropdown -->
+        <div data-controller="organization-autocomplete" style="position: relative;">
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Prestataire (Organisation) <span style="color: var(--coral-primary);">*</span>
           </label>
-          <%= f.text_field :contractor_organization, value: contract.contractor_organization, placeholder: "Nom du prestataire", required: true, style: "width: 100%;" %>
+          
+          <!-- Autocomplete input -->
+          <input 
+            type="text"
+            data-organization-autocomplete-target="input"
+            data-action="input->organization-autocomplete#search"
+            placeholder="Rechercher une organisation..."
+            style="width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: var(--dark-gray);"
+            onfocus="this.style.borderColor='var(--coral-primary)'; this.style.boxShadow='0 0 0 3px rgba(255, 107, 107, 0.1)';"
+            onblur="setTimeout(() => { this.style.borderColor='var(--light-gray)'; this.style.boxShadow='none'; }, 200);"
+            required
+          />
+          
+          <!-- Hidden field for actual selection -->
+          <%= f.hidden_field :contractor_organization_id, 
+            data: { organization_autocomplete_target: "hiddenField" },
+            value: contract.contractor_organization_id %>
+          
+          <!-- Suggestions dropdown with fuzzy matching -->
+          <div 
+            data-organization-autocomplete-target="suggestions"
+            style="position: absolute; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; z-index: 1000; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 4px; margin-top: 4px;">
+            <!-- Dynamic suggestions appear here -->
+          </div>
+          
+          <!-- "Did you mean..." section for similar names -->
+          <div 
+            data-organization-autocomplete-target="similarNames"
+            style="margin-top: 8px; padding: 12px; background-color: #fff3cd; border-left: 4px solid #ffc107; display: none; border-radius: 4px;">
+            <p class="typo-body-small typo-bold" style="color: #856404; margin-bottom: 4px;">
+              💡 Vouliez-vous dire :
+            </p>
+            <ul data-organization-autocomplete-target="similarList" style="margin: 0; padding-left: 20px;"></ul>
+          </div>
+          
+          <!-- Display aliases/former names -->
+          <p class="typo-body-small" style="margin-top: 4px; color: #6c757d; display: none;" data-organization-autocomplete-target="aliases"></p>
+          
+          <p class="typo-body-small" style="margin-top: 4px; color: #dc3545;">
+            ⚠️ Sélection obligatoire depuis la liste - Pas de saisie libre autorisée
+          </p>
         </div>
 
         <div>
@@ -223,25 +264,82 @@
       </h4>
       
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <!-- Items 24-25: Replace text fields with dropdowns (no free text allowed) -->
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Sites Couverts
+            Site Associé <span style="color: var(--coral-primary);">*</span>
           </label>
-          <%= f.text_field :covered_sites, value: contract.covered_sites, placeholder: "Ex: Tous sites, Site A, Site B", style: "width: 100%;" %>
+          <%= f.select :site_id,
+            options_for_select(
+              [
+                ['Tour Montparnasse - Paris 15e', 1],
+                ['Siège Social - La Défense', 2],
+                ['Centre Commercial - Lyon Part-Dieu', 3],
+                ['Campus Universitaire - Toulouse', 4],
+                ['Hôpital Saint-Louis - Paris 10e', 5]
+              ],
+              contract.site_id
+            ),
+            { include_blank: 'Sélectionner un site...', prompt: 'Sélectionner un site...' },
+            { 
+              required: true,
+              style: "width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem;",
+              class: "select2-dropdown"
+            } %>
+          <p class="typo-body-small" style="margin-top: 4px; color: #dc3545;">
+            ⚠️ Sélection obligatoire - Pas de saisie libre autorisée
+          </p>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Bâtiments Couverts
+            Bâtiments Associés
           </label>
-          <%= f.text_field :covered_buildings, value: contract.covered_buildings, placeholder: "Ex: Tous bâtiments, Bât. A", style: "width: 100%;" %>
+          <%= f.select :building_ids,
+            options_for_select(
+              [
+                ['Bâtiment A - Tour Montparnasse', 1],
+                ['Bâtiment B - Annexe Est', 2],
+                ['Bâtiment C - Annexe Ouest', 3]
+              ],
+              contract.building_ids
+            ),
+            {},
+            { 
+              multiple: true,
+              style: "width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm);",
+              class: "select2-dropdown"
+            } %>
+          <p class="typo-body-small" style="margin-top: 4px; color: #6c757d;">
+            💡 Maintenez Ctrl/Cmd pour sélectionner plusieurs bâtiments
+          </p>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Type d'Équipement Concerné
+            Équipements Associés
           </label>
-          <%= f.text_field :equipment_type, value: contract.equipment_type, placeholder: "Ex: Ascenseurs, CVC, Plomberie", style: "width: 100%;" %>
+          <%= f.select :equipment_ids,
+            options_for_select(
+              [
+                ['Ascenseur #1 - Tour Principal', 1],
+                ['Ascenseur #2 - Annexe', 2],
+                ['Chaudière CVC - Sous-sol', 3],
+                ['Climatisation Étage 5', 4],
+                ['Groupe Électrogène', 5],
+                ['Système Sécurité Incendie', 6]
+              ],
+              contract.equipment_ids
+            ),
+            {},
+            { 
+              multiple: true,
+              style: "width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm);",
+              class: "select2-dropdown"
+            } %>
+          <p class="typo-body-small" style="margin-top: 4px; color: #6c757d;">
+            💡 Sélectionnez tous les équipements couverts par ce contrat
+          </p>
         </div>
 
         <div>

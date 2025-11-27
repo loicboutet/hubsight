@@ -1,0 +1,199 @@
+<!-- Item 19: Data Conflict Resolution Modal -->
+<div id="conflictModal" class="modal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
+  <div class="modal-content" style="background-color: var(--white); margin: 5% auto; padding: 0; border-radius: var(--space-md); width: 90%; max-width: 800px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+    
+    <!-- Modal Header -->
+    <div style="padding: var(--space-lg); background-color: #fff3cd; border-bottom: 3px solid #ffc107; border-radius: var(--space-md) var(--space-md) 0 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="typo-h3" style="margin: 0; color: #856404; display: flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #ffc107;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          Conflit de Données Détecté
+        </h3>
+        <button onclick="closeConflictModal()" style="background: none; border: none; font-size: 28px; color: #856404; cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">&times;</button>
+      </div>
+      <p class="typo-body-small" style="margin-top: var(--space-sm); color: #856404;">
+        Des informations contradictoires ont été détectées. Veuillez résoudre les conflits avant de continuer.
+      </p>
+    </div>
+
+    <!-- Modal Body -->
+    <div style="padding: var(--space-lg); max-height: 500px; overflow-y: auto;">
+      <div id="conflictList">
+        <!-- Conflicts will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div style="padding: var(--space-lg); background-color: #f8f9fa; border-top: 1px solid #dee2e6; border-radius: 0 0 var(--space-md) var(--space-md); display: flex; justify-content: flex-end; gap: var(--space-md);">
+      <button onclick="closeConflictModal()" class="typo-btn-cancel">
+        Annuler
+      </button>
+      <button onclick="resolveAllConflicts()" class="typo-btn-success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        Résoudre les Conflits
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Conflict Item Template -->
+<template id="conflictItemTemplate">
+  <div class="conflict-item" style="background-color: white; border: 2px solid #ffc107; border-radius: var(--space-sm); padding: var(--space-lg); margin-bottom: var(--space-md);">
+    <div style="margin-bottom: var(--space-md);">
+      <h4 class="typo-h4" style="color: #856404; margin-bottom: var(--space-xs);">
+        Champ: <span class="conflict-field-name"></span>
+      </h4>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-lg);">
+      <!-- Value 1 -->
+      <div class="conflict-option" style="border: 2px solid #e9ecef; border-radius: var(--space-sm); padding: var(--space-md); cursor: pointer; transition: all 0.2s;" onclick="selectConflictValue(this, 1)">
+        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+          <input type="radio" name="conflict-choice" class="conflict-radio-1" style="width: 20px; height: 20px; cursor: pointer;">
+          <label class="typo-body-small typo-bold" style="color: #6c757d; cursor: pointer;">Valeur Existante</label>
+        </div>
+        <div style="background-color: #f8f9fa; padding: var(--space-sm); border-radius: 4px; margin-bottom: var(--space-sm);">
+          <p class="typo-body conflict-value-1" style="word-break: break-word;"></p>
+        </div>
+        <div class="typo-body-small" style="color: #6c757d;">
+          <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span class="conflict-user-1"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="conflict-date-1"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Value 2 -->
+      <div class="conflict-option" style="border: 2px solid #e9ecef; border-radius: var(--space-sm); padding: var(--space-md); cursor: pointer; transition: all 0.2s;" onclick="selectConflictValue(this, 2)">
+        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+          <input type="radio" name="conflict-choice" class="conflict-radio-2" style="width: 20px; height: 20px; cursor: pointer;">
+          <label class="typo-body-small typo-bold" style="color: #6c757d; cursor: pointer;">Nouvelle Valeur</label>
+        </div>
+        <div style="background-color: #f8f9fa; padding: var(--space-sm); border-radius: 4px; margin-bottom: var(--space-sm);">
+          <p class="typo-body conflict-value-2" style="word-break: break-word;"></p>
+        </div>
+        <div class="typo-body-small" style="color: #6c757d;">
+          <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span class="conflict-user-2"></span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="conflict-date-2"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: none;" class="manual-merge-section">
+      <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs);">
+        Ou saisissez une valeur personnalisée :
+      </label>
+      <input type="text" class="conflict-manual-value" placeholder="Valeur personnalisée..." style="width: 100%; padding: var(--space-sm); border: 1px solid #dee2e6; border-radius: 4px;">
+    </div>
+  </div>
+</template>
+
+<script>
+// Conflict detection and resolution functions
+let detectedConflicts = [];
+
+function showConflictModal(conflicts) {
+  detectedConflicts = conflicts;
+  const modal = document.getElementById('conflictModal');
+  const conflictList = document.getElementById('conflictList');
+  conflictList.innerHTML = '';
+
+  conflicts.forEach((conflict, index) => {
+    const template = document.getElementById('conflictItemTemplate');
+    const conflictItem = template.content.cloneNode(true);
+
+    conflictItem.querySelector('.conflict-field-name').textContent = conflict.fieldName;
+    conflictItem.querySelector('.conflict-value-1').textContent = conflict.value1;
+    conflictItem.querySelector('.conflict-value-2').textContent = conflict.value2;
+    conflictItem.querySelector('.conflict-user-1').textContent = conflict.user1 || 'Système';
+    conflictItem.querySelector('.conflict-user-2').textContent = conflict.user2 || 'Utilisateur actuel';
+    conflictItem.querySelector('.conflict-date-1').textContent = conflict.date1 || 'Date inconnue';
+    conflictItem.querySelector('.conflict-date-2').textContent = conflict.date2 || new Date().toLocaleDateString('fr-FR');
+
+    conflictItem.querySelector('.conflict-item').dataset.conflictIndex = index;
+
+    conflictList.appendChild(conflictItem);
+  });
+
+  modal.style.display = 'block';
+}
+
+function closeConflictModal() {
+  const modal = document.getElementById('conflictModal');
+  modal.style.display = 'none';
+}
+
+function selectConflictValue(element, choice) {
+  const conflictItem = element.closest('.conflict-item');
+  const options = conflictItem.querySelectorAll('.conflict-option');
+  
+  options.forEach(opt => {
+    opt.style.borderColor = '#e9ecef';
+    opt.style.backgroundColor = 'transparent';
+  });
+
+  element.style.borderColor = '#28a745';
+  element.style.backgroundColor = '#d4edda';
+
+  const radio = element.querySelector(`input[type="radio"]`);
+  radio.checked = true;
+
+  const conflictIndex = parseInt(conflictItem.dataset.conflictIndex);
+  if (detectedConflicts[conflictIndex]) {
+    detectedConflicts[conflictIndex].resolution = choice === 1 ? 'keep_existing' : 'use_new';
+  }
+}
+
+function resolveAllConflicts() {
+  const unresolvedConflicts = detectedConflicts.filter(c => !c.resolution);
+  
+  if (unresolvedConflicts.length > 0) {
+    alert(`Veuillez résoudre tous les conflits (${unresolvedConflicts.length} restant(s))`);
+    return;
+  }
+
+  // Log resolution decisions
+  console.log('Conflicts resolved:', detectedConflicts);
+  
+  // In a real implementation, this would send the resolutions to the backend
+  // For now, we'll just close the modal and allow form submission
+  alert('Conflits résolus avec succès !');
+  closeConflictModal();
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('conflictModal');
+  if (event.target === modal) {
+    closeConflictModal();
+  }
+}
+</script>
+
+<style>
+.conflict-option:hover {
+  border-color: #28a745 !important;
+}
+</style>
