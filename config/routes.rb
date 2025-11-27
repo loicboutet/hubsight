@@ -44,6 +44,9 @@ Rails.application.routes.draw do
     end
     post 'stop_impersonation', to: 'clients#stop_impersonation'
     
+    # Admin Access Logs (Audit trail for client data access)
+    resources :access_logs, only: [:index, :show]
+    
     # Price Reference Management (BRIQUE 2)
     resources :price_references do
       collection do

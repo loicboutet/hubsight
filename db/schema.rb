@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_27_173710) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_27_181426) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -22,6 +22,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_173710) do
     t.index ["last_activity_at"], name: "index_active_sessions_on_last_activity_at"
     t.index ["session_id"], name: "index_active_sessions_on_session_id", unique: true
     t.index ["user_id"], name: "index_active_sessions_on_user_id"
+  end
+
+  create_table "admin_access_logs", force: :cascade do |t|
+    t.integer "admin_user_id"
+    t.integer "organization_id"
+    t.string "action_type"
+    t.string "ip_address"
+    t.text "user_agent"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_user_id"], name: "index_admin_access_logs_on_admin_user_id"
+    t.index ["organization_id"], name: "index_admin_access_logs_on_organization_id"
   end
 
   create_table "organizations", force: :cascade do |t|
