@@ -751,6 +751,166 @@ puts "   - #{sm1.full_name}: #{sm1.assigned_sites.count} sites"
 puts "   - #{sm2.full_name}: #{sm2.assigned_sites.count} sites"
 puts "   - #{sm3.full_name}: #{sm3.assigned_sites.count} sites"
 
+# ============================================================================
+# CONTRACTS - Sample contracts for testing key indicators (Item 45)
+# ============================================================================
+
+puts "\n📄 Creating sample contracts..."
+
+# Contract families
+contract_families = [
+  'Maintenance CVC',
+  'Maintenance Ascenseurs',
+  'Nettoyage',
+  'Sécurité',
+  'Électricité',
+  'Contrôles Techniques',
+  'Assurances'
+]
+
+# Statuses with distribution
+statuses = ['active', 'active', 'active', 'active', 'active', 'pending', 'expired', 'suspended']
+
+# Get sites for contracts
+org1_sites_for_contracts = Site.where(organization_id: org1.id).limit(5).to_a
+org2_sites_for_contracts = Site.where(organization_id: org2.id).limit(3).to_a
+
+# Create contracts for Organization 1
+puts "  Creating contracts for Organization 1..."
+20.times do |i|
+  site = org1_sites_for_contracts.sample
+  family = contract_families.sample
+  status = statuses.sample
+  
+  # Vary dates to test renewals feature
+  start_date = Date.today - rand(365..730).days
+  contract_duration = [12, 24, 36].sample
+  end_date = start_date + contract_duration.months
+  
+  # Adjust some contracts to be in renewal windows
+  if i < 3
+    # 30 days window
+    end_date = Date.today + rand(1..30).days
+  elsif i < 6
+    # 60 days window
+    end_date = Date.today + rand(31..60).days
+  elsif i < 9
+    # 90 days window
+    end_date = Date.today + rand(61..90).days
+  end
+  
+  contract = Contract.find_or_initialize_by(
+    organization_id: org1.id,
+    contract_number: "CTR-2024-#{sprintf('%03d', i + 1)}"
+  )
+  
+  contract.assign_attributes(
+    site_id: site.id,
+    contract_family: family,
+    status: status,
+    annual_amount: rand(5000..150000),
+    start_date: start_date,
+    end_date: end_date
+  )
+  
+  if contract.new_record?
+    contract.save!
+    puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family})"
+  else
+    contract.save!
+  end
+end
+
+# Create contracts for Organization 2
+puts "  Creating contracts for Organization 2..."
+15.times do |i|
+  site = org2_sites_for_contracts.sample
+  family = contract_families.sample
+  status = statuses.sample
+  
+  start_date = Date.today - rand(365..730).days
+  contract_duration = [12, 24, 36].sample
+  end_date = start_date + contract_duration.months
+  
+  # Adjust some for renewal windows
+  if i < 2
+    end_date = Date.today + rand(1..30).days
+  elsif i < 4
+    end_date = Date.today + rand(31..60).days
+  elsif i < 6
+    end_date = Date.today + rand(61..90).days
+  end
+  
+  contract = Contract.find_or_initialize_by(
+    organization_id: org2.id,
+    contract_number: "CTR-2025-#{sprintf('%03d', i + 1)}"
+  )
+  
+  contract.assign_attributes(
+    site_id: site.id,
+    contract_family: family,
+    status: status,
+    annual_amount: rand(5000..120000),
+    start_date: start_date,
+    end_date: end_date
+  )
+  
+  if contract.new_record?
+    contract.save!
+    puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family})"
+  else
+    contract.save!
+  end
+end
+
+puts "\n📊 Total contracts created: #{Contract.count}"
+puts "   - Organization 1: #{Contract.where(organization_id: org1.id).count} contracts"
+puts "   - Organization 2: #{Contract.where(organization_id: org2.id).count} contracts"
+
+# ============================================================================
+# EQUIPMENT - Sample equipment for analytics
+# ============================================================================
+
+puts "\n⚙️  Creating sample equipment..."
+
+equipment_types = [
+  'CVC - Climatisation',
+  'CVC - Chauffage',
+  'Ascenseur',
+  'Éclairage LED',
+  'Plomberie',
+  'Sécurité Incendie',
+  'Contrôle Accès'
+]
+
+# Create equipment for Organization 1 sites
+org1_sites_for_equipment = Site.where(organization_id: org1.id).limit(3).to_a
+org1_sites_for_equipment.each do |site|
+  rand(3..8).times do
+    equipment = Equipment.create!(
+      organization_id: org1.id,
+      site_id: site.id,
+      equipment_type: equipment_types.sample,
+      commissioning_date: Date.today - rand(1..3650).days
+    )
+  end
+end
+
+# Create equipment for Organization 2 sites
+org2_sites_for_equipment = Site.where(organization_id: org2.id).limit(2).to_a
+org2_sites_for_equipment.each do |site|
+  rand(3..6).times do
+    equipment = Equipment.create!(
+      organization_id: org2.id,
+      site_id: site.id,
+      equipment_type: equipment_types.sample,
+      commissioning_date: Date.today - rand(1..3650).days
+    )
+  end
+end
+
+puts "  ✓ Created #{Equipment.count} equipment items"
+
 puts "\n✅ Seed completed successfully!"
 puts "\n📝 Test Users Created:"
 puts "=" * 80

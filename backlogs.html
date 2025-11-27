@@ -43,7 +43,7 @@
         <div class="stats">
             <div class="stat-card"><div class="stat-number">56</div><div class="stat-label">Total Tasks</div></div>
             <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Brick Phase</div></div>
-            <div class="stat-card"><div class="stat-number">10</div><div class="stat-label">Tasks Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">11</div><div class="stat-label">Tasks Implemented</div></div>
         </div>
         <table>
             <thead>
@@ -454,13 +454,13 @@
                     <td class="test-col"><span class="empty-cell">-</span></td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">45</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Key Indicators Display</td>
+                    <td class="title-col">PM - Key Indicators Display<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Display key indicators: contracts by status, contracts by family, upcoming renewals, total spend by category</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/dashboard">/dashboard</a></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Navigate to /dashboard. Verify Key Indicators section displays: 1) Contrats par Statut showing real counts for Actif, En attente, Expiré, Suspendu with percentages. 2) Renouvellements à Venir showing contracts expiring in next 30 days (red badge), 31-60 days (yellow badge), 61-90 days (blue badge). 3) Dépenses par Catégorie showing total spending and top 3 families by amount. 4) Répartition par Famille d'Achats with real percentages, contract counts, and amounts for all families. Verify KPI cards show real data: Sites Total (13), Contrats Actifs (varying count with %), Budget Annuel Total (sum of all contracts). Test multi-tenancy: logout, login as portfolio2@hubsight.com - verify different data shown (12 sites, different contract counts). Verify all data is organization-scoped with no data leakage. Check that indicators update with real database queries, no hardcoded values in Key Indicators section.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">

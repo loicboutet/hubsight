@@ -8,7 +8,7 @@
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Sites Total</div>
-        <div class="dashboard-kpi-value">0</div>
+        <div class="dashboard-kpi-value"><%= @sites_count || 0 %></div>
         <div class="dashboard-kpi-subtitle">Sites immobiliers</div>
       </div>
       <div class="dashboard-kpi-icon-container">
@@ -24,8 +24,8 @@
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Contrats Actifs</div>
-        <div class="dashboard-kpi-value">186</div>
-        <div class="dashboard-kpi-subtitle">92% de portfolio couvert</div>
+        <div class="dashboard-kpi-value"><%= @contracts_by_status['active'] || 0 %></div>
+        <div class="dashboard-kpi-subtitle"><% if @total_contracts > 0 %><%= ((@contracts_by_status['active'] || 0) * 100.0 / @total_contracts).round %>% de portfolio couvert<% else %>Aucun contrat<% end %></div>
       </div>
       <div class="dashboard-kpi-icon-container">
         <div class="dashboard-kpi-icon red">
@@ -62,8 +62,8 @@
     <div class="dashboard-kpi-card">
       <div class="dashboard-kpi-content">
         <div class="dashboard-kpi-label">Budget Annuel Total</div>
-        <div class="dashboard-kpi-value">847 500 €</div>
-        <div class="dashboard-kpi-subtitle positive">+6.2% vs année précédente</div>
+        <div class="dashboard-kpi-value"><%= number_to_currency(@total_spending, unit: "", precision: 0, delimiter: " ") %> €</div>
+        <div class="dashboard-kpi-subtitle"><%= pluralize(@total_contracts, 'contrat') %></div>
       </div>
       <div class="dashboard-kpi-icon-container">
         <div class="dashboard-kpi-icon purple">
@@ -166,6 +166,77 @@
     </div>
   </div>
 
+  <!-- KEY INDICATORS SECTION - ITEM 45 -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--light-gray);">
+      📊 Indicateurs Clés
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-lg);">
+      <!-- Contracts by Status -->
+      <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md);">
+        <h4 class="typo-h5" style="margin-bottom: var(--space-md); color: var(--dark-gray);">Contrats par Statut</h4>
+        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+          <% 
+            status_config = {
+              'active' => { label: 'Actif', color: '#28a745' },
+              'pending' => { label: 'En attente', color: '#ffc107' },
+              'expired' => { label: 'Expiré', color: '#dc3545' },
+              'suspended' => { label: 'Suspendu', color: '#6c757d' }
+            }
+            status_config.each do |status, config|
+              count = @contracts_by_status[status] || 0
+              percentage = @total_contracts > 0 ? (count * 100.0 / @total_contracts).round : 0
+          %>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.875rem;"><%= config[:label] %></span>
+              <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                <span style="font-weight: 600; color: <%= config[:color] %>;"><%= count %></span>
+                <span style="font-size: 0.75rem; color: var(--medium-gray);">(<%= percentage %>%)</span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Upcoming Renewals -->
+      <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md);">
+        <h4 class="typo-h5" style="margin-bottom: var(--space-md); color: var(--dark-gray);">Renouvellements à Venir</h4>
+        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.875rem;">30 prochains jours</span>
+            <span style="font-weight: 600; padding: 2px 8px; border-radius: 4px; background-color: #dc3545; color: white; font-size: 0.875rem;"><%= @renewals_30_days %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.875rem;">31-60 jours</span>
+            <span style="font-weight: 600; padding: 2px 8px; border-radius: 4px; background-color: #ffc107; color: white; font-size: 0.875rem;"><%= @renewals_60_days %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.875rem;">61-90 jours</span>
+            <span style="font-weight: 600; padding: 2px 8px; border-radius: 4px; background-color: #17a2b8; color: white; font-size: 0.875rem;"><%= @renewals_90_days %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Spend by Category -->
+      <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md);">
+        <h4 class="typo-h5" style="margin-bottom: var(--space-md); color: var(--dark-gray);">Dépenses par Catégorie</h4>
+        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+          <div style="padding: var(--space-sm); background-color: #e3f2fd; border-radius: var(--space-xs);">
+            <div style="font-size: 0.75rem; color: var(--medium-gray); margin-bottom: 2px;">Total</div>
+            <div style="font-weight: 700; font-size: 1.25rem; color: var(--dark-gray);"><%= number_to_currency(@total_spending, unit: "", precision: 0, delimiter: " ") %> €</div>
+          </div>
+          <% @family_distribution.first(3).each do |family| %>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.75rem; color: var(--dark-gray);"><%= family[:name] || 'Non défini' %></span>
+              <span style="font-weight: 600; font-size: 0.875rem;"><%= number_to_currency(family[:amount], unit: "", precision: 0, delimiter: " ") %> €</span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Distribution and Top Contracts Section -->
   <div style="display: grid; grid-template-columns: 1fr 2fr; gap: var(--space-lg); margin-bottom: var(--space-xl);">
     <!-- Purchase Family Distribution -->
@@ -174,25 +245,20 @@
         Répartition par Famille d'Achats
       </h3>
       <div class="distribution-list">
-        <% [
-          {name: "Maintenance", percentage: 42, contracts: 78, amount: "1 195 350 €", color: "#667eea"},
-          {name: "Nettoyage et Hygiène", percentage: 22, contracts: 41, amount: "626 450 €", color: "#e879f9"},
-          {name: "Contrôles Techniques", percentage: 15, contracts: 28, amount: "427 125 €", color: "#3b82f6"},
-          {name: "Énergies/Fluides", percentage: 12, contracts: 22, amount: "341 700 €", color: "#10b981"},
-          {name: "Assurances", percentage: 5, contracts: 9, amount: "142 375 €", color: "#ec4899"},
-          {name: "Immobilier", percentage: 3, contracts: 5, amount: "85 425 €", color: "#f59e0b"},
-          {name: "Autres", percentage: 1, contracts: 3, amount: "29 075 €", color: "#06b6d4"}
-        ].each do |family| %>
+        <% 
+          family_colors = ['#667eea', '#e879f9', '#3b82f6', '#10b981', '#ec4899', '#f59e0b', '#06b6d4', '#8b5cf6', '#ef4444', '#14b8a6']
+          @family_distribution.each_with_index do |family, index| 
+        %>
           <div class="distribution-item">
             <div class="distribution-header">
-              <span class="distribution-name"><%= family[:name] %></span>
+              <span class="distribution-name"><%= family[:name] || 'Non défini' %></span>
               <span class="distribution-percentage"><%= family[:percentage] %>%</span>
             </div>
             <div class="distribution-bar-container">
-              <div class="distribution-bar" style="width: <%= family[:percentage] %>%; background-color: <%= family[:color] %>;"></div>
+              <div class="distribution-bar" style="width: <%= family[:percentage] %>%; background-color: <%= family_colors[index % family_colors.length] %>;"></div>
             </div>
             <div class="distribution-details">
-              <span><%= family[:contracts] %> contrats • <%= family[:amount] %></span>
+              <span><%= family[:contracts] %> contrats • <%= number_to_currency(family[:amount], unit: "", precision: 0, delimiter: " ") %> €</span>
             </div>
           </div>
         <% end %>
