@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSight - Project Backlogs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background-color: white; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 2.5em; }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1em; }
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; flex: 1; min-width: 200px; }
+        .stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { opacity: 0.9; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        thead { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        th { padding: 15px 12px; text-align: left; font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        td { padding: 12px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+        tr:hover { background-color: #f8f9fa; }
+        .sl-col { width: 60px; text-align: center; font-weight: bold; color: #667eea; }
+        .brick-col { width: 100px; font-weight: 600; color: #764ba2; }
+        .title-col { width: 250px; font-weight: 600; color: #2c3e50; }
+        .description-col { min-width: 300px; }
+        .url-col { width: 200px; word-break: break-word; }
+        .url-col a { color: #667eea; text-decoration: none; }
+        .url-col a:hover { text-decoration: underline; }
+        .test-col { min-width: 350px; font-size: 13px; color: #555; }
+        .video-col { width: 120px; text-align: center; }
+        .empty-cell { color: #bdc3c7; font-style: italic; }
+        @media (max-width: 768px) { .container { padding: 15px; } h1 { font-size: 1.8em; } table { font-size: 12px; } th, td { padding: 8px 6px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 HubSight - Project Backlogs</h1>
+        <p class="subtitle">Complete task breakdown for Brick 1 implementation</p>
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number">56</div><div class="stat-label">Total Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Brick Phase</div></div>
+            <div class="stat-card"><div class="stat-number">9</div><div class="stat-label">Tasks Implemented</div></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="sl-col">SL</th>
+                    <th class="brick-col">Brick</th>
+                    <th class="title-col">Task Title</th>
+                    <th class="description-col">Task Description</th>
+                    <th class="url-col">URL</th>
+                    <th class="test-col">How to Test</th>
+                    <th class="video-col">Video</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="sl-col">1</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">User Registration - Sign Up</td>
+                    <td class="description-col">Implement user registration/signup form with email, password, name fields. Email verification required before account activation</td>
+                    <td class="url-col"><a href="/admin/portfolio_managers/new">/admin/portfolio_managers/new</a> or <a href="/site_managers/new">/site_managers/new</a></td>
+                    <td class="test-col">Login as admin (admin@hubsight.com / Password123!), go to /admin/portfolio_managers/new, fill email/first_name/last_name, click Create. Invitation email opens in browser. Click invitation link, set strong password (8+ chars, uppercase, lowercase, digit, special char), activate account. Verify real-time password strength meter shows weak/medium/strong. Verify all requirements turn green with checkmarks.</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">2</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">User Login - Sign In</td>
+                    <td class="description-col">Implement secure login functionality with email/password, remember me option, and failed login attempt tracking</td>
+                    <td class="url-col"><a href="/login">/login</a></td>
+                    <td class="test-col">Go to /login, enter email/password, check 'Remember me', click Sign In. Verify redirect to /dashboard. Try wrong password 5 times - account locks. Check letter_opener for unlock email. Click unlock link. Login again successfully. Verify login count increments in profile.</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">3</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">Password Reset - Forgot Password</td>
+                    <td class="description-col">Implement password reset flow: request reset link via email, verify token, set new password with strength validation</td>
+                    <td class="url-col"><a href="/password/new">/password/new</a></td>
+                    <td class="test-col">Go to /login, click 'Forgot password?', enter email, submit. Check letter_opener for reset email. Click reset link, enter new strong password (watch strength meter), confirm password, submit. Login with new password. Verify password strength validation works.</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">4</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">Email Verification</td>
+                    <td class="description-col">Email confirmation system: send verification email on signup, validate confirmation token, activate account</td>
+                    <td class="url-col"><a href="Automatic on invitation acceptance">Automatic on invitation acceptance</a></td>
+                    <td class="test-col">When accepting invitation (/invitations/accept/:token), email is auto-confirmed. For email changes: go to /profile/edit, change email, save. Check letter_opener for confirmation email. Click confirmation link. Verify new email confirmed and active.</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">5</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">User Profile Management</td>
+                    <td class="description-col">Allow users to update their profile: name, email, password, notification preferences, language settings</td>
+                    <td class="url-col"><a href="/profile/edit">/profile/edit</a></td>
+                    <td class="test-col">Login, go to /profile/edit. Update first/last name, phone, department, language (fr/en). Toggle notification preferences (4 checkboxes). To change password: enter current password, new password (watch strength meter), confirm. Click Save. Verify changes persist. Check login history shows: sign-in count, current/last IP, timestamps.</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">6</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">Session Management</td>
+                    <td class="description-col">Secure session handling with timeout, remember me cookie, concurrent session management, logout functionality</td>
+                    <td class="url-col"><a href="/active_sessions">/active_sessions</a></td>
+                    <td class="test-col">Login, go to /active_sessions. View active sessions showing device type, browser, OS, IP, timestamps. Login from different browser/device - see multiple sessions listed. Click 'Terminer' on non-current session - that device logged out. Verify cannot end current session. Wait 30 min inactive - session expires. Run CleanupSessionsJob.perform_now in console to test cleanup.</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">7</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">Role-Based Access Control (RBAC)</td>
+                    <td class="description-col">Implement role-based permissions system for Admin, Portfolio Manager, Site Manager, and Technician roles</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">8</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">Admin - Create Portfolio Manager Account</td>
+                    <td class="description-col">Implement functionality for Admin to create and configure Portfolio Manager accounts with proper permissions and organization assignment</td>
+                    <td class="url-col"><a href="/admin/portfolio_managers/new">/admin/portfolio_managers/new</a></td>
+                    <td class="test-col">Login as admin (admin@hubsight.com / Password123!). Click 'Gestionnaires' in the admin sidebar menu under 'Administration' section. View existing portfolio managers with their organizations and invitation status. Click 'Nouveau Gestionnaire' button. Fill required fields: email, first_name, last_name, select organization from dropdown (or create new via link). Click 'Créer le Gestionnaire'. Verify success message appears. Check letter_opener - invitation email should open with activation link. Click invitation link, set strong password (8+ chars, uppercase, lowercase, digit, special char), watch real-time strength meter. Accept invitation. Login with new credentials. Verify portfolio manager can access their organization's data. Test editing: click 'Modifier' on portfolio manager, update details, save. Verify resend invitation works for pending invitations. Verify admin-only access (non-admin users redirected).</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">9</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">Admin - Access Client Data</td>
+                    <td class="description-col">Enable Admin to access client data with formalized contractual authorization, including data isolation and audit logging</td>
+                    <td class="url-col"><a href="/admin/clients">/admin/clients</a></td>
+                    <td class="test-col">Login as admin (admin@hubsight.com / Password123!). Navigate to /admin/clients to view all client organizations with user statistics. Click 'Accéder aux données' button for any organization. Confirm security warning dialog. Verify prominent red banner appears at top showing organization name with 'Terminer l'accès' button. Access client data (sites, contracts, equipment) - verify all queries automatically scoped to selected organization. Navigate to /admin/access_logs to view audit trail - verify log entry shows: admin email, organization name, IP address, start time, status 'Active'. Click 'Terminer l'accès' in red banner - verify redirect to /admin/clients with success message. Return to /admin/access_logs - verify log entry now shows 'Terminée' status with duration calculated. Test timeout: start impersonation, wait 2+ hours (or modify timeout in code for testing), attempt page access - verify automatic session end with timeout message. Test data isolation: impersonate Org A, verify cannot access Org B data. Verify all impersonation features admin-only (non-admin users blocked).</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">10</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">Admin - Client Impersonation</td>
+                    <td class="description-col">Implement secure client impersonation feature allowing Admin to view and navigate the platform as a specific client for support purposes</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">11</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Site Manager Profiles</td>
+                    <td class="description-col">Portfolio Manager can create and manage Site Manager profiles for their organization with role-based permissions</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">12</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Assign Sites to Site Managers</td>
+                    <td class="description-col">Implement site assignment functionality allowing Portfolio Managers to assign specific sites to Site Manager users</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">13</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Sites</td>
+                    <td class="description-col">Full CRUD functionality for sites including name, address, area, site type, and other attributes from the data model</td>
+                    <td class="url-col"><a href="/sites">/sites</a></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Click 'Sites' in sidebar menu. View list of 13 sites with pagination (10 per page). Click 'Nouveau Site' - fill required fields (name, type, address, city, postal code) and optional fields (code, area, contact info, GPS, climate zone, etc.), submit. Click site name to view details. Click 'Éditer' to update. Test filters: search by name/city, filter by site type (8 types), filter by region (13 regions), sort options. Click 'Supprimer' and confirm deletion. Navigate pages 1-2 to verify pagination. Login as portfolio2@hubsight.com to verify multi-tenancy (sees only their 12 sites). Verify sites menu accessible from both Admin and User layouts.</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">14</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Buildings</td>
+                    <td class="description-col">Full CRUD functionality for buildings nested under sites, including construction year, area, ERP classification, energy data, etc.</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">15</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Levels</td>
+                    <td class="description-col">Full CRUD functionality for levels (floors) nested under buildings, including level number, altitude, and floor area</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">16</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Spaces</td>
+                    <td class="description-col">Full CRUD functionality for spaces/rooms nested under levels, including type, area, capacity, usage, and technical characteristics</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">17</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Equipment</td>
+                    <td class="description-col">Full CRUD functionality for equipment nested under spaces, including manufacturer, model, serial number, commissioning date, technical specs</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">18</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Tree View Navigation</td>
+                    <td class="description-col">Implement hierarchical tree navigation: Portfolio > Sites > Buildings > Levels > Spaces > Equipment with expand/collapse functionality</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">19</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Import OmniClass Table 23</td>
+                    <td class="description-col">Import OmniClass Table 23 equipment classification (256 equipment types) from Excel file provided by client</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">20</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Import Space Structure</td>
+                    <td class="description-col">Import space structure including OmniClass Table 13 space classifications (966 types) from Excel file</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">21</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Import Contract Families</td>
+                    <td class="description-col">Import contract families and subfamilies (7 families</td>
+                    <td class="url-col"><a href="20+ subfamilies) from Excel file provided by client">20+ subfamilies) from Excel file provided by client</a></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">22</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Equipment Search & Autocomplete</td>
+                    <td class="description-col">Search and autocomplete system in equipment database to facilitate manual entry, with filtering by technical lot and function</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">23</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Link Equipment to OmniClass</td>
+                    <td class="description-col">Manual linking interface for associating equipment with OmniClass classification codes via search system</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">24</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Upload PDF Contracts</td>
+                    <td class="description-col">Upload multi-page PDF contract documents with progress indicator and file validation (max size, file type)</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">25</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - OCR Text Extraction (Mistral)</td>
+                    <td class="description-col">Integrate Mistral OCR API for text extraction from uploaded PDF documents (~€0.10/contract cost)</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">26</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - LLM Data Structuring (OpenRouter)</td>
+                    <td class="description-col">Automatic data extraction via LLM (OpenRouter): contract number, dates, type, provider, durations, renewal, equipment, amounts (72 fields)</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">27</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Validate Extracted Data</td>
+                    <td class="description-col">Manual validation interface showing extracted data side-by-side with PDF, allowing corrections and confirmations before saving</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">28</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Manual Contract Creation</td>
+                    <td class="description-col">Create contracts manually when no document exists or extraction is incomplete, with comprehensive form for all 72 contract fields</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">29</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Contract Family Search</td>
+                    <td class="description-col">Search and autocomplete system in contract family/subfamily database to facilitate manual linking during contract entry</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">30</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Link Services to Contract Families</td>
+                    <td class="description-col">Manual linking of services to Contract Family/Subfamily using search system with autocomplete suggestions</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">31</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Auto-Calculate Contract Dates</td>
+                    <td class="description-col">Automatically calculate last renewal date, contract expiry date, termination deadline, last amount update date based on contract parameters</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">32</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Auto-Calculate VAT Amounts</td>
+                    <td class="description-col">Automatically calculate VAT inclusive amounts from exclusive amounts based on configurable VAT rates</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">33</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - View Contract List</td>
+                    <td class="description-col">Display contracts in list/table view with pagination, sorting, and column customization</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">34</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Filter Contracts</td>
+                    <td class="description-col">Multiple filter options: by site, building, contract family, service provider, status, date ranges, amount ranges</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">35</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Organizations</td>
+                    <td class="description-col">Create and manage organizations (companies) with 12 fields: name, legal name, SIRET, type, address, contacts, specialties, status</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">36</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Contacts</td>
+                    <td class="description-col">Create and manage contacts nested under organizations with 11 fields: name, position, phone, email, availability, languages</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">37</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Agencies</td>
+                    <td class="description-col">Create and manage agencies/establishments under organizations with address, service area, certifications</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">38</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Organization Search & Autocomplete</td>
+                    <td class="description-col">Search and autocomplete for organizations and contacts databases to facilitate manual linking during contract entry</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">39</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Link Organizations to Contracts</td>
+                    <td class="description-col">Manual linking of organizations (service providers) to contracts using search system with organization details preview</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">40</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Generate Contract PDF Summary</td>
+                    <td class="description-col">Generate PDF summary sheets per contract with emergency numbers, references, equipment list, based on client template</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">41</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Export Contract List</td>
+                    <td class="description-col">Export contract list to Excel/CSV with selected columns and applied filters</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">42</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Export Equipment List</td>
+                    <td class="description-col">Export equipment list to Excel/CSV with hierarchy context (site > building > level > space)</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">43</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Export Sites Structure</td>
+                    <td class="description-col">Export complete sites structure to Excel with hierarchical indentation or nested sheets</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">44</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Portfolio Overview Dashboard</td>
+                    <td class="description-col">Dashboard displaying portfolio overview: total sites, buildings, equipment, contracts, total contract value, key metrics</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">45</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Key Indicators Display</td>
+                    <td class="description-col">Display key indicators: contracts by status, contracts by family, upcoming renewals, total spend by category</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">46</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Analytics Dashboard</td>
+                    <td class="description-col">Analytics page with charts and graphs showing contract distribution, spending trends, equipment distribution by type</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">47</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - View Assigned Sites</td>
+                    <td class="description-col">Site Manager can view only sites assigned to them by Portfolio Manager with restricted access to other sites</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">48</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - View Site Contracts</td>
+                    <td class="description-col">View contracts related to assigned sites with read-only access to contract details</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">49</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - Upload Contracts for Scope</td>
+                    <td class="description-col">Upload contract PDFs for sites within their scope, triggering OCR/LLM extraction workflow</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">50</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - View Site Equipment</td>
+                    <td class="description-col">View list of equipment for assigned sites with hierarchical navigation (building > level > space > equipment)</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">51</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - Generate Contract PDF</td>
+                    <td class="description-col">Generate and export contract summary sheets in PDF format for contracts within their scope</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">52</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">System - Data Isolation</td>
+                    <td class="description-col">Complete data isolation between clients ensuring no cross-client data access or visibility</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">53</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">System - Responsive Web Design</td>
+                    <td class="description-col">Responsive web interface working seamlessly on desktop, tablet, and mobile devices</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">54</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">System - Client Branding</td>
+                    <td class="description-col">Clean design with client's graphic charter (logo and colors integration)</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">55</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">System - HTTPS & Security</td>
+                    <td class="description-col">Secure hosting in France with HTTPS connections, SSL certificates, and data encryption</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">56</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">System - Global Search</td>
+                    <td class="description-col">Global search functionality across contracts, equipment, sites, organizations with faceted filtering</td>
+                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
