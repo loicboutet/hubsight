@@ -1043,6 +1043,41 @@
                     </td>
                     
                 </tr>
+                
+                <!-- 13. PM - Create Site Manager Profiles -->
+                <tr class="priority-high">
+                    <td style="text-align: center; font-weight: 600;">38</td>
+                    <td class="feature-name">PM - Create Site Manager Profiles</td>
+                    <td class="url"><a href="http://localhost:3000/site_managers" target="_blank">/site_managers</a></td>
+                    <td class="url"><a href="https://hubsight.5000.dev/site_managers" target="_blank">/site_managers</a></td>
+                    <td class="changes">
+                        Portfolio Manager can create and manage Site Manager profiles:
+                        <ul>
+                            <li><strong>Testing Steps:</strong></li>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Click 'Responsables de Site' in sidebar menu (only visible to Portfolio Managers)</li>
+                            <li>View list of existing site managers with invitation status, site assignments, and last login info</li>
+                            <li>Click 'Nouveau Responsable' button</li>
+                            <li>Fill required fields: email, first_name, last_name, phone. Optionally add department</li>
+                            <li>Click 'Créer le Responsable' - verify success message and redirect to list</li>
+                            <li>Check letter_opener - invitation email should open with activation link</li>
+                            <li>Click invitation link, set strong password (8+ chars, uppercase, lowercase, digit, special char), watch real-time strength meter</li>
+                            <li>Accept invitation and login with new site manager credentials - verify site manager role assigned</li>
+                            <li>Back to portfolio manager account: click 'Voir' on site manager to view details</li>
+                            <li>Verify invitation status shows 'Actif' after acceptance</li>
+                            <li>For pending invitations: click 'Renvoyer l'invitation' button - verify new invitation email sent</li>
+                            <li>Test editing: click 'Éditer' on site manager, update phone/department/status, save. Verify changes persist</li>
+                            <li>Test organization scoping: login as different portfolio manager - verify cannot see other organization's site managers</li>
+                            <li>Verify portfolio manager-only access (non-PM users cannot access /site_managers)</li>
+                        </ul>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="status done">DONE</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="scope-check scope-yes">✓</span>
+                    </td>
+                </tr>
             </tbody>
         </table>
         
