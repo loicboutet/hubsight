@@ -162,7 +162,17 @@
                     </svg>
                     Éditer
                   <% end %>
-                  
+                  <button type="button" 
+                    data-action="open-delete-modal" 
+                    data-modal-id="deletion-modal-site-<%= site[:id] %>"
+                    title="Supprimer"
+                    class="typo-btn-small"
+                    style="background-color: #dc2626; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; font-size: 0.813rem; font-weight: 600; transition: background-color 0.2s;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Supprimer
+                  </button>
                 </div>
               </td>
             </tr>
@@ -181,4 +191,34 @@
         path: sites_path %>
     </div>
   </div>
+  
+  <!-- Deletion Confirmation Modals -->
+  <% [
+    {id: 1, name: "Tour Montparnasse", address: "33 Avenue du Maine", city: "Paris", postal: "75015", region: "Île-de-France", type: "Bureaux", area: "120,000", buildings: 1, equipment: 487, contracts: 23},
+    {id: 2, name: "Campus La Défense", address: "15 Esplanade du Général de Gaulle", city: "La Défense", postal: "92400", region: "Île-de-France", type: "Bureaux", area: "85,500", buildings: 4, equipment: 892, contracts: 34},
+    {id: 3, name: "Centre Commercial Odysseum", address: "2 Place de Lisbonne", city: "Montpellier", postal: "34000", region: "Occitanie", type: "Commercial", area: "65,000", buildings: 2, equipment: 324, contracts: 18},
+    {id: 4, name: "Site Industriel Lyon Nord", address: "Zone Industrielle des Marais", city: "Lyon", postal: "69009", region: "Auvergne-Rhône-Alpes", type: "Industriel", area: "45,000", buildings: 8, equipment: 567, contracts: 29},
+    {id: 5, name: "Résidence Le Parc", address: "89 Avenue Victor Hugo", city: "Nice", postal: "06000", region: "PACA", type: "Résidentiel", area: "12,500", buildings: 3, equipment: 156, contracts: 12},
+    {id: 6, name: "Parc d'Activités Roissy", address: "Avenue de la Commune de Paris", city: "Roissy", postal: "95700", region: "Île-de-France", type: "Logistique", area: "95,000", buildings: 6, equipment: 445, contracts: 21},
+    {id: 7, name: "Immeuble Haussmann", address: "45 Boulevard Haussmann", city: "Paris", postal: "75009", region: "Île-de-France", type: "Bureaux", area: "8,200", buildings: 1, equipment: 89, contracts: 8},
+    {id: 8, name: "Centre Médical Pasteur", address: "12 Rue Louis Pasteur", city: "Marseille", postal: "13001", region: "PACA", type: "Santé", area: "15,600", buildings: 2, equipment: 234, contracts: 16},
+    {id: 9, name: "Campus Universitaire Grenoble", address: "621 Avenue Centrale", city: "Grenoble", postal: "38400", region: "Auvergne-Rhône-Alpes", type: "Enseignement", area: "42,000", buildings: 7, equipment: 678, contracts: 27},
+    {id: 10, name: "Zone Commerciale Atlantis", address: "Avenue des Thébaudières", city: "Nantes", postal: "44800", region: "Pays de la Loire", type: "Commercial", area: "52,000", buildings: 3, equipment: 298, contracts: 19}
+  ].each do |site| %>
+    <%= render 'shared/deletion_confirmation_modal',
+      entity_type: 'le site',
+      entity_name: "#{site[:name]} - #{site[:city]}",
+      entity_id: "site-#{site[:id]}",
+      affected_items: { 
+        'bâtiments' => site[:buildings], 
+        'équipements' => site[:equipment], 
+        'contrats' => site[:contracts]
+      },
+      requires_extra_confirmation: true,
+      delete_path: site_path(site[:id])
+    %>
+  <% end %>
 </div>
+
+<!-- Initialize deletion confirmation controller -->
+<div data-controller="deletion-confirmation"></div>

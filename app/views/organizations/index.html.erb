@@ -165,7 +165,17 @@
                     </svg>
                     Modifier
                   <% end %>
-                  
+                  <button type="button" 
+                    data-action="open-delete-modal" 
+                    data-modal-id="deletion-modal-org-<%= org[:name].parameterize %>"
+                    title="Supprimer"
+                    class="typo-btn-small"
+                    style="background-color: #dc2626; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; font-size: 0.813rem; font-weight: 600; transition: background-color 0.2s;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Supprimer
+                  </button>
                 </div>
               </td>
             </tr>
@@ -184,4 +194,38 @@
         path: organizations_path %>
     </div>
   </div>
+  
+  <!-- Deletion Confirmation Modals -->
+  <% [
+    {name: "ENGIE Solutions", legal: "ENGIE Solutions SAS", siret: "552 081 317", type: "Prestataire", specialties: "CVC, Énergie, GTB", phone: "+33 1 40 06 20 00", email: "contact@engie-solutions.com", contracts: 12, active_contracts: 8, status: "Actif"},
+    {name: "OTIS France", legal: "OTIS SAS", siret: "562 092 928", type: "Prestataire", specialties: "Ascenseurs, Maintenance", phone: "+33 1 55 47 80 00", email: "service@otis.com", contracts: 8, active_contracts: 6, status: "Actif"},
+    {name: "Daikin Service", legal: "Daikin Airconditioning France SAS", siret: "338 101 842", type: "Prestataire", specialties: "Climatisation, CVC", phone: "+33 1 45 16 27 27", email: "contact@daikin.fr", contracts: 6, active_contracts: 5, status: "Actif"},
+    {name: "Bouygues Energies & Services", legal: "Bouygues ES SAS", siret: "343 014 383", type: "Prestataire", specialties: "Multi-technique, Énergie", phone: "+33 1 30 60 33 00", email: "contact@bouygues-es.com", contracts: 15, active_contracts: 12, status: "Actif"},
+    {name: "Clean Pro Services", legal: "Clean Pro SARL", siret: "789 456 123", type: "Prestataire", specialties: "Nettoyage, Entretien", phone: "+33 1 42 35 78 90", email: "contact@cleanpro.fr", contracts: 9, active_contracts: 7, status: "Actif"},
+    {name: "Bureau Veritas", legal: "Bureau Veritas SAS", siret: "775 690 621", type: "Organisme de contrôle", specialties: "Contrôles réglementaires", phone: "+33 1 45 17 70 00", email: "france@bureauveritas.com", contracts: 18, active_contracts: 15, status: "Actif"},
+    {name: "Schindler France", legal: "Schindler SAS", siret: "542 056 262", type: "Prestataire", specialties: "Ascenseurs, Escaliers mécaniques", phone: "+33 1 41 02 52 00", email: "contact@schindler.fr", contracts: 5, active_contracts: 4, status: "Actif"},
+    {name: "Veolia Propreté", legal: "Veolia Propreté IDF SAS", siret: "987 654 321", type: "Prestataire", specialties: "Nettoyage, Gestion déchets", phone: "+33 1 71 75 00 00", email: "contact@veolia.com", contracts: 7, active_contracts: 5, status: "Actif"},
+    {name: "EDF Entreprises", legal: "Électricité de France SA", siret: "552 081 317", type: "Fournisseur", specialties: "Fourniture électricité", phone: "+33 1 40 42 22 22", email: "entreprises@edf.fr", contracts: 24, active_contracts: 20, status: "Actif"},
+    {name: "Securitas France", legal: "Securitas France SARL", siret: "432 109 876", type: "Prestataire", specialties: "Sécurité, Gardiennage", phone: "+33 1 55 07 41 00", email: "contact@securitas.fr", contracts: 11, active_contracts: 9, status: "Actif"},
+    {name: "Vert Nature SARL", legal: "Vert Nature SARL", siret: "654 789 123", type: "Prestataire", specialties: "Espaces verts, Paysagisme", phone: "+33 1 48 56 32 10", email: "contact@vertnature.fr", contracts: 4, active_contracts: 3, status: "Actif"},
+    {name: "Climatic Services", legal: "Climatic Services SAS", siret: "765 432 198", type: "Prestataire", specialties: "Climatisation, Froid", phone: "+33 1 39 74 82 00", email: "info@climatic.fr", contracts: 3, active_contracts: 2, status: "Actif"},
+    {name: "AXA Assurances", legal: "AXA France IARD SA", siret: "722 057 460", type: "Assureur", specialties: "Assurance multi-risque", phone: "+33 1 40 75 48 00", email: "entreprises@axa.fr", contracts: 8, active_contracts: 6, status: "Actif"},
+    {name: "Artiplomb SAS", legal: "Artiplomb SAS", siret: "876 543 210", type: "Prestataire", specialties: "Plomberie, Chauffage", phone: "+33 1 47 23 89 45", email: "contact@artiplomb.fr", contracts: 2, active_contracts: 1, status: "Actif"},
+    {name: "Sicli Sécurité", legal: "Sicli Sécurité Incendie SA", siret: "321 654 987", type: "Prestataire", specialties: "Sécurité incendie, SSI", phone: "+33 1 43 98 74 20", email: "info@sicli.fr", contracts: 6, active_contracts: 5, status: "Actif"}
+  ].each do |org| %>
+    <%= render 'shared/deletion_confirmation_modal',
+      entity_type: 'l\'organisation',
+      entity_name: org[:name],
+      entity_id: "org-#{org[:name].parameterize}",
+      affected_items: { 
+        'contrats liés' => org[:contracts],
+        'contrats actifs' => org[:active_contracts]
+      },
+      requires_extra_confirmation: false,
+      delete_path: organization_path(org[:name].parameterize)
+    %>
+  <% end %>
 </div>
+
+<!-- Initialize deletion confirmation controller -->
+<div data-controller="deletion-confirmation"></div>
