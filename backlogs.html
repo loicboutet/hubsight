@@ -43,7 +43,7 @@
         <div class="stats">
             <div class="stat-card"><div class="stat-number">56</div><div class="stat-label">Total Tasks</div></div>
             <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Brick Phase</div></div>
-            <div class="stat-card"><div class="stat-number">12</div><div class="stat-label">Tasks Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">14</div><div class="stat-label">Tasks Implemented</div></div>
         </div>
         <table>
             <thead>
@@ -240,22 +240,68 @@ DATA SOURCE TRACKING: When creating space, verify created_by_name field populate
 LEVEL VIEW INTEGRATION: On level detail page (/levels/:id), verify "Espaces de ce Niveau" section displays real spaces from database (not mock data). Shows first 5 spaces with name, type badge, area, capacity, equipment count. 'Nouvel Espace' and 'Espaces' buttons link to create/list pages. Empty state shows "Aucun espace pour ce niveau".</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">17</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create and Manage Equipment</td>
+                    <td class="title-col">PM - Create and Manage Equipment<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Full CRUD functionality for equipment nested under spaces, including manufacturer, model, serial number, commissioning date, technical specs</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/equipment">/equipment</a></td>
+                    <td class="test-col">PREREQUISITES: Task 16 (Spaces) must be completed first. Login as portfolio manager (portfolio@hubsight.com / Password123!). 
+
+CREATE TEST: Go to /sites, select a site, click 'Bâtiments' tab, select a building, click on a level, select a space. On space detail page, click 'Nouvel Équipement' button. Fill REQUIRED field: name (example: "Climatiseur Daikin AC-500"). Fill OPTIONAL fields: equipment_type, equipment_category, manufacturer (e.g., "Daikin"), model (e.g., "AC-500"), serial_number (e.g., "SN123456789"), bdd_reference, nominal_power (e.g., "3.5 kW"), nominal_voltage (e.g., "230 V"), current, frequency (e.g., "50 Hz"), weight (e.g., "45 kg"), dimensions (e.g., "80 x 60 x 120 cm"), manufacturing_date, commissioning_date, warranty_end_date, next_maintenance_date, supplier, purchase_price, order_number, invoice_number, status (Actif/Inactif/En Maintenance/Hors Service), criticality (Faible/Moyen/Élevé/Critique), notes. Click 'Créer l'Équipement'. Verify: success flash message "Équipement créé avec succès.", redirected to equipment detail page, new equipment appears in space's equipment list.
+
+VIEW/SHOW TEST: From equipment list, click on equipment name to view detail page (/equipment/:id). Verify displays: equipment name, manufacturer, model, serial number, all physical characteristics, technical specifications (power, voltage, current, frequency, weight, dimensions), important dates (manufacturing, commissioning, warranty end, next maintenance), installation & warranty info, contracts & maintenance section, contacts section, supplier information (supplier, purchase price, order number, invoice number), status badge, criticality badge, notes, parent space/level/building/site breadcrumb navigation, created_by_name, updated_by_name timestamps.
+
+UPDATE/EDIT TEST: On equipment detail page, click 'Éditer' button (/equipment/:id/edit). Modify fields: change name, update manufacturer, model, serial number, change technical specs, update dates, change status, criticality. Click 'Mettre à Jour l'Équipement'. Verify: success message "Équipement mis à jour avec succès.", redirected to equipment detail page, changes persist when viewing equipment again, updated_by_name field populated with current user's name.
+
+LIST/INDEX TEST: Navigate to /equipment to view all equipment for organization. Verify equipment display with: name, type, manufacturer, model, location hierarchy (space > level > building > site), status. Each equipment has 'Voir' and 'Éditer' buttons. Pagination shows 10 per page.
+
+DELETE TEST: On equipment detail page, click 'Supprimer' button. Confirm deletion in dialog "Êtes-vous sûr de vouloir supprimer cet équipement ? Cette action est irréversible." Verify: success message "Équipement supprimé avec succès.", redirected to parent space detail page, equipment removed from list, space's equipment count decremented.
+
+VALIDATION TESTS: Try creating equipment without name - should fail with validation error "Name can't be blank". Try creating equipment with invalid numeric values - should fail. All field validations must prevent save.
+
+AUTHORIZATION TEST: Logout, login as different portfolio manager (portfolio2@hubsight.com / Password123!). Navigate to a space from Organization 1. Verify redirected with error "Accès non autorisé." Cannot view, create, edit, or delete equipment from other organizations' spaces.
+
+ORGANIZATION ISOLATION TEST: Create equipment in Organization 1's space while logged in as portfolio@hubsight.com. Equipment should have organization_id matching space's organization_id. Login as portfolio2@hubsight.com, create equipment in Organization 2's space. Verify each organization sees only their own equipment.
+
+HIERARCHY TRACKING: When creating equipment, verify it inherits site_id, building_id, level_id from parent space automatically through model callbacks. Check equipment.space, equipment.level, equipment.building, equipment.site associations work correctly.
+
+DATA SOURCE TRACKING: When creating equipment, verify created_by_name field populated with current user's full name. When updating, verify updated_by_name field updated. These fields support import tracking (import_source, import_date) for future Excel import functionality.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">18</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Tree View Navigation</td>
+                    <td class="title-col">PM - Tree View Navigation<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Implement hierarchical tree navigation: Portfolio > Sites > Buildings > Levels > Spaces > Equipment with expand/collapse functionality</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/portfolio">/portfolio</a></td>
+                    <td class="test-col">PREREQUISITES: Tasks 13-17 (Sites, Buildings, Levels, Spaces, Equipment) must be completed first. Login as portfolio manager (portfolio@hubsight.com / Password123!).
+
+NAVIGATION TEST: Click 'Portfolio' in the sidebar menu or navigate to /portfolio. Verify you land on the tree view page with title "Vue Arborescente" and subtitle "Navigation hiérarchique de votre portefeuille immobilier".
+
+STATISTICS DISPLAY TEST: At the top of the page, verify 5 gradient statistic cards display with real counts: 1) Sites (should show 13 for Organization 1), 2) Bâtiments (total buildings count), 3) Niveaux (total levels count), 4) Espaces (total spaces count), 5) Équipements (total equipment count). Each card has distinct gradient colors.
+
+ORGANIZATION ROOT TEST: Verify tree starts with organization root node displaying organization name with briefcase icon in purple gradient header. Shows total sites count in parentheses.
+
+HIERARCHY DISPLAY TEST: Verify complete 6-level hierarchy displays: 1) Organization (root), 2) Sites (blue building icon), 3) Buildings (pink building icon, nested under sites), 4) Levels (cyan layers icon, nested under buildings, ordered by level_number), 5) Spaces (green house icon, nested under levels), 6) Equipment (yellow gear icon, nested under spaces, leaf nodes).
+
+EXPAND/COLLAPSE FUNCTIONALITY TEST: Click on any node with children (shows chevron-right icon). Verify: 1) Children div becomes visible (display: block), 2) Chevron icon rotates 90 degrees downward, 3) Background color changes on hover. Click again to collapse: children hide (display: none), chevron rotates back to right. Test expanding multiple levels simultaneously: Site > Building > Level > Space > Equipment.
+
+ICONS AND BADGES TEST: Verify each level has distinct icon and color: Sites (blue building), Buildings (pink building), Levels (cyan layers), Spaces (green house), Equipment (yellow gear). Verify site type badges display (e.g., "Bureau", "Commercial"). Verify space type badges when present. Verify counts display next to each node showing number of children.
+
+LINKS TEST: Click on any node name (not the expand icon). Verify redirects to corresponding detail page: site_path(site), building_path(building), level_path(level), space_path(space), equipment_path(equipment). Verify links are styled properly (no underline, dark gray color).
+
+EMPTY STATE TEST: Login as a user with no sites (or manually remove all sites temporarily). Navigate to /portfolio. Verify empty state displays: large building icon (opacity 0.3), heading "Aucun site disponible", message with link "Commencez par créer votre premier site" linking to /sites/new.
+
+VISUAL HIERARCHY TEST: Verify indentation increases at each level (margin-left: var(--space-xl)). Verify icon sizes decrease progressively (24px > 20px > 18px > 16px > 14px > 12px). Verify font sizes decrease for deeper levels. Verify leaf nodes (equipment) have no expand icon, just spacing div.
+
+CONTROLLER INTEGRATION TEST: Verify tree_controller.js Stimulus controller is attached (data-controller="tree"). Verify toggle action works (data-action="click->tree#toggle"). Verify targets work correctly (data-tree-target="node", "children", "icon").
+
+HELP TEXT TEST: At bottom of page, verify blue info box with lightbulb emoji displays tip: "Cliquez sur les icônes de flèche pour développer/réduire les niveaux de la hiérarchie. Cliquez sur les noms pour accéder aux pages de détail."
+
+ORGANIZATION ISOLATION TEST: Login as portfolio@hubsight.com - verify sees 13 sites from Organization 1. Logout, login as portfolio2@hubsight.com - verify sees 12 sites from Organization 2 only, completely different tree structure. Verify no data leakage between organizations.
+
+PERFORMANCE TEST: With full hierarchy of sites/buildings/levels/spaces/equipment, verify tree loads efficiently. Verify expand/collapse is instant with no lag. Verify initial page load shows all nodes collapsed except organization root.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>

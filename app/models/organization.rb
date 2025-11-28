@@ -1,6 +1,11 @@
 class Organization < ApplicationRecord
   # Associations
   has_many :users, dependent: :restrict_with_error
+  has_many :sites, dependent: :restrict_with_error
+  has_many :buildings, dependent: :restrict_with_error
+  has_many :levels, dependent: :restrict_with_error
+  has_many :spaces, dependent: :restrict_with_error
+  has_many :equipment, dependent: :restrict_with_error
 
   # Validations
   validates :name, presence: true, uniqueness: true

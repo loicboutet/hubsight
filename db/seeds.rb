@@ -868,48 +868,385 @@ puts "   - Organization 1: #{Contract.where(organization_id: org1.id).count} con
 puts "   - Organization 2: #{Contract.where(organization_id: org2.id).count} contracts"
 
 # ============================================================================
-# EQUIPMENT - Sample equipment for analytics
+# BUILDINGS, LEVELS, SPACES & EQUIPMENT - Full hierarchy for testing
 # ============================================================================
 
-puts "\n⚙️  Creating sample equipment..."
+puts "\n🏗️  Creating buildings, levels, spaces and equipment hierarchy..."
 
-equipment_types = [
-  'CVC - Climatisation',
-  'CVC - Chauffage',
-  'Ascenseur',
-  'Éclairage LED',
-  'Plomberie',
-  'Sécurité Incendie',
-  'Contrôle Accès'
-]
+# Get first site from Organization 1 for detailed seed data
+site_org1 = Site.where(organization_id: org1.id).first
 
-# Create equipment for Organization 1 sites
-org1_sites_for_equipment = Site.where(organization_id: org1.id).limit(3).to_a
-org1_sites_for_equipment.each do |site|
-  rand(3..8).times do
-    equipment = Equipment.create!(
-      organization_id: org1.id,
-      site_id: site.id,
-      equipment_type: equipment_types.sample,
-      commissioning_date: Date.today - rand(1..3650).days
-    )
+if site_org1
+  puts "\n  Creating full hierarchy for: #{site_org1.name}"
+  
+  # Building 1
+  building1 = Building.find_or_initialize_by(
+    site: site_org1,
+    name: "Bâtiment A",
+    code: "BAT-A"
+  )
+  building1.assign_attributes(
+    organization_id: org1.id,
+    user_id: pm1.id,
+    construction_year: 2010,
+    area: 5000,
+    number_of_levels: 5,
+    status: 'active',
+    created_by_name: pm1.full_name,
+    description: "Bâtiment principal"
+  )
+  if building1.new_record?
+    building1.save!
+    puts "    ✓ Created building: #{building1.name}"
+  else
+    building1.save!
+  end
+  
+  # Level 1 - Ground Floor
+  level1 = Level.find_or_initialize_by(
+    building: building1,
+    name: "Rez-de-chaussée"
+  )
+  level1.assign_attributes(
+    organization_id: org1.id,
+    level_number: 0,
+    altitude: 0,
+    area: 1000,
+    created_by_name: pm1.full_name
+  )
+  if level1.new_record?
+    level1.save!
+    puts "      ✓ Created level: #{level1.name}"
+  else
+    level1.save!
+  end
+  
+  # Space 1 - Office
+  space1 = Space.find_or_initialize_by(
+    level: level1,
+    name: "Bureau 101"
+  )
+  space1.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Bureau",
+    area: 25.5,
+    capacity: 4,
+    created_by_name: pm1.full_name
+  )
+  if space1.new_record?
+    space1.save!
+    puts "        ✓ Created space: #{space1.name}"
+  else
+    space1.save!
+  end
+  
+  # Equipment 1 - Air Conditioner
+  equipment1 = Equipment.find_or_initialize_by(
+    space: space1,
+    name: "Climatiseur Daikin AC-500"
+  )
+  equipment1.assign_attributes(
+    organization_id: org1.id,
+    equipment_type: "CVC - Climatisation",
+    manufacturer: "Daikin",
+    model: "AC-500",
+    serial_number: "SN123456789",
+    nominal_power: 3.5,
+    nominal_voltage: 230,
+    current: 16,
+    frequency: 50,
+    weight: 45,
+    dimensions: "80 x 60 x 120 cm",
+    manufacturing_date: Date.new(2024, 1, 15),
+    commissioning_date: Date.new(2024, 3, 1),
+    warranty_end_date: Date.new(2027, 3, 1),
+    next_maintenance_date: Date.new(2025, 3, 15),
+    supplier: "SARL TechnoClim",
+    purchase_price: 2500.00,
+    order_number: "CMD-2024-123",
+    invoice_number: "FAC-2024-456",
+    status: "active",
+    criticality: "high",
+    notes: "Équipement essentiel pour le confort thermique du bureau. Maintenance préventive programmée tous les 6 mois.",
+    created_by_name: pm1.full_name
+  )
+  if equipment1.new_record?
+    equipment1.save!
+    puts "          ✓ Created equipment: #{equipment1.name}"
+  else
+    equipment1.save!
+  end
+  
+  # Equipment 2 - LED Lighting
+  equipment2 = Equipment.find_or_initialize_by(
+    space: space1,
+    name: "Éclairage LED Philips X300"
+  )
+  equipment2.assign_attributes(
+    organization_id: org1.id,
+    equipment_type: "Éclairage LED",
+    manufacturer: "Philips",
+    model: "X300",
+    serial_number: "SN987654321",
+    nominal_power: 50,
+    nominal_voltage: 230,
+    commissioning_date: Date.new(2024, 3, 1),
+    warranty_end_date: Date.new(2029, 3, 1),
+    status: "active",
+    criticality: "medium",
+    created_by_name: pm1.full_name
+  )
+  if equipment2.new_record?
+    equipment2.save!
+    puts "          ✓ Created equipment: #{equipment2.name}"
+  else
+    equipment2.save!
+  end
+  
+  # Space 2 - Meeting Room
+  space2 = Space.find_or_initialize_by(
+    level: level1,
+    name: "Salle de réunion A"
+  )
+  space2.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Salle de réunion",
+    area: 35.0,
+    capacity: 12,
+    created_by_name: pm1.full_name
+  )
+  if space2.new_record?
+    space2.save!
+    puts "        ✓ Created space: #{space2.name}"
+  else
+    space2.save!
+  end
+  
+  # Equipment 3 - Projector
+  equipment3 = Equipment.find_or_initialize_by(
+    space: space2,
+    name: "Vidéoprojecteur Epson EB-2250U"
+  )
+  equipment3.assign_attributes(
+    organization_id: org1.id,
+    equipment_type: "Audiovisuel",
+    manufacturer: "Epson",
+    model: "EB-2250U",
+    serial_number: "SN456789123",
+    commissioning_date: Date.new(2023, 9, 15),
+    warranty_end_date: Date.new(2026, 9, 15),
+    status: "active",
+    criticality: "medium",
+    created_by_name: pm1.full_name
+  )
+  if equipment3.new_record?
+    equipment3.save!
+    puts "          ✓ Created equipment: #{equipment3.name}"
+  else
+    equipment3.save!
+  end
+  
+  # Space 3 - Technical Room
+  space3 = Space.find_or_initialize_by(
+    level: level1,
+    name: "Local technique"
+  )
+  space3.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Local technique",
+    area: 15.0,
+    created_by_name: pm1.full_name
+  )
+  if space3.new_record?
+    space3.save!
+    puts "        ✓ Created space: #{space3.name}"
+  else
+    space3.save!
+  end
+  
+  # Equipment 4 - Boiler
+  equipment4 = Equipment.find_or_initialize_by(
+    space: space3,
+    name: "Chaudière à gaz Viessmann V200"
+  )
+  equipment4.assign_attributes(
+    organization_id: org1.id,
+    equipment_type: "CVC - Chauffage",
+    manufacturer: "Viessmann",
+    model: "Vitodens 200-W",
+    serial_number: "SN789123456",
+    nominal_power: 35,
+    commissioning_date: Date.new(2020, 11, 10),
+    warranty_end_date: Date.new(2025, 11, 10),
+    next_maintenance_date: Date.new(2025, 10, 1),
+    status: "active",
+    criticality: "critical",
+    notes: "Chaudière principale pour le chauffage du bâtiment. Entretien annuel obligatoire.",
+    created_by_name: pm1.full_name
+  )
+  if equipment4.new_record?
+    equipment4.save!
+    puts "          ✓ Created equipment: #{equipment4.name}"
+  else
+    equipment4.save!
+  end
+  
+  # Level 2 - First Floor
+  level2 = Level.find_or_initialize_by(
+    building: building1,
+    name: "1er étage"
+  )
+  level2.assign_attributes(
+    organization_id: org1.id,
+    level_number: 1,
+    altitude: 3.5,
+    area: 1000,
+    created_by_name: pm1.full_name
+  )
+  if level2.new_record?
+    level2.save!
+    puts "      ✓ Created level: #{level2.name}"
+  else
+    level2.save!
+  end
+  
+  # Space 4 - Open Space
+  space4 = Space.find_or_initialize_by(
+    level: level2,
+    name: "Open Space 201"
+  )
+  space4.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Bureau",
+    area: 150.0,
+    capacity: 30,
+    created_by_name: pm1.full_name
+  )
+  if space4.new_record?
+    space4.save!
+    puts "        ✓ Created space: #{space4.name}"
+  else
+    space4.save!
+  end
+  
+  # Equipment 5 - VRV System
+  equipment5 = Equipment.find_or_initialize_by(
+    space: space4,
+    name: "Système VRV Mitsubishi Electric"
+  )
+  equipment5.assign_attributes(
+    organization_id: org1.id,
+    equipment_type: "CVC - Climatisation",
+    manufacturer: "Mitsubishi Electric",
+    model: "VRF City Multi",
+    serial_number: "SN654321789",
+    nominal_power: 28,
+    commissioning_date: Date.new(2022, 5, 20),
+    warranty_end_date: Date.new(2027, 5, 20),
+    next_maintenance_date: Date.new(2025, 5, 1),
+    status: "active",
+    criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  if equipment5.new_record?
+    equipment5.save!
+    puts "          ✓ Created equipment: #{equipment5.name}"
+  else
+    equipment5.save!
+  end
+  
+  # Building 2
+  building2 = Building.find_or_initialize_by(
+    site: site_org1,
+    name: "Bâtiment B",
+    code: "BAT-B"
+  )
+  building2.assign_attributes(
+    organization_id: org1.id,
+    user_id: pm1.id,
+    construction_year: 2015,
+    area: 3000,
+    number_of_levels: 3,
+    status: 'active',
+    created_by_name: pm1.full_name,
+    description: "Bâtiment annexe"
+  )
+  if building2.new_record?
+    building2.save!
+    puts "    ✓ Created building: #{building2.name}"
+  else
+    building2.save!
+  end
+  
+  # Level in Building 2
+  level3 = Level.find_or_initialize_by(
+    building: building2,
+    name: "Rez-de-chaussée"
+  )
+  level3.assign_attributes(
+    organization_id: org1.id,
+    level_number: 0,
+    area: 1000,
+    created_by_name: pm1.full_name
+  )
+  if level3.new_record?
+    level3.save!
+    puts "      ✓ Created level: #{level3.name}"
+  else
+    level3.save!
+  end
+  
+  # Space in Building 2
+  space5 = Space.find_or_initialize_by(
+    level: level3,
+    name: "Accueil et réception"
+  )
+  space5.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Accueil",
+    area: 50.0,
+    created_by_name: pm1.full_name
+  )
+  if space5.new_record?
+    space5.save!
+    puts "        ✓ Created space: #{space5.name}"
+  else
+    space5.save!
+  end
+  
+  # Equipment in Building 2
+  equipment6 = Equipment.find_or_initialize_by(
+    space: space5,
+    name: "Système de contrôle d'accès Salto"
+  )
+  equipment6.assign_attributes(
+    organization_id: org1.id,
+    equipment_type: "Sécurité - Contrôle Accès",
+    manufacturer: "Salto",
+    model: "KS Series",
+    serial_number: "SN321654987",
+    commissioning_date: Date.new(2023, 2, 10),
+    warranty_end_date: Date.new(2028, 2, 10),
+    status: "active",
+    criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  if equipment6.new_record?
+    equipment6.save!
+    puts "          ✓ Created equipment: #{equipment6.name}"
+  else
+    equipment6.save!
   end
 end
 
-# Create equipment for Organization 2 sites
-org2_sites_for_equipment = Site.where(organization_id: org2.id).limit(2).to_a
-org2_sites_for_equipment.each do |site|
-  rand(3..6).times do
-    equipment = Equipment.create!(
-      organization_id: org2.id,
-      site_id: site.id,
-      equipment_type: equipment_types.sample,
-      commissioning_date: Date.today - rand(1..3650).days
-    )
-  end
-end
 
-puts "  ✓ Created #{Equipment.count} equipment items"
+puts "\n📊 Hierarchy Summary:"
+puts "   - Buildings: #{Building.count}"
+puts "   - Levels: #{Level.count}"
+puts "   - Spaces: #{Space.count}"
+puts "   - Equipment: #{Equipment.count}"
+puts "     • Organization 1: #{Equipment.where(organization_id: org1.id).count}"
+puts "     • Organization 2: #{Equipment.where(organization_id: org2.id).count}"
 
 puts "\n✅ Seed completed successfully!"
 puts "\n📝 Test Users Created:"
