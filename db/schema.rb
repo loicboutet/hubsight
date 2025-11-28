@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_27_211338) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_28_053200) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -191,6 +191,45 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_211338) do
     t.index ["user_id"], name: "index_sites_on_user_id"
   end
 
+  create_table "spaces", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "space_type"
+    t.decimal "area", precision: 10, scale: 2
+    t.decimal "ceiling_height", precision: 10, scale: 2
+    t.integer "capacity"
+    t.string "primary_use"
+    t.string "secondary_use"
+    t.string "floor_covering"
+    t.string "wall_covering"
+    t.string "ceiling_type"
+    t.text "present_equipment"
+    t.integer "water_points"
+    t.integer "electrical_outlets"
+    t.string "network_connectivity"
+    t.decimal "natural_lighting", precision: 5, scale: 2
+    t.string "ventilation"
+    t.boolean "heating"
+    t.boolean "air_conditioning"
+    t.boolean "pmr_accessibility"
+    t.boolean "has_windows"
+    t.string "omniclass_code"
+    t.string "grouping_zone"
+    t.integer "level_id", null: false
+    t.integer "organization_id"
+    t.string "created_by_name"
+    t.string "updated_by_name"
+    t.string "import_source"
+    t.datetime "import_date"
+    t.string "import_user"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["level_id", "name"], name: "index_spaces_on_level_id_and_name"
+    t.index ["level_id"], name: "index_spaces_on_level_id"
+    t.index ["organization_id"], name: "index_spaces_on_organization_id"
+    t.index ["space_type"], name: "index_spaces_on_space_type"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -246,4 +285,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_27_211338) do
   add_foreign_key "site_assignments", "sites"
   add_foreign_key "site_assignments", "users"
   add_foreign_key "sites", "users"
+  add_foreign_key "spaces", "levels"
+  add_foreign_key "spaces", "organizations"
 end

@@ -43,7 +43,7 @@
         <div class="stats">
             <div class="stat-card"><div class="stat-number">56</div><div class="stat-label">Total Tasks</div></div>
             <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Brick Phase</div></div>
-            <div class="stat-card"><div class="stat-number">11</div><div class="stat-label">Tasks Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">12</div><div class="stat-label">Tasks Implemented</div></div>
         </div>
         <table>
             <thead>
@@ -211,13 +211,33 @@ ORGANIZATION ISOLATION TEST: Create level in Organization 1's building while log
 DATA SOURCE TRACKING: When creating level, verify created_by_name field populated with current user's full name. When updating, verify updated_by_name field updated. These fields support import tracking (import_source, import_date) for future Excel import functionality.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">16</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create and Manage Spaces</td>
+                    <td class="title-col">PM - Create and Manage Spaces<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Full CRUD functionality for spaces/rooms nested under levels, including type, area, capacity, usage, and technical characteristics</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/levels/:level_id/spaces">/levels/:level_id/spaces</a></td>
+                    <td class="test-col">PREREQUISITES: Task 15 (Levels) must be completed first. Login as portfolio manager (portfolio@hubsight.com / Password123!). 
+
+CREATE TEST: Go to /sites, select a site, click 'Bâtiments' tab, select a building, click on a level. On level detail page, click 'Nouvel Espace' button. Fill REQUIRED field: name (examples: "Bureau 101", "Salle de réunion A", "Local technique"). Fill OPTIONAL fields: space_type (Bureau, Salle de réunion, Local technique, etc.), area in m² (e.g., 25.5), ceiling_height in m (e.g., 2.8), capacity in people (e.g., 10), primary_use (e.g., "Bureaux administratifs"), secondary_use, floor_covering (Moquette, Carrelage, etc.), wall_covering, ceiling_type, water_points (number), electrical_outlets (number), network_connectivity (Câblé, WiFi, etc.), natural_lighting (0-100%), ventilation type. Check comfort options: heating, air_conditioning, has_windows, pmr_accessibility. Add grouping_zone (Administrative, Technique, etc.), omniclass_code (e.g., "13-21 11 00"), notes. Click 'Créer l'Espace'. Verify: success flash message "Espace créé avec succès.", redirected to level detail page showing updated spaces count, new space appears in spaces list on level page.
+
+VIEW/SHOW TEST: From spaces list, click on space name to view detail page. Verify displays: space name, type badge, area (formatted as "XXX m²"), capacity, equipment count, all physical characteristics (floor_covering, wall_covering, ceiling_type, ventilation), technical infrastructure (water_points, electrical_outlets, network_connectivity, natural_lighting%), comfort features (heating, air_conditioning, has_windows, pmr_accessibility shown as Oui/Non), classification (grouping_zone, omniclass_code), parent level/building/site breadcrumb navigation, created_by_name, timestamps.
+
+UPDATE/EDIT TEST: On space detail page, click 'Éditer' button. Modify fields: change name, update space_type, change area, ceiling_height, capacity, update coverings and technical fields. Toggle comfort checkboxes. Click 'Mettre à Jour l'Espace'. Verify: success message "Espace mis à jour avec succès.", redirected to level detail page, changes persist when viewing space again, updated_by_name field populated with current user's name.
+
+LIST/INDEX TEST: From level page, click 'Espaces' button to view all spaces for the level (/levels/:level_id/spaces). Verify spaces display with: name, type badge, area, capacity, equipment count. Each space has 'Voir' and 'Éditer' buttons. Empty state shows "Aucun espace pour ce niveau" with 'Créer le premier espace' button.
+
+DELETE TEST: On space detail page, click 'Supprimer' button. Confirm deletion in dialog. Verify: success message "Espace supprimé avec succès.", redirected to level detail page, space removed from spaces list, level's spaces count decremented.
+
+VALIDATION TESTS: Try creating space without name - should fail with validation error "Name can't be blank". Try creating space with negative area - should fail. Try negative ceiling_height - should fail. Try negative capacity - should fail. Try natural_lighting > 100 or < 0 - should fail. All required field validations must prevent save.
+
+AUTHORIZATION TEST: Logout, login as different portfolio manager (portfolio2@hubsight.com / Password123!). Navigate to a level from Organization 1. Verify redirected with error "Accès non autorisé." Cannot view, create, edit, or delete spaces from other organizations' levels.
+
+ORGANIZATION ISOLATION TEST: Create space in Organization 1's level while logged in as portfolio@hubsight.com. Space should have organization_id matching level's organization_id. Login as portfolio2@hubsight.com, create space in Organization 2's level. Verify each organization sees only their own spaces.
+
+DATA SOURCE TRACKING: When creating space, verify created_by_name field populated with current user's full name. When updating, verify updated_by_name field updated. These fields support import tracking (import_source, import_date) for future Excel import functionality.
+
+LEVEL VIEW INTEGRATION: On level detail page (/levels/:id), verify "Espaces de ce Niveau" section displays real spaces from database (not mock data). Shows first 5 spaces with name, type badge, area, capacity, equipment count. 'Nouvel Espace' and 'Espaces' buttons link to create/list pages. Empty state shows "Aucun espace pour ce niveau".</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>

@@ -2,250 +2,238 @@
 
 <div class="section">
   <!-- Breadcrumb Navigation -->
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
+  <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
+  <% space_icon = capture { render 'shared/hierarchy_icons', type: 'space', size: 16 } %>
   <%= render 'shared/breadcrumb', path: [
-    { name: 'Sites', url: sites_path, icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Tour Montparnasse', url: site_path(1), icon: render('shared/hierarchy_icons', type: 'site', size: 16) },
-    { name: 'Bât. A', url: building_path(1), icon: render('shared/hierarchy_icons', type: 'building', size: 16) },
-    { name: 'RDC', url: level_path(1), icon: render('shared/hierarchy_icons', type: 'level', size: 16) },
-    { name: 'Espaces', url: level_spaces_path(1), icon: render('shared/hierarchy_icons', type: 'space', size: 16) },
-    { name: 'Bureau 101', url: nil, icon: render('shared/hierarchy_icons', type: 'space', size: 16) }
+    { name: 'Sites', url: sites_path, icon: site_icon },
+    { name: @site.name, url: site_path(@site), icon: site_icon },
+    { name: @building.name, url: building_path(@building), icon: building_icon },
+    { name: @level.name, url: level_path(@level), icon: level_icon },
+    { name: @space.name, url: nil, icon: space_icon }
   ] %>
 
   <!-- Header Section -->
-  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; align-items: center; gap: var(--space-md);">
+  <div style="margin-bottom: var(--space-xl); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-md);">
+    <div style="display: flex; align-items: center; gap: var(--space-md); flex: 1; min-width: 300px;">
       <%= render 'shared/hierarchy_icons', type: 'space', size: 32, color: '#8b5cf6' %>
       <div>
-        <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Bureau 101</h2>
-        <p class="typo-body-small" style="color: var(--medium-gray);">RDC - Bâtiment A - Tour Montparnasse</p>
+        <h2 class="typo-h2" style="margin-bottom: var(--space-xs);"><%= @space.name %></h2>
+        <p class="typo-body-small" style="color: var(--medium-gray);">
+          <%= @level.name %> - <%= @building.name %> - <%= @site.name %>
+        </p>
       </div>
     </div>
-    <div style="display: flex; gap: var(--space-md);">
-      <%= link_to edit_space_path(1), class: "typo-btn-small typo-btn-small-primary" do %>
+    <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+      <%= link_to edit_space_path(@space), class: "typo-btn-small typo-btn-small-primary" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
         Éditer
       <% end %>
-      <%= link_to level_path(1), class: "typo-btn-cancel" do %>
+      <%= link_to level_path(@level), class: "typo-btn-cancel" do %>
         ← Retour au Niveau
+      <% end %>
+      <%= link_to space_path(@space), method: :delete, data: { confirm: 'Êtes-vous sûr de vouloir supprimer cet espace ?' }, class: "typo-btn-small typo-btn-small-danger" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Supprimer
       <% end %>
     </div>
   </div>
 
   <!-- Space Information Cards -->
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-xl);">
-    <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #8b5cf6; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Type</p>
-      <p style="color: #8b5cf6; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">Bureau</p>
-    </div>
-    <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #22c55e; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Surface</p>
-      <p style="color: #22c55e; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">25 m²</p>
-    </div>
-    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #f59e0b; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Capacité</p>
-      <p style="color: #f59e0b; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">2 pers.</p>
-    </div>
-    <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #ef4444; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;">
-      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Équipements</p>
-      <p style="color: #ef4444; font-size: 1.4rem; font-weight: 700; margin: 0; line-height: 1.2;">3</p>
+    <% if @space.space_type.present? %>
+      <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #8b5cf6;">
+        <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">Type</p>
+        <p style="color: #8b5cf6; font-size: 1.2rem; font-weight: 700; margin: 0;"><%= @space.space_type %></p>
+      </div>
+    <% end %>
+    
+    <% if @space.area %>
+      <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #22c55e;">
+        <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">Surface</p>
+        <p style="color: #22c55e; font-size: 1.2rem; font-weight: 700; margin: 0;"><%= @space.formatted_area %></p>
+      </div>
+    <% end %>
+    
+    <% if @space.capacity %>
+      <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #3b82f6;">
+        <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">Capacité</p>
+        <p style="color: #3b82f6; font-size: 1.2rem; font-weight: 700; margin: 0;"><%= @space.capacity %> pers.</p>
+      </div>
+    <% end %>
+    
+    <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.1) 100%); padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #ef4444;">
+      <p style="color: var(--medium-gray); font-size: 0.7rem; margin-bottom: 6px; text-transform: uppercase; font-weight: 600;">Équipements</p>
+      <p style="color: #ef4444; font-size: 1.2rem; font-weight: 700; margin: 0;"><%= @space.equipment_count %></p>
     </div>
   </div>
 
-  <div style="background-color: var(--white); border-radius: var(--space-md); ">
-
-    <!-- Equipment Section -->
-    <div style="margin-bottom: var(--space-xl);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
-        <div style="display: flex; align-items: center; gap: var(--space-sm);">
-          <%= render 'shared/hierarchy_icons', type: 'equipment', size: 24, color: '#6b7280' %>
-          <h4 class="typo-h4" style="margin-bottom: 0">Équipements de cet Espace</h4>
-        </div>
-        <%= link_to new_space_equipment_path(1), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Nouvel Équipement
-        <% end %>
-      </div>
-
-      <div style="display: grid; gap: var(--space-md);">
-        <%
-          # Mock equipment data
-          equipment_list = [
-            { id: 1, name: 'Climatiseur Daikin AC-500', type: 'Climatisation', manufacturer: 'Daikin', status: 'Actif', last_maintenance: '15/12/2024' },
-            { id: 2, name: 'Détecteur Incendie FireGuard', type: 'Sécurité Incendie', manufacturer: 'Honeywell', status: 'Actif', last_maintenance: '10/01/2025' },
-            { id: 3, name: 'Luminaire LED Panel 60x60', type: 'Éclairage', manufacturer: 'Philips', status: 'Actif', last_maintenance: '05/01/2025' }
-          ]
-        %>
-
-        <% equipment_list.each do |equipment| %>
-          <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md); border-left: 4px solid var(--coral-primary);">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-              <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
-                  <%= render 'shared/hierarchy_icons', type: 'equipment', size: 20, color: 'var(--coral-primary)' %>
-                  <%= link_to equipment_path(equipment[:id]), style: "text-decoration: none;" do %>
-                    <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= equipment[:name] %></h5>
-                  <% end %>
-                </div>
-                <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
-                  <%= equipment[:type] %> • <%= equipment[:manufacturer] %>
-                </p>
-                
-                <div style="display: flex; gap: var(--space-lg);">
-                  <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                    <span style="display: inline-block; padding: 4px 10px; background-color: #d4edda; color: #155724; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                      <%= equipment[:status] %>
-                    </span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Maintenance: <%= equipment[:last_maintenance] %></span>
-                  </div>
-                </div>
-              </div>
-              
-              <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
-                <%= link_to equipment_path(equipment[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Voir
-                <% end %>
-                <%= link_to edit_equipment_path(equipment[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  Éditer
-                <% end %>
-                <%= link_to equipment_path(equipment[:id]), method: :delete, class: "typo-btn-small typo-btn-small-danger", onclick: "return confirm('ATTENTION : Cette action est irréversible !\\n\\nÊtes-vous sûr de vouloir supprimer définitivement cet équipement ?');" do %>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                  Supprimer
-                <% end %>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Space Details -->
-    <div style="margin-bottom: var(--space-xl);">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        Caractéristiques de l'Espace
-      </h4>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-xl);">
-        <!-- Basic Info -->
-        <div>
-          <h5 class="typo-h5" style="margin-bottom: var(--space-md); color: var(--medium-gray);">Informations de Base</h5>
-          <div style="display: grid; gap: var(--space-md);">
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Type d'Espace</p>
-              <p class="typo-body-small typo-bold">Bureau</p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Surface</p>
-              <p class="typo-body-small typo-bold">25 m²</p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Hauteur sous Plafond</p>
-              <p class="typo-body-small typo-bold">2.8 m</p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Capacité</p>
-              <p class="typo-body-small typo-bold">2 personnes</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Technical Info -->
-        <div>
-          <h5 class="typo-h5" style="margin-bottom: var(--space-md); color: var(--medium-gray);">Équipements Techniques</h5>
-          <div style="display: grid; gap: var(--space-md);">
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Points d'Eau</p>
-              <p class="typo-body-small typo-bold">0</p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Prises Électriques</p>
-              <p class="typo-body-small typo-bold">4</p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Éclairage Naturel</p>
-              <p class="typo-body-small typo-bold">60%</p>
-            </div>
-            <div>
-              <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Ventilation</p>
-              <p class="typo-body-small typo-bold">Mécanique</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Amenities -->
-        <div>
-          <h5 class="typo-h5" style="margin-bottom: var(--space-md); color: var(--medium-gray);">Équipements et Confort</h5>
-          <div style="display: grid; gap: var(--space-sm);">
-            <div style="display: flex; align-items: center; gap: var(--space-xs);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#10b981">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="typo-body-small">Fenêtres</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: var(--space-xs);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#10b981">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="typo-body-small">Chauffage</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: var(--space-xs);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#10b981">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="typo-body-small">Climatisation</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: var(--space-xs);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#10b981">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="typo-body-small">Connectivité Réseau</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: var(--space-xs);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#10b981">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="typo-body-small">Accessibilité PMR</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Finishes -->
+  <!-- Space Details in Grid -->
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl); margin-bottom: var(--space-xl);">
+    <!-- Basic Information -->
     <div>
       <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        Finitions
+        Informations Générales
       </h4>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md);">
+      <div style="display: grid; gap: var(--space-md);">
         <div>
-          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Revêtement de Sol</p>
-          <p class="typo-body-small typo-bold">Moquette</p>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Nom</p>
+          <p class="typo-body-small typo-bold"><%= @space.name %></p>
+        </div>
+        <% if @space.space_type %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Type d'Espace</p>
+            <p class="typo-body-small typo-bold"><%= @space.space_type %></p>
+          </div>
+        <% end %>
+        <% if @space.primary_use %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Utilisation Principale</p>
+            <p class="typo-body-small typo-bold"><%= @space.primary_use %></p>
+          </div>
+        <% end %>
+        <% if @space.secondary_use %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Utilisation Secondaire</p>
+            <p class="typo-body-small typo-bold"><%= @space.secondary_use %></p>
+          </div>
+        <% end %>
+        <% if @space.grouping_zone %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Zone de Regroupement</p>
+            <p class="typo-body-small typo-bold"><%= @space.grouping_zone %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Physical Characteristics -->
+    <div>
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Caractéristiques Physiques
+      </h4>
+      <div style="display: grid; gap: var(--space-md);">
+        <% if @space.area %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Surface</p>
+            <p class="typo-body-small typo-bold"><%= @space.formatted_area %></p>
+          </div>
+        <% end %>
+        <% if @space.ceiling_height %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Hauteur sous Plafond</p>
+            <p class="typo-body-small typo-bold"><%= @space.formatted_ceiling_height %></p>
+          </div>
+        <% end %>
+        <% if @space.floor_covering %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Revêtement de Sol</p>
+            <p class="typo-body-small typo-bold"><%= @space.floor_covering %></p>
+          </div>
+        <% end %>
+        <% if @space.wall_covering %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Revêtement Mural</p>
+            <p class="typo-body-small typo-bold"><%= @space.wall_covering %></p>
+          </div>
+        <% end %>
+        <% if @space.ceiling_type %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Type de Plafond</p>
+            <p class="typo-body-small typo-bold"><%= @space.ceiling_type %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Technical Infrastructure -->
+    <div>
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Infrastructure Technique
+      </h4>
+      <div style="display: grid; gap: var(--space-md);">
+        <% if @space.water_points && @space.water_points > 0 %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Points d'Eau</p>
+            <p class="typo-body-small typo-bold"><%= @space.water_points %></p>
+          </div>
+        <% end %>
+        <% if @space.electrical_outlets && @space.electrical_outlets > 0 %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Prises Électriques</p>
+            <p class="typo-body-small typo-bold"><%= @space.electrical_outlets %></p>
+          </div>
+        <% end %>
+        <% if @space.network_connectivity %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Connectivité Réseau</p>
+            <p class="typo-body-small typo-bold"><%= @space.network_connectivity %></p>
+          </div>
+        <% end %>
+        <% if @space.ventilation %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Ventilation</p>
+            <p class="typo-body-small typo-bold"><%= @space.ventilation %></p>
+          </div>
+        <% end %>
+        <% if @space.natural_lighting %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Éclairage Naturel</p>
+            <p class="typo-body-small typo-bold"><%= @space.natural_lighting %>%</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Comfort & Accessibility -->
+    <div>
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Confort & Accessibilité
+      </h4>
+      <div style="display: grid; gap: var(--space-md);">
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Chauffage</p>
+          <p class="typo-body-small typo-bold"><%= @space.heating ? 'Oui' : 'Non' %></p>
         </div>
         <div>
-          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Revêtement Mural</p>
-          <p class="typo-body-small typo-bold">Peinture</p>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Climatisation</p>
+          <p class="typo-body-small typo-bold"><%= @space.air_conditioning ? 'Oui' : 'Non' %></p>
         </div>
         <div>
-          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Type de Plafond</p>
-          <p class="typo-body-small typo-bold">Plafond suspendu</p>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Fenêtres</p>
+          <p class="typo-body-small typo-bold"><%= @space.has_windows ? 'Oui' : 'Non' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase;">Accessible PMR</p>
+          <p class="typo-body-small typo-bold"><%= @space.pmr_accessibility ? 'Oui' : 'Non' %></p>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Data Source Tracking -->
+  <% if @space.created_by_name || @space.updated_by_name %>
+    <div style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Traçabilité</h4>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md);">
+        <% if @space.created_by_name %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem;">Créé par</p>
+            <p class="typo-body-small typo-bold"><%= @space.created_by_name %> le <%= l(@space.created_at, format: :long) %></p>
+          </div>
+        <% end %>
+        <% if @space.updated_by_name %>
+          <div>
+            <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem;">Dernière modification</p>
+            <p class="typo-body-small typo-bold"><%= @space.updated_by_name %> le <%= l(@space.updated_at, format: :long) %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </div>
