@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_28_070842) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_28_104841) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -132,9 +132,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_070842) do
     t.datetime "import_date"
     t.string "import_user"
     t.text "notes"
+    t.integer "equipment_type_id"
     t.index ["building_id"], name: "index_equipment_on_building_id"
     t.index ["commissioning_date"], name: "index_equipment_on_commissioning_date"
     t.index ["equipment_type"], name: "index_equipment_on_equipment_type"
+    t.index ["equipment_type_id"], name: "index_equipment_on_equipment_type_id"
     t.index ["level_id"], name: "index_equipment_on_level_id"
     t.index ["manufacturer"], name: "index_equipment_on_manufacturer"
     t.index ["organization_id"], name: "index_equipment_on_organization_id"
@@ -142,6 +144,39 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_070842) do
     t.index ["site_id"], name: "index_equipment_on_site_id"
     t.index ["space_id"], name: "index_equipment_on_space_id"
     t.index ["status"], name: "index_equipment_on_status"
+  end
+
+  create_table "equipment_types", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "equipment_type_name", null: false
+    t.string "equipment_trigram"
+    t.string "technical_lot_trigram", null: false
+    t.string "technical_lot", null: false
+    t.string "purchase_subfamily"
+    t.string "function"
+    t.string "omniclass_number"
+    t.string "omniclass_title"
+    t.string "characteristic_1"
+    t.string "characteristic_2"
+    t.string "characteristic_3"
+    t.string "characteristic_4"
+    t.string "characteristic_5"
+    t.string "characteristic_6"
+    t.string "characteristic_7"
+    t.string "characteristic_8"
+    t.string "characteristic_9"
+    t.string "characteristic_10"
+    t.string "status", default: "active", null: false
+    t.text "description"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_equipment_types_on_code", unique: true
+    t.index ["omniclass_number"], name: "index_equipment_types_on_omniclass_number"
+    t.index ["purchase_subfamily"], name: "index_equipment_types_on_purchase_subfamily"
+    t.index ["status"], name: "index_equipment_types_on_status"
+    t.index ["technical_lot"], name: "index_equipment_types_on_technical_lot"
+    t.index ["technical_lot_trigram"], name: "index_equipment_types_on_technical_lot_trigram"
   end
 
   create_table "levels", force: :cascade do |t|
@@ -162,6 +197,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_070842) do
     t.index ["building_id", "level_number"], name: "index_levels_on_building_id_and_level_number"
     t.index ["building_id"], name: "index_levels_on_building_id"
     t.index ["organization_id"], name: "index_levels_on_organization_id"
+  end
+
+  create_table "omniclass_spaces", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "title", null: false
+    t.text "additional_data_1"
+    t.text "additional_data_2"
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_omniclass_spaces_on_code", unique: true
+    t.index ["status"], name: "index_omniclass_spaces_on_status"
+    t.index ["title"], name: "index_omniclass_spaces_on_title"
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -316,6 +364,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_070842) do
   add_foreign_key "buildings", "sites"
   add_foreign_key "buildings", "users"
   add_foreign_key "equipment", "buildings"
+  add_foreign_key "equipment", "equipment_types"
   add_foreign_key "equipment", "levels"
   add_foreign_key "equipment", "spaces"
   add_foreign_key "levels", "buildings"

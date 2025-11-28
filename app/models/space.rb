@@ -24,6 +24,24 @@ class Space < ApplicationRecord
   scope :by_type, ->(space_type) { where(space_type: space_type) }
   scope :ordered, -> { order(:name) }
 
+  # OmniClass classification association (via string code match)
+  def omniclass_classification
+    return nil unless omniclass_code.present?
+    @omniclass_classification ||= OmniclassSpace.find_by(code: omniclass_code)
+  end
+  
+  # Helper to get OmniClass title
+  def omniclass_title
+    omniclass_classification&.title
+  end
+  
+  # Helper to get formatted OmniClass display
+  def omniclass_display
+    return nil unless omniclass_code.present?
+    classification = omniclass_classification
+    classification ? classification.display_name : omniclass_code
+  end
+
   # Virtual attributes for counts
   def equipment_count
     equipment.count

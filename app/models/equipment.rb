@@ -5,6 +5,7 @@ class Equipment < ApplicationRecord
   belongs_to :building, optional: true
   belongs_to :level, optional: true
   belongs_to :site, optional: true
+  belongs_to :equipment_type, optional: true
 
   # Validations
   validates :organization_id, presence: true

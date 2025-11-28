@@ -2,6 +2,12 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+# Load equipment types
+require_relative 'seeds/equipment_types'
+
+# Load OmniClass space classifications
+require_relative 'seeds/omniclass_spaces'
+
 puts "🌱 Starting seed process..."
 
 # ============================================================================
@@ -945,9 +951,11 @@ if site_org1
     space: space1,
     name: "Climatiseur Daikin AC-500"
   )
+  # Find the equipment type
+  climatiseur_type = EquipmentType.find_by(code: 'CVC-007') # Climatiseur split system
   equipment1.assign_attributes(
     organization_id: org1.id,
-    equipment_type: "CVC - Climatisation",
+    equipment_type_id: climatiseur_type&.id,
     manufacturer: "Daikin",
     model: "AC-500",
     serial_number: "SN123456789",
@@ -982,9 +990,11 @@ if site_org1
     space: space1,
     name: "Éclairage LED Philips X300"
   )
+  # Find the equipment type
+  led_type = EquipmentType.find_by(code: 'ELE-005') # Luminaire LED encastré
   equipment2.assign_attributes(
     organization_id: org1.id,
-    equipment_type: "Éclairage LED",
+    equipment_type_id: led_type&.id,
     manufacturer: "Philips",
     model: "X300",
     serial_number: "SN987654321",
@@ -1029,7 +1039,6 @@ if site_org1
   )
   equipment3.assign_attributes(
     organization_id: org1.id,
-    equipment_type: "Audiovisuel",
     manufacturer: "Epson",
     model: "EB-2250U",
     serial_number: "SN456789123",
@@ -1069,9 +1078,11 @@ if site_org1
     space: space3,
     name: "Chaudière à gaz Viessmann V200"
   )
+  # Find the equipment type
+  chaudiere_type = EquipmentType.find_by(code: 'CVC-001') # Chaudière gaz murale
   equipment4.assign_attributes(
     organization_id: org1.id,
-    equipment_type: "CVC - Chauffage",
+    equipment_type_id: chaudiere_type&.id,
     manufacturer: "Viessmann",
     model: "Vitodens 200-W",
     serial_number: "SN789123456",
@@ -1134,9 +1145,11 @@ if site_org1
     space: space4,
     name: "Système VRV Mitsubishi Electric"
   )
+  # Find the equipment type
+  vrv_type = EquipmentType.find_by(code: 'CVC-008') # Climatiseur VRV/VRF
   equipment5.assign_attributes(
     organization_id: org1.id,
-    equipment_type: "CVC - Climatisation",
+    equipment_type_id: vrv_type&.id,
     manufacturer: "Mitsubishi Electric",
     model: "VRF City Multi",
     serial_number: "SN654321789",
@@ -1219,9 +1232,11 @@ if site_org1
     space: space5,
     name: "Système de contrôle d'accès Salto"
   )
+  # Find the equipment type
+  access_control_type = EquipmentType.find_by(code: 'SEC-008') # Centrale de contrôle d'accès
   equipment6.assign_attributes(
     organization_id: org1.id,
-    equipment_type: "Sécurité - Contrôle Accès",
+    equipment_type_id: access_control_type&.id,
     manufacturer: "Salto",
     model: "KS Series",
     serial_number: "SN321654987",
