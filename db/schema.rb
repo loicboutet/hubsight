@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_28_053200) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_28_070842) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -103,10 +103,45 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_053200) do
     t.date "commissioning_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "space_id"
+    t.integer "building_id"
+    t.integer "level_id"
+    t.string "name"
+    t.string "manufacturer"
+    t.string "model"
+    t.string "serial_number"
+    t.string "bdd_reference"
+    t.decimal "nominal_power", precision: 10, scale: 2
+    t.decimal "nominal_voltage", precision: 10, scale: 2
+    t.decimal "current", precision: 10, scale: 2
+    t.decimal "frequency", precision: 10, scale: 2
+    t.decimal "weight", precision: 10, scale: 2
+    t.string "dimensions"
+    t.date "manufacturing_date"
+    t.date "warranty_end_date"
+    t.date "next_maintenance_date"
+    t.string "supplier"
+    t.decimal "purchase_price", precision: 12, scale: 2
+    t.string "order_number"
+    t.string "invoice_number"
+    t.string "status", default: "active"
+    t.string "criticality"
+    t.string "created_by_name"
+    t.string "updated_by_name"
+    t.string "import_source"
+    t.datetime "import_date"
+    t.string "import_user"
+    t.text "notes"
+    t.index ["building_id"], name: "index_equipment_on_building_id"
     t.index ["commissioning_date"], name: "index_equipment_on_commissioning_date"
     t.index ["equipment_type"], name: "index_equipment_on_equipment_type"
+    t.index ["level_id"], name: "index_equipment_on_level_id"
+    t.index ["manufacturer"], name: "index_equipment_on_manufacturer"
     t.index ["organization_id"], name: "index_equipment_on_organization_id"
+    t.index ["serial_number"], name: "index_equipment_on_serial_number"
     t.index ["site_id"], name: "index_equipment_on_site_id"
+    t.index ["space_id"], name: "index_equipment_on_space_id"
+    t.index ["status"], name: "index_equipment_on_status"
   end
 
   create_table "levels", force: :cascade do |t|
@@ -280,6 +315,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_053200) do
   add_foreign_key "buildings", "organizations"
   add_foreign_key "buildings", "sites"
   add_foreign_key "buildings", "users"
+  add_foreign_key "equipment", "buildings"
+  add_foreign_key "equipment", "levels"
+  add_foreign_key "equipment", "spaces"
   add_foreign_key "levels", "buildings"
   add_foreign_key "levels", "organizations"
   add_foreign_key "site_assignments", "sites"

@@ -64,6 +64,9 @@ Rails.application.routes.draw do
   # Dashboard & Analytics
   get 'analytics', to: 'analytics#index'
   
+  # Portfolio Tree View (Hierarchical Navigation)
+  get 'portfolio', to: 'portfolio#index', as: :portfolio
+  
   # Sites Management with nested resources
   resources :sites do
     # Buildings nested under sites
