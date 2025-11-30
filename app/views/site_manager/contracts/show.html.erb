@@ -1,0 +1,292 @@
+<% content_for :header, "Détails du Contrat" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);"><%= @contract.title || @contract.contract_number %></h2>
+      <p class="typo-body-small">Contrat N° <%= @contract.contract_number %> - <span style="color: #999;">Accès en lecture seule</span></p>
+    </div>
+    <div style="display: flex; gap: var(--space-md);">
+      <% if @contract.pdf_attached? %>
+        <%= link_to my_contract_pdf_path(@contract), target: '_blank', class: "typo-btn-small", style: "display: inline-flex; align-items: center; gap: 6px; background-color: #10b981; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 600; transition: background-color 0.2s;" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          Voir PDF
+        <% end %>
+      <% end %>
+      <%= link_to my_contracts_path, class: "typo-btn-cancel" do %>
+        ← Retour à mes contrats
+      <% end %>
+    </div>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    <!-- Contract Header Card -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-xl); border-radius: var(--space-md); color: white; margin-bottom: var(--space-xl);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-lg);">
+        <div>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">NUMÉRO</p>
+          <p class="typo-h4" style="color: white;"><%= @contract.contract_number || '-' %></p>
+        </div>
+        <div>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">TYPE</p>
+          <p class="typo-h4" style="color: white;"><%= @contract.contract_type&.humanize || '-' %></p>
+        </div>
+        <div>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">MONTANT ANNUEL</p>
+          <p class="typo-h4" style="color: white;"><%= number_to_currency(@contract.annual_amount, unit: "€", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount %></p>
+        </div>
+        <div>
+          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">STATUT</p>
+          <p class="typo-h4" style="color: white;"><%= @contract.status&.capitalize || '-' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Site Information (Important for Site Managers) -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-lg); border: 2px solid #667eea;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale); display: flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#667eea" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        Site Concerné
+      </h4>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nom du Site</p>
+          <p class="typo-body typo-bold" style="color: #667eea; font-size: 1.25rem;"><%= @contract.site&.name || @contract.covered_sites || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Adresse</p>
+          <p class="typo-body"><%= @contract.site&.address || @contract.site_address || '-' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Identification Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Identification du Contrat
+      </h4>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Numéro de Contrat</p>
+          <p class="typo-body"><%= @contract.contract_number || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Type de Contrat</p>
+          <p class="typo-body"><%= @contract.contract_type&.humanize || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">État du Contrat</p>
+          <span class="<%= @contract.status == 'active' ? 'typo-badge-success' : 'typo-badge-warning' %>">
+            <%= @contract.status&.capitalize || '-' %>
+          </span>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Famille d'Achats</p>
+          <p class="typo-body"><%= @contract.contract_family || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Devise Applicable</p>
+          <p class="typo-body"><%= @contract.currency || 'EUR' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stakeholders Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Parties Prenantes
+      </h4>
+      
+      <!-- Supplier Organization -->
+      <div style="margin-bottom: var(--space-lg);">
+        <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Organisation Fournisseur / Prestataire</h5>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nom de l'Organisation</p>
+            <p class="typo-body typo-bold"><%= @contract.contractor_organization || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Contact Principal</p>
+            <p class="typo-body"><%= @contract.contractor_contact || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email</p>
+            <p class="typo-body"><%= @contract.contractor_email || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Téléphone</p>
+            <p class="typo-body"><%= @contract.contractor_phone || '-' %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Financial Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Aspects Financiers
+      </h4>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Montant Annualisé HT</p>
+          <p class="typo-body typo-bold" style="color: var(--coral-primary); font-size: 1.25rem;">
+            <%= number_to_currency(@contract.annual_amount, unit: "#{@contract.currency || 'EUR'}", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount %>
+          </p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Fréquence de Facturation</p>
+          <p class="typo-body"><%= @contract.billing_frequency || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Mode de Règlement</p>
+          <p class="typo-body"><%= @contract.billing_method || '-' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Temporality Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Temporalité
+      </h4>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Signature</p>
+          <p class="typo-body"><%= @contract.signature_date&.strftime("%d/%m/%Y") || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Début</p>
+          <p class="typo-body"><%= @contract.start_date&.strftime("%d/%m/%Y") || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Fin</p>
+          <p class="typo-body"><%= @contract.end_date&.strftime("%d/%m/%Y") || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Reconduction Automatique</p>
+          <p class="typo-body"><%= @contract.automatic_renewal ? 'Oui' : 'Non' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency Services Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Services de Dépannage d'Urgence
+      </h4>
+      
+      <!-- Business Days -->
+      <div style="margin-bottom: var(--space-lg);">
+        <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Jours Ouvrés</h5>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Planning et Horaires</p>
+            <p class="typo-body"><%= @contract.business_day_schedule_hours || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délais d'Intervention</p>
+            <p class="typo-body"><%= @contract.business_day_intervention_delay || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email Demande Dépannage</p>
+            <p class="typo-body"><%= @contract.business_day_breakdown_email || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Téléphone Demande Dépannage</p>
+            <p class="typo-body typo-bold" style="color: var(--coral-primary); font-size: 1.125rem;"><%= @contract.business_day_breakdown_phone || '-' %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- On-Call -->
+      <div>
+        <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Astreinte</h5>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Planning et Horaires</p>
+            <p class="typo-body"><%= @contract.on_call_schedule_hours || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délais d'Intervention</p>
+            <p class="typo-body"><%= @contract.on_call_intervention_delay || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email Demande Dépannage</p>
+            <p class="typo-body"><%= @contract.on_call_breakdown_email || '-' %></p>
+          </div>
+          <div>
+            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Téléphone Demande Dépannage</p>
+            <p class="typo-body typo-bold" style="color: #dc2626; font-size: 1.125rem;"><%= @contract.on_call_breakdown_phone || '-' %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services & SLA Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Services et Niveau de Service
+      </h4>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Fréquence d'Intervention</p>
+          <p class="typo-body"><%= @contract.intervention_frequency || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai d'Intervention</p>
+          <p class="typo-body"><%= @contract.intervention_delay || '-' %> <%= 'heures' if @contract.intervention_delay %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Horaires d'Intervention</p>
+          <p class="typo-body"><%= @contract.working_hours || '-' %></p>
+        </div>
+        <div>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Astreinte 24/7</p>
+          <p class="typo-body"><%= @contract.on_call_24_7 ? 'Oui' : 'Non' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDF Document Section -->
+    <% if @contract.pdf_attached? %>
+      <div style="background-color: #ecfdf5; border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg); border-left: 4px solid #10b981;">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); display: flex; align-items: center; gap: var(--space-sm); color: #065f46;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          Document PDF du Contrat
+        </h4>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <p class="typo-body typo-bold" style="color: #065f46;"><%= @contract.pdf_filename %></p>
+            <p class="typo-body-small" style="color: #047857;"><%= @contract.pdf_filesize_mb %> MB</p>
+          </div>
+          <%= link_to my_contract_pdf_path(@contract), target: '_blank', class: "typo-btn-success" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-bottom; margin-right: 4px;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Voir le PDF
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Read-Only Notice -->
+    <div style="background-color: #fff3cd; border-radius: var(--space-md); padding: var(--space-lg); border-left: 4px solid #ffc107;">
+      <div style="display: flex; align-items: start; gap: var(--space-md);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#856404" stroke-width="2" style="flex-shrink: 0;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <p class="typo-body typo-bold" style="color: #856404; margin-bottom: var(--space-xs);">Accès en lecture seule</p>
+          <p class="typo-body-small" style="color: #856404;">Vous disposez d'un accès en consultation uniquement. Pour toute modification, veuillez contacter votre gestionnaire de portefeuille.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

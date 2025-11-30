@@ -62,15 +62,26 @@
               <% end %>
             </li>
 
-            <!-- Sites -->
-            <li>
-              <%= link_to sites_path, class: "user-sidebar-link #{controller_name == 'sites' ? 'active' : ''}", title: "Sites" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-                <span>Sites</span>
-              <% end %>
-            </li>
+            <!-- Sites (All users) or Mes Sites (Site Managers only) -->
+            <% if current_user&.site_manager? %>
+              <li>
+                <%= link_to my_sites_path, class: "user-sidebar-link #{controller_name == 'sites' && action_name == 'index' && request.path == my_sites_path ? 'active' : ''}", title: "Mes Sites" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <span>Mes Sites</span>
+                <% end %>
+              </li>
+            <% else %>
+              <li>
+                <%= link_to sites_path, class: "user-sidebar-link #{controller_name == 'sites' ? 'active' : ''}", title: "Sites" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <span>Sites</span>
+                <% end %>
+              </li>
+            <% end %>
 
             <!-- Vue Arborescente -->
             <li>
@@ -93,15 +104,26 @@
               <% end %>
             </li>
 
-            <!-- Contrats -->
-            <li>
-              <%= link_to contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' ? 'active' : ''}", title: "Contrats" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>Contrats</span>
-              <% end %>
-            </li>
+            <!-- Contrats (All users) or Mes Contrats (Site Managers only) -->
+            <% if current_user&.site_manager? %>
+              <li>
+                <%= link_to my_contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' && request.path.start_with?('/my_contracts') ? 'active' : ''}", title: "Mes Contrats" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Mes Contrats</span>
+                <% end %>
+              </li>
+            <% else %>
+              <li>
+                <%= link_to contracts_path, class: "user-sidebar-link #{controller_name == 'contracts' ? 'active' : ''}", title: "Contrats" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Contrats</span>
+                <% end %>
+              </li>
+            <% end %>
 
             <!-- Économies Potentielles -->
             <li>

@@ -23,6 +23,10 @@ class Contract < ApplicationRecord
   scope :by_family, ->(family) { where(contract_family: family) }
   scope :by_status, ->(status) { where(status: status) }
   scope :in_date_range, ->(start_date, end_date) { where('start_date >= ? AND start_date <= ?', start_date, end_date) }
+  scope :for_site_manager, ->(user) { 
+    where(site_id: user.assigned_sites.pluck(:id))
+      .where(organization_id: user.organization_id) 
+  }
   
   # OCR Scopes
   scope :ocr_pending, -> { where(ocr_status: 'pending') }
