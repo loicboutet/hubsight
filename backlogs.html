@@ -365,7 +365,7 @@ NOTE: Current implementation has 127 representative classifications as proof of 
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">PM - Import Contract Families<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Import contract families and subfamilies (7 families + 20+ subfamilies) from Excel file provided by client</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col">bin/rails console</td>
                     <td class="test-col">PREREQUISITES: Database must be migrated and seeded. Run `bin/rails db:migrate` and `bin/rails db:seed` to ensure contract_families table exists with seed data.
 
 DATABASE VERIFICATION: Open Rails console (`bin/rails console`) and verify: 1) ContractFamily model exists: `ContractFamily.count` should return 42 (7 families + 35 subfamilies). 2) Check families count: `ContractFamily.families_only.count` should return 7. 3) Check subfamilies count: `ContractFamily.subfamilies_only.count` should return 35. 4) Verify data structure: `ContractFamily.first` should display all fields including code, name, family_type, parent_code, description, status, display_order, timestamps.
@@ -389,13 +389,37 @@ DISPLAY ORDER TEST: Verify display_order field exists and families are ordered c
 NOTE: Current implementation has 42 classifications (7 families + 35 subfamilies) as proof of concept. System supports unlimited expansion with additional subfamilies as client data becomes available. See doc/implementation_plan_item_21.md for complete documentation.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">22</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Equipment Search & Autocomplete</td>
+                    <td class="title-col">PM - Equipment Search & Autocomplete<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Search and autocomplete system in equipment database to facilitate manual entry, with filtering by technical lot and function</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/equipment/new">/equipment/new</a> or <a href="/equipment/1/edit">/equipment/:id/edit</a></td>
+                    <td class="test-col">PREREQUISITES: Task 19 (Equipment Types) must be completed. Database must be seeded with equipment types. Login as portfolio manager (portfolio@hubsight.com / Password123!).
+
+BASIC SEARCH TEST: Navigate to /equipment/new or edit an existing equipment (/equipment/:id/edit). Locate "Type d'Équipement" field with autocomplete. Type "clim" (at least 2 characters). Verify loading spinner appears briefly. After 300ms, verify dropdown appears with matching equipment types (climatiseurs). Verify each result shows: CVC badge (blue), equipment code (e.g., CVC-007), equipment name, function/subfamily info. Click on a result. Verify: input field populated with selected type (e.g., "CVC-007 - Climatiseur split mural"), hidden field contains equipment_type_id, detailed info panel displays below showing technical lot, function, subfamily, OmniClass code, characteristics.
+
+TECHNICAL LOT FILTERING TEST: Click "CVC" filter button above search field. Verify button becomes highlighted (blue background, white text). Type "ch" in search. Verify only CVC equipment types shown (chaudières, etc.). Click "ELE" button. Verify filter switches - button highlighted, only electrical equipment shown. Click "ELE" again. Verify filter deactivated - button returns to normal, all types shown. Test all 8 filter buttons (CVC, ELE, PLO, SEC, ASC, CEA, CTE, AUT).
+
+KEYBOARD NAVIGATION TEST: Type search query to show results dropdown. Press Arrow Down key multiple times. Verify selection highlight moves down through results. Press Arrow Up key. Verify selection moves up. Verify selected item scrolls into view if needed. Press Enter key. Verify highlighted item is selected and form updated. Press Escape key. Verify dropdown closes.
+
+MULTIPLE FILTERS TEST: Type "détecteur" in search. Verify both fire and security detectors appear. Click "SEC" filter button. Verify only security detectors shown (SEC badge, red). Clear search and type "pompe". Click "PLO" filter button. Verify only plumbing pumps shown (PLO badge, cyan).
+
+VISUAL ELEMENTS TEST: Verify badge colors match technical lots: CVC=Blue (#3b82f6), ELE=Yellow (#f59e0b), PLO=Cyan (#06b6d4), SEC=Red (#ef4444), ASC=Purple (#a855f7), CEA=Green (#10b981), CTE=Orange (#f97316), AUT=Indigo (#6366f1). Verify loading spinner appears during API call (spinning circle icon). Verify selected equipment info panel displays with gradient background, color-coded badge, complete details (function, subfamily, OmniClass, characteristics).
+
+EDGE CASES TEST: Type single character "c". Verify no dropdown appears (minimum 2 chars required). Type "zzzzzzz" (non-existent). Verify "Aucun type d'équipement trouvé" message with helpful text. Click outside dropdown. Verify dropdown closes. Start typing, then clear input. Verify dropdown hides.
+
+DEBOUNCING TEST: Type rapidly "climatiseur". Verify only ONE API call made after 300ms pause (check browser Network tab). Verify no excessive API calls during typing.
+
+API ENDPOINT TEST: Open browser DevTools Network tab. Type search query. Verify API call to /api/equipment_types/autocomplete with correct parameters (query, technical_lot if filter active). Verify response contains JSON array with equipment types including: id, code, name, display_name, technical_lot_trigram, technical_lot_name, function, omniclass_number, characteristics, lot_badge_color. Verify response limited to 50 results max.
+
+FORM INTEGRATION TEST: Select an equipment type via autocomplete. Fill rest of form (name, manufacturer, etc.). Submit form. Verify equipment created with correct equipment_type_id. View created equipment. Verify equipment type displayed correctly. Edit equipment. Verify autocomplete pre-populated with current equipment type.
+
+ORGANIZATION ISOLATION TEST: Login as portfolio@hubsight.com. Use autocomplete - verify sees all 68 equipment types. Logout, login as portfolio2@hubsight.com. Verify sees same equipment types (shared reference data, not org-scoped).
+
+PERFORMANCE TEST: With all 68 equipment types in database, verify autocomplete responds within 500ms. Verify dropdown renders smoothly with no lag. Verify keyboard navigation is instant. Verify no console errors.
+
+NOTE: Equipment types are reference data (OmniClass Table 23 classifications) shared across organizations. The actual equipment instances are organization-scoped. See doc/implementation_plan_item_22.md for complete technical documentation.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>

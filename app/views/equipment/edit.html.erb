@@ -162,37 +162,103 @@
         </h4>
         
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-          <div>
+          <!-- Equipment Type Autocomplete -->
+          <div style="grid-column: 1 / -1;">
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
               Type d'Équipement <span style="color: var(--coral-primary);">*</span>
             </label>
-            <select name="equipment[equipment_type_id]" required style="width: 100%;">
-              <option value="">Sélectionner...</option>
-              <optgroup label="CVC - HVAC">
-                <option value="1" selected>Climatiseur</option>
-                <option value="2">Chaudière</option>
-                <option value="3">VMC - Ventilation</option>
-                <option value="4">Radiateur</option>
-              </optgroup>
-              <optgroup label="ELE - Électricité">
-                <option value="5">Luminaire</option>
-                <option value="6">Tableau électrique</option>
-                <option value="7">Onduleur</option>
-              </optgroup>
-              <optgroup label="PLO - Plomberie">
-                <option value="8">Chauffe-eau</option>
-                <option value="9">Pompe</option>
-              </optgroup>
-              <optgroup label="SEC - Sécurité">
-                <option value="10">Détecteur incendie</option>
-                <option value="11">Extincteur</option>
-                <option value="12">Alarme intrusion</option>
-              </optgroup>
-              <optgroup label="ASC - Ascenseurs">
-                <option value="13">Ascenseur</option>
-                <option value="14">Monte-charge</option>
-              </optgroup>
-            </select>
+            
+            <div data-controller="equipment-type-autocomplete">
+              <!-- Technical Lot Filter Buttons -->
+              <div data-equipment-type-autocomplete-target="filterButtons" style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                <button type="button" data-lot="CVC" data-action="click->equipment-type-autocomplete#filterByLot" 
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  CVC
+                </button>
+                <button type="button" data-lot="ELE" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  ELE
+                </button>
+                <button type="button" data-lot="PLO" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  PLO
+                </button>
+                <button type="button" data-lot="SEC" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  SEC
+                </button>
+                <button type="button" data-lot="ASC" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  ASC
+                </button>
+                <button type="button" data-lot="CEA" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  CEA
+                </button>
+                <button type="button" data-lot="CTE" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  CTE
+                </button>
+                <button type="button" data-lot="AUT" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  AUT
+                </button>
+              </div>
+              
+              <!-- Search Input with Loading Indicator -->
+              <div style="position: relative;">
+                <input 
+                  type="text" 
+                  data-equipment-type-autocomplete-target="input"
+                  data-action="input->equipment-type-autocomplete#search keydown->equipment-type-autocomplete#handleKeydown"
+                  placeholder="Rechercher un type d'équipement (ex: climatiseur, chaudière...)"
+                  value="CVC-007 - Climatiseur split mural"
+                  style="width: 100%; padding-right: 40px;"
+                  autocomplete="off"
+                />
+                <input 
+                  type="hidden" 
+                  name="equipment[equipment_type_id]"
+                  value="7"
+                  data-equipment-type-autocomplete-target="hiddenField"
+                />
+                
+                <!-- Loading Spinner -->
+                <div data-equipment-type-autocomplete-target="loadingIndicator" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: none;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                    <path d="M12 2a10 10 0 0 1 10 10" opacity="0.75">
+                      <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                    </path>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Suggestions Dropdown -->
+              <div 
+                data-equipment-type-autocomplete-target="suggestions"
+                style="
+                  display: none;
+                  position: absolute;
+                  z-index: 1000;
+                  background: white;
+                  border: 1px solid #d1d5db;
+                  border-radius: 8px;
+                  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                  max-height: 400px;
+                  overflow-y: auto;
+                  margin-top: 4px;
+                  width: 100%;
+                ">
+              </div>
+              
+              <!-- Selected Equipment Type Info -->
+              <div data-equipment-type-autocomplete-target="selectedInfo" style="display: none;"></div>
+            </div>
+            
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-sm);">
+              💡 Tapez au moins 2 caractères pour rechercher. Utilisez les filtres pour affiner par lot technique.
+            </p>
           </div>
 
           <div>

@@ -270,6 +270,9 @@ Rails.application.routes.draw do
     get 'contracts/:id/linked_equipment', to: 'contracts#linked_equipment'
     get 'equipment/:id/contracts', to: 'equipment#contracts'
     
+    # Equipment Types autocomplete/search
+    get 'equipment_types/autocomplete', to: 'equipment_types#autocomplete'
+    
     # Autocomplete endpoints
     namespace :autocomplete do
       get :equipment_types
