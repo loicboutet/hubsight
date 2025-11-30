@@ -8,6 +8,9 @@ require_relative 'seeds/equipment_types'
 # Load OmniClass space classifications
 require_relative 'seeds/omniclass_spaces'
 
+# Load contract families
+require_relative 'seeds/contract_families'
+
 puts "🌱 Starting seed process..."
 
 # ============================================================================
