@@ -80,7 +80,18 @@
 
         <div>
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Type d'Équipement</p>
-          <p class="typo-body-small typo-bold">Climatiseur (CVC - HVAC)</p>
+          <% if @equipment.equipment_type %>
+            <p class="typo-body-small typo-bold">
+              <%= @equipment.equipment_type.equipment_type_name %>
+              <% if @equipment.equipment_type.technical_lot_trigram.present? %>
+                <span style="display: inline-block; margin-left: 8px; padding: 4px 8px; background-color: <%= case @equipment.equipment_type.lot_badge_color when 'blue' then '#3b82f6' when 'yellow' then '#f59e0b' when 'cyan' then '#06b6d4' when 'red' then '#ef4444' when 'purple' then '#a855f7' when 'green' then '#10b981' when 'orange' then '#f97316' when 'indigo' then '#6366f1' else '#6b7280' end %>; color: white; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                  <%= @equipment.equipment_type.technical_lot_trigram %>
+                </span>
+              <% end %>
+            </p>
+          <% else %>
+            <p class="typo-body-small typo-bold"><%= @equipment.equipment_type || "Non spécifié" %></p>
+          <% end %>
         </div>
 
         <div>
@@ -105,12 +116,29 @@
 
         <div>
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Référence OmniClass</p>
-          <p class="typo-body-small typo-bold">23-35 17 13 (Air Conditioning Equipment)</p>
+          <% if @equipment.equipment_type&.omniclass_number.present? %>
+            <p class="typo-body-small typo-bold">
+              <%= @equipment.equipment_type.omniclass_number %>
+              <% if @equipment.equipment_type.omniclass_title.present? %>
+                <span style="color: var(--medium-gray); font-weight: normal;">(<%= @equipment.equipment_type.omniclass_title %>)</span>
+              <% end %>
+            </p>
+          <% else %>
+            <p class="typo-body-small" style="color: var(--medium-gray);">Non spécifié</p>
+          <% end %>
         </div>
 
         <div>
           <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Sous-domaine Achat</p>
-          <p class="typo-body-small typo-bold">CVC - Climatisation</p>
+          <% if @equipment.equipment_type&.purchase_subfamily.present? %>
+            <p class="typo-body-small typo-bold">
+              <%= @equipment.equipment_type.technical_lot_trigram %> - <%= @equipment.equipment_type.purchase_subfamily %>
+            </p>
+          <% elsif @equipment.equipment_type&.technical_lot.present? %>
+            <p class="typo-body-small typo-bold"><%= @equipment.equipment_type.technical_lot %></p>
+          <% else %>
+            <p class="typo-body-small" style="color: var(--medium-gray);">Non spécifié</p>
+          <% end %>
         </div>
 
         <div>

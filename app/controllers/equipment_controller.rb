@@ -76,6 +76,7 @@ class EquipmentController < ApplicationController
       :space_id,
       :name,
       :equipment_type,
+      :equipment_type_id,
       :equipment_category,
       :manufacturer,
       :model,

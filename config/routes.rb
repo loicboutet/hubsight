@@ -100,15 +100,16 @@ Rails.application.routes.draw do
   
   # Contract Management
   resources :contracts do
-    member do
-      get :pdf
-      get :validate
-      patch :validate, action: :confirm_validation
-      get :compare # BRIQUE 2 - Compare with reference prices
-    end
     collection do
-      get :upload
-      post :upload, action: :process_upload
+      get 'upload'
+      post 'process_upload'
+      get 'compare'
+    end
+    member do
+      get 'validate'
+      post 'confirm_validation'
+      get 'pdf'
+      delete 'delete_pdf'
     end
   end
   

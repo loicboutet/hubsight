@@ -2,10 +2,16 @@ class Contract < ApplicationRecord
   belongs_to :organization
   belongs_to :site, optional: true
 
+  # ActiveStorage attachment for PDF document
+  has_one_attached :pdf_document
+
   # Validations
   validates :organization_id, presence: true
   validates :status, inclusion: { in: %w[active expired pending suspended] }
   validates :annual_amount, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  
+  # PDF validations
+  validate :pdf_document_validation, if: -> { pdf_document.attached? }
 
   # Scopes
   scope :active, -> { where(status: 'active') }
@@ -45,5 +51,40 @@ class Contract < ApplicationRecord
   # Check if contract has a valid family classification
   def has_family_classification?
     contract_family_object.present?
+  end
+
+  # PDF helper methods
+  def pdf_attached?
+    pdf_document.attached?
+  end
+
+  def pdf_filename
+    pdf_document.filename.to_s if pdf_attached?
+  end
+
+  def pdf_filesize
+    pdf_document.byte_size if pdf_attached?
+  end
+
+  def pdf_filesize_mb
+    (pdf_filesize.to_f / 1.megabyte).round(2) if pdf_attached?
+  end
+
+  def pdf_url
+    Rails.application.routes.url_helpers.rails_blob_path(pdf_document, disposition: "attachment") if pdf_attached?
+  end
+
+  private
+
+  def pdf_document_validation
+    # Validate content type
+    unless pdf_document.content_type == 'application/pdf'
+      errors.add(:pdf_document, 'doit être un fichier PDF')
+    end
+
+    # Validate file size (max 10MB)
+    if pdf_document.byte_size > 10.megabytes
+      errors.add(:pdf_document, 'ne doit pas dépasser 10 Mo')
+    end
   end
 end

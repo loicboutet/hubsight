@@ -422,22 +422,22 @@ PERFORMANCE TEST: With all 68 equipment types in database, verify autocomplete r
 NOTE: Equipment types are reference data (OmniClass Table 23 classifications) shared across organizations. The actual equipment instances are organization-scoped. See doc/implementation_plan_item_22.md for complete technical documentation.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">23</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Link Equipment to OmniClass</td>
+                    <td class="title-col">PM - Link Equipment to OmniClass<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Manual linking interface for associating equipment with OmniClass classification codes via search system</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/equipment/new">/equipment/new</a> or <a href="/equipment/1/edit">/equipment/:id/edit</a></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Go to a space (e.g., /spaces/1), click "Nouvel Équipement". In "Type d'Équipement" field, type "clim" (min 2 chars). Verify autocomplete dropdown appears with CVC badge (blue). Click "CVC" filter button - verify shows only CVC types. Select "CVC-007 - Climatiseur split mural". Verify selected info panel displays with: technical lot badge, equipment name/code, function, OmniClass code (23-35 17 13), purchase subfamily, characteristics. Verify hidden field has equipment_type_id. Fill name "Climatiseur Daikin" and manufacturer "Daikin". Submit form. Verify equipment created. On show page (/equipment/:id), verify displays: Type "Climatiseur split mural" with CVC badge (blue), OmniClass "23-35 17 13 (Split System Air Conditioners)", Sous-domaine "CVC - CLIMATISATION". Test edit: click "Éditer", verify autocomplete pre-populated. Change type by searching "chaud", select "CVC-001 - Chaudière gaz murale". Submit. Verify show page updates with new OmniClass. Test keyboard: type search, use Arrow Down/Up to navigate, Enter to select, Escape to close. Test filters: click each of 8 buttons (CVC, ELE, PLO, SEC, ASC, CEA, CTE, AUT), verify filtering works. Test debouncing: type rapidly "climatiseur" in DevTools Network tab, verify only 1 API call after 300ms. Test nil handling: view equipment without equipment_type_id, verify shows "Non spécifié" gracefully.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">24</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Upload PDF Contracts</td>
+                    <td class="title-col">PM - Upload PDF Contracts<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Upload multi-page PDF contract documents with progress indicator and file validation (max size, file type)</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/contracts/new">/contracts/new</a></td>
+                    <td class="test-col">Navigate to http://localhost:3000/contracts/new. Scroll to "📄 Document PDF du Contrat" section (orange/yellow gradient background). TEST DRAG & DROP: Drag a PDF file (under 10MB) over the upload zone - verify zone changes color with visual feedback. Drop the file - verify file preview appears showing filename and size. TEST CLICK UPLOAD: Click orange "Sélectionner un fichier" button - verify file picker opens. Select a PDF - verify preview appears. TEST VALIDATION (Wrong Type): Try uploading .jpg/.docx/.txt - verify error "Le fichier doit être au format PDF" appears and file rejected. TEST VALIDATION (Too Large): Try uploading PDF >10MB - verify error "Le fichier ne doit pas dépasser 10 Mo" appears. TEST REMOVE: Upload valid PDF, click X button on preview - verify preview disappears. TEST COMPLETE SUBMISSION: Fill required contract fields (Type: "Contrat initial", Numéro: "TEST-2024-001", Titre: "Test Upload", Type de Contrat, Famille d'Achats, Montant Annuel HT: "10000", dates). Upload valid PDF. Click "Créer le Contrat". Verify contract created with PDF attached. TEST VIEW/DOWNLOAD: Navigate to edit page, scroll to PDF section. Verify "PDF Actuel" section shows with green background, filename, size. Click "Voir" - verify PDF opens in new tab. Click "Télécharger" - verify PDF downloads. TEST REPLACE: Upload different PDF on edit page, save - verify new PDF replaces old one. Verify button styling matches app design (rounded borders, proper padding, 3.315rem height). See doc/implementation_plan_item_24.md for complete test steps.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>

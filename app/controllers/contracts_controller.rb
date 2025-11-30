@@ -292,8 +292,14 @@ class ContractsController < ApplicationController
   end
 
   def create
-    # Handle contract creation
-    redirect_to contracts_path, notice: "Contrat créé avec succès"
+    @contract = Contract.new(contract_params)
+    @contract.organization_id = current_user.organization_id if current_user
+    
+    if @contract.save
+      redirect_to contracts_path, notice: "Contrat créé avec succès"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -362,8 +368,13 @@ class ContractsController < ApplicationController
   end
 
   def update
-    # Handle contract update
-    redirect_to contract_path(params[:id]), notice: "Contrat mis à jour avec succès"
+    @contract = Contract.find(params[:id])
+    
+    if @contract.update(contract_params)
+      redirect_to contract_path(@contract.id), notice: "Contrat mis à jour avec succès"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -464,5 +475,77 @@ class ContractsController < ApplicationController
   def process_upload
     # Handle contract upload
     redirect_to contracts_path, notice: "Contrat importé avec succès"
+  end
+
+  def delete_pdf
+    @contract = Contract.find(params[:id])
+    
+    # Check authorization
+    unless @contract.organization_id == current_user.organization_id
+      redirect_to contracts_path, alert: "Accès non autorisé"
+      return
+    end
+    
+    if @contract.pdf_document.attached?
+      @contract.pdf_document.purge
+      redirect_to edit_contract_path(@contract), notice: "PDF supprimé avec succès"
+    else
+      redirect_to edit_contract_path(@contract), alert: "Aucun PDF à supprimer"
+    end
+  end
+
+  private
+
+  def contract_params
+    params.require(:contract).permit(
+      :contract_classification,
+      :parent_contract_id,
+      :pdf_document,
+      :contract_number,
+      :title,
+      :contract_type,
+      :purchase_family,
+      :purchase_subfamily,
+      :status,
+      :object,
+      :contractor_organization,
+      :contractor_contact,
+      :contractor_email,
+      :contractor_phone,
+      :contract_manager,
+      :managing_department,
+      :site_id,
+      :covered_sites,
+      :covered_buildings,
+      :equipment_type,
+      :equipment_count,
+      :geographic_areas,
+      :annual_amount_excl_tax,
+      :annual_amount_incl_tax,
+      :billing_method,
+      :billing_frequency,
+      :revision_index,
+      :revision_conditions,
+      :signature_date,
+      :start_date,
+      :end_date,
+      :initial_duration,
+      :renewal_duration,
+      :renewal_count,
+      :automatic_renewal,
+      :termination_notice,
+      :next_deadline,
+      :service_nature,
+      :intervention_frequency,
+      :intervention_delay,
+      :resolution_delay,
+      :working_hours,
+      :on_call_24_7,
+      :service_level,
+      :spare_parts_included,
+      :intervention_report_required,
+      :kpi,
+      :notes
+    )
   end
 end
