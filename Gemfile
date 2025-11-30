@@ -69,3 +69,7 @@ end
 
 gem "devise", "~> 4.9"
 gem "kaminari", "~> 1.2"
+
+# OCR and PDF processing
+gem "pdf-reader", "~> 2.12"  # FREE text extraction from digital PDFs
+gem "httparty", "~> 0.21"    # HTTP client for future Mistral API integration

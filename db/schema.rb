@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_30_172309) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_30_185113) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -133,7 +133,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_172309) do
     t.date "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "ocr_text"
+    t.string "ocr_status", default: "pending"
+    t.datetime "ocr_processed_at"
+    t.text "ocr_error_message"
+    t.string "ocr_provider"
+    t.integer "ocr_page_count"
     t.index ["contract_family"], name: "index_contracts_on_contract_family"
+    t.index ["ocr_processed_at"], name: "index_contracts_on_ocr_processed_at"
+    t.index ["ocr_provider"], name: "index_contracts_on_ocr_provider"
+    t.index ["ocr_status"], name: "index_contracts_on_ocr_status"
     t.index ["organization_id"], name: "index_contracts_on_organization_id"
     t.index ["site_id"], name: "index_contracts_on_site_id"
     t.index ["start_date"], name: "index_contracts_on_start_date"

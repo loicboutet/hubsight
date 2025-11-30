@@ -43,7 +43,7 @@
         <div class="stats">
             <div class="stat-card"><div class="stat-number">56</div><div class="stat-label">Total Tasks</div></div>
             <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Brick Phase</div></div>
-            <div class="stat-card"><div class="stat-number">15</div><div class="stat-label">Tasks Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">16</div><div class="stat-label">Tasks Implemented</div></div>
         </div>
         <table>
             <thead>
@@ -440,13 +440,13 @@ NOTE: Equipment types are reference data (OmniClass Table 23 classifications) sh
                     <td class="test-col">Navigate to http://localhost:3000/contracts/new. Scroll to "📄 Document PDF du Contrat" section (orange/yellow gradient background). TEST DRAG & DROP: Drag a PDF file (under 10MB) over the upload zone - verify zone changes color with visual feedback. Drop the file - verify file preview appears showing filename and size. TEST CLICK UPLOAD: Click orange "Sélectionner un fichier" button - verify file picker opens. Select a PDF - verify preview appears. TEST VALIDATION (Wrong Type): Try uploading .jpg/.docx/.txt - verify error "Le fichier doit être au format PDF" appears and file rejected. TEST VALIDATION (Too Large): Try uploading PDF >10MB - verify error "Le fichier ne doit pas dépasser 10 Mo" appears. TEST REMOVE: Upload valid PDF, click X button on preview - verify preview disappears. TEST COMPLETE SUBMISSION: Fill required contract fields (Type: "Contrat initial", Numéro: "TEST-2024-001", Titre: "Test Upload", Type de Contrat, Famille d'Achats, Montant Annuel HT: "10000", dates). Upload valid PDF. Click "Créer le Contrat". Verify contract created with PDF attached. TEST VIEW/DOWNLOAD: Navigate to edit page, scroll to PDF section. Verify "PDF Actuel" section shows with green background, filename, size. Click "Voir" - verify PDF opens in new tab. Click "Télécharger" - verify PDF downloads. TEST REPLACE: Upload different PDF on edit page, save - verify new PDF replaces old one. Verify button styling matches app design (rounded borders, proper padding, 3.315rem height). See doc/implementation_plan_item_24.md for complete test steps.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">25</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - OCR Text Extraction (Mistral)</td>
+                    <td class="title-col">PM - OCR Text Extraction (Mistral)<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Integrate Mistral OCR API for text extraction from uploaded PDF documents (~€0.10/contract cost)</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/contracts/:id">/contracts/:id</a> (see OCR status section)</td>
+                    <td class="test-col">PREREQUISITES: Task 24 (PDF Upload) must be completed. Run `bin/rails db:migrate` to ensure OCR fields exist. Login as portfolio manager (portfolio@hubsight.com / Password123!). CREATE CONTRACT WITH PDF: Go to /contracts/new, fill required fields, upload a digital PDF (Word export, etc.), submit. View contract show page - scroll to "Extraction OCR du PDF" section. VERIFY AUTO-TRIGGER: OCR should auto-trigger in background. Refresh page after a few seconds. STATUS DISPLAY: Verify status badge shows "Terminé" (green) for success or "En attente" (yellow) for pending. Verify provider shows "PDF Reader (Gratuit)" (FREE). VIEW EXTRACTED TEXT: If completed, click "Voir le texte extrait" - verify text was extracted correctly. RETRY FEATURE: For failed extractions, verify "🔄 Relancer l'extraction" button appears. Click it to manually retry. CONSOLE TEST: Run `bin/rails console`, then `ExtractContractOcrJob.perform_now(Contract.last.id)` to manually trigger. Check `Contract.last.ocr_status` should be "completed", `Contract.last.ocr_text` should contain extracted text. MISTRAL MIGRATION: System ready for Mistral - when API key added to credentials, automatically switches from pdf-reader to Mistral with zero code changes. See doc/implementation_plan_item_25.md for complete documentation.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>

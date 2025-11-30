@@ -110,6 +110,7 @@ Rails.application.routes.draw do
       post 'confirm_validation'
       get 'pdf'
       delete 'delete_pdf'
+      post 'retry_ocr'  # POST /contracts/:id/retry_ocr
     end
   end
   

@@ -494,6 +494,22 @@ class ContractsController < ApplicationController
     end
   end
 
+  def retry_ocr
+    @contract = Contract.find(params[:id])
+    
+    # Check authorization
+    unless @contract.organization_id == current_user.organization_id
+      redirect_to contracts_path, alert: "Accès non autorisé"
+      return
+    end
+    
+    if @contract.retry_ocr!
+      redirect_to contract_path(@contract), notice: "Extraction OCR relancée avec succès"
+    else
+      redirect_to contract_path(@contract), alert: "Impossible de relancer l'extraction OCR. Aucun PDF attaché."
+    end
+  end
+
   private
 
   def contract_params
