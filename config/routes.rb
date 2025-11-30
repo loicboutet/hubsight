@@ -111,6 +111,7 @@ Rails.application.routes.draw do
       get 'pdf'
       delete 'delete_pdf'
       post 'retry_ocr'  # POST /contracts/:id/retry_ocr
+      post 'retry_extraction'  # POST /contracts/:id/retry_extraction
     end
   end
   

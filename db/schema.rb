@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_30_185113) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_30_191541) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -139,14 +139,98 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_185113) do
     t.text "ocr_error_message"
     t.string "ocr_provider"
     t.integer "ocr_page_count"
+    t.string "title"
+    t.string "contract_type"
+    t.string "purchase_subfamily"
+    t.text "contract_object"
+    t.text "detailed_description"
+    t.string "contracting_method"
+    t.string "public_reference"
+    t.string "contractor_organization_name"
+    t.string "contractor_contact_name"
+    t.string "contractor_agency_name"
+    t.string "client_organization_name"
+    t.string "client_contact_name"
+    t.string "managing_department"
+    t.string "monitoring_manager"
+    t.string "contractor_phone"
+    t.string "contractor_email"
+    t.string "client_contact_email"
+    t.json "covered_sites", default: []
+    t.json "covered_buildings", default: []
+    t.json "covered_equipment_types", default: []
+    t.text "covered_equipment_list"
+    t.integer "equipment_count"
+    t.string "geographic_areas"
+    t.text "building_names"
+    t.string "floor_levels"
+    t.text "specific_zones"
+    t.string "technical_lot"
+    t.string "equipment_categories"
+    t.text "coverage_description"
+    t.text "exclusions"
+    t.text "special_conditions"
+    t.text "scope_notes"
+    t.decimal "annual_amount_ht", precision: 12, scale: 2
+    t.decimal "annual_amount_ttc", precision: 12, scale: 2
+    t.decimal "monthly_amount", precision: 12, scale: 2
+    t.string "billing_method"
+    t.string "billing_frequency"
+    t.string "payment_terms"
+    t.text "revision_conditions"
+    t.string "revision_index"
+    t.string "revision_frequency"
+    t.text "late_payment_penalties"
+    t.string "financial_guarantee"
+    t.decimal "deposit_amount", precision: 12, scale: 2
+    t.date "price_revision_date"
+    t.date "last_amount_update"
+    t.string "budget_code"
+    t.date "signature_date"
+    t.date "execution_start_date"
+    t.integer "initial_duration_months"
+    t.integer "renewal_duration_months"
+    t.integer "renewal_count"
+    t.boolean "automatic_renewal", default: false
+    t.integer "notice_period_days"
+    t.date "next_deadline_date"
+    t.date "last_renewal_date"
+    t.date "termination_date"
+    t.text "service_nature"
+    t.string "intervention_frequency"
+    t.integer "intervention_delay_hours"
+    t.integer "resolution_delay_hours"
+    t.string "working_hours"
+    t.boolean "on_call_24_7", default: false
+    t.decimal "sla_percentage", precision: 5, scale: 2
+    t.json "kpis", default: []
+    t.boolean "spare_parts_included"
+    t.boolean "supplies_included"
+    t.boolean "report_required"
+    t.json "appendix_documents", default: []
+    t.string "extraction_status"
+    t.json "extraction_data"
+    t.string "extraction_provider"
+    t.string "extraction_model"
+    t.decimal "extraction_confidence", precision: 5, scale: 2
+    t.datetime "extraction_processed_at"
+    t.text "extraction_notes"
     t.index ["contract_family"], name: "index_contracts_on_contract_family"
+    t.index ["contract_type"], name: "index_contracts_on_contract_type"
+    t.index ["contractor_organization_name"], name: "index_contracts_on_contractor_organization_name"
+    t.index ["execution_start_date"], name: "index_contracts_on_execution_start_date"
+    t.index ["extraction_processed_at"], name: "index_contracts_on_extraction_processed_at"
+    t.index ["extraction_status"], name: "index_contracts_on_extraction_status"
+    t.index ["next_deadline_date"], name: "index_contracts_on_next_deadline_date"
     t.index ["ocr_processed_at"], name: "index_contracts_on_ocr_processed_at"
     t.index ["ocr_provider"], name: "index_contracts_on_ocr_provider"
     t.index ["ocr_status"], name: "index_contracts_on_ocr_status"
     t.index ["organization_id"], name: "index_contracts_on_organization_id"
+    t.index ["signature_date"], name: "index_contracts_on_signature_date"
     t.index ["site_id"], name: "index_contracts_on_site_id"
     t.index ["start_date"], name: "index_contracts_on_start_date"
     t.index ["status"], name: "index_contracts_on_status"
+    t.index ["title"], name: "index_contracts_on_title"
   end
 
   create_table "equipment", force: :cascade do |t|

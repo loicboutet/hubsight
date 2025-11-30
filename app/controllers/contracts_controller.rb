@@ -509,6 +509,22 @@ class ContractsController < ApplicationController
       redirect_to contract_path(@contract), alert: "Impossible de relancer l'extraction OCR. Aucun PDF attaché."
     end
   end
+  
+  def retry_extraction
+    @contract = Contract.find(params[:id])
+    
+    # Check authorization
+    unless @contract.organization_id == current_user.organization_id
+      redirect_to contracts_path, alert: "Accès non autorisé"
+      return
+    end
+    
+    if @contract.retry_extraction!
+      redirect_to contract_path(@contract), notice: "Extraction LLM relancée avec succès"
+    else
+      redirect_to contract_path(@contract), alert: "Impossible de relancer l'extraction. OCR non complété."
+    end
+  end
 
   private
 

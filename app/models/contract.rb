@@ -10,12 +10,14 @@ class Contract < ApplicationRecord
   validates :status, inclusion: { in: %w[active expired pending suspended] }
   validates :annual_amount, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :ocr_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
+  validates :extraction_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
   
   # PDF validations
   validate :pdf_document_validation, if: -> { pdf_document.attached? }
 
   # Callbacks
   after_commit :trigger_ocr_extraction, on: [:create, :update], if: :should_trigger_ocr?
+  after_commit :trigger_llm_extraction, on: [:update], if: :should_trigger_llm?
 
   # Scopes
   scope :active, -> { where(status: 'active') }
@@ -33,6 +35,13 @@ class Contract < ApplicationRecord
   scope :ocr_processing, -> { where(ocr_status: 'processing') }
   scope :ocr_completed, -> { where(ocr_status: 'completed') }
   scope :ocr_failed, -> { where(ocr_status: 'failed') }
+  
+  # LLM Extraction Scopes
+  scope :extraction_pending, -> { where(extraction_status: 'pending') }
+  scope :extraction_processing, -> { where(extraction_status: 'processing') }
+  scope :extraction_completed, -> { where(extraction_status: 'completed') }
+  scope :extraction_failed, -> { where(extraction_status: 'failed') }
+  scope :needs_extraction, -> { ocr_completed.where(extraction_status: [nil, 'pending', 'failed']) }
 
   # Contract Family Integration Methods
   
@@ -137,6 +146,66 @@ class Contract < ApplicationRecord
     ExtractContractOcrJob.perform_later(id)
     true
   end
+  
+  # LLM Extraction helper methods
+  def extraction_completed?
+    extraction_status == 'completed'
+  end
+  
+  def extraction_in_progress?
+    extraction_status == 'processing'
+  end
+  
+  def extraction_pending?
+    extraction_status == 'pending'
+  end
+  
+  def extraction_failed?
+    extraction_status == 'failed'
+  end
+  
+  def needs_extraction?
+    ocr_completed? && (extraction_status.nil? || extraction_status == 'pending' || extraction_status == 'failed')
+  end
+  
+  def extraction_status_badge_color
+    case extraction_status
+    when 'completed' then 'green'
+    when 'processing' then 'blue'
+    when 'failed' then 'red'
+    when 'pending' then 'yellow'
+    else 'gray'
+    end
+  end
+  
+  def extraction_status_display
+    case extraction_status
+    when 'completed' then 'Terminé'
+    when 'processing' then 'En cours'
+    when 'failed' then 'Échec'
+    when 'pending' then 'En attente'
+    else 'Non traité'
+    end
+  end
+  
+  # Retry LLM extraction
+  def retry_extraction!
+    return false unless ocr_completed?
+    
+    update(extraction_status: 'pending', extraction_notes: nil)
+    ExtractContractDataJob.perform_later(id)
+    true
+  end
+  
+  # Check if using demo/mock provider
+  def using_demo_extraction?
+    extraction_provider == 'mock'
+  end
+  
+  # Get formatted confidence percentage
+  def extraction_confidence_percent
+    extraction_confidence ? "#{extraction_confidence.round(1)}%" : 'N/A'
+  end
 
   private
 
@@ -154,6 +223,22 @@ class Contract < ApplicationRecord
   # Trigger OCR extraction job
   def trigger_ocr_extraction
     ExtractContractOcrJob.perform_later(id)
+  end
+  
+  # Determine if LLM extraction should be triggered
+  def should_trigger_llm?
+    # Trigger LLM if:
+    # 1. OCR just completed (status changed to completed)
+    # 2. Extraction hasn't been done yet or failed
+    saved_change_to_ocr_status? &&
+      ocr_status == 'completed' &&
+      (extraction_status.nil? || extraction_status == 'pending' || extraction_status == 'failed')
+  end
+  
+  # Trigger LLM extraction job
+  def trigger_llm_extraction
+    update_column(:extraction_status, 'pending') if extraction_status.nil?
+    ExtractContractDataJob.perform_later(id)
   end
 
   def pdf_document_validation
