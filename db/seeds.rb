@@ -22,6 +22,7 @@ puts "\n🏢 Creating organizations..."
 # Organization 1
 org1 = Organization.find_or_initialize_by(name: 'Immobilière Centrale')
 org1.assign_attributes(
+  organization_type: 'owner',
   status: 'active'
 )
 if org1.new_record?
@@ -35,6 +36,7 @@ end
 # Organization 2
 org2 = Organization.find_or_initialize_by(name: 'Patrimoine & Gestion')
 org2.assign_attributes(
+  organization_type: 'owner',
   status: 'active'
 )
 if org2.new_record?
@@ -770,222 +772,172 @@ service_providers = [
   {
     name: "ENGIE Solutions",
     legal_name: "ENGIE Solutions SAS",
-    siret: "489 336 696 01234",
-    organization_type: "Fournisseur",
-    address: "1 Place Samuel de Champlain",
-    postal_code: "92400",
-    city: "Courbevoie",
-    main_phone: "+33 1 44 22 00 00",
-    main_email: "contact@engie-solutions.com",
+    siret: "48933669601234",
+    organization_type: "supplier",
+    headquarters_address: "1 Place Samuel de Champlain, 92400 Courbevoie",
+    phone: "+33 1 44 22 00 00",
+    email: "contact@engie-solutions.com",
     website: "www.engie-solutions.com",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Veolia Facility Management",
     legal_name: "Veolia Facility Management France SAS",
-    siret: "552 008 443 02156",
-    organization_type: "Fournisseur",
-    address: "30 Rue Madeleine Vionnet",
-    postal_code: "93300",
-    city: "Aubervilliers",
-    main_phone: "+33 1 85 57 00 00",
-    main_email: "contact@veolia-fm.fr",
+    siret: "55200844302156",
+    organization_type: "supplier",
+    headquarters_address: "30 Rue Madeleine Vionnet, 93300 Aubervilliers",
+    phone: "+33 1 85 57 00 00",
+    email: "contact@veolia-fm.fr",
     website: "www.veolia.fr",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Dalkia",
     legal_name: "Dalkia France SAS",
-    siret: "395 680 261 00789",
-    organization_type: "Fournisseur",
-    address: "5 Place des Frères Montgolfier",
-    postal_code: "78280",
-    city: "Guyancourt",
-    main_phone: "+33 1 39 23 80 00",
-    main_email: "contact@dalkia.fr",
+    siret: "39568026100789",
+    organization_type: "supplier",
+    headquarters_address: "5 Place des Frères Montgolfier, 78280 Guyancourt",
+    phone: "+33 1 39 23 80 00",
+    email: "contact@dalkia.fr",
     website: "www.dalkia.fr",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "ISS Facility Services",
     legal_name: "ISS Facility Services France SAS",
-    siret: "419 764 512 00345",
-    organization_type: "Fournisseur",
-    address: "83 Avenue Aristide Briand",
-    postal_code: "94110",
-    city: "Arcueil",
-    main_phone: "+33 1 41 24 29 00",
-    main_email: "contact.france@fr.issworld.com",
+    siret: "41976451200345",
+    organization_type: "supplier",
+    headquarters_address: "83 Avenue Aristide Briand, 94110 Arcueil",
+    phone: "+33 1 41 24 29 00",
+    email: "contact.france@fr.issworld.com",
     website: "www.fr.issworld.com",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Onet Technologies",
     legal_name: "Onet Technologies SAS",
-    siret: "542 078 825 00567",
-    organization_type: "Fournisseur",
-    address: "13 Avenue de l'Opéra",
-    postal_code: "75001",
-    city: "Paris",
-    main_phone: "+33 1 53 29 50 00",
-    main_email: "contact@onet.fr",
+    siret: "54207882500567",
+    organization_type: "supplier",
+    headquarters_address: "13 Avenue de l'Opéra, 75001 Paris",
+    phone: "+33 1 53 29 50 00",
+    email: "contact@onet.fr",
     website: "www.onet.fr",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Elior Services",
     legal_name: "Elior Services Care SAS",
-    siret: "408 168 003 00234",
-    organization_type: "Fournisseur",
-    address: "61-69 Rue de Bercy",
-    postal_code: "75012",
-    city: "Paris",
-    main_phone: "+33 1 71 06 70 00",
-    main_email: "contact@eliorgroup.com",
+    siret: "40816800300234",
+    organization_type: "supplier",
+    headquarters_address: "61-69 Rue de Bercy, 75012 Paris",
+    phone: "+33 1 71 06 70 00",
+    email: "contact@eliorgroup.com",
     website: "www.eliorgroup.com",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Sodexo Facilities Management",
     legal_name: "Sodexo Pass France SAS",
-    siret: "301 940 219 00456",
-    organization_type: "Fournisseur",
-    address: "255 Quai de la Bataille de Stalingrad",
-    postal_code: "92130",
-    city: "Issy-les-Moulineaux",
-    main_phone: "+33 1 30 85 75 00",
-    main_email: "contact@sodexo.com",
+    siret: "30194021900456",
+    organization_type: "supplier",
+    headquarters_address: "255 Quai de la Bataille de Stalingrad, 92130 Issy-les-Moulineaux",
+    phone: "+33 1 30 85 75 00",
+    email: "contact@sodexo.com",
     website: "www.sodexo.fr",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Cofely Services",
     legal_name: "Cofely Services SAS",
-    siret: "451 234 567 00123",
-    organization_type: "Fournisseur",
-    address: "12 Avenue du Général de Gaulle",
-    postal_code: "92400",
-    city: "Courbevoie",
-    main_phone: "+33 1 49 00 40 00",
-    main_email: "contact@cofely-services.fr",
+    siret: "45123456700123",
+    organization_type: "supplier",
+    headquarters_address: "12 Avenue du Général de Gaulle, 92400 Courbevoie",
+    phone: "+33 1 49 00 40 00",
+    email: "contact@cofely-services.fr",
     website: "www.gdfsuez-cofelyservices.fr",
-    status: "active",
-    user_org_id: org2.id
+    status: "active"
   },
   {
     name: "Spie Facilities",
     legal_name: "Spie Facilities SAS",
-    siret: "378 901 234 00567",
-    organization_type: "Fournisseur",
-    address: "10 Avenue de l'Entreprise",
-    postal_code: "95863",
-    city: "Cergy-Pontoise",
-    main_phone: "+33 1 34 41 81 00",
-    main_email: "contact@spie.com",
+    siret: "37890123400567",
+    organization_type: "supplier",
+    headquarters_address: "10 Avenue de l'Entreprise, 95863 Cergy-Pontoise",
+    phone: "+33 1 34 41 81 00",
+    email: "contact@spie.com",
     website: "www.spie.com",
-    status: "active",
-    user_org_id: org2.id
+    status: "active"
   },
   {
     name: "Bouygues Energies & Services",
     legal_name: "Bouygues Energies & Services SAS",
-    siret: "524 567 890 00234",
-    organization_type: "Fournisseur",
-    address: "3 Boulevard Gallieni",
-    postal_code: "92130",
-    city: "Issy-les-Moulineaux",
-    main_phone: "+33 1 30 60 33 00",
-    main_email: "contact@bouygues-es.fr",
+    siret: "52456789000234",
+    organization_type: "supplier",
+    headquarters_address: "3 Boulevard Gallieni, 92130 Issy-les-Moulineaux",
+    phone: "+33 1 30 60 33 00",
+    email: "contact@bouygues-es.fr",
     website: "www.bouygues-es.fr",
-    status: "active",
-    user_org_id: org2.id
+    status: "active"
   },
   {
     name: "Suez",
     legal_name: "Suez France SAS",
-    siret: "901 234 567 00890",
-    organization_type: "Fournisseur",
-    address: "Tour CB21, 16 Place de l'Iris",
-    postal_code: "92400",
-    city: "Courbevoie",
-    main_phone: "+33 1 58 81 20 00",
-    main_email: "contact@suez.com",
+    siret: "90123456700890",
+    organization_type: "supplier",
+    headquarters_address: "Tour CB21, 16 Place de l'Iris, 92400 Courbevoie",
+    phone: "+33 1 58 81 20 00",
+    email: "contact@suez.com",
     website: "www.suez.fr",
-    status: "active",
-    user_org_id: org2.id
+    status: "active"
   },
   {
     name: "Vinci Facilities",
     legal_name: "Vinci Facilities IDF SAS",
-    siret: "345 678 901 00456",
-    organization_type: "Fournisseur",
-    address: "1 Cours Ferdinand de Lesseps",
-    postal_code: "92500",
-    city: "Rueil-Malmaison",
-    main_phone: "+33 1 47 16 35 00",
-    main_email: "contact@vinci-facilities.com",
+    siret: "34567890100456",
+    organization_type: "supplier",
+    headquarters_address: "1 Cours Ferdinand de Lesseps, 92500 Rueil-Malmaison",
+    phone: "+33 1 47 16 35 00",
+    email: "contact@vinci-facilities.com",
     website: "www.vinci-facilities.com",
-    status: "active",
-    user_org_id: org2.id
+    status: "active"
   },
   {
     name: "Eiffage Energie Systèmes",
     legal_name: "Eiffage Energie Systèmes SAS",
-    siret: "567 234 890 00123",
-    organization_type: "Fournisseur",
-    address: "9 Place de l'Europe",
-    postal_code: "78140",
-    city: "Vélizy-Villacoublay",
-    main_phone: "+33 1 34 65 89 00",
-    main_email: "contact@eiffage-energie.com",
+    siret: "56723489000123",
+    organization_type: "supplier",
+    headquarters_address: "9 Place de l'Europe, 78140 Vélizy-Villacoublay",
+    phone: "+33 1 34 65 89 00",
+    email: "contact@eiffage-energie.com",
     website: "www.eiffage-energie.com",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Securitas France",
     legal_name: "Securitas France SARL",
-    siret: "789 456 123 00789",
-    organization_type: "Fournisseur",
-    address: "2-4 Rue Diderot",
-    postal_code: "92150",
-    city: "Suresnes",
-    main_phone: "+33 1 55 62 44 00",
-    main_email: "contact@securitas.fr",
+    siret: "78945612300789",
+    organization_type: "supplier",
+    headquarters_address: "2-4 Rue Diderot, 92150 Suresnes",
+    phone: "+33 1 55 62 44 00",
+    email: "contact@securitas.fr",
     website: "www.securitas.fr",
-    status: "active",
-    user_org_id: org1.id
+    status: "active"
   },
   {
     name: "Kone France",
     legal_name: "Kone SAS",
-    siret: "612 345 789 00234",
-    organization_type: "Fournisseur",
-    address: "3 Avenue du Canada",
-    postal_code: "91974",
-    city: "Courtabœuf",
-    main_phone: "+33 1 60 13 33 00",
-    main_email: "contact.france@kone.com",
+    siret: "61234578900234",
+    organization_type: "supplier",
+    headquarters_address: "3 Avenue du Canada, 91974 Courtabœuf",
+    phone: "+33 1 60 13 33 00",
+    email: "contact.france@kone.com",
     website: "www.kone.fr",
-    status: "active",
-    user_org_id: org2.id
+    status: "active"
   }
 ]
 
 service_providers.each do |provider_data|
-  user_org_id = provider_data.delete(:user_org_id)
-  
-  provider = Organization.find_or_initialize_by(
-    name: provider_data[:name],
-    user_organization_id: user_org_id
-  )
+  provider = Organization.find_or_initialize_by(name: provider_data[:name])
   provider.assign_attributes(provider_data)
   
   if provider.new_record?
@@ -1074,7 +1026,7 @@ contacts_data.each do |contact_data|
     organization_id: org.id,
     email: contact_data[:email]
   )
-  contact.assign_attributes(contact_data.merge(user_organization_id: org.user_organization_id))
+  contact.assign_attributes(contact_data)
   
   if contact.new_record?
     contact.save!
@@ -1156,7 +1108,7 @@ agencies_data.each do |agency_data|
     organization_id: org.id,
     code: agency_data[:code]
   )
-  agency.assign_attributes(agency_data.merge(user_organization_id: org.user_organization_id))
+  agency.assign_attributes(agency_data)
   
   if agency.new_record?
     agency.save!
@@ -1223,6 +1175,10 @@ puts "  Creating contracts for Organization 1..."
   
   contract.assign_attributes(
     site_id: site.id,
+    title: "Contrat #{family} - #{site.name}",
+    contract_type: "Contrat de maintenance",
+    contractor_organization_name: "Prestataire Maintenance",
+    contract_object: "Maintenance et entretien des équipements",
     contract_family: family,
     status: status,
     annual_amount: rand(5000..150000),
@@ -1265,6 +1221,10 @@ puts "  Creating contracts for Organization 2..."
   
   contract.assign_attributes(
     site_id: site.id,
+    title: "Contrat #{family} - #{site.name}",
+    contract_type: "Contrat de maintenance",
+    contractor_organization_name: "Prestataire Maintenance",
+    contract_object: "Maintenance et entretien des équipements",
     contract_family: family,
     status: status,
     annual_amount: rand(5000..120000),

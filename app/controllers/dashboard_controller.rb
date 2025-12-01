@@ -3,10 +3,13 @@ class DashboardController < ApplicationController
 
   def index
     # Get the current user's organization
-    org_id = current_user.organization_id
-    
-    # Contracts by Status
-    contracts = Contract.by_organization(org_id)
+    # Admin sees all data, other users see only their organization's data
+    if current_user.admin?
+      contracts = Contract.all
+    else
+      org_id = current_user.organization_id
+      contracts = Contract.by_organization(org_id)
+    end
     @contracts_by_status = contracts.group(:status).count
     @total_contracts = contracts.count
     
@@ -42,13 +45,16 @@ class DashboardController < ApplicationController
       .limit(10)
     
     # Sites count
-    @sites_count = Site.where(organization_id: org_id).count
-    
-    # Buildings count
-    @buildings_count = Building.where(organization_id: org_id).count
-    
-    # Equipment count
-    @equipment_count = Equipment.where(organization_id: org_id).count
+    if current_user.admin?
+      @sites_count = Site.count
+      @buildings_count = Building.count
+      @equipment_count = Equipment.count
+    else
+      org_id = current_user.organization_id
+      @sites_count = Site.where(organization_id: org_id).count
+      @buildings_count = Building.where(organization_id: org_id).count
+      @equipment_count = Equipment.where(organization_id: org_id).count
+    end
     
     # Service providers (unique contractor organizations)
     @providers_count = contracts.where.not(contractor_organization_name: nil)

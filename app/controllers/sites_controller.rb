@@ -4,10 +4,17 @@ class SitesController < ApplicationController
   before_action :authorize_portfolio_manager, except: [:index, :show]
   
   def index
-    @sites = current_user.sites
-                        .includes(:buildings)
-                        .page(params[:page])
-                        .per(10)
+    # Admin sees all sites, other users see only their organization's sites
+    if current_user.admin?
+      @sites = Site.includes(:buildings)
+                   .page(params[:page])
+                   .per(10)
+    else
+      @sites = current_user.sites
+                          .includes(:buildings)
+                          .page(params[:page])
+                          .per(10)
+    end
     
     # Apply filters
     @sites = @sites.search_by_name(params[:search]) if params[:search].present?
@@ -85,7 +92,12 @@ class SitesController < ApplicationController
   private
   
   def set_site
-    @site = current_user.sites.find(params[:id])
+    # Admin can access all sites, other users can only access their organization's sites
+    if current_user.admin?
+      @site = Site.find(params[:id])
+    else
+      @site = current_user.sites.find(params[:id])
+    end
   rescue ActiveRecord::RecordNotFound
     redirect_to sites_path, alert: "Site introuvable"
   end
