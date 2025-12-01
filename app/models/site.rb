@@ -22,6 +22,7 @@ class Site < ApplicationRecord
   # Scopes
   scope :active, -> { where(status: "active") }
   scope :inactive, -> { where(status: "inactive") }
+  scope :by_organization, ->(org_id) { where(organization_id: org_id) }
   scope :by_type, ->(type) { where(site_type: type) if type.present? }
   scope :by_region, ->(region) { where(region: region) if region.present? }
   scope :search_by_name, ->(query) { where("name LIKE ?", "%#{sanitize_sql_like(query)}%") if query.present? }
