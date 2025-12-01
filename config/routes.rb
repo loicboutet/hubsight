@@ -194,6 +194,10 @@ Rails.application.routes.draw do
   get 'my_contracts/upload', to: 'site_manager/contracts#upload'
   post 'my_contracts/upload', to: 'site_manager/contracts#process_upload'
   
+  # Equipment (Read-only access across all assigned sites)
+  get 'my_equipment', to: 'site_manager/equipment#index', as: :my_equipment_index
+  get 'my_equipment/:id', to: 'site_manager/equipment#show', as: :my_equipment
+  
   # Alerts (Read-only, BRIQUE 2)
   get 'my_alerts', to: 'site_manager/alerts#index'
   

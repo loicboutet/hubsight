@@ -1,0 +1,261 @@
+<% content_for :header, @equipment.name %>
+
+<div class="section">
+  <!-- Breadcrumb Navigation -->
+  <nav style="margin-bottom: var(--space-lg);">
+    <ol style="display: flex; align-items: center; gap: var(--space-sm); list-style: none; padding: 0;">
+      <li><%= link_to "Mes Équipements", my_equipment_index_path, class: "typo-body-small", style: "color: var(--medium-gray); text-decoration: none;" %></li>
+      <li class="typo-body-small" style="color: var(--medium-gray);">/</li>
+      <li class="typo-body-small typo-bold" style="color: var(--dark-gray);"><%= @equipment.name %></li>
+    </ol>
+  </nav>
+
+  <!-- Read-Only Access Notice -->
+  <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md); margin-bottom: var(--space-xl); display: flex; align-items: center; gap: var(--space-md);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink: 0;">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <div>
+      <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);">Accès en lecture seule</p>
+      <p class="typo-body-small" style="opacity: 0.9;">Vous consultez cet équipement mais ne pouvez pas le modifier. Pour toute modification, contactez votre gestionnaire de portefeuille.</p>
+    </div>
+  </div>
+
+  <!-- Equipment Header -->
+  <div style="background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%); color: white; padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <div style="display: flex; align-items: start; justify-content: space-between;">
+      <div style="flex: 1;">
+        <h1 class="typo-h1" style="margin-bottom: var(--space-md);"><%= @equipment.name %></h1>
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-md); align-items: center;">
+          <% if @equipment.equipment_type %>
+            <span style="background-color: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 6px; font-size: 0.875rem; font-weight: 600;">
+              <%= @equipment.equipment_type.name %>
+            </span>
+          <% end %>
+          <% status_colors = {
+            'active' => { bg: '#d4edda', text: '#155724' },
+            'inactive' => { bg: '#f8d7da', text: '#721c24' },
+            'maintenance' => { bg: '#fff3cd', text: '#856404' },
+            'out_of_service' => { bg: '#f8d7da', text: '#721c24' }
+          } %>
+          <% color = status_colors[@equipment.status] || { bg: '#e2e3e5', text: '#383d41' } %>
+          <span style="background-color: <%= color[:bg] %>; color: <%= color[:text] %>; padding: 6px 12px; border-radius: 6px; font-size: 0.875rem; font-weight: 600;">
+            <%= @equipment.status_label %>
+          </span>
+          <% if @equipment.criticality.present? %>
+            <% criticality_colors = {
+              'low' => { bg: '#d4edda', text: '#155724' },
+              'medium' => { bg: '#fff3cd', text: '#856404' },
+              'high' => { bg: '#f97316', text: '#ffffff' },
+              'critical' => { bg: '#ef4444', text: '#ffffff' }
+            } %>
+            <% color = criticality_colors[@equipment.criticality] || { bg: '#e2e3e5', text: '#383d41' } %>
+            <span style="background-color: <%= color[:bg] %>; color: <%= color[:text] %>; padding: 6px 12px; border-radius: 6px; font-size: 0.875rem; font-weight: 600;">
+              🔴 <%= @equipment.criticality_label %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Location Hierarchy -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+    <h2 class="typo-h3" style="margin-bottom: var(--space-md); display: flex; align-items: center; gap: var(--space-sm);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      Localisation
+    </h2>
+    <div style="display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+      <span class="typo-body typo-bold" style="color: var(--coral-primary);"><%= @equipment.site&.name || 'N/A' %></span>
+      <span class="typo-body" style="color: var(--medium-gray);">›</span>
+      <span class="typo-body" style="color: var(--dark-gray);"><%= @equipment.building&.name || 'N/A' %></span>
+      <span class="typo-body" style="color: var(--medium-gray);">›</span>
+      <span class="typo-body" style="color: var(--dark-gray);"><%= @equipment.level&.name || 'N/A' %></span>
+      <span class="typo-body" style="color: var(--medium-gray);">›</span>
+      <span class="typo-body" style="color: var(--dark-gray);"><%= @equipment.space&.name || 'N/A' %></span>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: var(--space-xl);">
+    <!-- Identification Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">📋 Identification</h3>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <div>
+          <p class="typo-label">Fabricant</p>
+          <p class="typo-body"><%= @equipment.manufacturer || '-' %></p>
+        </div>
+        
+        <div>
+          <p class="typo-label">Modèle</p>
+          <p class="typo-body"><%= @equipment.model || '-' %></p>
+        </div>
+        
+        <div>
+          <p class="typo-label">Numéro de série</p>
+          <p class="typo-body"><%= @equipment.serial_number || '-' %></p>
+        </div>
+        
+        <% if @equipment.equipment_type %>
+          <div>
+            <p class="typo-label">Type d'équipement</p>
+            <p class="typo-body"><%= @equipment.equipment_type.display_name %></p>
+          </div>
+          
+          <% if @equipment.equipment_type.omniclass_number.present? %>
+            <div>
+              <p class="typo-label">Code OmniClass</p>
+              <p class="typo-body"><%= @equipment.equipment_type.omniclass_number %> - <%= @equipment.equipment_type.omniclass_title %></p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Technical Specifications -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">⚙️ Caractéristiques Techniques</h3>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <% if @equipment.nominal_power.present? %>
+          <div>
+            <p class="typo-label">Puissance nominale</p>
+            <p class="typo-body"><%= @equipment.nominal_power %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.nominal_voltage.present? %>
+          <div>
+            <p class="typo-label">Tension nominale</p>
+            <p class="typo-body"><%= @equipment.nominal_voltage %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.current.present? %>
+          <div>
+            <p class="typo-label">Courant</p>
+            <p class="typo-body"><%= @equipment.current %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.frequency.present? %>
+          <div>
+            <p class="typo-label">Fréquence</p>
+            <p class="typo-body"><%= @equipment.frequency %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.weight.present? %>
+          <div>
+            <p class="typo-label">Poids</p>
+            <p class="typo-body"><%= @equipment.weight %> kg</p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.dimensions.present? %>
+          <div>
+            <p class="typo-label">Dimensions</p>
+            <p class="typo-body"><%= @equipment.dimensions %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Important Dates -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">📅 Dates Importantes</h3>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <% if @equipment.manufacturing_date.present? %>
+          <div>
+            <p class="typo-label">Date de fabrication</p>
+            <p class="typo-body"><%= l(@equipment.manufacturing_date, format: :long) rescue @equipment.manufacturing_date %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.commissioning_date.present? %>
+          <div>
+            <p class="typo-label">Date de mise en service</p>
+            <p class="typo-body"><%= l(@equipment.commissioning_date, format: :long) rescue @equipment.commissioning_date %></p>
+            <% if @equipment.age_in_years %>
+              <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs);">
+                Âge: <%= @equipment.age_in_years %> an<%= @equipment.age_in_years > 1 ? 's' : '' %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <% if @equipment.warranty_end_date.present? %>
+          <div>
+            <p class="typo-label">Fin de garantie</p>
+            <p class="typo-body"><%= l(@equipment.warranty_end_date, format: :long) rescue @equipment.warranty_end_date %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.next_maintenance_date.present? %>
+          <div>
+            <p class="typo-label">Prochaine maintenance</p>
+            <p class="typo-body"><%= l(@equipment.next_maintenance_date, format: :long) rescue @equipment.next_maintenance_date %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Supplier Information -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">🏢 Informations Fournisseur</h3>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <% if @equipment.supplier.present? %>
+          <div>
+            <p class="typo-label">Fournisseur</p>
+            <p class="typo-body"><%= @equipment.supplier %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.purchase_price.present? %>
+          <div>
+            <p class="typo-label">Prix d'achat</p>
+            <p class="typo-body"><%= number_to_currency(@equipment.purchase_price, unit: "€", separator: ",", delimiter: " ", format: "%n %u") %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.order_number.present? %>
+          <div>
+            <p class="typo-label">Numéro de commande</p>
+            <p class="typo-body"><%= @equipment.order_number %></p>
+          </div>
+        <% end %>
+        
+        <% if @equipment.invoice_number.present? %>
+          <div>
+            <p class="typo-label">Numéro de facture</p>
+            <p class="typo-body"><%= @equipment.invoice_number %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes Section -->
+  <% if @equipment.notes.present? %>
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-top: var(--space-xl);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">📝 Notes</h3>
+      <p class="typo-body" style="white-space: pre-wrap;"><%= @equipment.notes %></p>
+    </div>
+  <% end %>
+
+  <!-- Action Buttons -->
+  <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-md); justify-content: flex-start;">
+    <%= link_to my_equipment_index_path, class: "typo-btn-secondary" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: var(--space-xs);">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Retour à la liste
+    <% end %>
+  </div>
+</div>
