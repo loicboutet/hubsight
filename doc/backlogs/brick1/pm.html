@@ -42,8 +42,8 @@
         <p class="subtitle">Complete Portfolio Manager functionality for managing sites, buildings, equipment, contracts, and analytics</p>
         <div class="stats">
             <div class="stat-card"><div class="stat-number">36</div><div class="stat-label">Total Tasks</div></div>
-            <div class="stat-card"><div class="stat-number">27</div><div class="stat-label">Implemented</div></div>
-            <div class="stat-card"><div class="stat-number">9</div><div class="stat-label">Remaining</div></div>
+            <div class="stat-card"><div class="stat-number">36</div><div class="stat-label">Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Remaining</div></div>
         </div>
         <p style="margin: 20px 0; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196f3; font-size: 14px;">
             <strong>📌 Note:</strong> All Portfolio Manager tasks are accessible at <code>http://localhost:3000</code> after logging in as <code>portfolio@hubsight.com / Password123!</code>
@@ -56,7 +56,7 @@
                     <th class="title-col">Task Title</th>
                     <th class="description-col">Task Description</th>
                     <th class="url-col">URL</th>
-                    <th class="test-col">How to Test (Summary)</th>
+                    <th class="test-col">How to Test</th>
                     <th class="video-col">Video</th>
                 </tr>
             </thead>
@@ -67,7 +67,20 @@
                     <td class="title-col">PM - Create Site Manager Profiles<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Portfolio Manager can create and manage Site Manager profiles for their organization</td>
                     <td class="url-col"><a href="http://localhost:3000/site_managers">localhost:3000/site_managers</a></td>
-                    <td class="test-col">Navigate to /site_managers, create new site manager with email/name/phone, verify invitation email sent, test activation flow, verify organization isolation</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/site_managers</li>
+                            <li>Click "Nouveau Gestionnaire de Site" button</li>
+                            <li>Fill required fields: email, first name, last name, phone</li>
+                            <li>Click "Créer le Gestionnaire de Site"</li>
+                            <li>Verify success message and invitation email sent</li>
+                            <li>Check email for activation link</li>
+                            <li>Test activation flow with link from email</li>
+                            <li>Verify organization isolation (site manager associated with correct org)</li>
+                            <li>Test edit/delete operations on site manager profile</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -76,16 +89,45 @@
                     <td class="title-col">PM - Assign Sites to Site Managers<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Implement site assignment functionality allowing Portfolio Managers to assign specific sites to Site Manager users</td>
                     <td class="url-col"><a href="http://localhost:3000/site_managers/:id/assign_sites">localhost:3000/site_managers/:id/assign_sites</a></td>
-                    <td class="test-col">Go to site manager profile, click "Gérer les Sites", select sites with checkboxes, save assignments, verify site manager can only access assigned sites</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/site_managers</li>
+                            <li>Click on a site manager (e.g., Pierre Bernard)</li>
+                            <li>Click "Gérer les Sites" button</li>
+                            <li>Verify list shows all sites for current organization</li>
+                            <li>Select/deselect sites using checkboxes</li>
+                            <li>Click "Enregistrer les Assignations"</li>
+                            <li>Verify success message displayed</li>
+                            <li>Logout and login as site manager (sitemanager@hubsight.com / Password123!)</li>
+                            <li>Verify site manager sees only assigned sites</li>
+                            <li>Try accessing non-assigned site - verify access denied</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">13</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create and Manage Sites</td>
+                    <td class="title-col">PM - Create and Manage Sites<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Full CRUD functionality for sites including name, address, area, site type, and other attributes</td>
                     <td class="url-col"><a href="http://localhost:3000/sites">localhost:3000/sites</a></td>
-                    <td class="test-col">View sites list (13 sites for Org 1), create new site with required fields, edit existing site, delete site, test filters and pagination</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/sites</li>
+                            <li>Verify sites list displays (13 sites for Organization 1)</li>
+                            <li>Click "Nouveau Site" button</li>
+                            <li>Fill required fields: name, address, postal code, city</li>
+                            <li>Fill optional fields: site type, total area, etc.</li>
+                            <li>Click "Créer le Site"</li>
+                            <li>Verify site appears in list</li>
+                            <li>Test edit: click edit on a site, modify fields, save</li>
+                            <li>Test delete: click delete, confirm deletion</li>
+                            <li>Test filters and search functionality</li>
+                            <li>Test pagination if more than 25 sites</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -94,7 +136,22 @@
                     <td class="title-col">PM - Create and Manage Buildings<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Full CRUD functionality for buildings nested under sites</td>
                     <td class="url-col"><a href="http://localhost:3000/sites/:id">localhost:3000/sites/:id</a></td>
-                    <td class="test-col">Go to site detail, click "Bâtiments" tab, create building with name/code/year/area, view/edit/delete buildings, verify data source tracking</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/sites</li>
+                            <li>Click on any site to view details</li>
+                            <li>Click "Bâtiments" tab</li>
+                            <li>Click "Nouveau Bâtiment" button</li>
+                            <li>Fill required fields: name, building code</li>
+                            <li>Fill optional fields: construction year, total area, number of floors</li>
+                            <li>Select data source (Revit, AutoCAD, Manual, Import)</li>
+                            <li>Click "Créer le Bâtiment"</li>
+                            <li>Verify building appears in list</li>
+                            <li>Test edit and delete operations</li>
+                            <li>Verify data source tracking displays correctly</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -103,7 +160,21 @@
                     <td class="title-col">PM - Create and Manage Levels<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Full CRUD functionality for levels (floors) nested under buildings</td>
                     <td class="url-col"><a href="http://localhost:3000/buildings/:id/levels">localhost:3000/buildings/:id/levels</a></td>
-                    <td class="test-col">In building detail, create level with name/level_number/altitude/area, verify levels ordered by level_number, test CRUD operations</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to a building detail page</li>
+                            <li>Click "Niveaux" tab</li>
+                            <li>Click "Nouveau Niveau" button</li>
+                            <li>Fill required fields: name, level_number</li>
+                            <li>Fill optional fields: altitude, total area</li>
+                            <li>Click "Créer le Niveau"</li>
+                            <li>Verify level appears in list ordered by level_number</li>
+                            <li>Test edit operation</li>
+                            <li>Test delete operation</li>
+                            <li>Verify levels properly ordered (basement, ground, upper floors)</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -112,7 +183,21 @@
                     <td class="title-col">PM - Create and Manage Spaces<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Full CRUD functionality for spaces/rooms nested under levels</td>
                     <td class="url-col"><a href="http://localhost:3000/levels/:id/spaces">localhost:3000/levels/:id/spaces</a></td>
-                    <td class="test-col">In level detail, create space with name/type/area/capacity, fill optional fields (floor covering, ceiling type, etc), test CRUD operations</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to a level detail page</li>
+                            <li>Click "Espaces" tab</li>
+                            <li>Click "Nouvel Espace" button</li>
+                            <li>Fill required fields: name, space type (using OmniClass)</li>
+                            <li>Fill optional fields: area, capacity, ceiling height</li>
+                            <li>Fill additional fields: floor covering, ceiling type, wall type</li>
+                            <li>Click "Créer l'Espace"</li>
+                            <li>Verify space appears in list</li>
+                            <li>Test edit and delete operations</li>
+                            <li>Verify OmniClass space classification displays correctly</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -121,7 +206,21 @@
                     <td class="title-col">PM - Create and Manage Equipment<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Full CRUD functionality for equipment nested under spaces</td>
                     <td class="url-col"><a href="http://localhost:3000/equipment">localhost:3000/equipment</a></td>
-                    <td class="test-col">In space detail, create equipment with name/manufacturer/model/serial, fill technical specs, test CRUD, verify organization isolation</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/equipment or from space detail</li>
+                            <li>Click "Nouvel Équipement" button</li>
+                            <li>Select location: site, building, level, space</li>
+                            <li>Fill required fields: name, equipment type (using autocomplete)</li>
+                            <li>Fill optional fields: manufacturer, model, serial number</li>
+                            <li>Fill technical specs: installation date, warranty, power rating</li>
+                            <li>Click "Créer l'Équipement"</li>
+                            <li>Verify equipment appears in list</li>
+                            <li>Test edit and delete operations</li>
+                            <li>Verify organization isolation (only see own org equipment)</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -130,7 +229,21 @@
                     <td class="title-col">PM - Tree View Navigation<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Hierarchical tree navigation: Portfolio > Sites > Buildings > Levels > Spaces > Equipment</td>
                     <td class="url-col"><a href="http://localhost:3000/portfolio">localhost:3000/portfolio</a></td>
-                    <td class="test-col">Navigate to /portfolio, verify 6-level hierarchy displays, test expand/collapse with chevron icons, click nodes to navigate to detail pages</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/portfolio</li>
+                            <li>Verify 6-level hierarchy displays: Portfolio > Sites > Buildings > Levels > Spaces > Equipment</li>
+                            <li>Test expand/collapse with chevron icons</li>
+                            <li>Click on site node - verify navigates to site detail</li>
+                            <li>Click on building node - verify navigates to building detail</li>
+                            <li>Click on level node - verify navigates to level detail</li>
+                            <li>Click on space node - verify navigates to space detail</li>
+                            <li>Click on equipment node - verify navigates to equipment detail</li>
+                            <li>Verify tree state persists on navigation</li>
+                            <li>Test with multiple organizations (organization isolation)</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -139,7 +252,20 @@
                     <td class="title-col">PM - Import OmniClass Table 23<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Import OmniClass Table 23 equipment classification (68 representative types from 256 total)</td>
                     <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
-                    <td class="test-col">Run EquipmentType.count (should return 68), verify technical lots (CVC, ELE, PLO, SEC, etc), test model validations and scopes</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Open Rails console: bin/rails console</li>
+                            <li>Run: EquipmentType.count (should return 68)</li>
+                            <li>Run: EquipmentType.pluck(:technical_lot).uniq to see lots</li>
+                            <li>Verify technical lots: CVC, ELE, PLO, SEC, ASC, CVR, SUR</li>
+                            <li>Run: EquipmentType.where(technical_lot: 'CVC').count</li>
+                            <li>Run: EquipmentType.find_by(name: "Chaudière")</li>
+                            <li>Verify OmniClass codes format (e.g., 23-27 11 00)</li>
+                            <li>Test scopes: EquipmentType.by_technical_lot('ELE')</li>
+                            <li>Test search: EquipmentType.search('chaudière')</li>
+                            <li>Verify all 68 equipment types imported correctly</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -148,7 +274,20 @@
                     <td class="title-col">PM - Import Space Structure<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Import OmniClass Table 13 space classifications (127 representative types from 966 total)</td>
                     <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
-                    <td class="test-col">Run OmniclassSpace.count (should return 127), verify major categories (Building, Healthcare, Residential, etc), test search/filter</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Open Rails console: bin/rails console</li>
+                            <li>Run: OmniclassSpace.count (should return 127)</li>
+                            <li>Run: OmniclassSpace.pluck(:category).uniq to see categories</li>
+                            <li>Verify major categories: Building, Healthcare, Residential, Education, etc.</li>
+                            <li>Run: OmniclassSpace.where(category: 'Healthcare').count</li>
+                            <li>Run: OmniclassSpace.find_by(name: "Office")</li>
+                            <li>Verify OmniClass codes format (e.g., 13-11 00 00)</li>
+                            <li>Test search: OmniclassSpace.search('office')</li>
+                            <li>Test hierarchy: verify parent-child relationships</li>
+                            <li>Verify all 127 space types imported correctly</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -157,7 +296,20 @@
                     <td class="title-col">PM - Import Contract Families<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Import contract families and subfamilies (7 families + 35 subfamilies = 42 total)</td>
                     <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
-                    <td class="test-col">Run ContractFamily.count (should return 42), verify 7 families (MAIN, NETT, CTRL, FLUI, ASSU, IMMO, AUTR), test hierarchy</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Open Rails console: bin/rails console</li>
+                            <li>Run: ContractFamily.count (should return 42)</li>
+                            <li>Run: ContractFamily.where(parent_id: nil).count (should return 7)</li>
+                            <li>Verify 7 parent families: MAIN, NETT, CTRL, FLUI, ASSU, IMMO, AUTR</li>
+                            <li>Run: ContractFamily.find_by(code: 'MAIN')</li>
+                            <li>Run: ContractFamily.where(code: 'MAIN').first.children.count</li>
+                            <li>Verify subfamilies exist under each family</li>
+                            <li>Test: ContractFamily.find_by(code: 'MAIN-CVC')</li>
+                            <li>Verify hierarchy: parent_id links subfamilies to families</li>
+                            <li>Verify all 42 families/subfamilies imported correctly</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -166,7 +318,21 @@
                     <td class="title-col">PM - Equipment Search & Autocomplete<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Search and autocomplete system for equipment types with technical lot filtering</td>
                     <td class="url-col"><a href="http://localhost:3000/equipment/new">localhost:3000/equipment/new</a></td>
-                    <td class="test-col">In equipment form, type in "Type d'Équipement" field (min 2 chars), verify dropdown with badges, test 8 filter buttons (CVC, ELE, etc), verify keyboard navigation</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/equipment/new</li>
+                            <li>Locate "Type d'Équipement" autocomplete field</li>
+                            <li>Type minimum 2 characters (e.g., "ch")</li>
+                            <li>Verify dropdown appears with results</li>
+                            <li>Verify each result shows: name + colored badge (technical lot)</li>
+                            <li>Test 8 filter buttons: CVC, ELE, PLO, SEC, ASC, CVR, SUR, ALL</li>
+                            <li>Click "CVC" filter - verify only CVC equipment shown</li>
+                            <li>Test keyboard navigation: arrow keys, Enter to select</li>
+                            <li>Select equipment type - verify info panel shows details</li>
+                            <li>Verify debouncing works (doesn't query on every keystroke)</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -175,7 +341,21 @@
                     <td class="title-col">PM - Link Equipment to OmniClass<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Manual linking interface for associating equipment with OmniClass codes via autocomplete</td>
                     <td class="url-col"><a href="http://localhost:3000/equipment/new">localhost:3000/equipment/new</a></td>
-                    <td class="test-col">Use autocomplete to select equipment type, verify selected info panel shows OmniClass code, create equipment, verify show page displays classification</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/equipment/new</li>
+                            <li>Use autocomplete to search and select equipment type</li>
+                            <li>Verify selected info panel appears below autocomplete</li>
+                            <li>Verify info panel shows: OmniClass code, technical lot badge, description</li>
+                            <li>Fill other required fields and create equipment</li>
+                            <li>Navigate to equipment show page</li>
+                            <li>Verify OmniClass classification section displays</li>
+                            <li>Verify shows: code, name, technical lot, full hierarchy</li>
+                            <li>Test editing equipment - autocomplete should show current value</li>
+                            <li>Verify equipment can be filtered by technical lot</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -184,7 +364,21 @@
                     <td class="title-col">PM - Upload PDF Contracts<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Upload multi-page PDF contract documents with validation (max 10MB, PDF only)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
-                    <td class="test-col">Go to /contracts/new, drag/drop PDF file in orange upload zone, verify preview appears, test file validation (wrong type, too large), submit contract</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts/new</li>
+                            <li>Locate PDF upload zone (orange dashed border)</li>
+                            <li>Drag a PDF file over the zone - verify visual feedback</li>
+                            <li>Drop the PDF - verify green preview box appears with filename</li>
+                            <li>Test validation: try uploading non-PDF file - verify error message</li>
+                            <li>Test validation: try file over 10MB - verify size error</li>
+                            <li>Upload valid PDF (under 10MB)</li>
+                            <li>Fill required fields and submit</li>
+                            <li>Verify PDF attached to contract</li>
+                            <li>Test "Remove" button to clear uploaded file</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -193,7 +387,21 @@
                     <td class="title-col">PM - OCR Text Extraction<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Integrate OCR for text extraction from uploaded PDFs (currently using pdf-reader, ready for Mistral)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/:id">localhost:3000/contracts/:id</a></td>
-                    <td class="test-col">Upload contract with PDF, view contract detail, verify "Extraction OCR" section shows status "Terminé", click "Voir le texte extrait"</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts/new</li>
+                            <li>Upload a PDF contract file</li>
+                            <li>Fill required fields and submit</li>
+                            <li>On contract detail page, locate "Extraction OCR" section</li>
+                            <li>Verify OCR status shows "En attente" or "Terminé"</li>
+                            <li>If "En attente", wait ~10 seconds and refresh</li>
+                            <li>Once "Terminé", click "Voir le texte extrait" button</li>
+                            <li>Verify extracted text modal displays</li>
+                            <li>Verify text extraction quality</li>
+                            <li>Close modal and verify can proceed to data extraction</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -202,7 +410,21 @@
                     <td class="title-col">PM - LLM Data Structuring<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Automatic data extraction via LLM extracting 72 contract fields (demo mode with regex, ready for OpenRouter)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/:id">localhost:3000/contracts/:id</a></td>
-                    <td class="test-col">Upload contract PDF, verify "Données Extraites" section appears with 6 collapsible sections, verify 🎭 Demo mode banner, view extracted 72 fields</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Upload contract with PDF (or use existing contract)</li>
+                            <li>Wait for OCR extraction to complete</li>
+                            <li>Verify "Données Extraites" section appears</li>
+                            <li>Verify 🎭 Demo mode banner displayed at top</li>
+                            <li>Verify 6 collapsible sections: Identification, Parties, Scope, Financial, Temporality, Services</li>
+                            <li>Expand each section and verify extracted fields</li>
+                            <li>Count total fields - should be 72 across all sections</li>
+                            <li>Verify color-coded confidence indicators (green/yellow/red)</li>
+                            <li>Test collapsing/expanding sections</li>
+                            <li>Verify extraction completes within reasonable time</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -211,7 +433,22 @@
                     <td class="title-col">PM - Validate Extracted Data<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Manual validation interface with split-screen: PDF viewer + editable form</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/:id/validate">localhost:3000/contracts/:id/validate</a></td>
-                    <td class="test-col">After extraction completes, click "Valider les Données", verify split-screen (PDF left, form right), edit fields, add notes, submit validation</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to contract with completed extraction</li>
+                            <li>Click "Valider les Données" button</li>
+                            <li>Verify split-screen layout: PDF viewer (left) + Form (right)</li>
+                            <li>Verify PDF displays correctly in left pane</li>
+                            <li>Verify form shows all 72 extracted fields in right pane</li>
+                            <li>Edit some fields with corrected values</li>
+                            <li>Add validation notes in notes field</li>
+                            <li>Test PDF navigation (page up/down, zoom)</li>
+                            <li>Click "Valider et Enregistrer" button</li>
+                            <li>Verify success message and redirect to contract detail</li>
+                            <li>Verify validated data saved correctly</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -220,16 +457,46 @@
                     <td class="title-col">PM - Manual Contract Creation<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Create contracts manually without PDF using comprehensive 72-field form</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
-                    <td class="test-col">Go to /contracts/new, skip PDF upload (optional), fill 5 required fields + optional fields across 6 sections, submit without PDF</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts/new</li>
+                            <li>Skip PDF upload section (leave empty)</li>
+                            <li>Fill 5 required fields: contract number, title, contract type, status, site</li>
+                            <li>Fill optional fields in Identification section</li>
+                            <li>Fill fields in Parties section (client, provider info)</li>
+                            <li>Fill fields in Scope section</li>
+                            <li>Fill fields in Financial section (amounts, VAT)</li>
+                            <li>Fill fields in Temporality section (dates, durations)</li>
+                            <li>Fill fields in Services section (SLA, maintenance)</li>
+                            <li>Click "Créer le Contrat" button</li>
+                            <li>Verify contract created successfully without PDF</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">29</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Contract Family Search</td>
+                    <td class="title-col">PM - Contract Family Search<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Search and autocomplete for contract families/subfamilies with 7 filter buttons</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
-                    <td class="test-col">In contract form "Famille d'Achats" field, type min 2 chars, verify dropdown with hierarchy, test 7 family filters (MAIN, NETT, etc), select subfamily</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts/new</li>
+                            <li>Locate "Famille d'Achats" autocomplete field</li>
+                            <li>Type minimum 2 characters (e.g., "ma")</li>
+                            <li>Verify dropdown appears with results</li>
+                            <li>Verify hierarchy displayed: Family > Subfamily format</li>
+                            <li>Test 7 filter buttons: MAIN, NETT, CTRL, FLUI, ASSU, IMMO, AUTR</li>
+                            <li>Click "MAIN" filter - verify only MAIN subfamilies shown</li>
+                            <li>Click "ALL" to clear filter</li>
+                            <li>Select a subfamily (e.g., MAIN-CVC)</li>
+                            <li>Verify selected value displays with full hierarchy</li>
+                            <li>Test keyboard navigation with arrow keys</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -238,7 +505,21 @@
                     <td class="title-col">PM - Link Services to Contract Families<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Manual linking of services to Contract Family/Subfamily (implemented via Task 29)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
-                    <td class="test-col">Use family autocomplete to link contract to family/subfamily, fill service description, verify hierarchy displays on contract show page</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts/new</li>
+                            <li>Use family autocomplete to search and select family/subfamily</li>
+                            <li>Verify selected info panel shows family details</li>
+                            <li>Fill service description field</li>
+                            <li>Fill other required fields and create contract</li>
+                            <li>Navigate to contract show page</li>
+                            <li>Verify "Famille d'Achats" section displays</li>
+                            <li>Verify shows: Family code, Family name, Subfamily</li>
+                            <li>Verify service description displays correctly</li>
+                            <li>Test editing contract - family autocomplete should retain value</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -247,7 +528,22 @@
                     <td class="title-col">PM - Auto-Calculate Contract Dates<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Automatically calculate end date, last renewal date, termination deadline based on contract parameters</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
-                    <td class="test-col">Fill start date, initial duration, renewal duration, number of renewals, notice period, submit - verify 3 dates auto-calculated with purple AUTO badges</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts/new</li>
+                            <li>Fill start date (e.g., 2024-01-01)</li>
+                            <li>Fill initial duration in months (e.g., 12)</li>
+                            <li>Fill renewal duration in months (e.g., 12)</li>
+                            <li>Fill number of renewals (e.g., 2)</li>
+                            <li>Fill notice period in months (e.g., 3)</li>
+                            <li>Verify end date auto-calculates with purple AUTO badge</li>
+                            <li>Verify last renewal date auto-calculates with purple AUTO badge</li>
+                            <li>Verify termination deadline auto-calculates with purple AUTO badge</li>
+                            <li>Test changing values - verify dates recalculate immediately</li>
+                            <li>Create contract and verify calculated dates saved correctly</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -256,7 +552,21 @@
                     <td class="title-col">PM - Auto-Calculate VAT Amounts<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Automatically calculate VAT inclusive amounts with French VAT rates (20%, 10%, 5.5%, 0%)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
-                    <td class="test-col">Fill VAT rate (20%) and HT amount (85000€), verify TTC auto-calculates (102000€), verify Monthly auto-calculates, test bidirectional calculation</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts/new</li>
+                            <li>Select VAT rate: 20% from dropdown (20%, 10%, 5.5%, 0%)</li>
+                            <li>Fill annual amount HT (excluding VAT): 85000€</li>
+                            <li>Verify annual amount TTC auto-calculates: 102000€</li>
+                            <li>Verify monthly amounts auto-calculate (HT and TTC)</li>
+                            <li>Test bidirectional: change TTC amount, verify HT recalculates</li>
+                            <li>Test different VAT rates - verify calculations correct</li>
+                            <li>Verify all amounts display with proper € formatting</li>
+                            <li>Create contract and verify amounts saved correctly</li>
+                            <li>Verify calculations displayed on contract show page</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -265,7 +575,22 @@
                     <td class="title-col">PM - View Contract List<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Display contracts in table view with pagination, sorting, and column customization</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
-                    <td class="test-col">View contracts table, test sorting (click column headers), test column customization (hide/show columns), test pagination (15/25/50/100 per page)</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts</li>
+                            <li>Verify contracts table displays with all columns</li>
+                            <li>Test sorting: click column headers (number, title, site, status)</li>
+                            <li>Verify ascending/descending sort indicators</li>
+                            <li>Click "Colonnes" button to customize columns</li>
+                            <li>Hide/show various columns using checkboxes</li>
+                            <li>Verify table updates dynamically</li>
+                            <li>Test pagination: change per-page (15/25/50/100)</li>
+                            <li>Navigate through pages using pagination controls</li>
+                            <li>Verify total count and current page displayed</li>
+                            <li>Verify preferences persist on page refresh</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -274,52 +599,140 @@
                     <td class="title-col">PM - Filter Contracts<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">17 filter options: 5 basic (site, building, family, status, search) + 12 advanced (dates, amounts, etc)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
-                    <td class="test-col">Test basic filters, click "Filtres Avancés" button, test date ranges (3), amount ranges (2), additional filters (4), verify all 17 filters work together</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts</li>
+                            <li>Test 5 basic filters: site dropdown, building dropdown, family dropdown, status dropdown, search text</li>
+                            <li>Click "Filtres Avancés" button to expand advanced filters</li>
+                            <li>Test 3 date range filters: start date, end date, renewal date</li>
+                            <li>Test 2 amount range filters: annual amount HT, annual amount TTC</li>
+                            <li>Test 4 additional filters: contract type, client, provider, equipment</li>
+                            <li>Combine multiple filters together</li>
+                            <li>Verify results update dynamically</li>
+                            <li>Click "Réinitialiser" to clear all filters</li>
+                            <li>Verify all 17 filters can work simultaneously</li>
+                            <li>Verify filter state persists in URL</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">35</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create Organizations</td>
+                    <td class="title-col">PM - Create Organizations<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Create and manage organizations with 12 fields: name, legal name, SIRET, type, address, contacts</td>
                     <td class="url-col"><a href="http://localhost:3000/organizations">localhost:3000/organizations</a></td>
-                    <td class="test-col">Navigate to /organizations, create new organization, fill required fields, test CRUD operations</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/organizations</li>
+                            <li>Click "Nouvelle Organisation" button</li>
+                            <li>Fill required fields: name, organization type</li>
+                            <li>Fill optional fields: legal name, SIRET, address, postal code, city</li>
+                            <li>Fill contact fields: main phone, main email</li>
+                            <li>Click "Créer l'Organisation"</li>
+                            <li>Verify organization appears in list</li>
+                            <li>Test view: click on organization to see details</li>
+                            <li>Test edit: modify fields and save</li>
+                            <li>Test delete: delete organization (if no dependencies)</li>
+                            <li>Verify organization isolation per client</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">36</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create Contacts</td>
-                    <td class="description-col">Create and manage contacts nested under organizations with 11 fields</td>
+                    <td class="title-col">PM - Create Contacts<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Create and manage contacts nested under organizations with 11 fields (first_name, last_name, position, department, phone, mobile, email, etc)</td>
                     <td class="url-col"><a href="http://localhost:3000/contacts">localhost:3000/contacts</a></td>
-                    <td class="test-col">Navigate to /contacts, create contact under organization, fill name/position/phone/email, test CRUD</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contacts</li>
+                            <li>Click "Nouveau Contact" button</li>
+                            <li>Select organization from dropdown (or use autocomplete)</li>
+                            <li>Fill required fields: first_name, last_name, status</li>
+                            <li>Fill optional fields: position, department, phone, mobile, email</li>
+                            <li>Fill additional details: role, notes, preferences</li>
+                            <li>Click "Créer le Contact"</li>
+                            <li>Verify contact appears in contacts list</li>
+                            <li>Test edit: modify contact details and save</li>
+                            <li>Test delete: delete contact (verify cascade rules)</li>
+                            <li>Verify contacts grouped by organization</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">37</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Create Agencies</td>
-                    <td class="description-col">Create and manage agencies/establishments under organizations</td>
-                    <td class="url-col"><span class="empty-cell">To be implemented</span></td>
-                    <td class="test-col">Will allow creating multiple locations/branches for service provider organizations</td>
+                    <td class="title-col">PM - Create Agencies<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Create and manage agencies/establishments under organizations with 18 fields (name, code, type, address, city, specialties, etc)</td>
+                    <td class="url-col"><a href="http://localhost:3000/agencies">localhost:3000/agencies</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/agencies</li>
+                            <li>Click "Nouvelle Agence" button</li>
+                            <li>Select organization from dropdown</li>
+                            <li>Fill required fields: name, status</li>
+                            <li>Select agency type: headquarters, regional, branch, service center, depot, or other</li>
+                            <li>Fill optional fields: code, address, postal code, city, phone</li>
+                            <li>Add specialties or service details</li>
+                            <li>Click "Créer l'Agence"</li>
+                            <li>Verify agency appears in agencies list</li>
+                            <li>Test edit and delete operations</li>
+                            <li>Verify agencies grouped by organization</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">38</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Organization Search & Autocomplete</td>
-                    <td class="description-col">Search and autocomplete for organizations and contacts databases</td>
-                    <td class="url-col"><span class="empty-cell">To be implemented</span></td>
-                    <td class="test-col">Similar to equipment/family autocomplete but for organizations, to facilitate contract entry</td>
+                    <td class="title-col">PM - Organization Search & Autocomplete<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Search and autocomplete for organizations with real-time API, returns organizations with nested contacts and agencies</td>
+                    <td class="url-col"><a href="http://localhost:3000/api/organizations/autocomplete?query=ENGIE">localhost:3000/api/organizations/autocomplete?query=ENGIE</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Open terminal</li>
+                            <li>Run: curl "http://localhost:3000/api/organizations/autocomplete?query=ENGIE"</li>
+                            <li>Verify JSON response structure includes: id, name, legal_name, siret</li>
+                            <li>Verify contacts array with: first_name, last_name, position, phone</li>
+                            <li>Verify agencies array with: name, code, type, address</li>
+                            <li>Test with different queries (min 2 characters)</li>
+                            <li>Test with partial matches</li>
+                            <li>Verify results limited to current organization</li>
+                            <li>Verify debouncing/throttling works (multiple rapid requests)</li>
+                            <li>Verify proper HTTP status codes (200 for success, 422 for invalid)</li>
+                            <li>Test with special characters in query</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">39</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Link Organizations to Contracts</td>
-                    <td class="description-col">Manual linking of organizations (service providers) to contracts using autocomplete</td>
-                    <td class="url-col"><span class="empty-cell">To be implemented</span></td>
-                    <td class="test-col">Use organization autocomplete in contract form to link service provider with preview of details</td>
+                    <td class="title-col">PM - Link Organizations to Contracts<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">API and Stimulus controller ready for linking organizations to contracts (integration into contract forms pending)</td>
+                    <td class="url-col"><span class="empty-cell">Pending contract form integration</span></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Verify API endpoint exists: /api/organizations/autocomplete</li>
+                            <li>Check Stimulus controller: organization_autocomplete_controller.js</li>
+                            <li>Verify controller implements: search, debouncing, loading states</li>
+                            <li>Test debounce timing (300ms default)</li>
+                            <li>Verify minimum query length (2 characters)</li>
+                            <li>Test keyboard navigation support</li>
+                            <li>Verify results display nested contacts and agencies</li>
+                            <li>Test selection mechanism works</li>
+                            <li>Verify error handling for network failures</li>
+                            <li>Ready for integration into contract client/provider fields</li>
+                            <li>Documentation complete for future integration</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -328,16 +741,45 @@
                     <td class="title-col">PM - Generate Contract PDF Summary<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Generate PDF summary sheets per contract with 10 sections (shared service with SM)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/:id">localhost:3000/contracts/:id</a></td>
-                    <td class="test-col">On contract detail page, click "Générer Fiche PDF", verify PDF downloads with filename "Contrat_[NUMBER]_[DATE].pdf", verify 10 sections present</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to any contract detail page</li>
+                            <li>Locate "Générer Fiche PDF" button</li>
+                            <li>Click button - verify PDF generates and downloads</li>
+                            <li>Check filename format: "Contrat_[NUMBER]_[DATE].pdf"</li>
+                            <li>Verify 10 sections: Header, Emergency Contacts, Identification, Stakeholders, Scope, Equipment, Financial, Temporality, Services & SLA, Footer</li>
+                            <li>Verify purple/coral color scheme</li>
+                            <li>Verify emergency phone numbers in BOLD RED</li>
+                            <li>Verify page numbers in footer</li>
+                            <li>Test with contracts having different data completeness</li>
+                            <li>Verify shared service works for both PM and SM</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">41</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Export Contract List</td>
+                    <td class="title-col">PM - Export Contract List<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Export contract list to Excel with selected columns and applied filters</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
-                    <td class="test-col">Apply filters to contract list, customize columns, click export button, verify Excel file downloads with filters applied</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/contracts</li>
+                            <li>Apply various filters (site, status, date ranges, etc.)</li>
+                            <li>Customize visible columns using column selector</li>
+                            <li>Click "Exporter" button</li>
+                            <li>Verify Excel file downloads (.xlsx format)</li>
+                            <li>Open Excel file - verify applied filters reflected</li>
+                            <li>Verify only selected columns included</li>
+                            <li>Verify data matches filtered view</li>
+                            <li>Test with different filter combinations</li>
+                            <li>Verify proper formatting (dates, currencies, etc.)</li>
+                            <li>Verify filename includes timestamp</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -346,7 +788,22 @@
                     <td class="title-col">PM - Export Equipment List<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Export equipment list to Excel with hierarchy context (site > building > level > space)</td>
                     <td class="url-col"><a href="http://localhost:3000/equipment">localhost:3000/equipment</a></td>
-                    <td class="test-col">Go to /equipment, click "Exporter la Liste", verify Excel file downloads with 28 columns including hierarchy, verify formatting correct</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/equipment</li>
+                            <li>Click "Exporter la Liste" button</li>
+                            <li>Verify Excel file downloads (.xlsx format)</li>
+                            <li>Open Excel file - verify 28 columns present</li>
+                            <li>Verify hierarchy columns: Site Name, Building Name, Level Name, Space Name</li>
+                            <li>Verify equipment columns: Name, Type, Manufacturer, Model, Serial Number</li>
+                            <li>Verify technical columns: Installation Date, Warranty, Power Rating</li>
+                            <li>Verify OmniClass columns: Code, Technical Lot</li>
+                            <li>Verify proper formatting (dates, numbers)</li>
+                            <li>Verify header row with clear column names</li>
+                            <li>Verify filename: "Equipment_List_[DATE].xlsx"</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -355,7 +812,22 @@
                     <td class="title-col">PM - Export Sites Structure<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Export complete sites structure to Excel (hierarchical or multi-sheet)</td>
                     <td class="url-col"><a href="http://localhost:3000/sites">localhost:3000/sites</a></td>
-                    <td class="test-col">Go to /sites, test both exports: "Export Hiérarchique" (single sheet with indentation) and "Export Multi-Feuilles" (5 sheets: Sites, Buildings, Levels, Spaces, Equipment)</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/sites</li>
+                            <li>Click "Export Hiérarchique" button</li>
+                            <li>Verify Excel downloads with single sheet</li>
+                            <li>Verify hierarchical indentation shows: Site > Building > Level > Space > Equipment</li>
+                            <li>Close file, return to /sites</li>
+                            <li>Click "Export Multi-Feuilles" button</li>
+                            <li>Verify Excel downloads with 5 separate sheets</li>
+                            <li>Verify sheets: Sites, Buildings, Levels, Spaces, Equipment</li>
+                            <li>Verify relationships maintained via IDs</li>
+                            <li>Verify proper formatting on all sheets</li>
+                            <li>Compare both exports for data consistency</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -364,7 +836,22 @@
                     <td class="title-col">PM - Portfolio Overview Dashboard<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Dashboard displaying 7 KPIs, key indicators, and charts with real database data</td>
                     <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
-                    <td class="test-col">Navigate to /dashboard, verify 7 KPI cards with real data, verify key indicators section (status, renewals, spending), verify charts display correctly</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/dashboard</li>
+                            <li>Verify 7 KPI cards display: Total Sites, Total Buildings, Total Equipment, Active Contracts, Total Spend, Upcoming Renewals, Alerts</li>
+                            <li>Verify each KPI shows real data from database</li>
+                            <li>Verify key indicators section displays</li>
+                            <li>Verify contracts by status breakdown (4 statuses)</li>
+                            <li>Verify upcoming renewals (30/60/90 days)</li>
+                            <li>Verify family distribution with percentages</li>
+                            <li>Verify charts render correctly (no errors)</li>
+                            <li>Test responsive design (resize browser)</li>
+                            <li>Verify data updates when contracts change</li>
+                            <li>Verify organization isolation (only see own data)</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -373,7 +860,22 @@
                     <td class="title-col">PM - Key Indicators Display<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Display key indicators: contracts by status/family, upcoming renewals, spending by category</td>
                     <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
-                    <td class="test-col">On dashboard, verify key indicators show: contracts by status (4 statuses), renewals in 30/60/90 days, family distribution with percentages</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/dashboard</li>
+                            <li>Scroll to "Key Indicators" section</li>
+                            <li>Verify "Contracts by Status" displays 4 statuses: Active, Pending, Expired, Terminated</li>
+                            <li>Verify count and percentage for each status</li>
+                            <li>Verify "Upcoming Renewals" section shows renewals in 30/60/90 day windows</li>
+                            <li>Verify count for each renewal period</li>
+                            <li>Verify "Family Distribution" shows contract families with percentages</li>
+                            <li>Verify percentages sum to 100%</li>
+                            <li>Verify visual indicators (colors, icons) appropriate</li>
+                            <li>Test clicking indicators (should link to filtered views)</li>
+                            <li>Verify real-time data accuracy</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
@@ -382,7 +884,22 @@
                     <td class="title-col">PM - Analytics Dashboard<span class="status-badge status-done">✓</span></td>
                     <td class="description-col">Analytics page with charts showing contract distribution, spending trends, equipment distribution</td>
                     <td class="url-col"><a href="http://localhost:3000/analytics">localhost:3000/analytics</a></td>
-                    <td class="test-col">Navigate to /analytics, verify 3 sections display: Contract Distribution (donut charts), Spending Trends (monthly chart), Equipment Distribution (by type/site/age)</td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/analytics</li>
+                            <li>Verify "Contract Distribution" section with donut charts</li>
+                            <li>Verify charts show: by status, by family, by site</li>
+                            <li>Verify "Spending Trends" section with monthly line/bar chart</li>
+                            <li>Verify chart shows monthly spending over 12 months</li>
+                            <li>Verify "Equipment Distribution" section</li>
+                            <li>Verify charts show: by type, by site, by age</li>
+                            <li>Test chart interactions (hover, click, zoom if available)</li>
+                            <li>Verify legends display correctly</li>
+                            <li>Verify data labels clear and readable</li>
+                            <li>Test export/print functionality if available</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
             </tbody>

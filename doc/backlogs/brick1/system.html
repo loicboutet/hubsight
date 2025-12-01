@@ -59,7 +59,15 @@
                     <td class="title-col">System - Data Isolation</td>
                     <td class="description-col">Complete data isolation between clients ensuring no cross-client data access or visibility</td>
                     <td class="url-col"><span class="empty-cell">System-wide</span></td>
-                    <td class="test-col">Validated through all role-based tests by verifying organization_id scoping in all queries. Test by logging in as different organizations and confirming complete data separation.</td>
+                    <td class="test-col"><strong>Step-by-step Testing:</strong><br>
+                    1. Create two test organizations (Org A, Org B) with different users<br>
+                    2. Login as Org A user, create contracts/equipment/sites<br>
+                    3. Verify Org A data appears in all lists and searches<br>
+                    4. Login as Org B user, verify Org A data is NOT visible<br>
+                    5. Check database: SELECT * FROM contracts WHERE organization_id = [org_id]<br>
+                    6. Verify DataIsolation concern applied to all models with organization_id<br>
+                    7. Test direct URL access to other org's resources (should 404/403)<br>
+                    8. Inspect Rails logs for WHERE organization_id = X in all queries</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -68,7 +76,15 @@
                     <td class="title-col">System - Responsive Web Design</td>
                     <td class="description-col">Responsive web interface working seamlessly on desktop, tablet, and mobile devices</td>
                     <td class="url-col"><span class="empty-cell">All pages</span></td>
-                    <td class="test-col">Test all pages at different viewport sizes: Desktop (1920px+), Tablet (768px-1024px), Mobile (320px-767px). Use browser DevTools responsive mode to verify layouts adapt correctly.</td>
+                    <td class="test-col"><strong>Chrome DevTools Testing:</strong><br>
+                    1. Open DevTools (F12) → Toggle device toolbar (Ctrl+Shift+M)<br>
+                    2. Test breakpoints: 320px (iPhone SE), 375px (iPhone X), 768px (iPad), 1024px (iPad Pro), 1920px (Desktop)<br>
+                    3. Key pages to verify: Dashboard, Contracts Index, Equipment Index, Sites Show, Portfolio<br>
+                    4. Check: Navigation collapses to hamburger menu on mobile<br>
+                    5. Verify: Tables become scrollable or stack on small screens<br>
+                    6. Test: Forms remain usable, buttons accessible on all sizes<br>
+                    7. Validate: No horizontal scrolling, text remains readable<br>
+                    8. Check touch targets: Minimum 44x44px for mobile interactions</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -77,7 +93,16 @@
                     <td class="title-col">System - Client Branding</td>
                     <td class="description-col">Clean design with client's graphic charter (logo and colors integration)</td>
                     <td class="url-col"><span class="empty-cell">All pages</span></td>
-                    <td class="test-col">Verify consistent purple/coral color scheme throughout application. Check logo placement in navigation. Verify gradient backgrounds match brand guidelines.</td>
+                    <td class="test-col"><strong>Visual Brand Verification:</strong><br>
+                    1. Check primary gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%)<br>
+                    2. Verify secondary gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)<br>
+                    3. Inspect navigation header: Logo visible, proper spacing<br>
+                    4. Verify button styles: Consistent hover states, rounded corners<br>
+                    5. Check typography: Font family consistency across pages<br>
+                    6. Test card components: Gradient backgrounds on stat cards<br>
+                    7. Verify table headers: Dark gradient (135deg, #34495e, #2c3e50)<br>
+                    8. Inspect DevTools → Computed styles to confirm exact color codes<br>
+                    9. Check layouts: admin.html.erb and user.html.erb branding</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -86,7 +111,18 @@
                     <td class="title-col">System - HTTPS & Security</td>
                     <td class="description-col">Secure hosting in France with HTTPS connections, SSL certificates, and data encryption</td>
                     <td class="url-col"><span class="empty-cell">Production</span></td>
-                    <td class="test-col">Verify HTTPS enforced on all pages. Check SSL certificate valid. Confirm server located in France. Test secure headers (HSTS, CSP). Verify password encryption in database.</td>
+                    <td class="test-col"><strong>Security Checklist:</strong><br>
+                    1. <strong>HTTPS:</strong> Visit all pages, verify padlock in browser address bar<br>
+                    2. <strong>SSL Certificate:</strong> Click padlock → Certificate valid, not expired<br>
+                    3. <strong>Force HTTPS:</strong> Try http:// URLs, should redirect to https://<br>
+                    4. <strong>Security Headers:</strong> Open DevTools → Network → Response Headers:<br>
+                    &nbsp;&nbsp;&nbsp;- Strict-Transport-Security: max-age=31536000<br>
+                    &nbsp;&nbsp;&nbsp;- X-Frame-Options: SAMEORIGIN<br>
+                    &nbsp;&nbsp;&nbsp;- X-Content-Type-Options: nosniff<br>
+                    5. <strong>Password Storage:</strong> Rails console → User.first.password_digest (should be bcrypt hash)<br>
+                    6. <strong>Session Security:</strong> Check secure, httponly flags on cookies<br>
+                    7. <strong>Server Location:</strong> Verify hosting provider datacenter in France<br>
+                    8. Run security scan: rails secret (should not be exposed in logs)</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -95,7 +131,16 @@
                     <td class="title-col">System - Global Search</td>
                     <td class="description-col">Global search functionality across contracts, equipment, sites, organizations with faceted filtering</td>
                     <td class="url-col"><a href="http://localhost:3000/search">localhost:3000/search</a></td>
-                    <td class="test-col">To be implemented. Will provide unified search across all entities with filters by type, organization scoping, and relevance ranking.</td>
+                    <td class="test-col"><strong>Implementation Status:</strong> Search controller exists at /search but lacks backend logic.<br>
+                    <strong>When Implemented, Test:</strong><br>
+                    1. Navigate to /search, verify search interface loads<br>
+                    2. Enter search query, verify results from multiple entities<br>
+                    3. Test entity filters: Contracts, Equipment, Sites, Organizations<br>
+                    4. Verify organization scoping: Only see current org's data<br>
+                    5. Test search accuracy: Partial matches, relevance ranking<br>
+                    6. Performance: Search responds within 500ms for typical queries<br>
+                    7. Edge cases: Empty query, special characters, very long strings<br>
+                    8. Check faceted filtering: Filter by type, date range, status</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
             </tbody>
