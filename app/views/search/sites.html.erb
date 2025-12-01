@@ -87,7 +87,13 @@
               </p>
             <% end %>
             <div style="display: flex; gap: var(--space-sm); margin-top: var(--space-md);">
-              <%= link_to 'Voir', site_path(site), class: 'typo-btn-small-secondary', style: 'text-decoration: none; font-size: 0.875rem;' %>
+              <%= link_to site_path(site), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Voir
+              <% end %>
             </div>
           </div>
         <% end %>
