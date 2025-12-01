@@ -104,6 +104,7 @@ Rails.application.routes.draw do
       get 'upload'
       post 'process_upload'
       get 'compare'
+      patch 'update_columns'  # PATCH /contracts/update_columns
     end
     member do
       get 'validate'
