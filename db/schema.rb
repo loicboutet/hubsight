@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_064306) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_102949) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -220,6 +220,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_064306) do
     t.string "validated_by"
     t.text "validation_notes"
     t.json "corrected_fields", default: {}
+    t.decimal "vat_rate", precision: 5, scale: 2, default: "20.0"
     t.index ["contract_family"], name: "index_contracts_on_contract_family"
     t.index ["contract_type"], name: "index_contracts_on_contract_type"
     t.index ["contractor_organization_name"], name: "index_contracts_on_contractor_organization_name"
@@ -238,6 +239,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_064306) do
     t.index ["title"], name: "index_contracts_on_title"
     t.index ["validated_at"], name: "index_contracts_on_validated_at"
     t.index ["validation_status"], name: "index_contracts_on_validation_status"
+    t.index ["vat_rate"], name: "index_contracts_on_vat_rate"
   end
 
   create_table "equipment", force: :cascade do |t|

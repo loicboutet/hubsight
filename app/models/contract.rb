@@ -17,12 +17,14 @@ class Contract < ApplicationRecord
   validates :ocr_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
   validates :extraction_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
   validates :validation_status, inclusion: { in: %w[pending in_progress validated] }, allow_nil: true
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }, allow_nil: true
   
   # PDF validations - OPTIONAL for manual contract creation
   validate :pdf_document_validation, if: -> { pdf_document.attached? }
 
   # Callbacks
   before_save :calculate_contract_dates
+  before_save :calculate_vat_amounts
   before_save :track_amount_updates
   after_commit :trigger_ocr_extraction, on: [:create, :update], if: :should_trigger_ocr?
   after_commit :trigger_llm_extraction, on: [:update], if: :should_trigger_llm?
@@ -266,6 +268,33 @@ class Contract < ApplicationRecord
     corrected_fields&.key?(field_name.to_s)
   end
   
+  # VAT Calculation Methods
+  
+  # Calculate TTC (inclusive) from HT (exclusive) amount
+  def calculate_amount_ttc_from_ht
+    return nil unless annual_amount_ht && vat_rate
+    (annual_amount_ht * (1 + vat_rate / 100.0)).round(2)
+  end
+  
+  # Calculate HT (exclusive) from TTC (inclusive) amount
+  def calculate_amount_ht_from_ttc
+    return nil unless annual_amount_ttc && vat_rate
+    (annual_amount_ttc / (1 + vat_rate / 100.0)).round(2)
+  end
+  
+  # Calculate monthly amount from annual TTC
+  def calculate_monthly_from_annual
+    return nil unless annual_amount_ttc
+    (annual_amount_ttc / 12.0).round(2)
+  end
+  
+  # Check if VAT calculation inputs have changed
+  def vat_calculation_inputs_changed?
+    vat_rate_changed? ||
+    annual_amount_ht_changed? ||
+    annual_amount_ttc_changed?
+  end
+  
   # Contract Date Calculation Methods
   
   # Calculate the contract end date based on start date, initial duration, and renewals
@@ -331,6 +360,28 @@ class Contract < ApplicationRecord
     # Only recalculate if relevant fields have changed or if dates are nil
     if date_calculation_inputs_changed? || end_date.nil? || last_renewal_date.nil? || next_deadline_date.nil?
       update_calculated_dates
+    end
+  end
+  
+  # Callback to automatically calculate VAT amounts before saving
+  def calculate_vat_amounts
+    return unless vat_rate.present?
+    
+    # Determine which field changed to decide calculation direction
+    # Priority: if HT changed and TTC didn't, calculate TTC from HT
+    if annual_amount_ht_changed? && !annual_amount_ttc_changed?
+      self.annual_amount_ttc = calculate_amount_ttc_from_ht
+    # If TTC changed and HT didn't, calculate HT from TTC
+    elsif annual_amount_ttc_changed? && !annual_amount_ht_changed?
+      self.annual_amount_ht = calculate_amount_ht_from_ttc
+    # If VAT rate changed, recalculate TTC from HT (HT is the base)
+    elsif vat_rate_changed? && annual_amount_ht.present?
+      self.annual_amount_ttc = calculate_amount_ttc_from_ht
+    end
+    
+    # Always recalculate monthly from annual TTC if TTC is present
+    if annual_amount_ttc.present?
+      self.monthly_amount = calculate_monthly_from_annual
     end
   end
   

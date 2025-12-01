@@ -450,26 +450,89 @@
         <span style="font-size: 1.5rem;">💰</span>
         <span style="font-size: 1.2rem;">Aspects Financiers (15 champs)</span>
       </summary>
-      <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+      <div data-controller="vat-calculator" style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <!-- VAT Rate Field - NEW -->
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Taux de TVA (%)
+          </label>
+          <%= f.number_field :vat_rate, 
+            value: contract.vat_rate || 20.0,
+            placeholder: "Ex: 20, 10, 5.5",
+            step: 0.01, 
+            min: 0, 
+            max: 100,
+            data: {
+              vat_calculator_target: "vatRate",
+              action: "input->vat-calculator#calculate"
+            },
+            style: "width: 100%;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            💡 Taux standard France: 20% | Réduit: 10% ou 5.5%
+          </p>
+        </div>
+
+        <div style="grid-column: 2;">
+          <!-- Empty spacing cell -->
+        </div>
+
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Montant Annuel HT (€)
           </label>
-          <%= f.number_field :annual_amount_ht, value: contract.annual_amount_ht, placeholder: "Ex: 85000", step: 0.01, min: 0, style: "width: 100%;" %>
+          <%= f.number_field :annual_amount_ht, 
+            value: contract.annual_amount_ht, 
+            placeholder: "Ex: 85000", 
+            step: 0.01, 
+            min: 0,
+            data: {
+              vat_calculator_target: "amountHt",
+              action: "input->vat-calculator#calculateFromHt"
+            },
+            style: "width: 100%;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            💡 Montant hors taxes (base de calcul)
+          </p>
         </div>
 
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
             Montant Annuel TTC (€)
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
           </label>
-          <%= f.number_field :annual_amount_ttc, value: contract.annual_amount_ttc, placeholder: "Ex: 102000", step: 0.01, min: 0, style: "width: 100%;" %>
+          <%= f.number_field :annual_amount_ttc, 
+            value: contract.annual_amount_ttc, 
+            placeholder: "Ex: 102000", 
+            step: 0.01, 
+            min: 0,
+            data: {
+              vat_calculator_target: "amountTtc",
+              action: "input->vat-calculator#calculateFromTtc"
+            },
+            style: "width: 100%; background-color: #f3f4f6;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculé automatiquement : HT × (1 + TVA/100)
+          </p>
         </div>
 
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
             Montant Mensuel (€)
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
           </label>
-          <%= f.number_field :monthly_amount, value: contract.monthly_amount, placeholder: "Ex: 7083", step: 0.01, min: 0, style: "width: 100%;" %>
+          <%= f.number_field :monthly_amount, 
+            value: contract.monthly_amount, 
+            placeholder: "Ex: 8500", 
+            step: 0.01, 
+            min: 0,
+            readonly: true,
+            data: {
+              vat_calculator_target: "monthlyAmount"
+            },
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculé automatiquement : Montant TTC ÷ 12
+          </p>
         </div>
 
         <div>
