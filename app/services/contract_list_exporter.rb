@@ -131,34 +131,45 @@ class ContractListExporter
     end
     
     # Site filter
-    if @filter_params[:site].present?
-      contracts = contracts.where(site_id: @filter_params[:site])
-    end
+    contracts = contracts.where(site_id: @filter_params[:site]) if @filter_params[:site].present?
+    
+    # Building filter
+    contracts = contracts.where(building_id: @filter_params[:building]) if @filter_params[:building].present?
     
     # Contract type filter
-    if @filter_params[:type].present?
-      contracts = contracts.where(contract_type: @filter_params[:type])
-    end
+    contracts = contracts.where(contract_type: @filter_params[:type]) if @filter_params[:type].present?
     
     # Family filter
-    if @filter_params[:family].present?
-      contracts = contracts.where("contract_family LIKE ?", "#{@filter_params[:family]}%")
-    end
+    contracts = contracts.where("contract_family LIKE ?", "#{@filter_params[:family]}%") if @filter_params[:family].present?
     
     # Subfamily filter
-    if @filter_params[:subfamily].present?
-      contracts = contracts.where(purchase_subfamily: @filter_params[:subfamily])
-    end
+    contracts = contracts.where(purchase_subfamily: @filter_params[:subfamily]) if @filter_params[:subfamily].present?
     
     # Provider filter
-    if @filter_params[:provider].present?
-      contracts = contracts.where("contractor_organization_name LIKE ?", "%#{@filter_params[:provider]}%")
-    end
+    contracts = contracts.where("contractor_organization_name LIKE ?", "%#{@filter_params[:provider]}%") if @filter_params[:provider].present?
+    
+    # Renewal mode filter
+    contracts = contracts.where(renewal_mode: @filter_params[:renewal]) if @filter_params[:renewal].present?
     
     # Status filter
-    if @filter_params[:status].present?
-      contracts = contracts.where(status: @filter_params[:status])
-    end
+    contracts = contracts.where(status: @filter_params[:status]) if @filter_params[:status].present?
+    
+    # Date range filters
+    contracts = contracts.where("signature_date >= ?", @filter_params[:signature_date_from]) if @filter_params[:signature_date_from].present?
+    contracts = contracts.where("signature_date <= ?", @filter_params[:signature_date_to]) if @filter_params[:signature_date_to].present?
+    
+    contracts = contracts.where("execution_start_date >= ?", @filter_params[:start_date_from]) if @filter_params[:start_date_from].present?
+    contracts = contracts.where("execution_start_date <= ?", @filter_params[:start_date_to]) if @filter_params[:start_date_to].present?
+    
+    contracts = contracts.where("end_date >= ?", @filter_params[:end_date_from]) if @filter_params[:end_date_from].present?
+    contracts = contracts.where("end_date <= ?", @filter_params[:end_date_to]) if @filter_params[:end_date_to].present?
+    
+    # Amount range filters
+    contracts = contracts.where("annual_amount_ht >= ?", @filter_params[:amount_ht_min]) if @filter_params[:amount_ht_min].present?
+    contracts = contracts.where("annual_amount_ht <= ?", @filter_params[:amount_ht_max]) if @filter_params[:amount_ht_max].present?
+    
+    contracts = contracts.where("annual_amount_ttc >= ?", @filter_params[:amount_ttc_min]) if @filter_params[:amount_ttc_min].present?
+    contracts = contracts.where("annual_amount_ttc <= ?", @filter_params[:amount_ttc_max]) if @filter_params[:amount_ttc_max].present?
     
     contracts
   end

@@ -5,15 +5,27 @@ class ExportsController < ApplicationController
   def contracts
     organization = current_user.organization
 
-    # Extract filter parameters from request
+    # Extract filter parameters from request (including advanced filters)
     filter_params = {
       search: params[:search],
       site: params[:site],
+      building: params[:building],
       type: params[:type],
       family: params[:family],
       subfamily: params[:subfamily],
       provider: params[:provider],
+      renewal: params[:renewal],
       status: params[:status],
+      signature_date_from: params[:signature_date_from],
+      signature_date_to: params[:signature_date_to],
+      start_date_from: params[:start_date_from],
+      start_date_to: params[:start_date_to],
+      end_date_from: params[:end_date_from],
+      end_date_to: params[:end_date_to],
+      amount_ht_min: params[:amount_ht_min],
+      amount_ht_max: params[:amount_ht_max],
+      amount_ttc_min: params[:amount_ttc_min],
+      amount_ttc_max: params[:amount_ttc_max],
       sort: params[:sort],
       direction: params[:direction]
     }

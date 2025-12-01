@@ -63,8 +63,21 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">User Registration - Sign Up</td>
                     <td class="description-col">Implement user registration/signup form with email, password, name fields. Email verification required before account activation</td>
-                    <td class="url-col"><a href="/admin/portfolio_managers/new">/admin/portfolio_managers/new</a> or <a href="/site_managers/new">/site_managers/new</a></td>
-                    <td class="test-col">Login as admin (admin@hubsight.com / Password123!), go to /admin/portfolio_managers/new, fill email/first_name/last_name, click Create. Invitation email opens in browser. Click invitation link, set strong password (8+ chars, uppercase, lowercase, digit, special char), activate account. Verify real-time password strength meter shows weak/medium/strong. Verify all requirements turn green with checkmarks.</td>
+                    <td class="url-col"><a href="http://localhost:3000/admin/portfolio_managers/new">localhost:3000/admin/portfolio_managers/new</a> or <a href="http://localhost:3000/site_managers/new">localhost:3000/site_managers/new</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as admin (admin@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/admin/portfolio_managers/new</li>
+                            <li>Fill email, first_name, last_name fields</li>
+                            <li>Click "Create" button</li>
+                            <li>Verify invitation email opens in browser</li>
+                            <li>Click invitation link</li>
+                            <li>Set strong password (8+ chars, uppercase, lowercase, digit, special char)</li>
+                            <li>Verify real-time password strength meter shows weak/medium/strong</li>
+                            <li>Verify all requirements turn green with checkmarks</li>
+                            <li>Activate account</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -72,8 +85,22 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">User Login - Sign In</td>
                     <td class="description-col">Implement secure login functionality with email/password, remember me option, and failed login attempt tracking</td>
-                    <td class="url-col"><a href="/login">/login</a></td>
-                    <td class="test-col">Go to /login, enter email/password, check 'Remember me', click Sign In. Verify redirect to /dashboard. Try wrong password 5 times - account locks. Check letter_opener for unlock email. Click unlock link. Login again successfully. Verify login count increments in profile.</td>
+                    <td class="url-col"><a href="http://localhost:3000/login">localhost:3000/login</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Navigate to localhost:3000/login</li>
+                            <li>Enter valid email and password</li>
+                            <li>Check 'Remember me' checkbox</li>
+                            <li>Click "Sign In" button</li>
+                            <li>Verify redirect to localhost:3000/dashboard</li>
+                            <li>Logout and try wrong password 5 times</li>
+                            <li>Verify account locks</li>
+                            <li>Check letter_opener for unlock email</li>
+                            <li>Click unlock link in email</li>
+                            <li>Login again successfully</li>
+                            <li>Verify login count increments in profile</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -81,8 +108,22 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">Password Reset - Forgot Password</td>
                     <td class="description-col">Implement password reset flow: request reset link via email, verify token, set new password with strength validation</td>
-                    <td class="url-col"><a href="/password/new">/password/new</a></td>
-                    <td class="test-col">Go to /login, click 'Forgot password?', enter email, submit. Check letter_opener for reset email. Click reset link, enter new strong password (watch strength meter), confirm password, submit. Login with new password. Verify password strength validation works.</td>
+                    <td class="url-col"><a href="http://localhost:3000/password/new">localhost:3000/password/new</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Navigate to localhost:3000/login</li>
+                            <li>Click 'Forgot password?' link</li>
+                            <li>Enter email address</li>
+                            <li>Click submit button</li>
+                            <li>Check letter_opener for reset email</li>
+                            <li>Click reset link in email</li>
+                            <li>Enter new strong password (watch strength meter)</li>
+                            <li>Confirm password in second field</li>
+                            <li>Submit form</li>
+                            <li>Login with new password</li>
+                            <li>Verify password strength validation works</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -90,8 +131,19 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">Email Verification</td>
                     <td class="description-col">Email confirmation system: send verification email on signup, validate confirmation token, activate account</td>
-                    <td class="url-col"><a href="Automatic on invitation acceptance">Automatic on invitation acceptance</a></td>
-                    <td class="test-col">When accepting invitation (/invitations/accept/:token), email is auto-confirmed. For email changes: go to /profile/edit, change email, save. Check letter_opener for confirmation email. Click confirmation link. Verify new email confirmed and active.</td>
+                    <td class="url-col"><a href="http://localhost:3000/invitations/accept/:token">localhost:3000/invitations/accept/:token</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Accept invitation at localhost:3000/invitations/accept/:token</li>
+                            <li>Verify email is auto-confirmed</li>
+                            <li>Navigate to localhost:3000/profile/edit</li>
+                            <li>Change email address</li>
+                            <li>Save changes</li>
+                            <li>Check letter_opener for confirmation email</li>
+                            <li>Click confirmation link</li>
+                            <li>Verify new email confirmed and active</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -99,8 +151,23 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">User Profile Management</td>
                     <td class="description-col">Allow users to update their profile: name, email, password, notification preferences, language settings</td>
-                    <td class="url-col"><a href="/profile/edit">/profile/edit</a></td>
-                    <td class="test-col">Login, go to /profile/edit. Update first/last name, phone, department, language (fr/en). Toggle notification preferences (4 checkboxes). To change password: enter current password, new password (watch strength meter), confirm. Click Save. Verify changes persist. Check login history shows: sign-in count, current/last IP, timestamps.</td>
+                    <td class="url-col"><a href="http://localhost:3000/profile/edit">localhost:3000/profile/edit</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login to application</li>
+                            <li>Navigate to localhost:3000/profile/edit</li>
+                            <li>Update first name and last name</li>
+                            <li>Update phone and department</li>
+                            <li>Change language (fr/en)</li>
+                            <li>Toggle notification preferences (4 checkboxes)</li>
+                            <li>To change password: enter current password</li>
+                            <li>Enter new password (watch strength meter)</li>
+                            <li>Confirm new password</li>
+                            <li>Click Save button</li>
+                            <li>Verify changes persist after page reload</li>
+                            <li>Check login history shows sign-in count, current/last IP, timestamps</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -108,8 +175,22 @@
                     <td class="brick-col">Brick 1</td>
                     <td class="title-col">Session Management</td>
                     <td class="description-col">Secure session handling with timeout, remember me cookie, concurrent session management, logout functionality</td>
-                    <td class="url-col"><a href="/active_sessions">/active_sessions</a></td>
-                    <td class="test-col">Login, go to /active_sessions. View active sessions showing device type, browser, OS, IP, timestamps. Login from different browser/device - see multiple sessions listed. Click 'Terminer' on non-current session - that device logged out. Verify cannot end current session. Wait 30 min inactive - session expires. Run CleanupSessionsJob.perform_now in console to test cleanup.</td>
+                    <td class="url-col"><a href="http://localhost:3000/active_sessions">localhost:3000/active_sessions</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login to application</li>
+                            <li>Navigate to localhost:3000/active_sessions</li>
+                            <li>View active sessions showing device type, browser, OS, IP, timestamps</li>
+                            <li>Login from different browser or device</li>
+                            <li>Verify multiple sessions listed</li>
+                            <li>Click 'Terminer' button on a non-current session</li>
+                            <li>Verify that device is logged out</li>
+                            <li>Verify cannot end current session</li>
+                            <li>Wait 30 minutes inactive</li>
+                            <li>Verify session expires automatically</li>
+                            <li>Run CleanupSessionsJob.perform_now in console to test cleanup</li>
+                        </ol>
+                    </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
