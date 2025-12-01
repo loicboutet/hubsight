@@ -11,6 +11,7 @@ class Contract < ApplicationRecord
   validates :annual_amount, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :ocr_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
   validates :extraction_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
+  validates :validation_status, inclusion: { in: %w[pending in_progress validated] }, allow_nil: true
   
   # PDF validations
   validate :pdf_document_validation, if: -> { pdf_document.attached? }
@@ -205,6 +206,57 @@ class Contract < ApplicationRecord
   # Get formatted confidence percentage
   def extraction_confidence_percent
     extraction_confidence ? "#{extraction_confidence.round(1)}%" : 'N/A'
+  end
+  
+  # Validation Scopes
+  scope :validation_pending, -> { where(validation_status: 'pending') }
+  scope :validation_in_progress, -> { where(validation_status: 'in_progress') }
+  scope :validated, -> { where(validation_status: 'validated') }
+  scope :needs_validation, -> { extraction_completed.where(validation_status: ['pending', nil]) }
+  
+  # Validation helper methods
+  def validation_pending?
+    validation_status == 'pending' || validation_status.nil?
+  end
+  
+  def validation_in_progress?
+    validation_status == 'in_progress'
+  end
+  
+  def validated?
+    validation_status == 'validated'
+  end
+  
+  def needs_validation?
+    extraction_completed? && (validation_status.nil? || validation_status == 'pending')
+  end
+  
+  def validation_status_badge_color
+    case validation_status
+    when 'validated' then 'green'
+    when 'in_progress' then 'blue'
+    when 'pending' then 'yellow'
+    else 'gray'
+    end
+  end
+  
+  def validation_status_display
+    case validation_status
+    when 'validated' then 'Validé'
+    when 'in_progress' then 'En cours'
+    when 'pending' then 'En attente'
+    else 'Non validé'
+    end
+  end
+  
+  # Track which fields were manually corrected during validation
+  def mark_field_as_corrected(field_name)
+    self.corrected_fields ||= {}
+    self.corrected_fields[field_name] = true
+  end
+  
+  def field_corrected?(field_name)
+    corrected_fields&.key?(field_name.to_s)
   end
 
   private

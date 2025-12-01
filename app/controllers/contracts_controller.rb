@@ -387,81 +387,48 @@ class ContractsController < ApplicationController
   end
 
   def validate
-    # Mock contract being validated
-    @contract = ::OpenStruct.new(
-      id: params[:id],
-      contract_number: "AX000",
-      pdf_url: "/sample_contract.png"
-    )
+    @contract = Contract.find(params[:id])
     
-    # Mock extracted fields with confidence scores (matching screenshot)
-    @extracted_fields = [
-      {
-        label: "Objet",
-        value: "Contrat de maintenance et entretien des installations de plomberie, de climatisation et de ventilation",
-        confidence: 0.99
-      },
-      {
-        label: "Site",
-        value: "Résidence AMARAGGI, 11, Boulevard Sérurier, 75019 PARIS",
-        confidence: 1.00
-      },
-      {
-        label: "Numéro de contrat",
-        value: "AX000",
-        confidence: 1.00
-      },
-      {
-        label: "Le fournisseur",
-        value: "AXONE",
-        confidence: 0.98
-      },
-      {
-        label: "Le client",
-        value: "FONDATION CASIP-COJASOR",
-        confidence: 1.00
-      },
-      {
-        label: "Date de prise d'effet du contrat",
-        value: "01/01/2024",
-        confidence: 1.00
-      },
-      {
-        label: "Durée du contrat",
-        value: "1 an",
-        confidence: 1.00
-      },
-      {
-        label: "Clause de renouvellement",
-        value: "Tacite",
-        confidence: 1.00
-      },
-      {
-        label: "Durée de renouvellement",
-        value: "1",
-        confidence: 1.00
-      },
-      {
-        label: "Nature des prestations prévues au contrat",
-        value: "Maintenance préventive et curative des équipements du réseau de climatisations, chauffage et ventilation des locaux, incluant visites mensuelles, semestrielles et annuelles selon les équipements, dépannage sous 48h, astreinte, assistance technique, état des lieux et rapport de prise en charge.",
-        confidence: 0.95
-      },
-      {
-        label: "Procédure de dépannage",
-        value: "En cas de panne, intervention sous 48h après appel du client au 01.69.34.69.13 ou par mail à maintenance@axone-idf.com, du lundi au vendredi de 8h30 à 17h30. Déplacements et temps d'intervention inclus, fournitures facturées en sus.",
-        confidence: 0.97
-      },
-      {
-        label: "Astreinte",
-        value: "Intervention sous 48h après appel du client, 7j/7, 365 jours par an : du lundi au vendredi de 17h30 à 8h30, samedi et dimanche 24h/24. Abonnement inclus, interventions et déplacements facturés en sus au tarif de régie, fournitures en sus.",
-        confidence: 0.97
-      }
-    ]
+    # Check authorization
+    unless @contract.organization_id == current_user.organization_id
+      redirect_to contracts_path, alert: "Accès non autorisé"
+      return
+    end
+    
+    # Check if contract has completed extraction
+    unless @contract.extraction_completed?
+      redirect_to contract_path(@contract), alert: "L'extraction des données doit être terminée avant la validation"
+      return
+    end
+    
+    # Mark as in progress if still pending
+    if @contract.validation_pending?
+      @contract.update(validation_status: 'in_progress')
+    end
   end
 
   def confirm_validation
-    # Handle contract validation
-    redirect_to contract_path(params[:id]), notice: "Contrat validé avec succès"
+    @contract = Contract.find(params[:id])
+    
+    # Check authorization
+    unless @contract.organization_id == current_user.organization_id
+      redirect_to contracts_path, alert: "Accès non autorisé"
+      return
+    end
+    
+    # Update contract with validated data
+    if @contract.update(validation_params)
+      # Mark as validated
+      @contract.update(
+        validation_status: 'validated',
+        validated_at: Time.current,
+        validated_by: "#{current_user.first_name} #{current_user.last_name}".strip
+      )
+      
+      redirect_to contract_path(@contract), notice: "Contrat validé avec succès"
+    else
+      render :validate, status: :unprocessable_entity
+    end
   end
 
   def compare
@@ -527,6 +494,81 @@ class ContractsController < ApplicationController
   end
 
   private
+  
+  def validation_params
+    # Get all the extracted fields that can be validated/corrected
+    params.require(:contract).permit(
+      :title,
+      :contract_object,
+      :contract_type,
+      :purchase_subfamily,
+      :detailed_description,
+      :contracting_method,
+      :public_reference,
+      :contractor_organization_name,
+      :contractor_contact_name,
+      :contractor_agency_name,
+      :client_organization_name,
+      :client_contact_name,
+      :managing_department,
+      :monitoring_manager,
+      :contractor_phone,
+      :contractor_email,
+      :client_contact_email,
+      :equipment_count,
+      :geographic_areas,
+      :building_names,
+      :floor_levels,
+      :specific_zones,
+      :technical_lot,
+      :equipment_categories,
+      :coverage_description,
+      :exclusions,
+      :special_conditions,
+      :scope_notes,
+      :annual_amount_ht,
+      :annual_amount_ttc,
+      :monthly_amount,
+      :billing_method,
+      :billing_frequency,
+      :payment_terms,
+      :revision_conditions,
+      :revision_index,
+      :revision_frequency,
+      :late_payment_penalties,
+      :financial_guarantee,
+      :deposit_amount,
+      :price_revision_date,
+      :last_amount_update,
+      :budget_code,
+      :signature_date,
+      :execution_start_date,
+      :initial_duration_months,
+      :renewal_duration_months,
+      :renewal_count,
+      :automatic_renewal,
+      :notice_period_days,
+      :next_deadline_date,
+      :last_renewal_date,
+      :termination_date,
+      :service_nature,
+      :intervention_frequency,
+      :intervention_delay_hours,
+      :resolution_delay_hours,
+      :working_hours,
+      :on_call_24_7,
+      :sla_percentage,
+      :spare_parts_included,
+      :supplies_included,
+      :report_required,
+      :validation_notes,
+      covered_sites: [],
+      covered_buildings: [],
+      covered_equipment_types: [],
+      kpis: [],
+      appendix_documents: []
+    )
+  end
 
   def contract_params
     params.require(:contract).permit(

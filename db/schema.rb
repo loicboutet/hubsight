@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_30_191541) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_064306) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -215,6 +215,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_191541) do
     t.decimal "extraction_confidence", precision: 5, scale: 2
     t.datetime "extraction_processed_at"
     t.text "extraction_notes"
+    t.string "validation_status", default: "pending"
+    t.datetime "validated_at"
+    t.string "validated_by"
+    t.text "validation_notes"
+    t.json "corrected_fields", default: {}
     t.index ["contract_family"], name: "index_contracts_on_contract_family"
     t.index ["contract_type"], name: "index_contracts_on_contract_type"
     t.index ["contractor_organization_name"], name: "index_contracts_on_contractor_organization_name"
@@ -231,6 +236,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_191541) do
     t.index ["start_date"], name: "index_contracts_on_start_date"
     t.index ["status"], name: "index_contracts_on_status"
     t.index ["title"], name: "index_contracts_on_title"
+    t.index ["validated_at"], name: "index_contracts_on_validated_at"
+    t.index ["validation_status"], name: "index_contracts_on_validation_status"
   end
 
   create_table "equipment", force: :cascade do |t|
