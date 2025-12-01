@@ -43,7 +43,7 @@
         <div class="stats">
             <div class="stat-card"><div class="stat-number">56</div><div class="stat-label">Total Tasks</div></div>
             <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Brick Phase</div></div>
-            <div class="stat-card"><div class="stat-number">16</div><div class="stat-label">Tasks Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">17</div><div class="stat-label">Tasks Implemented</div></div>
         </div>
         <table>
             <thead>
@@ -602,13 +602,13 @@ NOTE: Equipment types are reference data (OmniClass Table 23 classifications) sh
                     <td class="test-col"><span class="empty-cell">-</span></td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">43</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Export Sites Structure</td>
+                    <td class="title-col">PM - Export Sites Structure<span class="status-badge status-done">✓ DONE</span></td>
                     <td class="description-col">Export complete sites structure to Excel with hierarchical indentation or nested sheets</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="url-col"><a href="/sites">/sites</a> (see export buttons)</td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Navigate to /sites. Verify two export buttons visible in page header: "Export Hiérarchique" (purple gradient) and "Export Multi-Feuilles" (pink gradient). HIERARCHICAL EXPORT TEST: Click "Export Hiérarchique" button. Verify Excel file downloads with filename format "structure_sites_organization-1_YYYYMMDD.xlsx". Open file in Excel/LibreOffice/Google Sheets. Verify single sheet named "Structure Hiérarchique". Verify purple header row (#4F46E5 background, white text) with columns: Niveau, Type, Code, Nom, Type/Catégorie, Surface (m²), Localisation, Année/Date, Statut, Détails. Verify hierarchical data structure: Level 0 = 🏢 Site, Level 1 = 🏗️ Bâtiment (indented), Level 2 = 📊 Niveau (more indented), Level 3 = 🏠 Espace, Level 4 = ⚙️ Équipement. Verify all 13 sites from Organization 1 present. For each site, verify buildings nested below, levels nested below buildings, spaces nested below levels, equipment nested below spaces. Verify numbers formatted to 2 decimals. Verify dates formatted as DD/MM/YYYY. NESTED SHEETS EXPORT TEST: Click "Export Multi-Feuilles" button. Verify Excel file downloads. Open file and verify 5 separate sheets exist: "Sites", "Bâtiments", "Niveaux", "Espaces", "Équipements". SITES SHEET: Verify columns: Code, Nom, Type, Adresse, Ville, Code Postal, Région, Département, Surface Totale (m²), Nombre de Bâtiments, Contact, Téléphone, Statut. Verify all 13 sites listed with complete data. BÂTIMENTS SHEET: Verify columns include: Site, Code Bâtiment, Nom, Référence Cadastrale, Année Construction, Surface (m²), Nombre de Niveaux, Statut. Verify buildings reference parent sites correctly. NIVEAUX SHEET: Verify columns: Site, Bâtiment, Nom Niveau, Numéro Niveau, Altitude (m), Surface (m²), Nombre d'Espaces. Verify levels ordered by level_number within each building. ESPACES SHEET: Verify columns: Site, Bâtiment, Niveau, Nom Espace, Type, Surface (m²), Capacité, Usage Principal, Code OmniClass, Nombre d'Équipements. ÉQUIPEMENTS SHEET: Verify columns: Site, Bâtiment, Niveau, Espace, Nom Équipement, Type, Fabricant, Modèle, Numéro de Série, Date Mise en Service, Statut, Criticité. AUTHORIZATION TEST: Logout, login as site manager (sitemanager@hubsight.com). Try accessing /exports/sites directly. Verify redirected to root with error "Accès non autorisé. Seuls les gestionnaires de portefeuille peuvent exporter des données." ORGANIZATION ISOLATION TEST: Login as portfolio@hubsight.com - export sites, verify sees 13 sites from Organization 1. Logout, login as portfolio2@hubsight.com - export sites, verify sees 12 different sites from Organization 2. Verify no data leakage between organizations. ERROR HANDLING TEST: In Rails console, test with organization without sites. Verify graceful handling (empty sheets, no errors). EXCEL COMPATIBILITY: Open exported files in Microsoft Excel (Windows/Mac), LibreOffice Calc, and Google Sheets. Verify all formatting preserved, headers visible, data readable. Verify frozen top row works (scroll down, headers stay visible). Verify column widths appropriate for content.</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">
