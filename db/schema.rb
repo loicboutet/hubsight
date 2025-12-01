@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_102949) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_115753) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -366,6 +366,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_102949) do
     t.string "status", default: "active", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "organization_type"
+    t.text "headquarters_address"
+    t.string "phone"
+    t.string "email"
+    t.string "website"
+    t.text "specialties"
+    t.date "relationship_start_date"
+    t.text "notes"
     t.index ["name"], name: "index_organizations_on_name", unique: true
     t.index ["siret"], name: "index_organizations_on_siret"
     t.index ["status"], name: "index_organizations_on_status"

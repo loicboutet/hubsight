@@ -1,10 +1,19 @@
-<% content_for :header, "Nouvelle Organisation" %>
+<div style="padding: var(--space-lg);">
+  <!-- Breadcrumb Navigation -->
+  <nav style="margin-bottom: var(--space-lg);">
+    <ol style="display: flex; list-style: none; padding: 0; margin: 0; gap: var(--space-sm); align-items: center;">
+      <li><%= link_to "Organisations", organizations_path, style: "color: var(--purple-primary); text-decoration: none;" %></li>
+      <li style="color: #999;">/</li>
+      <li class="typo-body-small" style="color: #666;">Nouvelle Organisation</li>
+    </ol>
+  </nav>
 
-<div class="section">
+  <!-- Page Header -->
   <div style="margin-bottom: var(--space-xl);">
-    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer une Nouvelle Organisation</h2>
-    <p class="typo-body-small">Ajouter une nouvelle entreprise, prestataire, fournisseur ou partenaire</p>
+    <h1 class="typo-h1" style="margin-bottom: var(--space-sm);">➕ Nouvelle Organisation</h1>
+    <p class="typo-body" style="color: #666;">Créez une nouvelle organisation (entreprise, prestataire, fournisseur...)</p>
   </div>
 
-  <%= render 'form', organization: @organization %>
+  <!-- Form -->
+  <%= render 'form' %>
 </div>
