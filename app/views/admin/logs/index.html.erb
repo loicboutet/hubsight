@@ -49,7 +49,7 @@
         <h3 class="text-sm font-semibold text-gray-300">Log Output</h3>
       </div>
       <div class="p-4 overflow-auto max-h-[600px] bg-black">
-        <pre class="text-xs font-mono leading-relaxed"><% @log_lines.each do |line| %><%= format_log_line(line) %>
+        <pre class="text-xs font-mono leading-relaxed" style="color: white !important; background-color: black !important;"><% @log_lines.each do |line| %><%= format_log_line(line) %>
 <% end %></pre>
       </div>
     </div>
