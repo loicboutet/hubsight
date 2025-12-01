@@ -73,3 +73,7 @@ gem "kaminari", "~> 1.2"
 # OCR and PDF processing
 gem "pdf-reader", "~> 2.12"  # FREE text extraction from digital PDFs
 gem "httparty", "~> 0.21"    # HTTP client for future Mistral API integration
+
+# PDF generation
+gem "prawn", "~> 2.4"        # PDF generation library
+gem "prawn-table", "~> 0.2"  # Table formatting for Prawn

@@ -64,6 +64,17 @@ class SiteManager::ContractsController < ApplicationController
     end
   end
   
+  def generate_summary_pdf
+    # Authorization already handled by set_contract before_action
+    # Generate PDF using shared service
+    pdf_binary = ContractPdfGenerator.new(@contract).generate
+    
+    send_data pdf_binary,
+      filename: "Contrat_#{@contract.contract_number}_#{Date.today.strftime('%Y%m%d')}.pdf",
+      type: 'application/pdf',
+      disposition: 'inline'
+  end
+  
   def new
     @contract = Contract.new
   end

@@ -191,6 +191,7 @@ Rails.application.routes.draw do
   post 'my_contracts', to: 'site_manager/contracts#create'
   get 'my_contracts/:id', to: 'site_manager/contracts#show', as: :my_contract
   get 'my_contracts/:id/pdf', to: 'site_manager/contracts#pdf', as: :my_contract_pdf
+  get 'my_contracts/:id/summary_pdf', to: 'site_manager/contracts#generate_summary_pdf', as: :my_contract_summary_pdf
   get 'my_contracts/upload', to: 'site_manager/contracts#upload'
   post 'my_contracts/upload', to: 'site_manager/contracts#process_upload'
   

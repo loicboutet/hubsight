@@ -7,12 +7,18 @@
       <p class="typo-body-small">Contrat N° <%= @contract.contract_number %> - <span style="color: #999;">Accès en lecture seule</span></p>
     </div>
     <div style="display: flex; gap: var(--space-md);">
+      <%= link_to my_contract_summary_pdf_path(@contract), target: '_blank', class: "typo-btn-small", style: "display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 600; transition: opacity 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Générer Fiche PDF
+      <% end %>
       <% if @contract.pdf_attached? %>
         <%= link_to my_contract_pdf_path(@contract), target: '_blank', class: "typo-btn-small", style: "display: inline-flex; align-items: center; gap: 6px; background-color: #10b981; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 600; transition: background-color 0.2s;" do %>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
           </svg>
-          Voir PDF
+          Voir PDF Original
         <% end %>
       <% end %>
       <%= link_to my_contracts_path, class: "typo-btn-cancel" do %>
