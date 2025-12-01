@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSight - Portfolio Manager Features (Brick 1)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background-color: white; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 2.5em; }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1em; }
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .stat-card { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 20px; border-radius: 8px; flex: 1; min-width: 200px; }
+        .stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { opacity: 0.9; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        thead { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        th { padding: 12px 8px; text-align: left; font-weight: 600; position: sticky; top: 0; z-index: 10; font-size: 12px; }
+        td { padding: 10px 8px; border-bottom: 1px solid #e0e0e0; vertical-align: top; font-size: 12px; }
+        tr:hover { background-color: #f8f9fa; }
+        tr.implemented { background-color: #e8f5e9; }
+        tr.implemented:hover { background-color: #c8e6c9; }
+        .sl-col { width: 50px; text-align: center; font-weight: bold; color: #3498db; }
+        .brick-col { width: 80px; font-weight: 600; color: #2980b9; }
+        .title-col { width: 220px; font-weight: 600; color: #2c3e50; }
+        .description-col { min-width: 250px; }
+        .url-col { width: 180px; word-break: break-word; }
+        .url-col a { color: #3498db; text-decoration: none; }
+        .url-col a:hover { text-decoration: underline; }
+        .test-col { min-width: 300px; font-size: 12px; color: #555; }
+        .video-col { width: 100px; text-align: center; }
+        .empty-cell { color: #bdc3c7; font-style: italic; }
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 600; margin-left: 6px; }
+        .status-done { background-color: #4caf50; color: white; }
+        @media (max-width: 768px) { .container { padding: 15px; } h1 { font-size: 1.8em; } table { font-size: 11px; } th, td { padding: 6px 4px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Portfolio Manager Features - Brick 1</h1>
+        <p class="subtitle">Complete Portfolio Manager functionality for managing sites, buildings, equipment, contracts, and analytics</p>
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number">36</div><div class="stat-label">Total Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">27</div><div class="stat-label">Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">9</div><div class="stat-label">Remaining</div></div>
+        </div>
+        <p style="margin: 20px 0; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196f3; font-size: 14px;">
+            <strong>📌 Note:</strong> All Portfolio Manager tasks are accessible at <code>http://localhost:3000</code> after logging in as <code>portfolio@hubsight.com / Password123!</code>
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th class="sl-col">SL</th>
+                    <th class="brick-col">Brick</th>
+                    <th class="title-col">Task Title</th>
+                    <th class="description-col">Task Description</th>
+                    <th class="url-col">URL</th>
+                    <th class="test-col">How to Test (Summary)</th>
+                    <th class="video-col">Video</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="implemented">
+                    <td class="sl-col">11</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Site Manager Profiles<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Portfolio Manager can create and manage Site Manager profiles for their organization</td>
+                    <td class="url-col"><a href="http://localhost:3000/site_managers">localhost:3000/site_managers</a></td>
+                    <td class="test-col">Navigate to /site_managers, create new site manager with email/name/phone, verify invitation email sent, test activation flow, verify organization isolation</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">12</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Assign Sites to Site Managers<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Implement site assignment functionality allowing Portfolio Managers to assign specific sites to Site Manager users</td>
+                    <td class="url-col"><a href="http://localhost:3000/site_managers/:id/assign_sites">localhost:3000/site_managers/:id/assign_sites</a></td>
+                    <td class="test-col">Go to site manager profile, click "Gérer les Sites", select sites with checkboxes, save assignments, verify site manager can only access assigned sites</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">13</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Sites</td>
+                    <td class="description-col">Full CRUD functionality for sites including name, address, area, site type, and other attributes</td>
+                    <td class="url-col"><a href="http://localhost:3000/sites">localhost:3000/sites</a></td>
+                    <td class="test-col">View sites list (13 sites for Org 1), create new site with required fields, edit existing site, delete site, test filters and pagination</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">14</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Buildings<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Full CRUD functionality for buildings nested under sites</td>
+                    <td class="url-col"><a href="http://localhost:3000/sites/:id">localhost:3000/sites/:id</a></td>
+                    <td class="test-col">Go to site detail, click "Bâtiments" tab, create building with name/code/year/area, view/edit/delete buildings, verify data source tracking</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">15</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Levels<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Full CRUD functionality for levels (floors) nested under buildings</td>
+                    <td class="url-col"><a href="http://localhost:3000/buildings/:id/levels">localhost:3000/buildings/:id/levels</a></td>
+                    <td class="test-col">In building detail, create level with name/level_number/altitude/area, verify levels ordered by level_number, test CRUD operations</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">16</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Spaces<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Full CRUD functionality for spaces/rooms nested under levels</td>
+                    <td class="url-col"><a href="http://localhost:3000/levels/:id/spaces">localhost:3000/levels/:id/spaces</a></td>
+                    <td class="test-col">In level detail, create space with name/type/area/capacity, fill optional fields (floor covering, ceiling type, etc), test CRUD operations</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">17</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create and Manage Equipment<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Full CRUD functionality for equipment nested under spaces</td>
+                    <td class="url-col"><a href="http://localhost:3000/equipment">localhost:3000/equipment</a></td>
+                    <td class="test-col">In space detail, create equipment with name/manufacturer/model/serial, fill technical specs, test CRUD, verify organization isolation</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">18</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Tree View Navigation<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Hierarchical tree navigation: Portfolio > Sites > Buildings > Levels > Spaces > Equipment</td>
+                    <td class="url-col"><a href="http://localhost:3000/portfolio">localhost:3000/portfolio</a></td>
+                    <td class="test-col">Navigate to /portfolio, verify 6-level hierarchy displays, test expand/collapse with chevron icons, click nodes to navigate to detail pages</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">19</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Import OmniClass Table 23<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Import OmniClass Table 23 equipment classification (68 representative types from 256 total)</td>
+                    <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
+                    <td class="test-col">Run EquipmentType.count (should return 68), verify technical lots (CVC, ELE, PLO, SEC, etc), test model validations and scopes</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">20</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Import Space Structure<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Import OmniClass Table 13 space classifications (127 representative types from 966 total)</td>
+                    <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
+                    <td class="test-col">Run OmniclassSpace.count (should return 127), verify major categories (Building, Healthcare, Residential, etc), test search/filter</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">21</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Import Contract Families<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Import contract families and subfamilies (7 families + 35 subfamilies = 42 total)</td>
+                    <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
+                    <td class="test-col">Run ContractFamily.count (should return 42), verify 7 families (MAIN, NETT, CTRL, FLUI, ASSU, IMMO, AUTR), test hierarchy</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">22</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Equipment Search & Autocomplete<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Search and autocomplete system for equipment types with technical lot filtering</td>
+                    <td class="url-col"><a href="http://localhost:3000/equipment/new">localhost:3000/equipment/new</a></td>
+                    <td class="test-col">In equipment form, type in "Type d'Équipement" field (min 2 chars), verify dropdown with badges, test 8 filter buttons (CVC, ELE, etc), verify keyboard navigation</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">23</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Link Equipment to OmniClass<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Manual linking interface for associating equipment with OmniClass codes via autocomplete</td>
+                    <td class="url-col"><a href="http://localhost:3000/equipment/new">localhost:3000/equipment/new</a></td>
+                    <td class="test-col">Use autocomplete to select equipment type, verify selected info panel shows OmniClass code, create equipment, verify show page displays classification</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">24</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Upload PDF Contracts<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Upload multi-page PDF contract documents with validation (max 10MB, PDF only)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">Go to /contracts/new, drag/drop PDF file in orange upload zone, verify preview appears, test file validation (wrong type, too large), submit contract</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">25</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - OCR Text Extraction<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Integrate OCR for text extraction from uploaded PDFs (currently using pdf-reader, ready for Mistral)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/:id">localhost:3000/contracts/:id</a></td>
+                    <td class="test-col">Upload contract with PDF, view contract detail, verify "Extraction OCR" section shows status "Terminé", click "Voir le texte extrait"</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">26</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - LLM Data Structuring<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Automatic data extraction via LLM extracting 72 contract fields (demo mode with regex, ready for OpenRouter)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/:id">localhost:3000/contracts/:id</a></td>
+                    <td class="test-col">Upload contract PDF, verify "Données Extraites" section appears with 6 collapsible sections, verify 🎭 Demo mode banner, view extracted 72 fields</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">27</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Validate Extracted Data<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Manual validation interface with split-screen: PDF viewer + editable form</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/:id/validate">localhost:3000/contracts/:id/validate</a></td>
+                    <td class="test-col">After extraction completes, click "Valider les Données", verify split-screen (PDF left, form right), edit fields, add notes, submit validation</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">28</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Manual Contract Creation<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Create contracts manually without PDF using comprehensive 72-field form</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">Go to /contracts/new, skip PDF upload (optional), fill 5 required fields + optional fields across 6 sections, submit without PDF</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">29</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Contract Family Search</td>
+                    <td class="description-col">Search and autocomplete for contract families/subfamilies with 7 filter buttons</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">In contract form "Famille d'Achats" field, type min 2 chars, verify dropdown with hierarchy, test 7 family filters (MAIN, NETT, etc), select subfamily</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">30</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Link Services to Contract Families<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Manual linking of services to Contract Family/Subfamily (implemented via Task 29)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">Use family autocomplete to link contract to family/subfamily, fill service description, verify hierarchy displays on contract show page</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">31</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Auto-Calculate Contract Dates<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Automatically calculate end date, last renewal date, termination deadline based on contract parameters</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">Fill start date, initial duration, renewal duration, number of renewals, notice period, submit - verify 3 dates auto-calculated with purple AUTO badges</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">32</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Auto-Calculate VAT Amounts<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Automatically calculate VAT inclusive amounts with French VAT rates (20%, 10%, 5.5%, 0%)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">Fill VAT rate (20%) and HT amount (85000€), verify TTC auto-calculates (102000€), verify Monthly auto-calculates, test bidirectional calculation</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">33</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - View Contract List<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Display contracts in table view with pagination, sorting, and column customization</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
+                    <td class="test-col">View contracts table, test sorting (click column headers), test column customization (hide/show columns), test pagination (15/25/50/100 per page)</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">34</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Filter Contracts<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">17 filter options: 5 basic (site, building, family, status, search) + 12 advanced (dates, amounts, etc)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
+                    <td class="test-col">Test basic filters, click "Filtres Avancés" button, test date ranges (3), amount ranges (2), additional filters (4), verify all 17 filters work together</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">35</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Organizations</td>
+                    <td class="description-col">Create and manage organizations with 12 fields: name, legal name, SIRET, type, address, contacts</td>
+                    <td class="url-col"><a href="http://localhost:3000/organizations">localhost:3000/organizations</a></td>
+                    <td class="test-col">Navigate to /organizations, create new organization, fill required fields, test CRUD operations</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">36</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Contacts</td>
+                    <td class="description-col">Create and manage contacts nested under organizations with 11 fields</td>
+                    <td class="url-col"><a href="http://localhost:3000/contacts">localhost:3000/contacts</a></td>
+                    <td class="test-col">Navigate to /contacts, create contact under organization, fill name/position/phone/email, test CRUD</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">37</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Create Agencies</td>
+                    <td class="description-col">Create and manage agencies/establishments under organizations</td>
+                    <td class="url-col"><span class="empty-cell">To be implemented</span></td>
+                    <td class="test-col">Will allow creating multiple locations/branches for service provider organizations</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">38</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Organization Search & Autocomplete</td>
+                    <td class="description-col">Search and autocomplete for organizations and contacts databases</td>
+                    <td class="url-col"><span class="empty-cell">To be implemented</span></td>
+                    <td class="test-col">Similar to equipment/family autocomplete but for organizations, to facilitate contract entry</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">39</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Link Organizations to Contracts</td>
+                    <td class="description-col">Manual linking of organizations (service providers) to contracts using autocomplete</td>
+                    <td class="url-col"><span class="empty-cell">To be implemented</span></td>
+                    <td class="test-col">Use organization autocomplete in contract form to link service provider with preview of details</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">40</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Generate Contract PDF Summary<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Generate PDF summary sheets per contract with 10 sections (shared service with SM)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/:id">localhost:3000/contracts/:id</a></td>
+                    <td class="test-col">On contract detail page, click "Générer Fiche PDF", verify PDF downloads with filename "Contrat_[NUMBER]_[DATE].pdf", verify 10 sections present</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">41</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Export Contract List</td>
+                    <td class="description-col">Export contract list to Excel with selected columns and applied filters</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
+                    <td class="test-col">Apply filters to contract list, customize columns, click export button, verify Excel file downloads with filters applied</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">42</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Export Equipment List<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Export equipment list to Excel with hierarchy context (site > building > level > space)</td>
+                    <td class="url-col"><a href="http://localhost:3000/equipment">localhost:3000/equipment</a></td>
+                    <td class="test-col">Go to /equipment, click "Exporter la Liste", verify Excel file downloads with 28 columns including hierarchy, verify formatting correct</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">43</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Export Sites Structure<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Export complete sites structure to Excel (hierarchical or multi-sheet)</td>
+                    <td class="url-col"><a href="http://localhost:3000/sites">localhost:3000/sites</a></td>
+                    <td class="test-col">Go to /sites, test both exports: "Export Hiérarchique" (single sheet with indentation) and "Export Multi-Feuilles" (5 sheets: Sites, Buildings, Levels, Spaces, Equipment)</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">44</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Portfolio Overview Dashboard<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Dashboard displaying 7 KPIs, key indicators, and charts with real database data</td>
+                    <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
+                    <td class="test-col">Navigate to /dashboard, verify 7 KPI cards with real data, verify key indicators section (status, renewals, spending), verify charts display correctly</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">45</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Key Indicators Display<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Display key indicators: contracts by status/family, upcoming renewals, spending by category</td>
+                    <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
+                    <td class="test-col">On dashboard, verify key indicators show: contracts by status (4 statuses), renewals in 30/60/90 days, family distribution with percentages</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">46</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">PM - Analytics Dashboard<span class="status-badge status-done">✓</span></td>
+                    <td class="description-col">Analytics page with charts showing contract distribution, spending trends, equipment distribution</td>
+                    <td class="url-col"><a href="http://localhost:3000/analytics">localhost:3000/analytics</a></td>
+                    <td class="test-col">Navigate to /analytics, verify 3 sections display: Contract Distribution (donut charts), Spending Trends (monthly chart), Equipment Distribution (by type/site/age)</td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
