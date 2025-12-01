@@ -274,11 +274,14 @@
     </div>
 
     <!-- Pagination -->
-    <% if @contracts.total_pages > 1 %>
-      <div style="margin-top: var(--space-xl); display: flex; justify-content: center; align-items: center; gap: var(--space-md);">
-        <%= paginate @contracts, theme: 'twitter-bootstrap-4' %>
-      </div>
-    <% end %>
+    <div style="margin-top: var(--space-xl);">
+      <%= render 'shared/pagination', 
+        current_page: @contracts.current_page, 
+        total_pages: @contracts.total_pages, 
+        total_count: @all_contracts_count, 
+        per_page: @per_page,
+        path: contracts_path %>
+    </div>
   </div>
 </div>
 

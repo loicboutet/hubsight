@@ -5,8 +5,12 @@ class ContractsController < ApplicationController
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :validate, :confirm_validation, :delete_pdf, :retry_ocr, :retry_extraction]
 
   def index
-    # Get base query scoped to current organization
-    @contracts = Contract.by_organization(current_user.organization_id)
+    # Get base query - admins see all, others see only their organization
+    if current_user.admin?
+      @contracts = Contract.all
+    else
+      @contracts = Contract.by_organization(current_user.organization_id)
+    end
     
     # Apply filters
     @contracts = apply_filters(@contracts)
@@ -50,9 +54,15 @@ class ContractsController < ApplicationController
     }
     
     # Get unique values for filter dropdowns
-    @sites = Site.by_organization(current_user.organization_id).order(:name)
-    @buildings = Building.by_organization(current_user.organization_id).order(:name)
-    @contract_types = Contract.by_organization(current_user.organization_id).distinct.pluck(:contract_type).compact.sort
+    if current_user.admin?
+      @sites = Site.order(:name)
+      @buildings = Building.order(:name)
+      @contract_types = Contract.distinct.pluck(:contract_type).compact.sort
+    else
+      @sites = Site.by_organization(current_user.organization_id).order(:name)
+      @buildings = Building.by_organization(current_user.organization_id).order(:name)
+      @contract_types = Contract.by_organization(current_user.organization_id).distinct.pluck(:contract_type).compact.sort
+    end
     @families = ContractFamily.families_only.order(:display_order)
     @subfamilies = ContractFamily.subfamilies_only.order(:name)
     
@@ -65,8 +75,8 @@ class ContractsController < ApplicationController
   end
 
   def show
-    # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Check authorization - admins can view all, others only their organization
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
@@ -92,16 +102,16 @@ class ContractsController < ApplicationController
   end
 
   def edit
-    # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Check authorization - admins can edit all, others only their organization
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
   end
 
   def update
-    # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Check authorization - admins can update all, others only their organization
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
@@ -114,8 +124,8 @@ class ContractsController < ApplicationController
   end
 
   def destroy
-    # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Check authorization - admins can delete all, others only their organization
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
