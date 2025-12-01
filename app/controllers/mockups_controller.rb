@@ -1,4 +1,6 @@
 class MockupsController < ApplicationController
+  skip_before_action :authenticate_user!
+  
   # Set the layout based on the action
   layout :resolve_layout
   
