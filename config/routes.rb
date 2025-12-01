@@ -282,6 +282,9 @@ Rails.application.routes.draw do
     # Equipment Types autocomplete/search
     get 'equipment_types/autocomplete', to: 'equipment_types#autocomplete'
     
+    # Contract Families autocomplete/search
+    get 'contract_families/autocomplete', to: 'contract_families#autocomplete'
+    
     # Autocomplete endpoints
     namespace :autocomplete do
       get :equipment_types
