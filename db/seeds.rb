@@ -761,6 +761,414 @@ puts "   - #{sm2.full_name}: #{sm2.assigned_sites.count} sites"
 puts "   - #{sm3.full_name}: #{sm3.assigned_sites.count} sites"
 
 # ============================================================================
+# SERVICE PROVIDER ORGANIZATIONS - For contract testing (Tasks 35-39)
+# ============================================================================
+
+puts "\n🏭 Creating service provider organizations..."
+
+service_providers = [
+  {
+    name: "ENGIE Solutions",
+    legal_name: "ENGIE Solutions SAS",
+    siret: "489 336 696 01234",
+    organization_type: "Fournisseur",
+    address: "1 Place Samuel de Champlain",
+    postal_code: "92400",
+    city: "Courbevoie",
+    main_phone: "+33 1 44 22 00 00",
+    main_email: "contact@engie-solutions.com",
+    website: "www.engie-solutions.com",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Veolia Facility Management",
+    legal_name: "Veolia Facility Management France SAS",
+    siret: "552 008 443 02156",
+    organization_type: "Fournisseur",
+    address: "30 Rue Madeleine Vionnet",
+    postal_code: "93300",
+    city: "Aubervilliers",
+    main_phone: "+33 1 85 57 00 00",
+    main_email: "contact@veolia-fm.fr",
+    website: "www.veolia.fr",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Dalkia",
+    legal_name: "Dalkia France SAS",
+    siret: "395 680 261 00789",
+    organization_type: "Fournisseur",
+    address: "5 Place des Frères Montgolfier",
+    postal_code: "78280",
+    city: "Guyancourt",
+    main_phone: "+33 1 39 23 80 00",
+    main_email: "contact@dalkia.fr",
+    website: "www.dalkia.fr",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "ISS Facility Services",
+    legal_name: "ISS Facility Services France SAS",
+    siret: "419 764 512 00345",
+    organization_type: "Fournisseur",
+    address: "83 Avenue Aristide Briand",
+    postal_code: "94110",
+    city: "Arcueil",
+    main_phone: "+33 1 41 24 29 00",
+    main_email: "contact.france@fr.issworld.com",
+    website: "www.fr.issworld.com",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Onet Technologies",
+    legal_name: "Onet Technologies SAS",
+    siret: "542 078 825 00567",
+    organization_type: "Fournisseur",
+    address: "13 Avenue de l'Opéra",
+    postal_code: "75001",
+    city: "Paris",
+    main_phone: "+33 1 53 29 50 00",
+    main_email: "contact@onet.fr",
+    website: "www.onet.fr",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Elior Services",
+    legal_name: "Elior Services Care SAS",
+    siret: "408 168 003 00234",
+    organization_type: "Fournisseur",
+    address: "61-69 Rue de Bercy",
+    postal_code: "75012",
+    city: "Paris",
+    main_phone: "+33 1 71 06 70 00",
+    main_email: "contact@eliorgroup.com",
+    website: "www.eliorgroup.com",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Sodexo Facilities Management",
+    legal_name: "Sodexo Pass France SAS",
+    siret: "301 940 219 00456",
+    organization_type: "Fournisseur",
+    address: "255 Quai de la Bataille de Stalingrad",
+    postal_code: "92130",
+    city: "Issy-les-Moulineaux",
+    main_phone: "+33 1 30 85 75 00",
+    main_email: "contact@sodexo.com",
+    website: "www.sodexo.fr",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Cofely Services",
+    legal_name: "Cofely Services SAS",
+    siret: "451 234 567 00123",
+    organization_type: "Fournisseur",
+    address: "12 Avenue du Général de Gaulle",
+    postal_code: "92400",
+    city: "Courbevoie",
+    main_phone: "+33 1 49 00 40 00",
+    main_email: "contact@cofely-services.fr",
+    website: "www.gdfsuez-cofelyservices.fr",
+    status: "active",
+    user_org_id: org2.id
+  },
+  {
+    name: "Spie Facilities",
+    legal_name: "Spie Facilities SAS",
+    siret: "378 901 234 00567",
+    organization_type: "Fournisseur",
+    address: "10 Avenue de l'Entreprise",
+    postal_code: "95863",
+    city: "Cergy-Pontoise",
+    main_phone: "+33 1 34 41 81 00",
+    main_email: "contact@spie.com",
+    website: "www.spie.com",
+    status: "active",
+    user_org_id: org2.id
+  },
+  {
+    name: "Bouygues Energies & Services",
+    legal_name: "Bouygues Energies & Services SAS",
+    siret: "524 567 890 00234",
+    organization_type: "Fournisseur",
+    address: "3 Boulevard Gallieni",
+    postal_code: "92130",
+    city: "Issy-les-Moulineaux",
+    main_phone: "+33 1 30 60 33 00",
+    main_email: "contact@bouygues-es.fr",
+    website: "www.bouygues-es.fr",
+    status: "active",
+    user_org_id: org2.id
+  },
+  {
+    name: "Suez",
+    legal_name: "Suez France SAS",
+    siret: "901 234 567 00890",
+    organization_type: "Fournisseur",
+    address: "Tour CB21, 16 Place de l'Iris",
+    postal_code: "92400",
+    city: "Courbevoie",
+    main_phone: "+33 1 58 81 20 00",
+    main_email: "contact@suez.com",
+    website: "www.suez.fr",
+    status: "active",
+    user_org_id: org2.id
+  },
+  {
+    name: "Vinci Facilities",
+    legal_name: "Vinci Facilities IDF SAS",
+    siret: "345 678 901 00456",
+    organization_type: "Fournisseur",
+    address: "1 Cours Ferdinand de Lesseps",
+    postal_code: "92500",
+    city: "Rueil-Malmaison",
+    main_phone: "+33 1 47 16 35 00",
+    main_email: "contact@vinci-facilities.com",
+    website: "www.vinci-facilities.com",
+    status: "active",
+    user_org_id: org2.id
+  },
+  {
+    name: "Eiffage Energie Systèmes",
+    legal_name: "Eiffage Energie Systèmes SAS",
+    siret: "567 234 890 00123",
+    organization_type: "Fournisseur",
+    address: "9 Place de l'Europe",
+    postal_code: "78140",
+    city: "Vélizy-Villacoublay",
+    main_phone: "+33 1 34 65 89 00",
+    main_email: "contact@eiffage-energie.com",
+    website: "www.eiffage-energie.com",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Securitas France",
+    legal_name: "Securitas France SARL",
+    siret: "789 456 123 00789",
+    organization_type: "Fournisseur",
+    address: "2-4 Rue Diderot",
+    postal_code: "92150",
+    city: "Suresnes",
+    main_phone: "+33 1 55 62 44 00",
+    main_email: "contact@securitas.fr",
+    website: "www.securitas.fr",
+    status: "active",
+    user_org_id: org1.id
+  },
+  {
+    name: "Kone France",
+    legal_name: "Kone SAS",
+    siret: "612 345 789 00234",
+    organization_type: "Fournisseur",
+    address: "3 Avenue du Canada",
+    postal_code: "91974",
+    city: "Courtabœuf",
+    main_phone: "+33 1 60 13 33 00",
+    main_email: "contact.france@kone.com",
+    website: "www.kone.fr",
+    status: "active",
+    user_org_id: org2.id
+  }
+]
+
+service_providers.each do |provider_data|
+  user_org_id = provider_data.delete(:user_org_id)
+  
+  provider = Organization.find_or_initialize_by(
+    name: provider_data[:name],
+    user_organization_id: user_org_id
+  )
+  provider.assign_attributes(provider_data)
+  
+  if provider.new_record?
+    provider.save!
+    puts "  ✓ Created organization: #{provider.name}"
+  else
+    provider.save!
+    puts "  ✓ Updated organization: #{provider.name}"
+  end
+end
+
+puts "\n📊 Total service provider organizations: #{Organization.count}"
+
+# ============================================================================
+# CONTACTS - Key contacts for each organization
+# ============================================================================
+
+puts "\n👥 Creating contacts for organizations..."
+
+contacts_data = [
+  # ENGIE Solutions
+  { org_name: "ENGIE Solutions", first_name: "Pierre", last_name: "Dubois", position: "Directeur Technique", department: "Direction Technique", phone: "+33 1 44 22 10 01", mobile: "+33 6 12 34 56 78", email: "pierre.dubois@engie-solutions.com", status: "active" },
+  { org_name: "ENGIE Solutions", first_name: "Marie", last_name: "Laurent", position: "Responsable Contrats", department: "Commercial", phone: "+33 1 44 22 10 02", mobile: "+33 6 23 45 67 89", email: "marie.laurent@engie-solutions.com", status: "active" },
+  { org_name: "ENGIE Solutions", first_name: "Jean", last_name: "Martin", position: "Chef de Projet", department: "Projets", phone: "+33 1 44 22 10 03", mobile: "+33 6 34 56 78 90", email: "jean.martin@engie-solutions.com", status: "active" },
+  
+  # Veolia
+  { org_name: "Veolia Facility Management", first_name: "Sophie", last_name: "Bernard", position: "Directrice Régionale", department: "Direction", phone: "+33 1 85 57 01 01", mobile: "+33 6 45 67 89 01", email: "sophie.bernard@veolia-fm.fr", status: "active" },
+  { org_name: "Veolia Facility Management", first_name: "Luc", last_name: "Moreau", position: "Responsable Maintenance", department: "Maintenance", phone: "+33 1 85 57 01 02", mobile: "+33 6 56 78 90 12", email: "luc.moreau@veolia-fm.fr", status: "active" },
+  
+  # Dalkia
+  { org_name: "Dalkia", first_name: "Claire", last_name: "Rousseau", position: "Directrice Commerciale", department: "Commercial", phone: "+33 1 39 23 80 01", mobile: "+33 6 67 89 01 23", email: "claire.rousseau@dalkia.fr", status: "active" },
+  { org_name: "Dalkia", first_name: "Marc", last_name: "Fontaine", position: "Chef de Secteur", department: "Exploitation", phone: "+33 1 39 23 80 02", mobile: "+33 6 78 90 12 34", email: "marc.fontaine@dalkia.fr", status: "active" },
+  
+  # ISS
+  { org_name: "ISS Facility Services", first_name: "Isabelle", last_name: "Leroy", position: "Account Manager", department: "Clientèle", phone: "+33 1 41 24 29 01", mobile: "+33 6 89 01 23 45", email: "isabelle.leroy@fr.issworld.com", status: "active" },
+  { org_name: "ISS Facility Services", first_name: "François", last_name: "Petit", position: "Responsable Nettoyage", department: "Nettoyage", phone: "+33 1 41 24 29 02", mobile: "+33 6 90 12 34 56", email: "francois.petit@fr.issworld.com", status: "active" },
+  
+  # Onet
+  { org_name: "Onet Technologies", first_name: "Nathalie", last_name: "Mercier", position: "Directrice d'Agence", department: "Direction", phone: "+33 1 53 29 50 01", mobile: "+33 6 01 23 45 67", email: "nathalie.mercier@onet.fr", status: "active" },
+  { org_name: "Onet Technologies", first_name: "Gérard", last_name: "Blanc", position: "Responsable Technique", department: "Technique", phone: "+33 1 53 29 50 02", mobile: "+33 6 12 34 56 89", email: "gerard.blanc@onet.fr", status: "active" },
+  
+  # Elior
+  { org_name: "Elior Services", first_name: "Catherine", last_name: "Durand", position: "Directrice de Site", department: "Sites", phone: "+33 1 71 06 70 01", mobile: "+33 6 23 45 67 90", email: "catherine.durand@eliorgroup.com", status: "active" },
+  
+  # Sodexo
+  { org_name: "Sodexo Facilities Management", first_name: "Philippe", last_name: "Girard", position: "Responsable Sécurité", department: "Sécurité", phone: "+33 1 30 85 75 01", mobile: "+33 6 34 56 78 01", email: "philippe.girard@sodexo.com", status: "active" },
+  { org_name: "Sodexo Facilities Management", first_name: "Sylvie", last_name: "Lambert", position: "Responsable Qualité", department: "Qualité", phone: "+33 1 30 85 75 02", mobile: "+33 6 45 67 89 12", email: "sylvie.lambert@sodexo.com", status: "active" },
+  
+  # Cofely
+  { org_name: "Cofely Services", first_name: "André", last_name: "Bonnet", position: "Directeur Technique", department: "Technique", phone: "+33 1 49 00 40 01", mobile: "+33 6 56 78 90 23", email: "andre.bonnet@cofely-services.fr", status: "active" },
+  { org_name: "Cofely Services", first_name: "Christine", last_name: "Fournier", position: "Ingénieur CVC", department: "CVC", phone: "+33 1 49 00 40 02", mobile: "+33 6 67 89 01 34", email: "christine.fournier@cofely-services.fr", status: "active" },
+  
+  # Spie
+  { org_name: "Spie Facilities", first_name: "Éric", last_name: "Roussel", position: "Chef de Projet", department: "Projets", phone: "+33 1 34 41 81 01", mobile: "+33 6 78 90 12 45", email: "eric.roussel@spie.com", status: "active" },
+  
+  # Bouygues
+  { org_name: "Bouygues Energies & Services", first_name: "Olivier", last_name: "Weber", position: "Directeur Commercial", department: "Commercial", phone: "+33 1 30 60 33 01", mobile: "+33 6 89 01 23 56", email: "olivier.weber@bouygues-es.fr", status: "active" },
+  { org_name: "Bouygues Energies & Services", first_name: "Julie", last_name: "Legrand", position: "Ingénieur Electricité", department: "Electricité", phone: "+33 1 30 60 33 02", mobile: "+33 6 90 12 34 67", email: "julie.legrand@bouygues-es.fr", status: "active" },
+  
+  # Suez
+  { org_name: "Suez", first_name: "Bernard", last_name: "Schmitt", position: "Responsable Fluides", department: "Fluides", phone: "+33 1 58 81 20 01", mobile: "+33 6 01 23 45 78", email: "bernard.schmitt@suez.com", status: "active" },
+  
+  # Vinci
+  { org_name: "Vinci Facilities", first_name: "Stéphane", last_name: "Lefebvre", position: "Directeur d'Exploitation", department: "Exploitation", phone: "+33 1 47 16 35 01", mobile: "+33 6 12 34 56 90", email: "stephane.lefebvre@vinci-facilities.com", status: "active" },
+  { org_name: "Vinci Facilities", first_name: "Anne", last_name: "Delmas", position: "Responsable Contrats", department: "Contrats", phone: "+33 1 47 16 35 02", mobile: "+33 6 23 45 67 01", email: "anne.delmas@vinci-facilities.com", status: "active" },
+  
+  # Eiffage
+  { org_name: "Eiffage Energie Systèmes", first_name: "François", last_name: "Morel", position: "Chef d'Agence", department: "Agence", phone: "+33 1 34 65 89 01", mobile: "+33 6 34 56 78 12", email: "francois.morel@eiffage-energie.com", status: "active" },
+  
+  # Securitas
+  { org_name: "Securitas France", first_name: "Laurent", last_name: "Garcia", position: "Responsable Sûreté", department: "Sûreté", phone: "+33 1 55 62 44 01", mobile: "+33 6 45 67 89 23", email: "laurent.garcia@securitas.fr", status: "active" },
+  { org_name: "Securitas France", first_name: "Martine", last_name: "Roux", position: "Chef d'Équipe", department: "Opérations", phone: "+33 1 55 62 44 02", mobile: "+33 6 56 78 90 34", email: "martine.roux@securitas.fr", status: "active" },
+  
+  # Kone
+  { org_name: "Kone France", first_name: "Thierry", last_name: "Benoit", position: "Responsable Maintenance", department: "Maintenance", phone: "+33 1 60 13 33 01", mobile: "+33 6 67 89 01 45", email: "thierry.benoit@kone.com", status: "active" },
+  { org_name: "Kone France", first_name: "Valérie", last_name: "Simon", position: "Technicienne Senior", department: "Technique", phone: "+33 1 60 13 33 02", mobile: "+33 6 78 90 12 56", email: "valerie.simon@kone.com", status: "active" }
+]
+
+contacts_data.each do |contact_data|
+  org_name = contact_data.delete(:org_name)
+  org = Organization.find_by(name: org_name)
+  
+  next unless org
+  
+  contact = Contact.find_or_initialize_by(
+    organization_id: org.id,
+    email: contact_data[:email]
+  )
+  contact.assign_attributes(contact_data.merge(user_organization_id: org.user_organization_id))
+  
+  if contact.new_record?
+    contact.save!
+    puts "  ✓ Created contact: #{contact.first_name} #{contact.last_name} (#{org_name})"
+  else
+    contact.save!
+  end
+end
+
+puts "\n📊 Total contacts created: #{Contact.count}"
+
+# ============================================================================
+# AGENCIES - Branches and establishments for organizations
+# ============================================================================
+
+puts "\n🏪 Creating agencies for organizations..."
+
+agencies_data = [
+  # ENGIE Solutions
+  { org_name: "ENGIE Solutions", name: "Siège Social Paris", code: "ENGIE-HQ", agency_type: "headquarters", address: "1 Place Samuel de Champlain", postal_code: "92400", city: "Courbevoie", phone: "+33 1 44 22 00 00", status: "active" },
+  { org_name: "ENGIE Solutions", name: "Agence Île-de-France", code: "ENGIE-IDF", agency_type: "regional", address: "15 Rue Jean Jaurès", postal_code: "93170", city: "Bagnolet", phone: "+33 1 44 22 50 00", status: "active" },
+  
+  # Veolia
+  { org_name: "Veolia Facility Management", name: "Direction Générale", code: "VFM-DG", agency_type: "headquarters", address: "30 Rue Madeleine Vionnet", postal_code: "93300", city: "Aubervilliers", phone: "+33 1 85 57 00 00", status: "active" },
+  { org_name: "Veolia Facility Management", name: "Agence Paris Nord", code: "VFM-PN", agency_type: "branch", address: "5 Avenue du Parc", postal_code: "95380", city: "Louvres", phone: "+33 1 85 57 10 00", status: "active" },
+  
+  # Dalkia
+  { org_name: "Dalkia", name: "Siège Guyancourt", code: "DALKIA-HQ", agency_type: "headquarters", address: "5 Place des Frères Montgolfier", postal_code: "78280", city: "Guyancourt", phone: "+33 1 39 23 80 00", status: "active" },
+  { org_name: "Dalkia", name: "Agence Lyon", code: "DALKIA-LYO", agency_type: "regional", address: "45 Rue de la République", postal_code: "69002", city: "Lyon", phone: "+33 4 72 10 20 00", status: "active" },
+  
+  # ISS
+  { org_name: "ISS Facility Services", name: "Siège Arcueil", code: "ISS-HQ", agency_type: "headquarters", address: "83 Avenue Aristide Briand", postal_code: "94110", city: "Arcueil", phone: "+33 1 41 24 29 00", status: "active" },
+  
+  # Onet
+  { org_name: "Onet Technologies", name: "Direction Paris", code: "ONET-PAR", agency_type: "headquarters", address: "13 Avenue de l'Opéra", postal_code: "75001", city: "Paris", phone: "+33 1 53 29 50 00", status: "active" },
+  { org_name: "Onet Technologies", name: "Centre de Services Marseille", code: "ONET-MAR", agency_type: "service_center", address: "78 Boulevard de la Libération", postal_code: "13001", city: "Marseille", phone: "+33 4 91 10 20 00", status: "active" },
+  
+  # Elior
+  { org_name: "Elior Services", name: "Siège Paris", code: "ELIOR-HQ", agency_type: "headquarters", address: "61-69 Rue de Bercy", postal_code: "75012", city: "Paris", phone: "+33 1 71 06 70 00", status: "active" },
+  
+  # Sodexo
+  { org_name: "Sodexo Facilities Management", name: "Direction Générale", code: "SODEXO-DG", agency_type: "headquarters", address: "255 Quai de la Bataille de Stalingrad", postal_code: "92130", city: "Issy-les-Moulineaux", phone: "+33 1 30 85 75 00", status: "active" },
+  { org_name: "Sodexo Facilities Management", name: "Agence Toulouse", code: "SODEXO-TOU", agency_type: "branch", address: "12 Allée Jean Jaurès", postal_code: "31000", city: "Toulouse", phone: "+33 5 61 10 20 00", status: "active" },
+  
+  # Cofely
+  { org_name: "Cofely Services", name: "Siège Social", code: "COFELY-HQ", agency_type: "headquarters", address: "12 Avenue du Général de Gaulle", postal_code: "92400", city: "Courbevoie", phone: "+33 1 49 00 40 00", status: "active" },
+  
+  # Spie
+  { org_name: "Spie Facilities", name: "Direction Cergy", code: "SPIE-CER", agency_type: "headquarters", address: "10 Avenue de l'Entreprise", postal_code: "95863", city: "Cergy-Pontoise", phone: "+33 1 34 41 81 00", status: "active" },
+  { org_name: "Spie Facilities", name: "Agence Lille", code: "SPIE-LIL", agency_type: "regional", address: "50 Rue de Tournai", postal_code: "59000", city: "Lille", phone: "+33 3 20 10 20 00", status: "active" },
+  
+  # Bouygues
+  { org_name: "Bouygues Energies & Services", name: "Siège Issy", code: "BYGES-HQ", agency_type: "headquarters", address: "3 Boulevard Gallieni", postal_code: "92130", city: "Issy-les-Moulineaux", phone: "+33 1 30 60 33 00", status: "active" },
+  
+  # Suez
+  { org_name: "Suez", name: "Tour CB21", code: "SUEZ-HQ", agency_type: "headquarters", address: "16 Place de l'Iris", postal_code: "92400", city: "Courbevoie", phone: "+33 1 58 81 20 00", status: "active" },
+  
+  # Vinci
+  { org_name: "Vinci Facilities", name: "Direction IDF", code: "VINCI-IDF", agency_type: "headquarters", address: "1 Cours Ferdinand de Lesseps", postal_code: "92500", city: "Rueil-Malmaison", phone: "+33 1 47 16 35 00", status: "active" },
+  { org_name: "Vinci Facilities", name: "Agence Bordeaux", code: "VINCI-BDX", agency_type: "branch", address: "23 Cours de la Somme", postal_code: "33800", city: "Bordeaux", phone: "+33 5 56 10 20 00", status: "active" },
+  
+  # Eiffage
+  { org_name: "Eiffage Energie Systèmes", name: "Siège Vélizy", code: "EIFFAGE-HQ", agency_type: "headquarters", address: "9 Place de l'Europe", postal_code: "78140", city: "Vélizy-Villacoublay", phone: "+33 1 34 65 89 00", status: "active" },
+  
+  # Securitas
+  { org_name: "Securitas France", name: "Direction Suresnes", code: "SECU-HQ", agency_type: "headquarters", address: "2-4 Rue Diderot", postal_code: "92150", city: "Suresnes", phone: "+33 1 55 62 44 00", status: "active" },
+  
+  # Kone
+  { org_name: "Kone France", name: "Siège Courtabœuf", code: "KONE-HQ", agency_type: "headquarters", address: "3 Avenue du Canada", postal_code: "91974", city: "Courtabœuf", phone: "+33 1 60 13 33 00", status: "active" }
+]
+
+agencies_data.each do |agency_data|
+  org_name = agency_data.delete(:org_name)
+  org = Organization.find_by(name: org_name)
+  
+  next unless org
+  
+  agency = Agency.find_or_initialize_by(
+    organization_id: org.id,
+    code: agency_data[:code]
+  )
+  agency.assign_attributes(agency_data.merge(user_organization_id: org.user_organization_id))
+  
+  if agency.new_record?
+    agency.save!
+    puts "  ✓ Created agency: #{agency.name} (#{org_name})"
+  else
+    agency.save!
+  end
+end
+
+puts "\n📊 Total agencies created: #{Agency.count}"
+
+# ============================================================================
 # CONTRACTS - Sample contracts for testing key indicators (Item 45)
 # ============================================================================
 
