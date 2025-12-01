@@ -1,10 +1,8 @@
-<% content_for :header, "Nouveau Contrat" %>
-
-<div class="section">
-  <div style="margin-bottom: var(--space-xl);">
-    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un Nouveau Contrat</h2>
-    <p class="typo-body-small">Ajouter un contrat de maintenance, nettoyage, ou autre service</p>
-  </div>
-
-  <%= render 'form', contract: @contract %>
+<div class="page-header" style="margin-bottom: var(--space-lg);">
+  <h1 class="typo-h1">Nouveau Contrat</h1>
+  <p class="typo-body-small" style="color: var(--grey-primary); margin-top: var(--space-sm);">
+    Créez un nouveau contrat en téléchargeant un PDF pour extraction automatique, ou en saisissant manuellement toutes les informations
+  </p>
 </div>
+
+<%= render 'comprehensive_form', contract: @contract %>

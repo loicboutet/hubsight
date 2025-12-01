@@ -10,6 +10,10 @@ Rails.application.routes.draw do
     confirmation: 'confirmation'
   }
   
+  # Invitations
+  get 'invitations/accept/:token', to: 'invitations#show', as: :accept_invitation
+  put 'invitations/accept/:token', to: 'invitations#update'
+  
   # Role-based dashboard redirect
   get 'dashboard', to: 'dashboard#index', as: :dashboard
 
@@ -19,7 +23,18 @@ Rails.application.routes.draw do
   
   namespace :admin do
     # Portfolio Managers Management
-    resources :portfolio_managers
+    resources :portfolio_managers do
+      member do
+        post :resend_invitation
+      end
+    end
+    
+    # Organizations Management
+    resources :organizations do
+      member do
+        post :toggle_status
+      end
+    end
     
     # Client Data Access
     resources :clients, only: [:index] do
@@ -28,6 +43,12 @@ Rails.application.routes.draw do
       end
     end
     post 'stop_impersonation', to: 'clients#stop_impersonation'
+    
+    # Admin Access Logs (Audit trail for client data access)
+    resources :access_logs, only: [:index, :show]
+    
+    # Application Logs Viewer
+    resources :logs, only: [:index]
     
     # Price Reference Management (BRIQUE 2)
     resources :price_references do
@@ -45,6 +66,9 @@ Rails.application.routes.draw do
   
   # Dashboard & Analytics
   get 'analytics', to: 'analytics#index'
+  
+  # Portfolio Tree View (Hierarchical Navigation)
+  get 'portfolio', to: 'portfolio#index', as: :portfolio
   
   # Sites Management with nested resources
   resources :sites do
@@ -79,29 +103,42 @@ Rails.application.routes.draw do
   
   # Contract Management
   resources :contracts do
-    member do
-      get :pdf
-      get :validate
-      patch :validate, action: :confirm_validation
-      get :compare # BRIQUE 2 - Compare with reference prices
-    end
     collection do
-      get :upload
-      post :upload, action: :process_upload
+      get 'upload'
+      post 'process_upload'
+      get 'compare'
+      patch 'update_columns'  # PATCH /contracts/update_columns
+    end
+    member do
+      get 'validate'
+      post 'confirm_validation'
+      get 'pdf'
+      delete 'delete_pdf'
+      post 'retry_ocr'  # POST /contracts/:id/retry_ocr
+      post 'retry_extraction'  # POST /contracts/:id/retry_extraction
     end
   end
   
   # Organizations Management
   resources :organizations do
     # Contacts nested under organizations
-    resources :contacts, only: [:index, :new, :create]
+    resources :contacts, only: [:new, :create]
+    # Agencies nested under organizations
+    resources :agencies, only: [:new, :create]
     collection do
       get :search
     end
   end
   
-  # Contacts Management (standalone index + nested actions)
+  # Contacts Management (full CRUD with standalone routes)
   resources :contacts do
+    collection do
+      get :search
+    end
+  end
+  
+  # Agencies Management (full CRUD with standalone routes)
+  resources :agencies do
     collection do
       get :search
     end
@@ -112,6 +149,7 @@ Rails.application.routes.draw do
     member do
       get :assign_sites
       patch :assign_sites, action: :update_site_assignments
+      post :resend_invitation
     end
   end
   
@@ -137,6 +175,14 @@ Rails.application.routes.draw do
   # User Management
   resources :users
   
+  # Profile Management
+  get 'profile/edit', to: 'users#edit_profile', as: :edit_profile
+  patch 'profile', to: 'users#update_profile', as: :update_profile
+  
+  # Active Session Management (renamed to avoid conflict with Devise)
+  get 'active_sessions', to: 'sessions#index', as: :sessions
+  delete 'active_sessions/:id', to: 'sessions#destroy', as: :session
+  
   # Settings
   resources :settings, only: [:index, :update]
   
@@ -154,10 +200,17 @@ Rails.application.routes.draw do
   
   # Contracts (Limited access)
   get 'my_contracts', to: 'site_manager/contracts#index'
+  get 'my_contracts/new', to: 'site_manager/contracts#new', as: :new_my_contract
+  post 'my_contracts', to: 'site_manager/contracts#create'
   get 'my_contracts/:id', to: 'site_manager/contracts#show', as: :my_contract
   get 'my_contracts/:id/pdf', to: 'site_manager/contracts#pdf', as: :my_contract_pdf
+  get 'my_contracts/:id/summary_pdf', to: 'site_manager/contracts#generate_summary_pdf', as: :my_contract_summary_pdf
   get 'my_contracts/upload', to: 'site_manager/contracts#upload'
   post 'my_contracts/upload', to: 'site_manager/contracts#process_upload'
+  
+  # Equipment (Read-only access across all assigned sites)
+  get 'my_equipment', to: 'site_manager/equipment#index', as: :my_equipment_index
+  get 'my_equipment/:id', to: 'site_manager/equipment#show', as: :my_equipment
   
   # Alerts (Read-only, BRIQUE 2)
   get 'my_alerts', to: 'site_manager/alerts#index'
@@ -239,6 +292,15 @@ Rails.application.routes.draw do
     get 'sites/:id/hierarchy', to: 'sites#hierarchy'
     get 'contracts/:id/linked_equipment', to: 'contracts#linked_equipment'
     get 'equipment/:id/contracts', to: 'equipment#contracts'
+    
+    # Equipment Types autocomplete/search
+    get 'equipment_types/autocomplete', to: 'equipment_types#autocomplete'
+    
+    # Contract Families autocomplete/search
+    get 'contract_families/autocomplete', to: 'contract_families#autocomplete'
+    
+    # Organizations autocomplete/search (Task 38)
+    get 'organizations/autocomplete', to: 'organizations#autocomplete'
     
     # Autocomplete endpoints
     namespace :autocomplete do

@@ -141,6 +141,98 @@
       <% end %>
     </div>
 
+    <!-- Item 17: Data History Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-top: var(--space-lg); border: 1px solid var(--pink-pale);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        📊 Historique des Modifications
+      </h3>
+      
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--medium-gray);">
+        Consultez l'historique complet de toutes les modifications effectuées dans la plateforme. Filtrez par date, utilisateur ou type d'entité.
+      </p>
+      
+      <!-- Filter Form -->
+      <%= form_with url: audit_trail_path, method: :get, local: true do |f| %>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Date de début</label>
+            <input type="date" name="start_date" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Date de fin</label>
+            <input type="date" name="end_date" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Utilisateur</label>
+            <select name="user_id" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <option value="">Tous les utilisateurs</option>
+              <option value="1">Admin User</option>
+              <option value="2">John Doe</option>
+              <option value="3">Jane Smith</option>
+            </select>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type d'entité</label>
+            <select name="entity_type" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <option value="">Tous les types</option>
+              <option value="Contract">Contrats</option>
+              <option value="Equipment">Équipements</option>
+              <option value="Site">Sites</option>
+              <option value="Building">Bâtiments</option>
+              <option value="Organization">Organisations</option>
+            </select>
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: var(--space-md); margin-bottom: var(--space-xl);">
+          <button type="submit" class="typo-btn-primary" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filtrer l'historique
+          </button>
+          <%= link_to audit_trail_path, class: "typo-btn-cancel" do %>
+            Voir tout l'historique
+          <% end %>
+          <button type="button" class="typo-btn-success" onclick="window.print()" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+            </svg>
+            Exporter en PDF
+          </button>
+        </div>
+      <% end %>
+      
+      <!-- Preview of Recent Changes -->
+      <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm); border: 1px solid #dee2e6;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md);">
+          <h4 class="typo-h4" style="margin: 0;">Dernières modifications</h4>
+          <%= link_to "Voir l'historique complet →", audit_trail_path, class: "typo-body-small", style: "color: var(--coral-primary); text-decoration: none; font-weight: 600;" %>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
+          <div style="padding: var(--space-sm); background-color: white; border-radius: 4px; border-left: 3px solid #0d6efd;">
+            <p class="typo-body-small" style="margin-bottom: 2px;">
+              <strong>Admin User</strong> a modifié le contrat <strong>CTR-2025-001</strong>
+            </p>
+            <p class="typo-body-small" style="color: #6c757d;">26/11/2025 à 14:30</p>
+          </div>
+          <div style="padding: var(--space-sm); background-color: white; border-radius: 4px; border-left: 3px solid #198754;">
+            <p class="typo-body-small" style="margin-bottom: 2px;">
+              <strong>John Doe</strong> a créé un nouvel équipement <strong>EQ-2025-042</strong>
+            </p>
+            <p class="typo-body-small" style="color: #6c757d;">26/11/2025 à 13:15</p>
+          </div>
+          <div style="padding: var(--space-sm); background-color: white; border-radius: 4px; border-left: 3px solid #dc3545;">
+            <p class="typo-body-small" style="margin-bottom: 2px;">
+              <strong>Jane Smith</strong> a supprimé le site <strong>Ancienne Succursale Paris</strong>
+            </p>
+            <p class="typo-body-small" style="color: #6c757d;">26/11/2025 à 11:45</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Security Section -->
     <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-top: var(--space-lg); border: 1px solid var(--pink-pale);">
       <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Sécurité</h3>

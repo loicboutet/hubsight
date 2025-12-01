@@ -1,11 +1,13 @@
-require 'ostruct'
-
 module Admin
   class PriceReferencesController < ApplicationController
     layout 'admin'
     
     # GET /admin/price_references
     def index
+      @price_references = PriceReference.where(status: 'active').order(updated_at: :desc)
+      @total_references = PriceReference.where(status: 'active').count
+      @total_families = PriceReference.where(status: 'active').distinct.count(:contract_family)
+      @last_update = PriceReference.maximum(:updated_at)
     end
     
     # GET /admin/price_references/:id

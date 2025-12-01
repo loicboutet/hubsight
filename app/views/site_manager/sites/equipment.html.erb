@@ -1,0 +1,277 @@
+<% content_for :header, "Équipements - #{@site.name}" %>
+
+<div class="section">
+  <!-- Breadcrumb Navigation -->
+  <nav style="margin-bottom: var(--space-lg);">
+    <ol style="display: flex; align-items: center; gap: var(--space-sm); list-style: none; padding: 0;">
+      <li><%= link_to "Mes Sites", my_sites_path, class: "typo-body-small", style: "color: var(--medium-gray); text-decoration: none;" %></li>
+      <li class="typo-body-small" style="color: var(--medium-gray);">/</li>
+      <li><%= link_to @site.name, my_site_path(@site), class: "typo-body-small", style: "color: var(--medium-gray); text-decoration: none;" %></li>
+      <li class="typo-body-small" style="color: var(--medium-gray);">/</li>
+      <li class="typo-body-small typo-bold" style="color: var(--dark-gray);">Équipements</li>
+    </ol>
+  </nav>
+
+  <!-- Read-Only Access Notice -->
+  <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md); margin-bottom: var(--space-xl); display: flex; align-items: center; gap: var(--space-md);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink: 0;">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <div>
+      <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-xs);">Accès en lecture seule</p>
+      <p class="typo-body-small" style="opacity: 0.9;">Vous pouvez consulter les équipements de ce site mais ne pouvez pas les modifier.</p>
+    </div>
+  </div>
+
+  <!-- Site Header -->
+  <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <h1 class="typo-h1" style="margin-bottom: var(--space-sm);"><%= @site.name %></h1>
+    <p class="typo-body" style="opacity: 0.9;">Navigation hiérarchique des équipements</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-xl);">
+    <!-- Total Equipment -->
+    <div style="background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm);">
+        <span class="typo-body-small" style="opacity: 0.9;">Total Équipements</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </div>
+      <p class="typo-h2" style="font-weight: 700;"><%= @total_count %></p>
+    </div>
+
+    <!-- Active Equipment -->
+    <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm);">
+        <span class="typo-body-small" style="opacity: 0.9;">Actifs</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <p class="typo-h2" style="font-weight: 700;"><%= @active_count %></p>
+    </div>
+
+    <!-- Maintenance Equipment -->
+    <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm);">
+        <span class="typo-body-small" style="opacity: 0.9;">En Maintenance</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <p class="typo-h2" style="font-weight: 700;"><%= @maintenance_count %></p>
+    </div>
+
+    <!-- Critical Equipment -->
+    <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-sm);">
+        <span class="typo-body-small" style="opacity: 0.9;">Critiques</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <p class="typo-h2" style="font-weight: 700;"><%= @critical_count %></p>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+    <%= form_with url: my_site_equipment_path(@site), method: :get, local: true, style: "display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-md); align-items: end;" do |f| %>
+      <!-- Building Filter -->
+      <% if @buildings.any? %>
+        <div>
+          <label class="typo-label" style="display: block; margin-bottom: var(--space-xs);">Bâtiment</label>
+          <%= select_tag :building_id, 
+              options_for_select([['Tous les bâtiments', '']] + @buildings.map { |b| [b.name, b.id] }, params[:building_id]),
+              class: "typo-input" %>
+        </div>
+      <% end %>
+
+      <!-- Status Filter -->
+      <div>
+        <label class="typo-label" style="display: block; margin-bottom: var(--space-xs);">Statut</label>
+        <%= select_tag :status,
+            options_for_select([
+              ['Tous les statuts', ''],
+              ['Actif', 'active'],
+              ['Inactif', 'inactive'],
+              ['En maintenance', 'maintenance'],
+              ['Hors service', 'out_of_service']
+            ], params[:status]),
+            class: "typo-input" %>
+      </div>
+
+      <!-- Search -->
+      <div>
+        <label class="typo-label" style="display: block; margin-bottom: var(--space-xs);">Recherche</label>
+        <%= text_field_tag :search, params[:search], 
+            placeholder: "Nom, fabricant, modèle...",
+            class: "typo-input" %>
+      </div>
+
+      <!-- Buttons -->
+      <div style="display: flex; gap: var(--space-sm);">
+        <%= submit_tag "Filtrer", class: "typo-btn-primary" %>
+        <%= link_to "Réinitialiser", my_site_equipment_path(@site), class: "typo-btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @equipment.any? %>
+    <!-- Hierarchical Equipment Display: Building > Level > Space > Equipment -->
+    <% @equipment_by_building.each do |building, building_equipment| %>
+      <div style="margin-bottom: var(--space-xl);">
+        <!-- Building Header -->
+        <div style="background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); color: white; padding: var(--space-md) var(--space-lg); border-radius: var(--space-md); margin-bottom: var(--space-md); cursor: pointer;" data-controller="tree" data-action="click->tree#toggle">
+          <div style="display: flex; align-items: center; gap: var(--space-sm);">
+            <svg data-tree-target="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="transition: transform 0.2s;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <h3 class="typo-h3"><%= building.name %></h3>
+            <span class="typo-body-small" style="opacity: 0.9; margin-left: auto;">(<%= building_equipment.count %> équipement<%= building_equipment.count > 1 ? 's' : '' %>)</span>
+          </div>
+        </div>
+
+        <!-- Building Equipment Content -->
+        <div data-tree-target="children" style="display: none; margin-left: var(--space-lg);">
+          <% building_equipment.group_by(&:level).each do |level, level_equipment| %>
+            <div style="margin-bottom: var(--space-lg);">
+              <!-- Level Header -->
+              <div style="background-color: #06b6d4; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; padding: var(--space-sm) var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-sm); cursor: pointer;" data-controller="tree" data-action="click->tree#toggle">
+                <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                  <svg data-tree-target="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="transition: transform 0.2s;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                  </svg>
+                  <span class="typo-body-small typo-bold"><%= level&.name || 'Sans niveau' %></span>
+                  <span class="typo-body-small" style="opacity: 0.9; margin-left: auto;">(<%= level_equipment.count %>)</span>
+                </div>
+              </div>
+
+              <!-- Level Equipment Content -->
+              <div data-tree-target="children" style="display: none; margin-left: var(--space-lg);">
+                <% level_equipment.group_by(&:space).each do |space, space_equipment| %>
+                  <div style="margin-bottom: var(--space-md);">
+                    <!-- Space Header -->
+                    <div style="background-color: #10b981; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: var(--space-sm) var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-sm); cursor: pointer;" data-controller="tree" data-action="click->tree#toggle">
+                      <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                        <svg data-tree-target="icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="transition: transform 0.2s;">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span class="typo-body-small typo-bold"><%= space.name %></span>
+                        <span class="typo-body-small" style="opacity: 0.9; margin-left: auto;">(<%= space_equipment.count %>)</span>
+                      </div>
+                    </div>
+
+                    <!-- Space Equipment List -->
+                    <div data-tree-target="children" style="display: none; margin-left: var(--space-lg);">
+                      <div style="background-color: var(--white); border-radius: var(--space-sm); overflow: hidden; border: 1px solid var(--pink-pale);">
+                        <% space_equipment.each_with_index do |equipment, index| %>
+                          <div style="padding: var(--space-md); border-bottom: <%= index < space_equipment.count - 1 ? '1px solid var(--pink-pale)' : 'none' %>; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <%= link_to equipment.name, my_equipment_path(equipment), class: "typo-body-small typo-bold", style: "color: var(--coral-primary); text-decoration: none; display: block; margin-bottom: var(--space-xs);" %>
+                              <div style="display: flex; gap: var(--space-sm); align-items: center; flex-wrap: wrap;">
+                                <% if equipment.equipment_type %>
+                                  <span class="typo-body-small" style="color: var(--medium-gray);"><%= equipment.equipment_type.name %></span>
+                                  <span style="color: var(--medium-gray);">•</span>
+                                <% end %>
+                                <span class="typo-body-small" style="color: var(--medium-gray);"><%= equipment.manufacturer || '-' %></span>
+                                <span style="color: var(--medium-gray);">•</span>
+                                <% status_colors = {
+                                  'active' => { bg: '#d4edda', text: '#155724' },
+                                  'inactive' => { bg: '#f8d7da', text: '#721c24' },
+                                  'maintenance' => { bg: '#fff3cd', text: '#856404' },
+                                  'out_of_service' => { bg: '#f8d7da', text: '#721c24' }
+                                } %>
+                                <% color = status_colors[equipment.status] || { bg: '#e2e3e5', text: '#383d41' } %>
+                                <span style="display: inline-block; padding: 2px 8px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">
+                                  <%= equipment.status_label %>
+                                </span>
+                                <% if equipment.criticality.present? %>
+                                  <% criticality_colors = {
+                                    'low' => { bg: '#d4edda', text: '#155724' },
+                                    'medium' => { bg: '#fff3cd', text: '#856404' },
+                                    'high' => { bg: '#fff3cd', text: '#856404' },
+                                    'critical' => { bg: '#f8d7da', text: '#721c24' }
+                                  } %>
+                                  <% color = criticality_colors[equipment.criticality] || { bg: '#e2e3e5', text: '#383d41' } %>
+                                  <span style="display: inline-block; padding: 2px 8px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.7rem; font-weight: 600;">
+                                    <%= equipment.criticality_label %>
+                                  </span>
+                                <% end %>
+                              </div>
+                            </div>
+                            <%= link_to my_equipment_path(equipment), class: "typo-btn-small typo-btn-small-primary" do %>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            <% end %>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Help Text -->
+    <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: var(--space-md); border-radius: var(--space-sm); margin-top: var(--space-xl);">
+      <p class="typo-body-small" style="color: var(--dark-gray);">
+        💡 <strong>Astuce:</strong> Cliquez sur les en-têtes (Bâtiment, Niveau, Espace) pour développer ou réduire les sections et naviguer facilement dans la hiérarchie.
+      </p>
+    </div>
+
+    <!-- Pagination -->
+    <% if @equipment.respond_to?(:total_pages) && @equipment.total_pages > 1 %>
+      <div style="margin-top: var(--space-lg); text-align: center;">
+        <%= paginate @equipment %>
+      </div>
+    <% end %>
+  <% else %>
+    <!-- Empty State -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xxl); text-align: center;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="var(--medium-gray)" style="margin: 0 auto;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      <h3 class="typo-h3" style="margin-top: var(--space-lg); color: var(--gray-secondary);">Aucun équipement trouvé</h3>
+      <p class="typo-body" style="color: var(--medium-gray); margin-top: var(--space-sm);">
+        <% if params[:search].present? || params[:building_id].present? || params[:status].present? %>
+          Aucun équipement ne correspond à vos critères de recherche pour ce site.
+        <% else %>
+          Aucun équipement n'est encore enregistré pour ce site.
+        <% end %>
+      </p>
+      <% if params[:search].present? || params[:building_id].present? || params[:status].present? %>
+        <%= link_to "Réinitialiser les filtres", my_site_equipment_path(@site), class: "typo-btn-secondary", style: "margin-top: var(--space-lg);" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Back Button -->
+  <div style="margin-top: var(--space-xl);">
+    <%= link_to my_site_path(@site), class: "typo-btn-secondary" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: var(--space-xs);">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Retour au site
+    <% end %>
+  </div>
+</div>

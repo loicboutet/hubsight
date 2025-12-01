@@ -1,0 +1,272 @@
+<% content_for :header, "Mon Profil" %>
+
+<div class="section">
+  <div class="page-header-responsive">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Mon Profil</h2>
+      <p class="typo-body-small">Gérer vos informations personnelles et préférences</p>
+    </div>
+  </div>
+
+  <%= form_with(model: @user, url: update_profile_path, method: :patch, local: true) do |f| %>
+    <% if @user.errors.any? %>
+      <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-lg);">
+        <h3 style="margin-top: 0; font-size: 1.1rem;">
+          <%= pluralize(@user.errors.count, "erreur") %> ont empêché la mise à jour de votre profil:
+        </h3>
+        <ul style="margin-bottom: 0;">
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+      <!-- Left Column: Personal Information -->
+      <div>
+        <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+          <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+            Informations Personnelles
+          </h3>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-lg);">
+            <div>
+              <%= f.label :first_name, "Prénom", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+              <%= f.text_field :first_name, 
+                  required: true,
+                  style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+            </div>
+
+            <div>
+              <%= f.label :last_name, "Nom", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+              <%= f.text_field :last_name, 
+                  required: true,
+                  style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+            </div>
+          </div>
+
+          <div style="margin-bottom: var(--space-lg);">
+            <%= f.label :email, "Email", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.email_field :email, 
+                required: true,
+                style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+            <p class="typo-body-small" style="color: #6c757d; margin-top: var(--space-sm);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-top;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              La modification de l'email nécessitera une reconfirmation
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-lg);">
+            <div>
+              <%= f.label :phone, "Téléphone", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+              <%= f.text_field :phone, 
+                  placeholder: "+33 1 23 45 67 89",
+                  style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+            </div>
+
+            <div>
+              <%= f.label :department, "Département", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+              <%= f.text_field :department, 
+                  placeholder: "Ex: Gestion technique",
+                  style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+            </div>
+          </div>
+
+          <div style="margin-bottom: var(--space-lg);">
+            <%= f.label :language, "Langue", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.select :language, 
+                options_for_select([['Français', 'fr'], ['English', 'en']], @user.language || 'fr'),
+                {},
+                style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white; font-size: 1rem;" %>
+          </div>
+        </div>
+
+        <!-- Notification Preferences -->
+        <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+          <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+            Préférences de Notification
+          </h3>
+
+          <p class="typo-body-small" style="color: #6c757d; margin-bottom: var(--space-lg);">
+            Choisissez les notifications que vous souhaitez recevoir par email
+          </p>
+
+          <% 
+            current_prefs = @user.notification_preferences || {}
+            notification_options = [
+              { key: 'email_alerts', label: 'Alertes Contrats', description: 'Recevoir des alertes pour les contrats expirés ou à renouveler' },
+              { key: 'email_upcoming', label: 'Échéances Prochaines', description: 'Notifications des contrats arrivant à échéance' },
+              { key: 'email_at_risk', label: 'Contrats à Risque', description: 'Alertes pour les contrats nécessitant une attention particulière' },
+              { key: 'email_missing_contracts', label: 'Contrats Manquants', description: 'Notifications des équipements sans contrat' }
+            ]
+          %>
+
+          <% notification_options.each do |option| %>
+            <div style="background-color: #f8f9fa; padding: var(--space-md); border-radius: var(--space-sm); margin-bottom: var(--space-md);">
+              <label style="display: flex; align-items: start; cursor: pointer;">
+                <%= check_box_tag "user[notification_preferences][#{option[:key]}]", '1', current_prefs[option[:key].to_sym], 
+                    id: "user_notification_preferences_#{option[:key]}",
+                    style: "width: 20px; height: 20px; margin-right: var(--space-md); margin-top: 2px; cursor: pointer;" %>
+                <div>
+                  <span class="typo-body-small typo-bold" style="display: block; margin-bottom: 4px;"><%= option[:label] %></span>
+                  <span class="typo-body-small" style="color: #6c757d; font-size: 0.875rem;"><%= option[:description] %></span>
+                </div>
+              </label>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Right Column: Security & Activity -->
+      <div>
+        <!-- Change Password -->
+        <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);" data-controller="password-strength">
+          <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+            Changer le Mot de Passe
+          </h3>
+
+          <p class="typo-body-small" style="color: #6c757d; margin-bottom: var(--space-lg);">
+            Laissez les champs vides si vous ne souhaitez pas changer votre mot de passe
+          </p>
+
+          <div style="margin-bottom: var(--space-lg);">
+            <%= f.label :current_password, "Mot de passe actuel", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.password_field :current_password, 
+                autocomplete: "current-password",
+                placeholder: "Entrez votre mot de passe actuel",
+                style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+          </div>
+
+          <div style="margin-bottom: var(--space-lg);">
+            <%= f.label :password, "Nouveau mot de passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.password_field :password, 
+                autocomplete: "new-password",
+                placeholder: "Entrez votre nouveau mot de passe",
+                data: { password_strength_target: "input", action: "input->password-strength#checkStrength" },
+                style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+            
+            <!-- Password Strength Meter -->
+            <div data-password-strength-target="meter" style="margin-top: var(--space-sm);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <span class="typo-body-small" style="color: #6c757d;">Force du mot de passe</span>
+                <span class="typo-body-small strength-text" style="font-weight: 600;"></span>
+              </div>
+              <div style="width: 100%; height: 6px; background-color: #e9ecef; border-radius: 3px; overflow: hidden;">
+                <div class="strength-bar" style="height: 100%; width: 0%; transition: all 0.3s ease; border-radius: 3px;"></div>
+              </div>
+            </div>
+            
+            <p data-password-strength-target="feedback" class="typo-body-small" style="margin-top: var(--space-sm); font-weight: 600;"></p>
+          </div>
+
+          <div style="margin-bottom: var(--space-lg);">
+            <%= f.label :password_confirmation, "Confirmation du nouveau mot de passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.password_field :password_confirmation,
+                autocomplete: "new-password",
+                placeholder: "Confirmez votre nouveau mot de passe",
+                style: "width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;" %>
+          </div>
+
+          <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: var(--space-md); border-radius: var(--space-sm);">
+            <p class="typo-body-small" style="margin: 0 0 var(--space-sm) 0; font-weight: bold; color: #856404;">
+              Exigences du mot de passe:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div data-password-strength-target="requirement" data-requirement="length" class="requirement-unmet" style="display: flex; align-items: center; gap: 8px;">
+                <span class="check-icon" style="font-size: 1.2rem; font-weight: bold;">○</span>
+                <span class="typo-body-small" style="color: #856404;">Au moins 8 caractères</span>
+              </div>
+              <div data-password-strength-target="requirement" data-requirement="uppercase" class="requirement-unmet" style="display: flex; align-items: center; gap: 8px;">
+                <span class="check-icon" style="font-size: 1.2rem; font-weight: bold;">○</span>
+                <span class="typo-body-small" style="color: #856404;">Au moins une lettre majuscule</span>
+              </div>
+              <div data-password-strength-target="requirement" data-requirement="lowercase" class="requirement-unmet" style="display: flex; align-items: center; gap: 8px;">
+                <span class="check-icon" style="font-size: 1.2rem; font-weight: bold;">○</span>
+                <span class="typo-body-small" style="color: #856404;">Au moins une lettre minuscule</span>
+              </div>
+              <div data-password-strength-target="requirement" data-requirement="digit" class="requirement-unmet" style="display: flex; align-items: center; gap: 8px;">
+                <span class="check-icon" style="font-size: 1.2rem; font-weight: bold;">○</span>
+                <span class="typo-body-small" style="color: #856404;">Au moins un chiffre</span>
+              </div>
+              <div data-password-strength-target="requirement" data-requirement="special" class="requirement-unmet" style="display: flex; align-items: center; gap: 8px;">
+                <span class="check-icon" style="font-size: 1.2rem; font-weight: bold;">○</span>
+                <span class="typo-body-small" style="color: #856404;">Au moins un caractère spécial (!@#$%^&*)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Activity -->
+        <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+          <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+            Activité du Compte
+          </h3>
+
+          <div style="margin-bottom: var(--space-md);">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); margin-bottom: var(--space-sm);">
+              <span class="typo-body-small" style="color: #6c757d;">Rôle</span>
+              <span class="typo-body-small typo-bold"><%= @user.role.humanize %></span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); margin-bottom: var(--space-sm);">
+              <span class="typo-body-small" style="color: #6c757d;">Statut</span>
+              <span style="display: inline-block; padding: 4px 10px; background-color: #d4edda; color: #155724; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                <%= @user.status || 'Actif' %>
+              </span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); margin-bottom: var(--space-sm);">
+              <span class="typo-body-small" style="color: #6c757d;">Nombre de connexions</span>
+              <span class="typo-body-small typo-bold"><%= @user.sign_in_count %></span>
+            </div>
+
+            <% if @user.current_sign_in_at.present? %>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); margin-bottom: var(--space-sm);">
+                <span class="typo-body-small" style="color: #6c757d;">Dernière connexion</span>
+                <span class="typo-body-small typo-bold"><%= l(@user.current_sign_in_at, format: :long) rescue @user.current_sign_in_at.strftime("%d/%m/%Y à %H:%M") %></span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm); margin-bottom: var(--space-sm);">
+                <span class="typo-body-small" style="color: #6c757d;">IP de connexion</span>
+                <span class="typo-body-small typo-bold" style="font-family: monospace;"><%= @user.current_sign_in_ip %></span>
+              </div>
+            <% end %>
+
+            <% if @user.last_sign_in_at.present? && @user.last_sign_in_at != @user.current_sign_in_at %>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background-color: #f8f9fa; border-radius: var(--space-sm);">
+                <span class="typo-body-small" style="color: #6c757d;">Connexion précédente</span>
+                <span class="typo-body-small typo-bold"><%= l(@user.last_sign_in_at, format: :long) rescue @user.last_sign_in_at.strftime("%d/%m/%Y à %H:%M") %></span>
+              </div>
+            <% end %>
+          </div>
+
+          <div style="border-top: 1px solid #e9ecef; padding-top: var(--space-md); margin-top: var(--space-md);">
+            <p class="typo-body-small" style="color: #6c757d; margin-bottom: var(--space-md);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-top;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Vos données sont sécurisées et protégées
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; margin-top: var(--space-xl);">
+      <%= link_to "Annuler", dashboard_path, class: "typo-btn-cancel" %>
+      <%= f.submit "Enregistrer les modifications", class: "typo-btn-success", style: "cursor: pointer;" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  @media (max-width: 1200px) {
+    .section > form > div {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>

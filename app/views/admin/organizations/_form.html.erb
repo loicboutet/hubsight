@@ -1,0 +1,111 @@
+<div style="background-color: var(--white); border-radius: var(--space-md);">
+  <form action="<%= @organization&.persisted? ? admin_organization_path(@organization) : admin_organizations_path %>" method="post" accept-charset="UTF-8">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <% if @organization&.persisted? %>
+      <input type="hidden" name="_method" value="patch">
+    <% end %>
+    
+    <% if @organization&.errors&.any? %>
+      <div style="margin-bottom: var(--space-lg); padding: var(--space-lg); background-color: #ffebee; border-left: 4px solid #f44336; border-radius: var(--space-sm);">
+        <h4 style="margin: 0 0 var(--space-sm) 0; color: #c62828;">
+          <%= pluralize(@organization.errors.count, "erreur") %> <%= @organization.errors.count > 1 ? 'ont empêché' : 'a empêché' %> l'enregistrement:
+        </h4>
+        <ul style="margin: 0; padding-left: var(--space-lg);">
+          <% @organization.errors.full_messages.each do |message| %>
+            <li style="color: #c62828;"><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    
+    <% if flash[:alert] %>
+      <div style="margin-bottom: var(--space-lg); padding: var(--space-lg); background-color: #ffebee; border-left: 4px solid #f44336; border-radius: var(--space-sm);">
+        <p style="margin: 0; color: #c62828;"><%= flash[:alert] %></p>
+      </div>
+    <% end %>
+    
+    <!-- Organization Details Section -->
+    <div style="margin-bottom: var(--space-2xl);">
+      <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        Informations de l'Organisation
+      </h3>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom de l'Organisation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <input type="text" name="organization[name]" id="organization_name" placeholder="Ex: ENGIE Solutions" value="<%= @organization&.name %>" required style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;">
+          <p style="margin-top: var(--space-xs); font-size: 0.875rem; color: var(--gray);">
+            Nom commercial de l'organisation
+          </p>
+        </div>
+        
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Raison Sociale
+          </label>
+          <input type="text" name="organization[legal_name]" id="organization_legal_name" placeholder="Ex: ENGIE SA" value="<%= @organization&.legal_name %>" style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;">
+          <p style="margin-top: var(--space-xs); font-size: 0.875rem; color: var(--gray);">
+            Nom légal de l'entreprise
+          </p>
+        </div>
+        
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Numéro SIRET
+          </label>
+          <input type="text" name="organization[siret]" id="organization_siret" placeholder="Ex: 123 456 789 00012" value="<%= @organization&.siret %>" pattern="[\d\s]{14,17}" style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem; font-family: monospace;">
+          <p style="margin-top: var(--space-xs); font-size: 0.875rem; color: var(--gray);">
+            14 chiffres (optionnel)
+          </p>
+        </div>
+        
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Statut <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <select name="organization[status]" id="organization_status" required style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;">
+            <option value="active" <%= 'selected' if @organization&.status == 'active' || @organization&.status.nil? %>>Actif</option>
+            <option value="inactive" <%= 'selected' if @organization&.status == 'inactive' %>>Inactif</option>
+          </select>
+          <p style="margin-top: var(--space-xs); font-size: 0.875rem; color: var(--gray);">
+            Les organisations inactives ne peuvent pas être assignées à de nouveaux utilisateurs
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info box for status -->
+    <% if @organization&.persisted? %>
+    <div style="margin-bottom: var(--space-2xl); padding: var(--space-lg); background-color: #e3f2fd; border-left: 4px solid #2196f3; border-radius: var(--space-sm);">
+      <p style="margin: 0; color: #1565c0;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: var(--space-sm);">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <strong>Information:</strong> Cette organisation a <%= @organization.users.count %> utilisateur(s) associé(s). 
+        <%= @organization.users.count > 0 ? "La suppression n'est pas possible tant que des utilisateurs y sont rattachés." : "Vous pouvez supprimer cette organisation." %>
+      </p>
+    </div>
+    <% end %>
+
+    <!-- Form Actions -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-xl); border-top: 1px solid var(--pink-pale);">
+      <a href="<%= @organization&.persisted? ? admin_organization_path(@organization) : admin_organizations_path %>" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      </a>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= @organization&.persisted? ? 'Mettre à jour' : 'Créer l\'Organisation' %>
+      </button>
+    </div>
+  </form>
+</div>

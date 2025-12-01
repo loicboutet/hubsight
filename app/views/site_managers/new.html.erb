@@ -55,41 +55,18 @@
         </div>
       </div>
 
-      <!-- Account Information Section -->
+      <!-- Additional Information Section -->
       <div style="margin-bottom: var(--space-xl);">
         <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-          Informations de Compte
+          Informations Complémentaires
         </h4>
         
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Mot de passe <span style="color: var(--coral-primary);">*</span>
+              Département
             </label>
-            <input type="password" name="user[password]" placeholder="Minimum 8 caractères" required minlength="8" style="width: 100%;" />
-            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
-              Minimum 8 caractères
-            </p>
-          </div>
-
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Confirmer le mot de passe <span style="color: var(--coral-primary);">*</span>
-            </label>
-            <input type="password" name="user[password_confirmation]" placeholder="Confirmer le mot de passe" required minlength="8" style="width: 100%;" />
-          </div>
-
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Rôle
-            </label>
-            <select name="user[role]" style="width: 100%;" disabled>
-              <option value="site_manager" selected>Responsable de Site</option>
-            </select>
-            <input type="hidden" name="user[role]" value="site_manager" />
-            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
-              Le rôle est automatiquement défini sur "Responsable de Site"
-            </p>
+            <input type="text" name="user[department]" placeholder="Ex: Maintenance" style="width: 100%;" />
           </div>
 
           <div>
@@ -105,22 +82,22 @@
       </div>
 
       <!-- Quick Reference -->
-      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm); border-left: 4px solid #667eea;">
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #e7f3ff; border-radius: var(--space-sm); border-left: 4px solid #667eea;">
         <h5 class="typo-h5" style="margin-bottom: var(--space-sm); color: var(--dark-gray);">
           💡 Informations Importantes
         </h5>
         <ul style="margin: 0; padding-left: var(--space-lg); color: var(--medium-gray);">
           <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+            <strong>Invitation par email :</strong> Un email d'invitation sera envoyé au responsable de site
+          </li>
+          <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
+            <strong>Définition du mot de passe :</strong> Le responsable définira son propre mot de passe via le lien d'invitation
+          </li>
+          <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
             <strong>Rôle :</strong> Le responsable de site aura accès uniquement aux sites qui lui seront assignés
           </li>
-          <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
-            <strong>Assignation :</strong> Après création, utilisez le bouton "Sites" pour assigner des sites à ce responsable
-          </li>
-          <li class="typo-body-small" style="margin-bottom: var(--space-xs);">
-            <strong>Email :</strong> Un email de bienvenue sera envoyé avec les identifiants de connexion
-          </li>
           <li class="typo-body-small">
-            <strong>Sécurité :</strong> Le mot de passe doit contenir au moins 8 caractères
+            <strong>Assignation :</strong> Après création, utilisez le bouton "Sites" pour assigner des sites à ce responsable
           </li>
         </ul>
       </div>

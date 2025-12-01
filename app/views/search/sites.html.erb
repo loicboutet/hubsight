@@ -1,0 +1,104 @@
+<% content_for :header, "Search - Sites" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Recherche de Sites</h2>
+    <p class="typo-body-small">Rechercher des sites dans votre portefeuille</p>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md); ">
+    
+    <!-- Main Search Bar -->
+    <div style="margin-bottom: var(--space-xl);">
+      <div style="position: relative;">
+        <input type="text" placeholder="Rechercher un site..." 
+          style="width: 100%; padding: 16px 50px 16px 50px; font-size: 1.125rem; border: 2px solid var(--light-gray); border-radius: var(--space-md); transition: border-color 0.2s;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" 
+          style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--medium-gray);">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <button type="submit" class="typo-btn-success" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); height: calc(100% - 16px);">
+          Rechercher
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Tabs -->
+    <div style="margin-bottom: var(--space-xl); border-bottom: 2px solid var(--pink-pale);">
+      <div style="display: flex; gap: var(--space-md); overflow-x: auto;">
+        <%= link_to search_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
+          Tous les résultats
+        <% end %>
+        <%= link_to search_sites_path, class: "typo-body-small typo-bold", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid var(--coral-primary); color: var(--coral-primary); white-space: nowrap;" do %>
+          Sites
+        <% end %>
+        <%= link_to search_contracts_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
+          Contrats
+        <% end %>
+        <%= link_to search_equipment_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
+          Équipements
+        <% end %>
+        <%= link_to search_organizations_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
+          Organisations
+        <% end %>
+        <span class="typo-body-small" style="padding: var(--space-md) var(--space-lg); display: inline-block; border-bottom: 3px solid transparent; color: var(--light-gray); white-space: nowrap; cursor: not-allowed;">
+          Contacts
+        </span>
+      </div>
+    </div>
+
+    <!-- Quick Filters -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
+      <h5 class="typo-h5" style="margin-bottom: var(--space-md);">Filtres Rapides</h5>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+        <button class="typo-label typo-label-primary">Tous</button>
+        <button class="typo-label typo-label-success">Actifs</button>
+        <button class="typo-label">Par département</button>
+        <button class="typo-label">Par surface</button>
+      </div>
+    </div>
+
+    <!-- Sites Results -->
+    <div>
+      <div style="margin-bottom: var(--space-lg);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-sm);">Sites Récents</h3>
+        <p class="typo-body-small" style="color: var(--medium-gray);">
+          <%= Site.count %> sites trouvés
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: var(--space-md);">
+        <% Site.order(created_at: :desc).each do |site| %>
+          <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); padding: var(--space-lg); transition: all 0.2s; background: var(--white);" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'; this.style.borderColor='var(--coral-primary)';" onmouseout="this.style.boxShadow='none'; this.style.borderColor='var(--light-gray)';">
+            <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: var(--space-sm);">
+              <span class="typo-label typo-label-primary">Site</span>
+              <span class="typo-label typo-label-<%= site.status == 'active' ? 'success' : 'warning' %>"><%= site.status.capitalize %></span>
+            </div>
+            <h5 class="typo-h5" style="margin-bottom: var(--space-xs); color: var(--dark-gray);"><%= site.name %></h5>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);">
+              📍 <%= site.address %>
+            </p>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
+              <%= site.city %> (<%= site.department %>) • <%= number_with_delimiter(site.total_area || 0, delimiter: ' ') %> m²
+            </p>
+            <% if site.buildings.any? %>
+              <p class="typo-body-small" style="color: var(--light-gray); font-size: 0.85rem; margin-bottom: var(--space-sm);">
+                🏢 <%= pluralize(site.buildings.count, 'bâtiment') %>
+              </p>
+            <% end %>
+            <div style="display: flex; gap: var(--space-sm); margin-top: var(--space-md);">
+              <%= link_to site_path(site), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Voir
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+</div>

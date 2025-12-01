@@ -1,0 +1,105 @@
+<% content_for :header, @site.name %>
+
+<div class="section">
+  <!-- Site Header -->
+  <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: var(--space-xl); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <h1 class="typo-h1" style="margin-bottom: var(--space-sm);"><%= @site.name %></h1>
+    <p class="typo-body" style="opacity: 0.9;"><%= @site.address %></p>
+  </div>
+
+  <!-- Quick Actions -->
+  <div style="display: flex; gap: var(--space-md); margin-bottom: var(--space-xl); flex-wrap: wrap;">
+    <%= link_to my_site_equipment_path(@site), class: "typo-btn-primary" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: var(--space-xs);">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      Voir les Équipements
+    <% end %>
+    <%= link_to my_sites_path, class: "typo-btn-secondary" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: var(--space-xs);">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Retour à mes sites
+    <% end %>
+  </div>
+
+  <!-- Site Information Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-xl); margin-bottom: var(--space-xl);">
+    <!-- General Information -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">📋 Informations Générales</h3>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <div>
+          <p class="typo-label">Type de site</p>
+          <p class="typo-body"><%= @site.site_type || '-' %></p>
+        </div>
+        
+        <div>
+          <p class="typo-label">Code site</p>
+          <p class="typo-body"><%= @site.code || '-' %></p>
+        </div>
+        
+        <div>
+          <p class="typo-label">Surface totale</p>
+          <p class="typo-body"><%= @site.total_area ? "#{@site.total_area} m²" : '-' %></p>
+        </div>
+        
+        <div>
+          <p class="typo-label">Région</p>
+          <p class="typo-body"><%= @site.region || '-' %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">📞 Informations de Contact</h3>
+      
+      <div style="display: grid; gap: var(--space-md);">
+        <% @contacts.each do |contact| %>
+          <div style="padding: var(--space-md); background-color: var(--pink-pale); border-radius: var(--space-sm);">
+            <p class="typo-body typo-bold" style="margin-bottom: var(--space-xs);"><%= contact[:name] %></p>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-xs);"><%= contact[:role] %></p>
+            <p class="typo-body-small"><%= contact[:phone] %></p>
+            <p class="typo-body-small"><%= contact[:email] %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opening Hours -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h3" style="margin-bottom: var(--space-md);">🕐 Horaires d'Ouverture</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--space-md);">
+      <% @opening_hours.each do |schedule| %>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-sm); border-bottom: 1px solid var(--pink-pale);">
+          <span class="typo-body typo-bold"><%= schedule[:day] %></span>
+          <% if schedule[:open] %>
+            <span class="typo-body-small" style="color: var(--medium-gray);"><%= schedule[:from] %> - <%= schedule[:to] %></span>
+          <% else %>
+            <span class="typo-body-small" style="color: var(--medium-gray);"><%= schedule[:from] %></span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Address Information -->
+  <% if @site.address.present? %>
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
+      <h3 class="typo-h3" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">📍 Adresse Complète</h3>
+      
+      <div style="display: grid; gap: var(--space-sm);">
+        <p class="typo-body"><%= @site.address %></p>
+        <p class="typo-body"><%= [@site.postal_code, @site.city].compact.join(' ') %></p>
+        <% if @site.region.present? %>
+          <p class="typo-body"><%= @site.region %></p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

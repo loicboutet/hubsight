@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSight - Site Manager Features (Brick 1)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background-color: white; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 2.5em; }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1em; }
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .stat-card { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; padding: 20px; border-radius: 8px; flex: 1; min-width: 200px; }
+        .stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { opacity: 0.9; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        thead { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; }
+        th { padding: 15px 12px; text-align: left; font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        td { padding: 12px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+        tr:hover { background-color: #f8f9fa; }
+        tr.implemented { background-color: #e8f5e9; }
+        tr.implemented:hover { background-color: #c8e6c9; }
+        .sl-col { width: 60px; text-align: center; font-weight: bold; color: #27ae60; }
+        .brick-col { width: 100px; font-weight: 600; color: #229954; }
+        .title-col { width: 250px; font-weight: 600; color: #2c3e50; }
+        .description-col { min-width: 300px; }
+        .url-col { width: 200px; word-break: break-word; }
+        .url-col a { color: #27ae60; text-decoration: none; }
+        .url-col a:hover { text-decoration: underline; }
+        .test-col { min-width: 350px; font-size: 13px; color: #555; }
+        .video-col { width: 120px; text-align: center; }
+        .empty-cell { color: #bdc3c7; font-style: italic; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+        .status-done { background-color: #4caf50; color: white; }
+        @media (max-width: 768px) { .container { padding: 15px; } h1 { font-size: 1.8em; } table { font-size: 12px; } th, td { padding: 8px 6px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Site Manager Features - Brick 1</h1>
+        <p class="subtitle">Site Manager functionality for viewing assigned sites, contracts, and equipment</p>
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number">5</div><div class="stat-label">Total Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Implemented</div></div>
+            <div class="stat-card"><div class="stat-number">Brick 1</div><div class="stat-label">Phase</div></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="sl-col">SL</th>
+                    <th class="brick-col">Brick</th>
+                    <th class="title-col">Task Title</th>
+                    <th class="description-col">Task Description</th>
+                    <th class="url-col">URL</th>
+                    <th class="test-col">How to Test</th>
+                    <th class="video-col">Video</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="sl-col">47</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - View Assigned Sites</td>
+                    <td class="description-col">Site Manager can view only sites assigned to them by Portfolio Manager with restricted access to other sites</td>
+                    <td class="url-col"><a href="http://localhost:3000/my_sites">localhost:3000/my_sites</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/site_managers</li>
+                            <li>Click on a site manager (e.g., Pierre Bernard)</li>
+                            <li>Click "Gérer les Sites" button</li>
+                            <li>Select/deselect sites using checkboxes</li>
+                            <li>Click "Enregistrer les Assignations"</li>
+                            <li>Logout and login as site manager (sitemanager@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/my_sites</li>
+                            <li>Verify ONLY assigned sites visible (5 sites, not all 13)</li>
+                            <li>Click on an assigned site - should work</li>
+                            <li>Try manually accessing a non-assigned site ID in URL</li>
+                            <li>Verify redirected with "Vous n'avez pas accès à ce site" error</li>
+                            <li>Test with sitemanager2@hubsight.com for different assignments</li>
+                        </ol>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">48</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - View Site Contracts<span class="status-badge status-done">✓ DONE</span></td>
+                    <td class="description-col">View contracts related to assigned sites with read-only access to contract details</td>
+                    <td class="url-col"><a href="http://localhost:3000/my_contracts">localhost:3000/my_contracts</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as site manager (sitemanager@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/my_contracts</li>
+                            <li>Verify see only contracts for assigned sites</li>
+                            <li>Verify contracts grouped by site with gradient headers</li>
+                            <li>Test filters: select site, family, status, search</li>
+                            <li>Click "Voir" on any contract</li>
+                            <li>Verify shows full details in read-only mode</li>
+                            <li>Verify NO edit/delete buttons present</li>
+                            <li>Verify "Accès en lecture seule" warning displayed</li>
+                            <li>If contract has PDF, click "Voir PDF" button</li>
+                            <li>Try accessing non-assigned site contract - verify error</li>
+                            <li>Test organization isolation with sitemanager3@hubsight.com</li>
+                        </ol>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">49</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - Upload Contracts for Scope<span class="status-badge status-done">✓ DONE</span></td>
+                    <td class="description-col">Upload contract PDFs for sites within their scope, triggering OCR/LLM extraction workflow</td>
+                    <td class="url-col"><a href="http://localhost:3000/my_contracts/new">localhost:3000/my_contracts/new</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as site manager (sitemanager@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/my_contracts</li>
+                            <li>Click "Nouveau Contrat" button</li>
+                            <li>Verify blue info banner explains auto-extraction process</li>
+                            <li>In "Site Associé" dropdown, verify ONLY assigned sites appear</li>
+                            <li>Drag a PDF file (under 10MB) over dropzone - verify visual feedback</li>
+                            <li>Drop file - verify green preview box appears</li>
+                            <li>Fill required fields: select site, contract number, title, type, family</li>
+                            <li>Click "Télécharger le Contrat" button</li>
+                            <li>Verify success message and redirect to contract detail</li>
+                            <li>Verify OCR status shows "En attente" or "Terminé"</li>
+                            <li>Wait ~10 seconds, refresh - verify extraction completed</li>
+                            <li>Verify 6 collapsible sections with extracted data appear</li>
+                        </ol>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">50</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - View Site Equipment<span class="status-badge status-done">✓ DONE</span></td>
+                    <td class="description-col">View list of equipment for assigned sites with hierarchical navigation (building > level > space > equipment)</td>
+                    <td class="url-col"><a href="http://localhost:3000/my_equipment">localhost:3000/my_equipment</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as site manager (sitemanager@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/my_equipment</li>
+                            <li>Verify blue "Accès en lecture seule" notice displays</li>
+                            <li>Verify 4 statistics cards show real counts</li>
+                            <li>Verify equipment list shows ONLY equipment from assigned sites</li>
+                            <li>Verify equipment grouped by site with gradient headers</li>
+                            <li>Test filters: select site, status, search by name/manufacturer</li>
+                            <li>Click equipment name - verify shows read-only details</li>
+                            <li>Navigate to localhost:3000/my_sites/:id/equipment</li>
+                            <li>Verify hierarchical tree: Building > Level > Space > Equipment</li>
+                            <li>Click building header - verify expands/collapses</li>
+                            <li>Try accessing non-assigned site equipment - verify error</li>
+                        </ol>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr class="implemented">
+                    <td class="sl-col">51</td>
+                    <td class="brick-col">Brick 1</td>
+                    <td class="title-col">SM - Generate Contract PDF<span class="status-badge status-done">✓ DONE</span></td>
+                    <td class="description-col">Generate and export contract summary sheets in PDF format for contracts within their scope</td>
+                    <td class="url-col"><a href="http://localhost:3000/my_contracts/:id">localhost:3000/my_contracts/:id</a></td>
+                    <td class="test-col">
+                        <ol>
+                            <li>Login as site manager (sitemanager@hubsight.com / Password123!)</li>
+                            <li>Navigate to localhost:3000/my_contracts</li>
+                            <li>Click "Voir" on any contract</li>
+                            <li>On contract detail page, locate "Générer Fiche PDF" button</li>
+                            <li>Click button - verify PDF generates and opens</li>
+                            <li>Check filename: "Contrat_[NUMBER]_[DATE].pdf"</li>
+                            <li>Verify PDF contains: Header, Emergency contacts (red phones), Identification, Stakeholders, Scope, Equipment list, Financial aspects, Temporality, Services & SLA, Footer with page numbers</li>
+                            <li>Verify purple/coral color scheme</li>
+                            <li>Verify emergency numbers in BOLD RED</li>
+                            <li>Try generating PDF for non-assigned site contract - verify error</li>
+                            <li>Test with multiple contracts to verify unique filenames</li>
+                        </ol>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

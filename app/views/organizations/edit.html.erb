@@ -1,10 +1,21 @@
-<% content_for :header, "Éditer Organisation" %>
+<div style="padding: var(--space-lg);">
+  <!-- Breadcrumb Navigation -->
+  <nav style="margin-bottom: var(--space-lg);">
+    <ol style="display: flex; list-style: none; padding: 0; margin: 0; gap: var(--space-sm); align-items: center;">
+      <li><%= link_to "Organisations", organizations_path, style: "color: var(--purple-primary); text-decoration: none;" %></li>
+      <li style="color: #999;">/</li>
+      <li><%= link_to @organization.name, organization_path(@organization), style: "color: var(--purple-primary); text-decoration: none;" %></li>
+      <li style="color: #999;">/</li>
+      <li class="typo-body-small" style="color: #666;">Éditer</li>
+    </ol>
+  </nav>
 
-<div class="section">
+  <!-- Page Header -->
   <div style="margin-bottom: var(--space-xl);">
-    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Éditer l'Organisation</h2>
-    <p class="typo-body-small">Modifier les informations de <%= @organization.name %></p>
+    <h1 class="typo-h1" style="margin-bottom: var(--space-sm);">✏️ Éditer <%= @organization.name %></h1>
+    <p class="typo-body" style="color: #666;">Modifiez les informations de l'organisation</p>
   </div>
 
-  <%= render 'form', organization: @organization %>
+  <!-- Form -->
+  <%= render 'form' %>
 </div>

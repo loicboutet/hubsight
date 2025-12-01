@@ -1,0 +1,102 @@
+<%# OCR Status Display Component %>
+<% if contract.pdf_attached? %>
+  <div class="ocr-status-section" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 0.5rem; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: #2d3748;">
+      📄 Extraction OCR du PDF
+    </h3>
+    
+    <div class="ocr-info">
+      <!-- OCR Status Badge -->
+      <div style="margin-bottom: 0.75rem;">
+        <span style="font-weight: 500; color: #4a5568;">Statut:</span>
+        <span class="badge" style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-left: 0.5rem; background-color: <%= contract.ocr_status_badge_color == 'green' ? '#48bb78' : contract.ocr_status_badge_color == 'blue' ? '#4299e1' : contract.ocr_status_badge_color == 'red' ? '#f56565' : contract.ocr_status_badge_color == 'yellow' ? '#ecc94b' : '#a0aec0' %>; color: white;">
+          <%= contract.ocr_status_display %>
+        </span>
+      </div>
+      
+      <!-- OCR Provider -->
+      <% if contract.ocr_provider.present? %>
+        <div style="margin-bottom: 0.75rem;">
+          <span style="font-weight: 500; color: #4a5568;">Fournisseur:</span>
+          <span style="margin-left: 0.5rem; color: #2d3748;">
+            <%= contract.ocr_provider == 'pdf_reader' ? 'PDF Reader (Gratuit)' : contract.ocr_provider == 'mistral' ? 'Mistral OCR' : contract.ocr_provider %>
+          </span>
+        </div>
+      <% end %>
+      
+      <!-- Page Count -->
+      <% if contract.ocr_page_count.present? && contract.ocr_page_count > 0 %>
+        <div style="margin-bottom: 0.75rem;">
+          <span style="font-weight: 500; color: #4a5568;">Pages traitées:</span>
+          <span style="margin-left: 0.5rem; color: #2d3748;"><%= contract.ocr_page_count %></span>
+        </div>
+      <% end %>
+      
+      <!-- Processed Date -->
+      <% if contract.ocr_processed_at.present? %>
+        <div style="margin-bottom: 0.75rem;">
+          <span style="font-weight: 500; color: #4a5568;">Traité le:</span>
+          <span style="margin-left: 0.5rem; color: #2d3748;"><%= l(contract.ocr_processed_at, format: :long) %></span>
+        </div>
+      <% end %>
+      
+      <!-- Error Message -->
+      <% if contract.ocr_failed? && contract.ocr_error_message.present? %>
+        <div style="margin-top: 1rem; padding: 0.75rem; background-color: #fed7d7; border-left: 4px solid #f56565; border-radius: 0.25rem;">
+          <p style="font-weight: 600; color: #c53030; margin-bottom: 0.25rem;">❌ Erreur d'extraction:</p>
+          <p style="color: #742a2a; font-size: 0.875rem;"><%= contract.ocr_error_message %></p>
+        </div>
+      <% end %>
+      
+      <!-- Extracted Text Preview -->
+      <% if contract.ocr_completed? && contract.ocr_text.present? %>
+        <div style="margin-top: 1rem;">
+          <details>
+            <summary style="cursor: pointer; font-weight: 500; color: #4a5568; padding: 0.5rem; background-color: #edf2f7; border-radius: 0.25rem; user-select: none;">
+              📝 Voir le texte extrait (<%= contract.ocr_text.length %> caractères)
+            </summary>
+            <div style="margin-top: 0.75rem; padding: 0.75rem; background-color: #fff; border: 1px solid #e2e8f0; border-radius: 0.25rem; max-height: 300px; overflow-y: auto;">
+              <pre style="font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; word-wrap: break-word; color: #2d3748; margin: 0;"><%= contract.ocr_text %></pre>
+            </div>
+          </details>
+        </div>
+      <% end %>
+      
+      <!-- Action Buttons -->
+      <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+        <% if contract.ocr_failed? || contract.ocr_pending? %>
+          <%= button_to "🔄 Relancer l'extraction", retry_ocr_contract_path(contract), 
+              method: :post,
+              class: "btn-primary",
+              style: "padding: 0.5rem 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 0.375rem; font-weight: 600; cursor: pointer; transition: all 0.2s;",
+              data: { confirm: "Êtes-vous sûr de vouloir relancer l'extraction OCR ?" } %>
+        <% end %>
+        
+        <% if contract.ocr_completed? && contract.ocr_text.present? %>
+          <span style="color: #48bb78; font-weight: 500;">✅ Texte extrait avec succès - prêt pour le traitement LLM (Task 26)</span>
+        <% end %>
+      </div>
+      
+      <!-- Info Message -->
+      <% if contract.ocr_pending? %>
+        <div style="margin-top: 1rem; padding: 0.75rem; background-color: #fef5e7; border-left: 4px solid #f39c12; border-radius: 0.25rem;">
+          <p style="color: #7a5c0f; font-size: 0.875rem;">
+            ⏳ L'extraction OCR est en attente de traitement. Le texte sera extrait automatiquement en arrière-plan.
+          </p>
+        </div>
+      <% elsif contract.ocr_in_progress? %>
+        <div style="margin-top: 1rem; padding: 0.75rem; background-color: #ebf8ff; border-left: 4px solid #4299e1; border-radius: 0.25rem;">
+          <p style="color: #2c5282; font-size: 0.875rem;">
+            ⚙️ Extraction en cours... Veuillez rafraîchir la page dans quelques instants.
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 0.5rem; background-color: #f7fafc; border: 2px dashed #cbd5e0;">
+    <p style="color: #718096; text-align: center;">
+      📄 Aucun PDF attaché. L'extraction OCR sera disponible après l'upload d'un document PDF.
+    </p>
+  </div>
+<% end %>

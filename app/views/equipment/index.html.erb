@@ -1,214 +1,131 @@
 <% content_for :header, "Équipements" %>
 
 <div class="section">
-  <!-- Breadcrumb Navigation -->
-  <% equipment_icon = capture { render 'shared/hierarchy_icons', type: 'equipment', size: 16 } %>
-  <%= render 'shared/breadcrumb', path: [
-    { name: 'Équipements', url: nil, icon: equipment_icon }
-  ] %>
-
   <!-- Header Section -->
-  <div class="page-header-responsive">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
     <div style="display: flex; align-items: center; gap: var(--space-md);">
       <%= render 'shared/hierarchy_icons', type: 'equipment', size: 32, color: 'var(--coral-primary)' %>
       <div>
-        <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Équipements</h2>
-        <p class="typo-body-small" style="color: var(--medium-gray);">Gérer tous les équipements de vos sites</p>
+        <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Équipements</h2>
+        <p class="typo-body-small" style="color: var(--medium-gray);">Gestion des équipements techniques</p>
       </div>
+    </div>
+    <div style="display: flex; gap: var(--space-md);">
+      <%= link_to exports_equipment_path, style: "display: inline-flex; align-items: center; gap: var(--space-sm); background-color: var(--medium-gray); color: var(--white); padding: 0 32px; height: 3.315rem; font-size: 1.105rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; text-decoration: none;", data: { turbo: false } do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        Exporter
+      <% end %>
+      <%= link_to new_equipment_path, class: "typo-btn-success" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Nouvel Équipement
+      <% end %>
     </div>
   </div>
 
-  <div style="background-color: var(--white); border-radius: var(--space-md);">
-    
-    <!-- Filters Section -->
-    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
-      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-md); align-items: end;">
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
-          <input type="text" placeholder="Nom, modèle, fabricant..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-        </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Site</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Tous les sites</option>
-            <option>Tour Montparnasse</option>
-            <option>Campus La Défense</option>
-            <option>Site Industriel Lyon</option>
-          </select>
-        </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Famille</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Toutes</option>
-            <option>Maintenance</option>
-            <option>Nettoyage</option>
-            <option>Contrôle réglementaire</option>
-          </select>
-        </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type d'Équipement</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Tous</option>
-            <option>CVC - HVAC</option>
-            <option>Électricité</option>
-            <option>Plomberie</option>
-            <option>Sécurité</option>
-            <option>Ascenseurs</option>
-          </select>
-        </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Tous</option>
-            <option>Actif</option>
-            <option>Inactif</option>
-            <option>En maintenance</option>
-            <option>Hors service</option>
-          </select>
-        </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Criticité</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Toutes</option>
-            <option>Critique</option>
-            <option>Élevé</option>
-            <option>Moyen</option>
-            <option>Faible</option>
-          </select>
-        </div>
-        <div style="grid-column: 1 / -1; display: flex; gap: var(--space-md); justify-content: flex-end;">
-          <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            Effacer
-          </button>
-          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            Filtrer
-          </button>
-        </div>
-      </div>
-    </div>
-
+  <% if @equipment.any? %>
     <!-- Equipment List -->
-    <div style="display: grid; gap: var(--space-md); margin-bottom: var(--space-xl);">
-      <%
-        # Mock equipment data - expanded list for pagination demo
-        equipment_list = [
-          { id: 1, name: 'Climatiseur Daikin AC-500', type: 'Climatisation', category: 'CVC - HVAC', manufacturer: 'Daikin', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '15/12/2024', location: 'Bureau 101 - RDC - Bât. A', criticality: 'Élevé', service_provider: 'Climatisation - Daikin', installation_date: '12/03/2020', under_warranty: true },
-          { id: 2, name: 'Détecteur Incendie FireGuard', type: 'Sécurité Incendie', category: 'SEC - Sécurité', manufacturer: 'Honeywell', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '10/01/2025', location: 'Bureau 101 - RDC - Bât. A', criticality: 'Critique', service_provider: nil, installation_date: '05/06/2018', under_warranty: false },
-          { id: 3, name: 'Luminaire LED Panel 60x60', type: 'Éclairage', category: 'ELE - Électricité', manufacturer: 'Philips', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '05/01/2025', location: 'Bureau 101 - RDC - Bât. A', criticality: 'Faible', service_provider: 'Éclairage - Philips', installation_date: '15/09/2021', under_warranty: false },
-          { id: 4, name: 'Chaudière Viessmann VB-200', type: 'Chauffage', category: 'CVC - HVAC', manufacturer: 'Viessmann', status: 'En maintenance', status_color: '#fff3cd', status_text_color: '#856404', last_maintenance: '20/12/2024', location: 'Chaufferie - SS1 - Bât. A', criticality: 'Critique', service_provider: 'Chauffage - Viessmann', installation_date: '10/11/2019', under_warranty: true },
-          { id: 5, name: 'VMC Aldes Bahia', type: 'Ventilation', category: 'CVC - HVAC', manufacturer: 'Aldes', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '28/12/2024', location: 'Bureau 205 - 2ème - Bât. A', criticality: 'Moyen', service_provider: 'Ventilation - Aldes', installation_date: '22/04/2020', under_warranty: false },
-          { id: 6, name: 'Tableau Électrique Schneider TE-45', type: 'Tableau électrique', category: 'ELE - Électricité', manufacturer: 'Schneider Electric', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '18/12/2024', location: 'Local technique - RDC - Bât. A', criticality: 'Élevé', service_provider: nil, installation_date: '08/02/2017', under_warranty: false },
-          { id: 7, name: 'Ascenseur OTIS Gen2', type: 'Ascenseur', category: 'ASC - Ascenseurs', manufacturer: 'OTIS', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '22/01/2025', location: 'Hall principal - RDC - Bât. A', criticality: 'Critique', service_provider: 'Ascenseurs - OTIS', installation_date: '14/07/2023', under_warranty: true },
-          { id: 8, name: 'Chauffe-eau Thermor ACI+ 300L', type: 'Chauffe-eau', category: 'PLO - Plomberie', manufacturer: 'Thermor', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '12/01/2025', location: 'Sanitaires - 1er - Bât. A', criticality: 'Moyen', service_provider: 'Plomberie - Thermor', installation_date: '30/05/2021', under_warranty: false },
-          { id: 9, name: 'Extincteur CO2 5kg', type: 'Extincteur', category: 'SEC - Sécurité', manufacturer: 'Gloria', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '15/11/2024', location: 'Couloir - 1er - Bât. A', criticality: 'Élevé', service_provider: 'Sécurité - Gloria', installation_date: '18/01/2022', under_warranty: true },
-          { id: 10, name: 'Pompe Circulation Grundfos UPS', type: 'Pompe', category: 'PLO - Plomberie', manufacturer: 'Grundfos', status: 'Hors service', status_color: '#f8d7da', status_text_color: '#721c24', last_maintenance: '08/12/2024', location: 'Chaufferie - SS1 - Bât. A', criticality: 'Élevé', service_provider: nil, installation_date: '25/03/2016', under_warranty: false },
-          { id: 11, name: 'Climatiseur Split Samsung AR09', type: 'Climatisation', category: 'CVC - HVAC', manufacturer: 'Samsung', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '19/01/2025', location: 'Bureau 302 - 3ème - Bât. A', criticality: 'Moyen', service_provider: 'Climatisation - Samsung', installation_date: '11/08/2022', under_warranty: true },
-          { id: 12, name: 'Alarme Intrusion Paradox SP7000', type: 'Alarme intrusion', category: 'SEC - Sécurité', manufacturer: 'Paradox', status: 'Actif', status_color: '#d4edda', status_text_color: '#155724', last_maintenance: '03/01/2025', location: 'Entrée principale - RDC - Bât. A', criticality: 'Critique', service_provider: 'Sécurité - Paradox', installation_date: '02/12/2023', under_warranty: true },
-        ]
-      %>
-
-      <% equipment_list.each do |equipment| %>
-        <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md); border-left: 4px solid var(--coral-primary);">
-          <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
-                <%= render 'shared/hierarchy_icons', type: 'equipment', size: 20, color: 'var(--coral-primary)' %>
-                <%= link_to equipment_path(equipment[:id]), style: "text-decoration: none;" do %>
-                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= equipment[:name] %></h5>
+    <div style="background-color: var(--white); border-radius: var(--space-md); overflow: hidden;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead style="background-color: var(--pink-pale);">
+          <tr>
+            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Nom</th>
+            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Type</th>
+            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Fabricant</th>
+            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Localisation</th>
+            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Statut</th>
+            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Criticité</th>
+            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: center;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @equipment.each do |equipment| %>
+            <tr style="border-bottom: 1px solid var(--pink-pale);">
+              <td style="padding: var(--space-md);">
+                <%= link_to equipment.name, equipment_path(equipment), class: "typo-body-small typo-bold", style: "color: var(--coral-primary); text-decoration: none;" %>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small"><%= equipment.equipment_type&.equipment_type_name || '-' %></span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small"><%= equipment.manufacturer || '-' %></span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <span class="typo-body-small"><%= equipment.location_path || '-' %></span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <% status_colors = {
+                  'active' => { bg: '#d4edda', text: '#155724' },
+                  'inactive' => { bg: '#f8d7da', text: '#721c24' },
+                  'maintenance' => { bg: '#fff3cd', text: '#856404' },
+                  'out_of_service' => { bg: '#f8d7da', text: '#721c24' },
+                  'decommissioned' => { bg: '#e2e3e5', text: '#383d41' }
+                } %>
+                <% color = status_colors[equipment.status] || { bg: '#e2e3e5', text: '#383d41' } %>
+                <span style="display: inline-block; padding: 4px 10px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                  <%= equipment.status_label %>
+                </span>
+              </td>
+              <td style="padding: var(--space-md);">
+                <% if equipment.criticality.present? %>
+                  <% criticality_colors = {
+                    'low' => { bg: '#d4edda', text: '#155724' },
+                    'medium' => { bg: '#fff3cd', text: '#856404' },
+                    'high' => { bg: '#fff3cd', text: '#856404' },
+                    'critical' => { bg: '#f8d7da', text: '#721c24' }
+                  } %>
+                  <% color = criticality_colors[equipment.criticality] || { bg: '#e2e3e5', text: '#383d41' } %>
+                  <span style="display: inline-block; padding: 4px 10px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                    <%= equipment.criticality_label %>
+                  </span>
+                <% else %>
+                  <span class="typo-body-small">-</span>
                 <% end %>
-              </div>
-              <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);">
-                <%= equipment[:type] %> • <%= equipment[:manufacturer] %>
-              </p>
-              <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md); font-size: 0.813rem;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <%= equipment[:location] %>
-              </p>
-              
-              <div style="display: flex; gap: var(--space-lg); flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <span style="display: inline-block; padding: 4px 10px; background-color: <%= equipment[:status_color] %>; color: <%= equipment[:status_text_color] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                    <%= equipment[:status] %>
-                  </span>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <div style="display: flex; gap: var(--space-sm); justify-content: center;">
+                  <%= link_to equipment_path(equipment), class: "typo-btn-small typo-btn-small-primary" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  <% end %>
+                  <%= link_to edit_equipment_path(equipment), class: "typo-btn-small typo-btn-small-secondary" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  <% end %>
                 </div>
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <span style="display: inline-block; padding: 4px 10px; background-color: #e7f3ff; color: #0066cc; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                    <%= equipment[:category] %>
-                  </span>
-                </div>
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <span style="display: inline-block; padding: 4px 10px; background-color: #fff3cd; color: #856404; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                    Criticité: <%= equipment[:criticality] %>
-                  </span>
-                </div>
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Maintenance: <%= equipment[:last_maintenance] %></span>
-                </div>
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">
-                    <%= equipment[:service_provider] ? equipment[:service_provider] : "Pas de contrat associé" %>
-                  </span>
-                </div>
-                <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6b7280">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Installation: <%= equipment[:installation_date] %></span>
-                </div>
-                <% if equipment[:under_warranty] %>
-                  <div style="display: flex; align-items: center; gap: var(--space-xs);">
-                    <span style="display: inline-block; padding: 4px 10px; background-color: #d4edda; color: #155724; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                      Sous garantie
-                    </span>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-            
-            <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
-              <%= link_to equipment_path(equipment[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Voir
-              <% end %>
-              <%= link_to edit_equipment_path(equipment[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Éditer
-              <% end %>
-              
-            </div>
-          </div>
-        </div>
-      <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
 
     <!-- Pagination -->
-    <div style="margin-top: var(--space-xl);">
-      <%= render 'shared/pagination', 
-        current_page: 1, 
-        total_pages: 5, 
-        total_count: 58, 
-        per_page: 12,
-        path: equipment_index_path %>
+    <% if @equipment.respond_to?(:total_pages) && @equipment.total_pages > 1 %>
+      <div style="margin-top: var(--space-lg); text-align: center;">
+        <%= paginate @equipment %>
+      </div>
+    <% end %>
+  <% else %>
+    <!-- Empty State -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xxl); text-align: center;">
+      <%= render 'shared/hierarchy_icons', type: 'equipment', size: 64, color: 'var(--medium-gray)' %>
+      <h3 class="typo-h3" style="margin-top: var(--space-lg); color: var(--gray-secondary);">Aucun équipement</h3>
+      <p class="typo-body" style="color: var(--medium-gray); margin-top: var(--space-sm);">
+        Commencez par créer votre premier équipement.
+      </p>
+      <%= link_to new_equipment_path, class: "typo-btn-success", style: "margin-top: var(--space-lg);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Créer le premier équipement
+      <% end %>
     </div>
-  </div>
+  <% end %>
 </div>

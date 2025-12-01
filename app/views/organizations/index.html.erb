@@ -1,187 +1,172 @@
-<% content_for :header, "Organisations" %>
-
-<div class="section">
-  <div class="page-header-responsive">
+<div style="padding: var(--space-lg);">
+  <!-- Page Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
     <div>
-      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Gestion des Organisations</h2>
-      <p class="typo-body-small">Gérer les entreprises, prestataires, fournisseurs et partenaires</p>
+      <h1 class="typo-h1" style="margin-bottom: var(--space-sm);">🏢 Organisations</h1>
+      <p class="typo-body" style="color: #666;">Gérez les entreprises et prestataires de votre portefeuille</p>
     </div>
-    <a href="<%= new_organization_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <%= link_to new_organization_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
       Nouvelle Organisation
-    </a>
+    <% end %>
   </div>
 
-  <div style="background-color: var(--white); border-radius: var(--space-md); ">
-    <!-- Filters Section -->
-    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
-      <style>
-        @media (max-width: 1200px) {
-          .filters-grid-orgs { grid-template-columns: 1fr 1fr auto auto !important; }
-        }
-        @media (max-width: 768px) {
-          .filters-grid-orgs { grid-template-columns: 1fr !important; }
-        }
-      </style>
-      <div class="filters-grid-orgs" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+  <!-- Filters -->
+  <div style="background: linear-gradient(135deg, var(--purple-primary) 0%, var(--pink-primary) 100%); padding: var(--space-lg); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
+    <%= form_with url: organizations_path, method: :get, local: true do |f| %>
+      <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: var(--space-md); align-items: end;">
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
-          <input type="text" placeholder="Nom, SIRET..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); color: white;">
+            Recherche
+          </label>
+          <%= f.text_field :search, value: params[:search], placeholder: "Nom, raison sociale ou SIRET...", style: "width: 100%;" %>
         </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Tous</option>
-            <option>Prestataire</option>
-            <option>Fournisseur</option>
-            <option>Locataire</option>
-            <option>Propriétaire</option>
-          </select>
-        </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Spécialité</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Toutes</option>
-            <option>CVC</option>
-            <option>Électricité</option>
-            <option>Plomberie</option>
-            <option>Ascenseurs</option>
-            <option>Nettoyage</option>
-          </select>
-        </div>
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Tous</option>
-            <option>Actif</option>
-            <option>Inactif</option>
-          </select>
-        </div>
-        <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-          Effacer
-        </button>
-        <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-          </svg>
-          Filtrer
-        </button>
-      </div>
-    </div>
 
-    <!-- Organizations Table -->
-    <div style="overflow-x: auto;">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); color: white;">
+            Type
+          </label>
+          <%= f.select :organization_type,
+            Organization::ORGANIZATION_TYPES,
+            { include_blank: 'Tous les types' },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div style="display: flex; gap: var(--space-sm);">
+          <%= f.submit "Filtrer", class: "typo-btn-primary", style: "cursor: pointer; white-space: nowrap;" %>
+          <%= link_to "Réinitialiser", organizations_path, class: "typo-btn-cancel", style: "white-space: nowrap;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Statistics -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-xl);">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-lg); border-radius: var(--space-md); color: white;">
+      <div class="typo-h2" style="margin-bottom: var(--space-sm);"><%= @organizations.total_count %></div>
+      <div class="typo-body-small">Total Organisations</div>
+    </div>
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: var(--space-lg); border-radius: var(--space-md); color: white;">
+      <div class="typo-h2" style="margin-bottom: var(--space-sm);"><%= Organization.active.count %></div>
+      <div class="typo-body-small">Actives</div>
+    </div>
+    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: var(--space-lg); border-radius: var(--space-md); color: white;">
+      <div class="typo-h2" style="margin-bottom: var(--space-sm);"><%= Organization.by_type('service_provider').count %></div>
+      <div class="typo-body-small">Prestataires</div>
+    </div>
+  </div>
+
+  <!-- Organizations Table -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); overflow: hidden;">
+    <% if @organizations.any? %>
       <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ORGANISATION</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TYPE</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SPÉCIALITÉS</th>
-            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CONTACT</th>
-            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CONTRATS</th>
-            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
-            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
+        <thead style="background: linear-gradient(135deg, var(--purple-primary) 0%, var(--pink-primary) 100%);">
+          <tr>
+            <th style="padding: var(--space-md); text-align: left; color: white; font-weight: 600;">Organisation</th>
+            <th style="padding: var(--space-md); text-align: left; color: white; font-weight: 600;">Type</th>
+            <th style="padding: var(--space-md); text-align: left; color: white; font-weight: 600;">Spécialités</th>
+            <th style="padding: var(--space-md); text-align: left; color: white; font-weight: 600;">Contact</th>
+            <th style="padding: var(--space-md); text-align: left; color: white; font-weight: 600;">Statut</th>
+            <th style="padding: var(--space-md); text-align: center; color: white; font-weight: 600;">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% [
-            {name: "ENGIE Solutions", legal: "ENGIE Solutions SAS", siret: "552 081 317", type: "Prestataire", specialties: "CVC, Énergie, GTB", phone: "+33 1 40 06 20 00", email: "contact@engie-solutions.com", contracts: 12, status: "Actif"},
-            {name: "OTIS France", legal: "OTIS SAS", siret: "562 092 928", type: "Prestataire", specialties: "Ascenseurs, Maintenance", phone: "+33 1 55 47 80 00", email: "service@otis.com", contracts: 8, status: "Actif"},
-            {name: "Daikin Service", legal: "Daikin Airconditioning France SAS", siret: "338 101 842", type: "Prestataire", specialties: "Climatisation, CVC", phone: "+33 1 45 16 27 27", email: "contact@daikin.fr", contracts: 6, status: "Actif"},
-            {name: "Bouygues Energies & Services", legal: "Bouygues ES SAS", siret: "343 014 383", type: "Prestataire", specialties: "Multi-technique, Énergie", phone: "+33 1 30 60 33 00", email: "contact@bouygues-es.com", contracts: 15, status: "Actif"},
-            {name: "Clean Pro Services", legal: "Clean Pro SARL", siret: "789 456 123", type: "Prestataire", specialties: "Nettoyage, Entretien", phone: "+33 1 42 35 78 90", email: "contact@cleanpro.fr", contracts: 9, status: "Actif"},
-            {name: "Bureau Veritas", legal: "Bureau Veritas SAS", siret: "775 690 621", type: "Organisme de contrôle", specialties: "Contrôles réglementaires", phone: "+33 1 45 17 70 00", email: "france@bureauveritas.com", contracts: 18, status: "Actif"},
-            {name: "Schindler France", legal: "Schindler SAS", siret: "542 056 262", type: "Prestataire", specialties: "Ascenseurs, Escaliers mécaniques", phone: "+33 1 41 02 52 00", email: "contact@schindler.fr", contracts: 5, status: "Actif"},
-            {name: "Veolia Propreté", legal: "Veolia Propreté IDF SAS", siret: "987 654 321", type: "Prestataire", specialties: "Nettoyage, Gestion déchets", phone: "+33 1 71 75 00 00", email: "contact@veolia.com", contracts: 7, status: "Actif"},
-            {name: "EDF Entreprises", legal: "Électricité de France SA", siret: "552 081 317", type: "Fournisseur", specialties: "Fourniture électricité", phone: "+33 1 40 42 22 22", email: "entreprises@edf.fr", contracts: 24, status: "Actif"},
-            {name: "Securitas France", legal: "Securitas France SARL", siret: "432 109 876", type: "Prestataire", specialties: "Sécurité, Gardiennage", phone: "+33 1 55 07 41 00", email: "contact@securitas.fr", contracts: 11, status: "Actif"},
-            {name: "Vert Nature SARL", legal: "Vert Nature SARL", siret: "654 789 123", type: "Prestataire", specialties: "Espaces verts, Paysagisme", phone: "+33 1 48 56 32 10", email: "contact@vertnature.fr", contracts: 4, status: "Actif"},
-            {name: "Climatic Services", legal: "Climatic Services SAS", siret: "765 432 198", type: "Prestataire", specialties: "Climatisation, Froid", phone: "+33 1 39 74 82 00", email: "info@climatic.fr", contracts: 3, status: "Actif"},
-            {name: "AXA Assurances", legal: "AXA France IARD SA", siret: "722 057 460", type: "Assureur", specialties: "Assurance multi-risque", phone: "+33 1 40 75 48 00", email: "entreprises@axa.fr", contracts: 8, status: "Actif"},
-            {name: "Artiplomb SAS", legal: "Artiplomb SAS", siret: "876 543 210", type: "Prestataire", specialties: "Plomberie, Chauffage", phone: "+33 1 47 23 89 45", email: "contact@artiplomb.fr", contracts: 2, status: "Actif"},
-            {name: "Sicli Sécurité", legal: "Sicli Sécurité Incendie SA", siret: "321 654 987", type: "Prestataire", specialties: "Sécurité incendie, SSI", phone: "+33 1 43 98 74 20", email: "info@sicli.fr", contracts: 6, status: "Actif"}
-          ].each_with_index do |org, index| %>
-            <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
-              <!-- Organization Name -->
+          <% @organizations.each do |organization| %>
+            <tr style="border-bottom: 1px solid var(--pink-pale);">
               <td style="padding: var(--space-md);">
                 <div>
-                  <%= link_to organization_path(org[:name].parameterize), style: "text-decoration: none;" do %>
-                    <p class="typo-body-small typo-bold" style="margin-bottom: 2px; color: var(--coral-primary); transition: color 0.2s;"><%= org[:name] %></p>
+                  <div class="typo-body-small typo-bold" style="margin-bottom: 4px;">
+                    <%= link_to organization.name, organization_path(organization), style: "color: var(--purple-primary); text-decoration: none;" %>
+                  </div>
+                  <% if organization.legal_name.present? %>
+                    <div class="typo-body-small" style="color: #666; font-size: 0.75rem;"><%= organization.legal_name %></div>
                   <% end %>
-                  <p class="typo-body-small" style="color: #999; font-size: 0.813rem;">SIRET: <%= org[:siret] %></p>
+                  <% if organization.siret.present? %>
+                    <div class="typo-body-small" style="color: #999; font-size: 0.7rem;">SIRET: <%= organization.formatted_siret %></div>
+                  <% end %>
                 </div>
               </td>
-              
-              <!-- Type -->
               <td style="padding: var(--space-md);">
-                <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
-                  <%= org[:type] %>
-                </span>
+                <% if organization.organization_type.present? %>
+                  <span style="background-color: var(--purple-pale); color: var(--purple-primary); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;">
+                    <%= organization.type_label %>
+                  </span>
+                <% else %>
+                  <span style="color: #999;">—</span>
+                <% end %>
               </td>
-              
-              <!-- Specialties -->
               <td style="padding: var(--space-md);">
-                <p class="typo-body-small" style="color: #666;"><%= org[:specialties] %></p>
+                <div class="typo-body-small" style="color: #666; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  <%= organization.specialties.present? ? organization.specialties : "—" %>
+                </div>
               </td>
-              
-              <!-- Contact -->
               <td style="padding: var(--space-md);">
                 <div>
-                  <p class="typo-body-small" style="margin-bottom: 2px; font-size: 0.813rem;"><%= org[:phone] %></p>
-                  <p class="typo-body-small" style="color: #999; font-size: 0.75rem;"><%= org[:email] %></p>
+                  <% if organization.phone.present? %>
+                    <div class="typo-body-small" style="margin-bottom: 2px;">📞 <%= organization.phone %></div>
+                  <% end %>
+                  <% if organization.email.present? %>
+                    <div class="typo-body-small" style="color: #666; font-size: 0.75rem;">✉️ <%= organization.email %></div>
+                  <% end %>
+                  <% if organization.phone.blank? && organization.email.blank? %>
+                    <span style="color: #999;">—</span>
+                  <% end %>
                 </div>
               </td>
-              
-              <!-- Contracts -->
-              <td style="padding: var(--space-md); text-align: center;">
-                <p class="typo-body-small typo-bold"><%= org[:contracts] %></p>
-              </td>
-              
-              <!-- Status -->
-              <td style="padding: var(--space-md); text-align: center;">
-                <span style="display: inline-block; padding: 4px 10px; background-color: #d4edda; color: #155724; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-                  <%= org[:status] %>
-                </span>
-              </td>
-              
-              <!-- Actions -->
               <td style="padding: var(--space-md);">
-                <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
-                  <%= link_to organization_path(org[:name].parameterize), class: "typo-btn-small typo-btn-small-secondary" do %>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
+                <% if organization.active? %>
+                  <span style="background-color: #d4edda; color: #155724; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                    ✓ Actif
+                  </span>
+                <% else %>
+                  <span style="background-color: #f8d7da; color: #721c24; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                    ✗ Inactif
+                  </span>
+                <% end %>
+              </td>
+              <td style="padding: var(--space-md); text-align: center;">
+                <div style="display: flex; gap: var(--space-sm); justify-content: center;">
+                  <%= link_to organization_path(organization), class: "typo-btn-primary", style: "padding: 6px 12px; font-size: 0.75rem; white-space: nowrap;" do %>
                     Voir
                   <% end %>
-                  <%= link_to edit_organization_path(org[:name].parameterize), class: "typo-btn-small typo-btn-small-primary" do %>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    Modifier
+                  <%= link_to edit_organization_path(organization), class: "typo-btn-secondary", style: "padding: 6px 12px; font-size: 0.75rem; white-space: nowrap;" do %>
+                    Éditer
                   <% end %>
-                  
                 </div>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
-    </div>
 
-    <!-- Pagination -->
-    <div style="margin-top: var(--space-xl);">
-      <%= render 'shared/pagination', 
-        current_page: 1, 
-        total_pages: 2, 
-        total_count: 15, 
-        per_page: 15,
-        path: organizations_path %>
-    </div>
+      <!-- Pagination -->
+      <% if @organizations.total_pages > 1 %>
+        <div style="margin-top: var(--space-xl);">
+          <%= render 'shared/pagination', 
+            current_page: @organizations.current_page, 
+            total_pages: @organizations.total_pages, 
+            total_count: @organizations.total_count, 
+            per_page: 15,
+            path: organizations_path %>
+        </div>
+      <% end %>
+    <% else %>
+      <div style="padding: var(--space-xl); text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.3;">🏢</div>
+        <h3 class="typo-h3" style="margin-bottom: var(--space-sm);">Aucune organisation trouvée</h3>
+        <p class="typo-body" style="color: #666; margin-bottom: var(--space-lg);">
+          <% if params[:search].present? || params[:organization_type].present? %>
+            Aucun résultat ne correspond à vos critères de recherche.
+          <% else %>
+            Commencez par créer votre première organisation.
+          <% end %>
+        </p>
+        <%= link_to new_organization_path, class: "typo-btn-success" do %>
+          Créer la première organisation
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>

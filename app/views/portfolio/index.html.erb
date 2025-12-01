@@ -1,0 +1,241 @@
+<% content_for :header, "Vue Arborescente du Portefeuille" %>
+
+<div style="padding: var(--space-xl);">
+  <!-- Header with Statistics -->
+  <div style="margin-bottom: var(--space-2xl);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
+      <div>
+        <h1 class="typo-h1" style="margin-bottom: var(--space-sm);">Vue Arborescente</h1>
+        <p style="color: var(--gray); margin: 0;">Navigation hiérarchique de votre portefeuille immobilier</p>
+      </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-xl);">
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs);"><%= @total_sites %></div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Sites</div>
+      </div>
+      <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs);"><%= @total_buildings %></div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Bâtiments</div>
+      </div>
+      <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs);"><%= @total_levels %></div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Niveaux</div>
+      </div>
+      <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs);"><%= @total_spaces %></div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Espaces</div>
+      </div>
+      <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
+        <div style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs);"><%= @total_equipment %></div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Équipements</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tree View Container -->
+  <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);" data-controller="tree">
+    
+    <% if @sites.empty? %>
+      <!-- Empty State -->
+      <div style="text-align: center; padding: var(--space-2xl); color: var(--gray);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); opacity: 0.3;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        <h3 style="margin-bottom: var(--space-sm); color: var(--dark-gray);">Aucun site disponible</h3>
+        <p>Commencez par <%= link_to "créer votre premier site", new_site_path, style: "color: var(--coral-primary); text-decoration: none;" %></p>
+      </div>
+    <% else %>
+      <!-- Portfolio Root -->
+      <div class="tree-node tree-root">
+        <div class="tree-node-header" style="padding: var(--space-md); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: var(--space-sm); margin-bottom: var(--space-md);">
+          <div style="display: flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span style="font-weight: 600; font-size: 1.1rem;"><%= @organization.name %></span>
+            <span style="opacity: 0.9; font-size: 0.875rem;">(<%= @total_sites %> sites)</span>
+          </div>
+        </div>
+
+        <!-- Sites Level -->
+        <div class="tree-children" style="margin-left: var(--space-xl);">
+          <% @sites.each do |site| %>
+            <div class="tree-node" data-tree-target="node" style="margin-bottom: var(--space-lg);">
+              <div class="tree-node-header" style="display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm); border-radius: var(--space-sm); cursor: pointer; transition: background-color 0.2s;" data-action="click->tree#toggle">
+                <!-- Expand/Collapse Icon -->
+                <% if site.buildings.any? %>
+                  <svg class="tree-toggle-icon" data-tree-target="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink: 0; transition: transform 0.2s;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                <% else %>
+                  <div style="width: 20px; flex-shrink: 0;"></div>
+                <% end %>
+                
+                <!-- Site Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #667eea; flex-shrink: 0;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                
+                <!-- Site Name & Details -->
+                <div style="flex: 1;">
+                  <%= link_to site.name, site_path(site), style: "color: var(--dark-gray); text-decoration: none; font-weight: 600;" %>
+                  <span style="color: var(--gray); font-size: 0.875rem; margin-left: var(--space-sm);">
+                    (<%= site.buildings.count %> bâtiments)
+                  </span>
+                </div>
+                
+                <!-- Site Type Badge -->
+                <span style="padding: 4px 12px; background-color: var(--blue-pale); color: var(--blue-primary); border-radius: 12px; font-size: 0.75rem; font-weight: 500;">
+                  <%= site.site_type_label %>
+                </span>
+              </div>
+
+              <!-- Buildings Level -->
+              <% if site.buildings.any? %>
+                <div class="tree-children" data-tree-target="children" style="display: none; margin-left: var(--space-xl); margin-top: var(--space-sm);">
+                  <% site.buildings.each do |building| %>
+                    <div class="tree-node" data-tree-target="node" style="margin-bottom: var(--space-md);">
+                      <div class="tree-node-header" style="display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm); border-radius: var(--space-sm); cursor: pointer; transition: background-color 0.2s;" data-action="click->tree#toggle">
+                        <!-- Expand/Collapse Icon -->
+                        <% if building.levels.any? %>
+                          <svg class="tree-toggle-icon" data-tree-target="icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink: 0; transition: transform 0.2s;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                          </svg>
+                        <% else %>
+                          <div style="width: 18px; flex-shrink: 0;"></div>
+                        <% end %>
+                        
+                        <!-- Building Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #f5576c; flex-shrink: 0;">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        
+                        <!-- Building Name & Details -->
+                        <div style="flex: 1;">
+                          <%= link_to building.name, building_path(building), style: "color: var(--dark-gray); text-decoration: none; font-weight: 500;" %>
+                          <span style="color: var(--gray); font-size: 0.875rem; margin-left: var(--space-sm);">
+                            (<%= building.levels.count %> niveaux)
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Levels -->
+                      <% if building.levels.any? %>
+                        <div class="tree-children" data-tree-target="children" style="display: none; margin-left: var(--space-xl); margin-top: var(--space-sm);">
+                          <% building.levels.order(:level_number).each do |level| %>
+                            <div class="tree-node" data-tree-target="node" style="margin-bottom: var(--space-md);">
+                              <div class="tree-node-header" style="display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm); border-radius: var(--space-sm); cursor: pointer; transition: background-color 0.2s;" data-action="click->tree#toggle">
+                                <!-- Expand/Collapse Icon -->
+                                <% if level.spaces.any? %>
+                                  <svg class="tree-toggle-icon" data-tree-target="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink: 0; transition: transform 0.2s;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                  </svg>
+                                <% else %>
+                                  <div style="width: 16px; flex-shrink: 0;"></div>
+                                <% end %>
+                                
+                                <!-- Level Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #00f2fe; flex-shrink: 0;">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                                </svg>
+                                
+                                <!-- Level Name & Details -->
+                                <div style="flex: 1;">
+                                  <%= link_to level.name, level_path(level), style: "color: var(--dark-gray); text-decoration: none; font-weight: 500;" %>
+                                  <span style="color: var(--gray); font-size: 0.875rem; margin-left: var(--space-sm);">
+                                    (<%= level.spaces.count %> espaces)
+                                  </span>
+                                </div>
+                              </div>
+
+                              <!-- Spaces -->
+                              <% if level.spaces.any? %>
+                                <div class="tree-children" data-tree-target="children" style="display: none; margin-left: var(--space-xl); margin-top: var(--space-sm);">
+                                  <% level.spaces.each do |space| %>
+                                    <div class="tree-node" data-tree-target="node" style="margin-bottom: var(--space-sm);">
+                                      <div class="tree-node-header" style="display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm); border-radius: var(--space-sm); cursor: pointer; transition: background-color 0.2s;" data-action="click->tree#toggle">
+                                        <!-- Expand/Collapse Icon -->
+                                        <% if space.equipment.any? %>
+                                          <svg class="tree-toggle-icon" data-tree-target="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink: 0; transition: transform 0.2s;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                          </svg>
+                                        <% else %>
+                                          <div style="width: 14px; flex-shrink: 0;"></div>
+                                        <% end %>
+                                        
+                                        <!-- Space Icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #38f9d7; flex-shrink: 0;">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                        </svg>
+                                        
+                                        <!-- Space Name & Details -->
+                                        <div style="flex: 1;">
+                                          <%= link_to space.name, space_path(space), style: "color: var(--dark-gray); text-decoration: none; font-weight: 500; font-size: 0.9rem;" %>
+                                          <span style="color: var(--gray); font-size: 0.8rem; margin-left: var(--space-sm);">
+                                            (<%= space.equipment.count %> équipements)
+                                          </span>
+                                        </div>
+                                        
+                                        <!-- Space Type Badge -->
+                                        <% if space.space_type.present? %>
+                                          <span style="padding: 2px 8px; background-color: var(--pink-pale); color: var(--coral-primary); border-radius: 8px; font-size: 0.7rem;">
+                                            <%= space.space_type %>
+                                          </span>
+                                        <% end %>
+                                      </div>
+
+                                      <!-- Equipment -->
+                                      <% if space.equipment.any? %>
+                                        <div class="tree-children" data-tree-target="children" style="display: none; margin-left: var(--space-xl); margin-top: var(--space-xs);">
+                                          <% space.equipment.each do |equipment| %>
+                                            <div class="tree-node tree-leaf" style="margin-bottom: var(--space-xs);">
+                                              <div class="tree-node-header" style="display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs) var(--space-sm); border-radius: var(--space-sm);">
+                                                <div style="width: 14px; flex-shrink: 0;"></div>
+                                                
+                                                <!-- Equipment Icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #fee140; flex-shrink: 0;">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                
+                                                <!-- Equipment Name -->
+                                                <%= link_to equipment.name, equipment_path(equipment), style: "color: var(--dark-gray); text-decoration: none; font-size: 0.85rem;" %>
+                                                
+                                                <!-- Equipment Type -->
+                                                <% if equipment.equipment_type.present? %>
+                                                  <span style="color: var(--gray); font-size: 0.75rem;">- <%= equipment.equipment_type %></span>
+                                                <% end %>
+                                              </div>
+                                            </div>
+                                          <% end %>
+                                        </div>
+                                      <% end %>
+                                    </div>
+                                  <% end %>
+                                </div>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Help Text -->
+  <div style="margin-top: var(--space-lg); padding: var(--space-md); background: var(--blue-pale); border-left: 4px solid var(--blue-primary); border-radius: var(--space-sm);">
+    <p style="margin: 0; color: var(--dark-gray); font-size: 0.875rem;">
+      <strong>💡 Astuce :</strong> Cliquez sur les icônes de flèche pour développer/réduire les niveaux de la hiérarchie. Cliquez sur les noms pour accéder aux pages de détail.
+    </p>
+  </div>
+</div>

@@ -1,93 +1,86 @@
-require 'ostruct'
-
 class OrganizationsController < ApplicationController
+  before_action :require_portfolio_manager
+  before_action :set_organization, only: [:show, :edit, :update, :destroy]
+
   def index
-    # Renders organizations/index.html.erb
+    @organizations = Organization.all
+                                .search(params[:search])
+                                .by_type(params[:organization_type])
+                                .ordered
+                                .page(params[:page]).per(15)
   end
 
   def show
-    # Handle both numeric IDs and slugs
-    org_id = params[:id]
-    
-    @organization = OpenStruct.new(
-      id: org_id,  # Keep the original ID/slug for routing
-      name: "ENGIE Solutions",
-      legal_name: "ENGIE Solutions SAS",
-      siret: "552 081 317 00426",
-      organization_type: "Service provider",
-      headquarters_address: "1 Place Samuel de Champlain",
-      city: "Paris",
-      postal_code: "75016",
-      phone: "+33 1 40 06 20 00",
-      email: "contact@engie-solutions.com",
-      website: "https://www.engie-solutions.com",
-      specialties: "HVAC, Energie, Maintenance multi-technique, Gestion technique des bâtiments",
-      relationship_start_date: Date.new(2018, 3, 15),
-      status: "active",
-      notes: "Prestataire historique avec une excellente expertise en maintenance CVC et efficacité énergétique. Intervient sur la majorité de nos sites."
-    )
-    
-    # Make to_param return the id for proper URL generation
-    def @organization.to_param
-      id.to_s
-    end
+    # @organization set by before_action
   end
 
   def new
-    @organization = OpenStruct.new(
-      name: "",
-      legal_name: "",
-      siret: "",
-      organization_type: "",
-      headquarters_address: "",
-      city: "",
-      postal_code: "",
-      phone: "",
-      email: "",
-      website: "",
-      specialties: "",
-      relationship_start_date: nil,
-      status: "active",
-      notes: ""
-    )
+    @organization = Organization.new(status: 'active')
   end
 
   def create
-    # Handle organization creation
-    redirect_to organizations_path, notice: "Organisation créée avec succès"
+    @organization = Organization.new(organization_params)
+
+    if @organization.save
+      redirect_to @organization, notice: 'Organisation créée avec succès.'
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
-    @organization = OpenStruct.new(
-      id: params[:id],
-      name: "ENGIE Solutions",
-      legal_name: "ENGIE Solutions SAS",
-      siret: "552 081 317 00426",
-      organization_type: "Service provider",
-      headquarters_address: "1 Place Samuel de Champlain",
-      city: "Paris",
-      postal_code: "75016",
-      phone: "+33 1 40 06 20 00",
-      email: "contact@engie-solutions.com",
-      website: "https://www.engie-solutions.com",
-      specialties: "HVAC, Energie, Maintenance multi-technique, Gestion technique des bâtiments",
-      relationship_start_date: Date.new(2018, 3, 15),
-      status: "active",
-      notes: "Prestataire historique avec une excellente expertise en maintenance CVC et efficacité énergétique. Intervient sur la majorité de nos sites."
-    )
+    # @organization set by before_action
   end
 
   def update
-    # Handle organization update
-    redirect_to organization_path(params[:id]), notice: "Organisation mise à jour avec succès"
+    if @organization.update(organization_params)
+      redirect_to @organization, notice: 'Organisation mise à jour avec succès.'
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
-    # Handle organization deletion
-    redirect_to organizations_path, notice: "Organisation supprimée avec succès"
+    if @organization.destroy
+      redirect_to organizations_path, notice: 'Organisation supprimée avec succès.'
+    else
+      redirect_to @organization, alert: "Impossible de supprimer cette organisation : #{@organization.errors.full_messages.join(', ')}"
+    end
   end
 
   def search
-    # Renders organizations/search.html.erb
+    @organizations = Organization.search(params[:q])
+                                .ordered
+                                .limit(50)
+    render json: @organizations
+  end
+
+  private
+
+  def set_organization
+    @organization = Organization.find(params[:id])
+  end
+
+  def organization_params
+    params.require(:organization).permit(
+      :name,
+      :legal_name,
+      :siret,
+      :organization_type,
+      :headquarters_address,
+      :phone,
+      :email,
+      :website,
+      :specialties,
+      :relationship_start_date,
+      :status,
+      :notes
+    )
+  end
+
+  def require_portfolio_manager
+    unless current_user&.portfolio_manager?
+      redirect_to root_path, alert: 'Accès non autorisé. Seuls les gestionnaires de portefeuille peuvent gérer les organisations.'
+    end
   end
 end

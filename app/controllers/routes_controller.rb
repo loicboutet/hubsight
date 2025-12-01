@@ -1,4 +1,6 @@
 class RoutesController < ApplicationController
+  skip_before_action :track_session, only: [:index]
+  
   def index
     # Routes organized by role based on specification.md
     @routes_by_role = {

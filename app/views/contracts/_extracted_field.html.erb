@@ -1,0 +1,28 @@
+<% # Partial for displaying a single extracted field
+  type ||= 'text'
+  value_display = case type
+    when 'currency'
+      value.present? ? number_to_currency(value, unit: '€', separator: ',', delimiter: ' ', format: '%n %u') : nil
+    when 'date'
+      value.present? ? (value.is_a?(String) ? value : value.strftime('%d/%m/%Y')) : nil
+    when 'number'
+      value.present? ? value.to_s : nil
+    when 'boolean'
+      value.nil? ? nil : (value ? 'Oui' : 'Non')
+    when 'percentage'
+      value.present? ? "#{value}%" : nil
+    when 'array'
+      value.present? && value != '' ? value : nil
+    else
+      value
+  end
+%>
+
+<div style="padding: 0.75rem; background: <%= value_display.present? ? '#f0fdf4' : '#fef2f2' %>; border-radius: 6px; border: 1px solid <%= value_display.present? ? '#bbf7d0' : '#fecaca' %>;">
+  <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem; font-weight: 500;">
+    <%= label %>
+  </div>
+  <div style="font-weight: 600; color: <%= value_display.present? ? '#166534' : '#991b1b' %>; word-break: break-word;">
+    <%= value_display.present? ? value_display : '—' %>
+  </div>
+</div>

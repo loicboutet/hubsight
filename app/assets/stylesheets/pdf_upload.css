@@ -1,0 +1,44 @@
+/* PDF Upload Drag & Drop Styles */
+
+[data-controller="pdf-upload"] .drag-over {
+  border-color: #4caf50 !important;
+  background-color: #f1f8e9 !important;
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+}
+
+[data-controller="pdf-upload"] [data-pdf-upload-target="dropzone"] {
+  transition: all 0.3s ease;
+}
+
+[data-controller="pdf-upload"] [data-pdf-upload-target="dropzone"]:hover {
+  border-color: #ffa726;
+  background-color: #fffaf0;
+}
+
+/* Progress bar animations */
+[data-pdf-upload-target="progressBar"] .progress-fill {
+  transition: width 0.3s ease;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  [data-controller="pdf-upload"] [data-pdf-upload-target="dropzone"] {
+    padding: var(--space-lg);
+  }
+  
+  [data-controller="pdf-upload"] svg {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}

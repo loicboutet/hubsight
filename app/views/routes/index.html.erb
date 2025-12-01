@@ -1,6 +1,22 @@
 <% content_for :header, "Routes de l'Application" %>
 
 <div class="section">
+  <% unless user_signed_in? %>
+    <!-- Login Prompt for Non-Authenticated Users -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-xl); border-radius: var(--space-lg); margin-bottom: var(--space-xl); text-align: center; color: white;">
+      <h2 class="typo-h2" style="color: white; margin-bottom: var(--space-md);">Bienvenue sur HubSight</h2>
+      <p class="typo-body" style="color: rgba(255, 255, 255, 0.9); margin-bottom: var(--space-lg);">
+        Plateforme de gestion immobilière et technique pour la gestion et le suivi des contrats.
+      </p>
+      <%= link_to new_user_session_path, class: "typo-btn-primary", style: "background-color: white; color: #667eea; padding: var(--space-md) var(--space-xl); display: inline-flex; align-items: center; gap: var(--space-sm); font-weight: 600; border-radius: var(--space-md); text-decoration: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+        </svg>
+        Se connecter
+      <% end %>
+    </div>
+  <% end %>
+
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">HubSight - Toutes les Routes</h2>
     <p class="typo-body-small">Routes organisées par rôle utilisateur selon specification.md</p>

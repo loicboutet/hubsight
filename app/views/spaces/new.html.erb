@@ -1,10 +1,10 @@
-<% content_for :header, "New Space" %>
+<% content_for :header, "Nouvel Espace" %>
 
 <div class="section">
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un Nouvel Espace</h2>
-    <p class="typo-body-small">Ajouter un espace/pièce au niveau</p>
+    <p class="typo-body-small">Ajouter un espace au niveau <%= @level.name %></p>
   </div>
 
-  <%= render 'form', space: @space %>
+  <%= render 'form', space: @space, level: @level %>
 </div>

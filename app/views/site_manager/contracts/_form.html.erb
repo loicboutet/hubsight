@@ -1,0 +1,290 @@
+<div style="background-color: var(--white); border-radius: var(--space-md);">
+  <%= form_with(model: @contract, url: my_contracts_path, method: :post, local: true) do |f| %>
+    
+    <!-- Info Banner -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #2196f3; border-radius: var(--space-sm);">
+      <div style="display: flex; align-items: start; gap: var(--space-md);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#1976d2" style="flex-shrink: 0; margin-top: 2px;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <p class="typo-body-small typo-bold" style="margin: 0 0 var(--space-xs) 0; color: #1565c0;">
+            ℹ️ Processus d'extraction automatique
+          </p>
+          <p class="typo-body-small" style="margin: 0; color: #424242;">
+            Après le téléchargement du PDF, le système extraira automatiquement les données du contrat via OCR et intelligence artificielle. Vous pourrez consulter les résultats dans la page de détail du contrat.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDF Document Upload Section with Drag & Drop -->
+    <div data-controller="pdf-upload" data-pdf-upload-max-size-value="10485760" style="margin-bottom: var(--space-xl); padding: var(--space-lg); background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: var(--space-sm); border: 2px solid #ffb74d;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md); color: #e65100;">
+        📄 Document PDF du Contrat <span style="color: var(--coral-primary);">*</span>
+      </h4>
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--grey-primary);">
+        Téléchargez le PDF du contrat (multi-pages supporté) - Taille maximale : 10 Mo
+      </p>
+      
+      <!-- Drag and Drop Zone -->
+      <div 
+        data-pdf-upload-target="dropzone"
+        data-action="dragenter->pdf-upload#handleDragEnter dragover->pdf-upload#handleDragOver dragleave->pdf-upload#handleDragLeave drop->pdf-upload#handleDrop"
+        style="border: 3px dashed #ffb74d; border-radius: var(--space-sm); padding: var(--space-xl); text-align: center; background-color: white; transition: all 0.3s ease; cursor: pointer;"
+        onclick="this.querySelector('input[type=file]').click()">
+        
+        <!-- Hidden File Input -->
+        <%= f.file_field :pdf_document, 
+          accept: 'application/pdf',
+          required: true,
+          data: { 
+            pdf_upload_target: 'input',
+            action: 'change->pdf-upload#handleFileSelect'
+          },
+          style: "display: none;" %>
+        
+        <!-- Upload Icon and Text -->
+        <div style="margin-bottom: var(--space-md);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="#ffb74d" style="margin: 0 auto; display: block;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </div>
+        
+        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm); color: #e65100;">
+          Glissez-déposez votre fichier PDF ici
+        </p>
+        <p class="typo-body-small" style="color: var(--grey-primary); margin-bottom: var(--space-sm);">
+          ou
+        </p>
+        <button 
+          type="button"
+          data-action="click->pdf-upload#selectFile"
+          style="background: linear-gradient(135deg, #ffb74d 0%, #ffa726 100%); color: white; padding: 0 32px; height: 3.315rem; font-size: 1.105rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(255, 183, 77, 0.3); display: inline-flex; align-items: center; gap: var(--space-sm);"
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(255, 183, 77, 0.4)';"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(255, 183, 77, 0.3)';">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Sélectionner un fichier
+        </button>
+        <p class="typo-body-small" style="margin-top: var(--space-md); color: #757575; font-size: 0.85rem;">
+          Formats acceptés : PDF uniquement • Taille max : 10 Mo
+        </p>
+      </div>
+
+      <!-- Error Message -->
+      <div 
+        data-pdf-upload-target="errorMessage"
+        style="display: none; margin-top: var(--space-md); padding: var(--space-md); background-color: #ffebee; border-left: 4px solid #f44336; border-radius: var(--space-xs);">
+        <p class="typo-body-small" style="color: #c62828; margin: 0;">
+          <!-- Error message will be inserted here -->
+        </p>
+      </div>
+
+      <!-- File Preview -->
+      <div 
+        data-pdf-upload-target="preview"
+        style="display: none; margin-top: var(--space-lg); padding: var(--space-md); background-color: white; border: 2px solid #4caf50; border-radius: var(--space-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: var(--space-md);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#4caf50" style="flex-shrink: 0;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <div>
+              <p class="typo-body-small typo-bold" style="margin: 0; color: #2e7d32;">
+                <span data-pdf-upload-target="fileName">fichier.pdf</span>
+              </p>
+              <p class="typo-body-small" style="margin: var(--space-xs) 0 0 0; color: #757575;">
+                Taille: <span data-pdf-upload-target="fileSize">0 Mo</span>
+              </p>
+            </div>
+          </div>
+          <button 
+            type="button"
+            data-action="click->pdf-upload#removeFile"
+            style="background: none; border: none; cursor: pointer; color: #f44336; padding: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Essential Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        ℹ️ Informations Essentielles
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <!-- Site Selection - ONLY assigned sites -->
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Site Associé <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :site_id,
+            options_for_select(
+              @assigned_sites.map { |site| [site.name, site.id] },
+              @contract.site_id
+            ),
+            { include_blank: 'Sélectionner un site...', prompt: 'Sélectionner un site...' },
+            { 
+              required: true,
+              style: "width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem;"
+            } %>
+          <p class="typo-body-small" style="margin-top: 4px; color: #1976d2;">
+            💡 Vous ne pouvez sélectionner que vos sites assignés
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Numéro de Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :contract_number, value: @contract.contract_number, placeholder: "Ex: CTR-2024-001", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Titre du Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :title, value: @contract.title, placeholder: "Ex: Maintenance CVC", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :contract_type,
+            [
+              ['Maintenance préventive', 'preventive_maintenance'],
+              ['Maintenance corrective', 'corrective_maintenance'],
+              ['Maintenance mixte', 'mixed_maintenance'],
+              ['Nettoyage', 'cleaning'],
+              ['Contrôle technique', 'technical_control'],
+              ['Fluides', 'utilities'],
+              ['Sécurité', 'security'],
+              ['Autre', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: @contract.contract_type },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Famille d'Achats <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :purchase_family,
+            [
+              ['Maintenance', 'maintenance'],
+              ['Nettoyage et Hygiène', 'cleaning'],
+              ['Contrôle Technique', 'technical_control'],
+              ['Fluides', 'utilities'],
+              ['Sécurité', 'security'],
+              ['Autres Contrats', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: @contract.purchase_family },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Sous-Famille
+          </label>
+          <%= f.text_field :purchase_subfamily, value: @contract.purchase_subfamily, placeholder: "Ex: CVC, Ascenseurs, Électricité", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prestataire
+          </label>
+          <%= f.text_field :contractor_organization, value: @contract.contractor_organization, placeholder: "Nom de l'entreprise", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Contact Prestataire
+          </label>
+          <%= f.text_field :contractor_contact, value: @contract.contractor_contact, placeholder: "Nom du contact", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email Prestataire
+          </label>
+          <%= f.email_field :contractor_email, value: @contract.contractor_email, placeholder: "contact@prestataire.fr", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone Prestataire
+          </label>
+          <%= f.text_field :contractor_phone, value: @contract.contractor_phone, placeholder: "+33 1 23 45 67 89", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Montant Annuel HT (€)
+          </label>
+          <%= f.number_field :annual_amount_excl_tax, value: @contract.annual_amount_excl_tax, placeholder: "Ex: 50000", step: 0.01, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Montant Annuel TTC (€)
+          </label>
+          <%= f.number_field :annual_amount_incl_tax, value: @contract.annual_amount_incl_tax, placeholder: "Ex: 60000", step: 0.01, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Début
+          </label>
+          <%= f.date_field :start_date, value: @contract.start_date, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Fin
+          </label>
+          <%= f.date_field :end_date, value: @contract.end_date, style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Objet du Contrat
+          </label>
+          <%= f.text_area :object, value: @contract.object, rows: 3, placeholder: "Description de l'objet du contrat", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Notes
+          </label>
+          <%= f.text_area :notes, value: @contract.notes, rows: 2, placeholder: "Notes complémentaires", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden field for status -->
+    <%= f.hidden_field :status, value: 'active' %>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to my_contracts_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
+        Télécharger le Contrat
+      </button>
+    </div>
+  <% end %>
+</div>

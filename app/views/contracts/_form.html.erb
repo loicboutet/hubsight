@@ -48,29 +48,148 @@
       </div>
     </div>
 
-    <!-- PDF Document Upload Section -->
-    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #fff3e0; border-radius: var(--space-sm);">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-md);">
-        Document PDF du Contrat
+    <!-- PDF Document Upload Section with Drag & Drop -->
+    <div data-controller="pdf-upload" data-pdf-upload-max-size-value="10485760" style="margin-bottom: var(--space-xl); padding: var(--space-lg); background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: var(--space-sm); border: 2px solid #ffb74d;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md); color: #e65100;">
+        📄 Document PDF du Contrat
       </h4>
-      <p class="typo-body-small" style="margin-bottom: var(--space-md); color: var(--grey-primary);">
-        Il faut pouvoir retrouver la version PDF importé du contrat dans la fiche contrat (et donc une zone où sont stockés les contrats au format PDF)
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--grey-primary);">
+        Téléchargez le PDF du contrat (multi-pages supporté) - Taille maximale : 10 Mo
       </p>
       
-      <div>
-        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-          Importer le PDF du Contrat
-        </label>
-        <%= f.file_field :pdf_file, 
+      <!-- Drag and Drop Zone -->
+      <div 
+        data-pdf-upload-target="dropzone"
+        data-action="dragenter->pdf-upload#handleDragEnter dragover->pdf-upload#handleDragOver dragleave->pdf-upload#handleDragLeave drop->pdf-upload#handleDrop"
+        style="border: 3px dashed #ffb74d; border-radius: var(--space-sm); padding: var(--space-xl); text-align: center; background-color: white; transition: all 0.3s ease; cursor: pointer;"
+        onclick="this.querySelector('input[type=file]').click()">
+        
+        <!-- Hidden File Input -->
+        <%= f.file_field :pdf_document, 
           accept: 'application/pdf',
-          style: "width: 100%;" %>
-        <% if contract.respond_to?(:pdf_url) && contract.pdf_url.present? %>
-          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--green-primary);">
-            📄 Document PDF existant : 
-            <%= link_to "Voir le PDF", contract.pdf_url, target: '_blank', class: 'typo-link' %>
-          </p>
-        <% end %>
+          data: { 
+            pdf_upload_target: 'input',
+            action: 'change->pdf-upload#handleFileSelect'
+          },
+          style: "display: none;" %>
+        
+        <!-- Upload Icon and Text -->
+        <div style="margin-bottom: var(--space-md);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="#ffb74d" style="margin: 0 auto; display: block;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </div>
+        
+        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm); color: #e65100;">
+          Glissez-déposez votre fichier PDF ici
+        </p>
+        <p class="typo-body-small" style="color: var(--grey-primary); margin-bottom: var(--space-sm);">
+          ou
+        </p>
+        <button 
+          type="button"
+          data-action="click->pdf-upload#selectFile"
+          style="background: linear-gradient(135deg, #ffb74d 0%, #ffa726 100%); color: white; padding: 0 32px; height: 3.315rem; font-size: 1.105rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(255, 183, 77, 0.3); display: inline-flex; align-items: center; gap: var(--space-sm);"
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(255, 183, 77, 0.4)';"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(255, 183, 77, 0.3)';">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Sélectionner un fichier
+        </button>
+        <p class="typo-body-small" style="margin-top: var(--space-md); color: #757575; font-size: 0.85rem;">
+          Formats acceptés : PDF uniquement • Taille max : 10 Mo
+        </p>
       </div>
+
+      <!-- Error Message -->
+      <div 
+        data-pdf-upload-target="errorMessage"
+        style="display: none; margin-top: var(--space-md); padding: var(--space-md); background-color: #ffebee; border-left: 4px solid #f44336; border-radius: var(--space-xs);">
+        <p class="typo-body-small" style="color: #c62828; margin: 0;">
+          <!-- Error message will be inserted here -->
+        </p>
+      </div>
+
+      <!-- File Preview -->
+      <div 
+        data-pdf-upload-target="preview"
+        style="display: none; margin-top: var(--space-lg); padding: var(--space-md); background-color: white; border: 2px solid #4caf50; border-radius: var(--space-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: var(--space-md);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#4caf50" style="flex-shrink: 0;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <div>
+              <p class="typo-body-small typo-bold" style="margin: 0; color: #2e7d32;">
+                <span data-pdf-upload-target="fileName">fichier.pdf</span>
+              </p>
+              <p class="typo-body-small" style="margin: var(--space-xs) 0 0 0; color: #757575;">
+                Taille: <span data-pdf-upload-target="fileSize">0 Mo</span>
+              </p>
+            </div>
+          </div>
+          <button 
+            type="button"
+            data-action="click->pdf-upload#removeFile"
+            style="background: none; border: none; cursor: pointer; color: #f44336; padding: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar (hidden by default, for future AJAX upload) -->
+      <div 
+        data-pdf-upload-target="progressBar"
+        style="display: none; margin-top: var(--space-md);">
+        <div style="background-color: #e0e0e0; border-radius: 10px; overflow: hidden; height: 24px;">
+          <div class="progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #4caf50 0%, #66bb6a 100%); transition: width 0.3s ease;"></div>
+        </div>
+        <p class="typo-body-small" data-pdf-upload-target="progressText" style="margin-top: var(--space-xs); color: var(--grey-primary); text-align: center;">
+          <!-- Progress text will be inserted here -->
+        </p>
+      </div>
+
+      <!-- Existing PDF Display -->
+      <% if contract.respond_to?(:pdf_attached?) && contract.pdf_attached? %>
+        <div style="margin-top: var(--space-lg); padding: var(--space-md); background-color: #f1f8e9; border-left: 4px solid #8bc34a; border-radius: var(--space-xs);">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: var(--space-md);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#689f38">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <div>
+                <p class="typo-body-small typo-bold" style="margin: 0; color: #558b2f;">
+                  📄 PDF Actuel: <%= contract.pdf_filename %>
+                </p>
+                <p class="typo-body-small" style="margin: var(--space-xs) 0 0 0; color: #757575;">
+                  Taille: <%= contract.pdf_filesize_mb %> Mo
+                </p>
+              </div>
+            </div>
+            <div style="display: flex; gap: var(--space-sm);">
+              <%= link_to rails_blob_path(contract.pdf_document, disposition: "inline"), target: '_blank', class: 'typo-btn-success', style: 'display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-md); font-size: 0.9rem;' do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Voir
+              <% end %>
+              <%= link_to rails_blob_path(contract.pdf_document, disposition: "attachment"), class: 'typo-btn-primary', style: 'display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-md); font-size: 0.9rem;' do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Télécharger
+              <% end %>
+            </div>
+          </div>
+          <p class="typo-body-small" style="margin-top: var(--space-sm); color: #757575; font-style: italic;">
+            💡 Téléchargez un nouveau fichier ci-dessus pour remplacer le PDF actuel
+          </p>
+        </div>
+      <% end %>
     </div>
     
     <!-- Identification Section -->
@@ -100,6 +219,8 @@
           </label>
           <%= f.select :contract_type,
             [
+              ['Bail (Lease)', 'lease'],
+              ['Acte de propriété (Property Deed)', 'property_deed'],
               ['Maintenance préventive', 'preventive_maintenance'],
               ['Maintenance corrective', 'corrective_maintenance'],
               ['Maintenance mixte', 'mixed_maintenance'],
@@ -110,7 +231,7 @@
               ['Autre', 'other']
             ],
             { include_blank: 'Sélectionner...', selected: contract.contract_type },
-            { required: true, style: "width: 100%;" } %>
+            { required: true, style: "width: 100%;", id: 'contract_type_select', onchange: 'toggleContractTypeFields()' } %>
         </div>
 
         <div>
@@ -170,11 +291,52 @@
       </h4>
       
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-        <div>
+        <!-- Items 22-23: Replace text field with autocomplete dropdown -->
+        <div data-controller="organization-autocomplete" style="position: relative;">
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Prestataire (Organisation) <span style="color: var(--coral-primary);">*</span>
           </label>
-          <%= f.text_field :contractor_organization, value: contract.contractor_organization, placeholder: "Nom du prestataire", required: true, style: "width: 100%;" %>
+          
+          <!-- Autocomplete input -->
+          <input 
+            type="text"
+            data-organization-autocomplete-target="input"
+            data-action="input->organization-autocomplete#search"
+            placeholder="Rechercher une organisation..."
+            style="width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: var(--dark-gray);"
+            onfocus="this.style.borderColor='var(--coral-primary)'; this.style.boxShadow='0 0 0 3px rgba(255, 107, 107, 0.1)';"
+            onblur="setTimeout(() => { this.style.borderColor='var(--light-gray)'; this.style.boxShadow='none'; }, 200);"
+            required
+          />
+          
+          <!-- Hidden field for actual selection -->
+          <%= f.hidden_field :contractor_organization_id, 
+            data: { organization_autocomplete_target: "hiddenField" },
+            value: contract.contractor_organization_id %>
+          
+          <!-- Suggestions dropdown with fuzzy matching -->
+          <div 
+            data-organization-autocomplete-target="suggestions"
+            style="position: absolute; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; z-index: 1000; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 4px; margin-top: 4px;">
+            <!-- Dynamic suggestions appear here -->
+          </div>
+          
+          <!-- "Did you mean..." section for similar names -->
+          <div 
+            data-organization-autocomplete-target="similarNames"
+            style="margin-top: 8px; padding: 12px; background-color: #fff3cd; border-left: 4px solid #ffc107; display: none; border-radius: 4px;">
+            <p class="typo-body-small typo-bold" style="color: #856404; margin-bottom: 4px;">
+              💡 Vouliez-vous dire :
+            </p>
+            <ul data-organization-autocomplete-target="similarList" style="margin: 0; padding-left: 20px;"></ul>
+          </div>
+          
+          <!-- Display aliases/former names -->
+          <p class="typo-body-small" style="margin-top: 4px; color: #6c757d; display: none;" data-organization-autocomplete-target="aliases"></p>
+          
+          <p class="typo-body-small" style="margin-top: 4px; color: #dc3545;">
+            ⚠️ Sélection obligatoire depuis la liste - Pas de saisie libre autorisée
+          </p>
         </div>
 
         <div>
@@ -221,25 +383,82 @@
       </h4>
       
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <!-- Items 24-25: Replace text fields with dropdowns (no free text allowed) -->
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Sites Couverts
+            Site Associé <span style="color: var(--coral-primary);">*</span>
           </label>
-          <%= f.text_field :covered_sites, value: contract.covered_sites, placeholder: "Ex: Tous sites, Site A, Site B", style: "width: 100%;" %>
+          <%= f.select :site_id,
+            options_for_select(
+              [
+                ['Tour Montparnasse - Paris 15e', 1],
+                ['Siège Social - La Défense', 2],
+                ['Centre Commercial - Lyon Part-Dieu', 3],
+                ['Campus Universitaire - Toulouse', 4],
+                ['Hôpital Saint-Louis - Paris 10e', 5]
+              ],
+              contract.site_id
+            ),
+            { include_blank: 'Sélectionner un site...', prompt: 'Sélectionner un site...' },
+            { 
+              required: true,
+              style: "width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem;",
+              class: "select2-dropdown"
+            } %>
+          <p class="typo-body-small" style="margin-top: 4px; color: #dc3545;">
+            ⚠️ Sélection obligatoire - Pas de saisie libre autorisée
+          </p>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Bâtiments Couverts
+            Bâtiments Associés
           </label>
-          <%= f.text_field :covered_buildings, value: contract.covered_buildings, placeholder: "Ex: Tous bâtiments, Bât. A", style: "width: 100%;" %>
+          <%= f.select :building_ids,
+            options_for_select(
+              [
+                ['Bâtiment A - Tour Montparnasse', 1],
+                ['Bâtiment B - Annexe Est', 2],
+                ['Bâtiment C - Annexe Ouest', 3]
+              ],
+              contract.building_ids
+            ),
+            {},
+            { 
+              multiple: true,
+              style: "width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm);",
+              class: "select2-dropdown"
+            } %>
+          <p class="typo-body-small" style="margin-top: 4px; color: #6c757d;">
+            💡 Maintenez Ctrl/Cmd pour sélectionner plusieurs bâtiments
+          </p>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Type d'Équipement Concerné
+            Équipements Associés
           </label>
-          <%= f.text_field :equipment_type, value: contract.equipment_type, placeholder: "Ex: Ascenseurs, CVC, Plomberie", style: "width: 100%;" %>
+          <%= f.select :equipment_ids,
+            options_for_select(
+              [
+                ['Ascenseur #1 - Tour Principal', 1],
+                ['Ascenseur #2 - Annexe', 2],
+                ['Chaudière CVC - Sous-sol', 3],
+                ['Climatisation Étage 5', 4],
+                ['Groupe Électrogène', 5],
+                ['Système Sécurité Incendie', 6]
+              ],
+              contract.equipment_ids
+            ),
+            {},
+            { 
+              multiple: true,
+              style: "width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm);",
+              class: "select2-dropdown"
+            } %>
+          <p class="typo-body-small" style="margin-top: 4px; color: #6c757d;">
+            💡 Sélectionnez tous les équipements couverts par ce contrat
+          </p>
         </div>
 
         <div>
@@ -398,6 +617,236 @@
             Prochaine Échéance
           </label>
           <%= f.date_field :next_deadline, value: contract.next_deadline, style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Item 5: Lease-Specific Fields Section -->
+    <div id="lease_fields_section" style="margin-bottom: var(--space-xl); display: none;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--coral-primary);">
+        📋 Informations Spécifiques au Bail
+      </h4>
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--grey-primary);">
+        Complétez les informations spécifiques pour un contrat de type Bail
+      </p>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Bail <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :lease_type,
+            [
+              ['Commercial', 'commercial'],
+              ['Habitation', 'residential'],
+              ['Bureau', 'office'],
+              ['Industriel', 'industrial'],
+              ['Mixte', 'mixed']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.lease_type },
+            { style: "width: 100%;", class: 'lease-field' } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Surface (m²) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :lease_area, value: contract.lease_area, placeholder: "Ex: 250", step: 0.01, min: 0, style: "width: 100%;", class: 'lease-field' %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Loyer Mensuel HT (€) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :monthly_rent_excl_tax, value: contract.monthly_rent_excl_tax, placeholder: "Ex: 3750", step: 0.01, min: 0, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Loyer hors charges et hors taxes
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Charges Mensuelles (€)
+          </label>
+          <%= f.number_field :monthly_charges, value: contract.monthly_charges, placeholder: "Ex: 450", step: 0.01, min: 0, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Charges locatives mensuelles
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type d'Indexation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :indexation_type,
+            [
+              ['ILC - Indice des Loyers Commerciaux', 'ILC'],
+              ['ILAT - Indice des Loyers des Activités Tertiaires', 'ILAT'],
+              ['IRL - Indice de Référence des Loyers', 'IRL'],
+              ['ICC - Indice du Coût de la Construction', 'ICC'],
+              ['Autre', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.indexation_type },
+            { style: "width: 100%;", class: 'lease-field' } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Taux d'Indexation (%)
+          </label>
+          <%= f.number_field :indexation_rate, value: contract.indexation_rate, placeholder: "Ex: 2.5", step: 0.01, min: 0, max: 100, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Taux annuel d'évolution de l'indice
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Prise d'Effet <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :lease_effective_date, value: contract.lease_effective_date, style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Date de début du bail (peut différer de la signature)
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Durée du Bail (mois) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :lease_duration_months, value: contract.lease_duration_months, placeholder: "Ex: 108 (9 ans)", min: 1, style: "width: 100%;", class: 'lease-field', id: 'lease_duration_field', onchange: 'calculateNextDeadline()' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Durée totale du bail en mois
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prochaine Échéance de Bail
+          </label>
+          <%= f.date_field :next_lease_deadline, value: contract.next_lease_deadline, style: "width: 100%;", class: 'lease-field', id: 'next_lease_deadline_field', readonly: true %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Calculée automatiquement (triennal pour bail commercial)
+          </p>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Alertes / Notifications
+          </label>
+          <%= f.text_area :lease_alerts, value: contract.lease_alerts, rows: 2, placeholder: "Ex: Renouvellement proche, Indexation à venir, Documents manquants...", style: "width: 100%;", class: 'lease-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Alertes spécifiques pour ce bail (renouvellement, indexation, etc.)
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items 9 & 10: Property Deed-Specific Fields Section -->
+    <div id="property_deed_fields_section" style="margin-bottom: var(--space-xl); display: none;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid #8b5cf6;">
+        🏢 Informations Spécifiques à l'Acte de Propriété
+      </h4>
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--grey-primary);">
+        Complétez les informations spécifiques pour un contrat de type Acte de Propriété
+      </p>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date d'Acquisition <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.date_field :property_acquisition_date, value: contract.property_acquisition_date, style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Date d'acquisition du bien immobilier
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Surface (m²) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :property_area, value: contract.property_area, placeholder: "Ex: 850", step: 0.01, min: 0, style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Surface totale du bien en mètres carrés
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type d'Usage <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :property_usage_type,
+            [
+              ['Bureaux', 'office'],
+              ['Résidentiel', 'residential'],
+              ['Commercial', 'commercial'],
+              ['Industriel', 'industrial'],
+              ['Mixte', 'mixed']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.property_usage_type },
+            { style: "width: 100%;", class: 'property-deed-field' } %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Type d'utilisation principale du bien
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Propriété <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :property_ownership_type,
+            [
+              ['Pleine propriété', 'full_ownership'],
+              ['Usufruit', 'usufruct'],
+              ['Nue-propriété', 'bare_ownership'],
+              ['Copropriété', 'co_ownership']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.property_ownership_type },
+            { style: "width: 100%;", class: 'property-deed-field' } %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Nature juridique de la propriété
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prix d'Acquisition (€) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.number_field :property_acquisition_price, value: contract.property_acquisition_price, placeholder: "Ex: 1800000", step: 0.01, min: 0, style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Prix d'achat initial du bien
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Valeur de Marché Actuelle (€)
+          </label>
+          <%= f.number_field :property_current_market_value, value: contract.property_current_market_value, placeholder: "Ex: 1850000", step: 0.01, min: 0, style: "width: 100%;", class: 'property-deed-field', id: 'property_current_market_value_field', onchange: 'updateMarketValueDate()' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Estimation actuelle de la valeur du bien
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date MAJ Valeur de Marché
+          </label>
+          <%= f.date_field :property_market_value_last_update, value: contract.property_market_value_last_update, style: "width: 100%;", class: 'property-deed-field', id: 'property_market_value_last_update_field', readonly: true %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Date de dernière mise à jour de la valeur (auto)
+          </p>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Alertes (Annexe Diagnostic Manquante)
+          </label>
+          <%= f.text_area :property_deed_alerts, value: contract.property_deed_alerts, rows: 2, placeholder: "Ex: Diagnostic de performance énergétique manquant, Diagnostic amiante à renouveler...", style: "width: 100%;", class: 'property-deed-field' %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: var(--grey-primary); font-size: 0.75rem;">
+            Alertes concernant les documents ou diagnostics manquants
+          </p>
         </div>
       </div>
     </div>
@@ -561,8 +1010,107 @@ function toggleParentContractField() {
   }
 }
 
+// Items 5, 9 & 10: Toggle lease and property deed fields based on contract type
+function toggleContractTypeFields() {
+  const contractTypeSelect = document.getElementById('contract_type_select');
+  const leaseFieldsSection = document.getElementById('lease_fields_section');
+  const propertyDeedFieldsSection = document.getElementById('property_deed_fields_section');
+  const leaseFields = document.querySelectorAll('.lease-field');
+  const propertyDeedFields = document.querySelectorAll('.property-deed-field');
+  
+  if (!contractTypeSelect) return;
+  
+  const contractType = contractTypeSelect.value;
+  
+  // Handle Lease fields
+  if (contractType === 'lease') {
+    if (leaseFieldsSection) leaseFieldsSection.style.display = 'block';
+    leaseFields.forEach(field => {
+      if (field.previousElementSibling?.textContent.includes('*')) {
+        field.required = true;
+      }
+    });
+  } else {
+    if (leaseFieldsSection) leaseFieldsSection.style.display = 'none';
+    leaseFields.forEach(field => {
+      field.required = false;
+    });
+  }
+  
+  // Handle Property Deed fields
+  if (contractType === 'property_deed') {
+    if (propertyDeedFieldsSection) propertyDeedFieldsSection.style.display = 'block';
+    propertyDeedFields.forEach(field => {
+      if (field.previousElementSibling?.textContent.includes('*')) {
+        field.required = true;
+      }
+    });
+  } else {
+    if (propertyDeedFieldsSection) propertyDeedFieldsSection.style.display = 'none';
+    propertyDeedFields.forEach(field => {
+      field.required = false;
+    });
+  }
+}
+
+// Calculate next lease deadline (triennial for commercial leases)
+function calculateNextDeadline() {
+  const effectiveDateField = document.querySelector('[name*="lease_effective_date"]');
+  const durationField = document.getElementById('lease_duration_field');
+  const nextDeadlineField = document.getElementById('next_lease_deadline_field');
+  
+  if (!effectiveDateField || !durationField || !nextDeadlineField) return;
+  
+  const effectiveDate = effectiveDateField.value;
+  const duration = parseInt(durationField.value);
+  
+  if (effectiveDate && duration) {
+    // Parse the effective date
+    const date = new Date(effectiveDate);
+    
+    // For commercial leases, calculate triennial deadline (36 months)
+    // Note: This is a simplified version. Backend should handle actual calculation
+    const triennialMonths = 36;
+    const nextDeadline = new Date(date);
+    nextDeadline.setMonth(nextDeadline.getMonth() + triennialMonths);
+    
+    // Format as YYYY-MM-DD for date input
+    const formattedDate = nextDeadline.toISOString().split('T')[0];
+    nextDeadlineField.value = formattedDate;
+  }
+}
+
+// Detect if we're editing a lease or property deed contract and set the contract type
+function detectAndSetContractType() {
+  const contractTypeSelect = document.getElementById('contract_type_select');
+  if (!contractTypeSelect) return;
+  
+  // Check if we're editing a known lease contract (BAIL prefix)
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/bail-') || currentPath.includes('/BAIL-')) {
+    contractTypeSelect.value = 'lease';
+    toggleContractTypeFields();
+  }
+  // Check if we're editing a known property deed contract (PROP prefix)
+  else if (currentPath.includes('/prop-') || currentPath.includes('/PROP-')) {
+    contractTypeSelect.value = 'property_deed';
+    toggleContractTypeFields();
+  }
+  // Otherwise, use whatever is already selected
+  else if (contractTypeSelect.value) {
+    toggleContractTypeFields();
+  }
+}
+
 // Run on page load
 document.addEventListener('DOMContentLoaded', function() {
   toggleParentContractField();
+  detectAndSetContractType();
+  
+  // Add event listener for effective date changes
+  const effectiveDateField = document.querySelector('[name*="lease_effective_date"]');
+  if (effectiveDateField) {
+    effectiveDateField.addEventListener('change', calculateNextDeadline);
+  }
 });
 </script>

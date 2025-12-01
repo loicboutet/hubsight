@@ -22,45 +22,45 @@
       <div class="filters-grid-contracts" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
-          <input type="text" placeholder="N° contrat, titre..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <input type="text" id="tech-filter-search" placeholder="N° contrat, titre..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Site</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Tous les sites</option>
+          <select id="tech-filter-site" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
+            <option value="">Tous les sites</option>
             <option>Tour Montparnasse</option>
             <option>Campus La Défense</option>
           </select>
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Famille</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Toutes</option>
-            <option>Maintenance</option>
+          <select id="tech-filter-family" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
+            <option value="">Toutes</option>
+            <option value="Maintenance">Maintenance</option>
             <option>Nettoyage</option>
             <option>Contrôles</option>
           </select>
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Prestataire</label>
-          <input type="text" placeholder="Nom..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+          <input type="text" id="tech-filter-provider" placeholder="Nom..." style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
         </div>
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
-          <select style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
-            <option>Tous</option>
-            <option>Actif</option>
+          <select id="tech-filter-status" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;">
+            <option value="">Tous</option>
+            <option value="Actif">Actif</option>
             <option>En cours</option>
             <option>Terminé</option>
           </select>
         </div>
-        <button type="button" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <button type="button" id="tech-btn-clear-filters" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
           Effacer
         </button>
-        <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <button type="submit" id="tech-btn-apply-filters" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
           </svg>
@@ -68,6 +68,93 @@
         </button>
       </div>
     </div>
+
+    <script>
+    // Contract Display Prioritization - Item 2 (Technician)
+    // Default filters: Family = "Maintenance", Status = "Active" (Actif)
+    // Save/load user filter preferences with localStorage
+    
+    (function() {
+      const STORAGE_KEY = 'technician_contracts_filter_preferences';
+      
+      // Get filter elements
+      const filters = {
+        search: document.getElementById('tech-filter-search'),
+        site: document.getElementById('tech-filter-site'),
+        family: document.getElementById('tech-filter-family'),
+        provider: document.getElementById('tech-filter-provider'),
+        status: document.getElementById('tech-filter-status')
+      };
+      
+      // Load saved preferences or set defaults
+      function loadFilters() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            const preferences = JSON.parse(saved);
+            Object.keys(preferences).forEach(key => {
+              if (filters[key]) {
+                filters[key].value = preferences[key];
+              }
+            });
+          } catch (e) {
+            console.error('Error loading filter preferences:', e);
+            setDefaults();
+          }
+        } else {
+          setDefaults();
+        }
+      }
+      
+      // Set default filter values
+      function setDefaults() {
+        if (filters.family) filters.family.value = 'Maintenance';
+        if (filters.status) filters.status.value = 'Actif';
+      }
+      
+      // Save filter preferences
+      function saveFilters() {
+        const preferences = {};
+        Object.keys(filters).forEach(key => {
+          if (filters[key]) {
+            preferences[key] = filters[key].value;
+          }
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+      }
+      
+      // Clear filters
+      function clearFilters() {
+        Object.values(filters).forEach(filter => {
+          if (filter) filter.value = '';
+        });
+        localStorage.removeItem(STORAGE_KEY);
+        setDefaults();
+      }
+      
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        loadFilters();
+        
+        // Save filters when Apply button is clicked
+        const btnApply = document.getElementById('tech-btn-apply-filters');
+        if (btnApply) {
+          btnApply.addEventListener('click', function() {
+            saveFilters();
+            // Note: Actual filtering requires backend implementation
+          });
+        }
+        
+        // Clear filters when Clear button is clicked
+        const btnClear = document.getElementById('tech-btn-clear-filters');
+        if (btnClear) {
+          btnClear.addEventListener('click', function() {
+            clearFilters();
+          });
+        }
+      });
+    })();
+    </script>
 
     <!-- Contracts Table -->
     <table style="width: 100%; border-collapse: collapse;">

@@ -1,0 +1,25 @@
+The latest modification asked on the mockup are :
+
+Contract Display: Prioritize service contracts first (if possible, set an initial filter in the display, e.g., Maintenance Family, Active Contract).
+
+Comments: My text comments are present in your mockup modifications—verify before starting development.
+
+Lease and Property Deed Contracts: Include the following elements for columns:
+
+* Leases: Site | Owner | Type | Area | Monthly Rent (excl. VAT) | Monthly Charges | Indexation | Signature Date | Effective Date | Lease Duration | Next Lease Deadline | Status | Alerts (Renewal/Indexation)
+* Property Deeds: Site | Acquisition Date | Area | Usage Type | Property Type (full ownership/usufructuary/co-ownership) | Acquisition Price | Current Market Value | Last Market Value Update | Alerts (Missing Diagnostic Appendix)
+
+Data:
+
+* Use source data from my Excel files during development (I've noted you sometimes use data that seems logical but doesn't come from those files—mentioned in previous emails).
+* Historization & data sources: Display data origin (e.g., "Contract entered on 02/05/2026 by John Wick") + usage history (possibly in settings)
+* Data conflicts: How to handle 2 contradictory/inconsistent pieces of information?
+* Supplier name discrepancies (slight variations or company mergers): How to handle/associate them?
+* Associations (contract-site, contract-equipment, etc.): Provide dropdown lists (no free text).
+* Deletion: Require confirmation + login entry to validate.
+
+Access & Modules: Block the "Savings" module initially (with a padlock icon), visible but locked. Unlocks after 5 contracts are imported/entered.
+
+Display: ██████░░░░] 2/5 contracts — 3 more to unlock savings analysis
+
+Onboarding: Add to login page: "Manage your contracts. Never miss a deadline. Analyze your potential savings. (100% free platform). The Potential Savings module unlocks automatically once 5 contracts are imported."

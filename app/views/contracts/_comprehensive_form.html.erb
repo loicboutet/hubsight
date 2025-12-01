@@ -1,0 +1,896 @@
+<div style="background-color: var(--white); border-radius: var(--space-md);">
+  <%= form_with(url: contract.respond_to?(:id) && contract.id.present? ? contract_path(contract.id) : contracts_path, method: contract.respond_to?(:id) && contract.id.present? ? :patch : :post, local: true) do |f| %>
+    
+    <!-- Creation Method Banner (only on new) -->
+    <% unless contract.respond_to?(:id) && contract.id.present? %>
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: var(--space-sm);">
+        <h4 style="margin: 0 0 var(--space-md) 0; font-size: 1.3rem;">
+          📝 Méthode de Création du Contrat
+        </h4>
+        <p style="margin: 0; opacity: 0.95; font-size: 0.95rem;">
+          Vous pouvez créer un contrat de deux façons : <strong>télécharger un PDF</strong> pour extraction automatique, ou <strong>saisir manuellement</strong> toutes les informations. Le PDF est optionnel - remplissez simplement les champs ci-dessous pour une création manuelle complète.
+        </p>
+      </div>
+    <% end %>
+
+    <!-- PDF Document Upload Section - OPTIONAL -->
+    <div data-controller="pdf-upload" data-pdf-upload-max-size-value="10485760" style="margin-bottom: var(--space-xl); padding: var(--space-lg); background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: var(--space-sm); border: 2px solid #ffb74d;">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-md); color: #e65100;">
+        📄 Document PDF du Contrat <span style="font-size: 0.85rem; font-weight: 400; opacity: 0.8;">(Optionnel)</span>
+      </h4>
+      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--grey-primary);">
+        Si vous disposez d'un PDF, téléchargez-le pour une extraction automatique des données. Sinon, saisissez directement les informations dans les champs ci-dessous.
+      </p>
+      
+      <!-- Drag and Drop Zone -->
+      <div 
+        data-pdf-upload-target="dropzone"
+        data-action="dragenter->pdf-upload#handleDragEnter dragover->pdf-upload#handleDragOver dragleave->pdf-upload#handleDragLeave drop->pdf-upload#handleDrop"
+        style="border: 3px dashed #ffb74d; border-radius: var(--space-sm); padding: var(--space-xl); text-align: center; background-color: white; transition: all 0.3s ease; cursor: pointer;"
+        onclick="this.querySelector('input[type=file]').click()">
+        
+        <%= f.file_field :pdf_document, 
+          accept: 'application/pdf',
+          data: { 
+            pdf_upload_target: 'input',
+            action: 'change->pdf-upload#handleFileSelect'
+          },
+          style: "display: none;" %>
+        
+        <div style="margin-bottom: var(--space-md);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="#ffb74d" style="margin: 0 auto; display: block;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </div>
+        
+        <p class="typo-body-small typo-bold" style="margin-bottom: var(--space-sm); color: #e65100;">
+          Glissez-déposez votre fichier PDF ici
+        </p>
+        <p class="typo-body-small" style="color: var(--grey-primary); margin-bottom: var(--space-sm);">ou</p>
+        <button 
+          type="button"
+          data-action="click->pdf-upload#selectFile"
+          style="background: linear-gradient(135deg, #ffb74d 0%, #ffa726 100%); color: white; padding: 0 32px; height: 3.315rem; font-size: 1.105rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(255, 183, 77, 0.3); display: inline-flex; align-items: center; gap: var(--space-sm);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Sélectionner un fichier
+        </button>
+      </div>
+
+      <!-- Error/Preview/Progress messages (existing code) -->
+      <div data-pdf-upload-target="errorMessage" style="display: none; margin-top: var(--space-md); padding: var(--space-md); background-color: #ffebee; border-left: 4px solid #f44336; border-radius: var(--space-xs);">
+        <p class="typo-body-small" style="color: #c62828; margin: 0;"></p>
+      </div>
+      
+      <div data-pdf-upload-target="preview" style="display: none; margin-top: var(--space-lg); padding: var(--space-md); background-color: white; border: 2px solid #4caf50; border-radius: var(--space-sm);">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: var(--space-md);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#4caf50">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <div>
+              <p class="typo-body-small typo-bold" style="margin: 0; color: #2e7d32;">
+                <span data-pdf-upload-target="fileName">fichier.pdf</span>
+              </p>
+              <p class="typo-body-small" style="margin: var(--space-xs) 0 0 0; color: #757575;">
+                Taille: <span data-pdf-upload-target="fileSize">0 Mo</span>
+              </p>
+            </div>
+          </div>
+          <button type="button" data-action="click->pdf-upload#removeFile" style="background: none; border: none; cursor: pointer; color: #f44336; padding: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <% if contract.respond_to?(:pdf_attached?) && contract.pdf_attached? %>
+        <div style="margin-top: var(--space-lg); padding: var(--space-md); background-color: #f1f8e9; border-left: 4px solid #8bc34a; border-radius: var(--space-xs);">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: var(--space-md);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#689f38">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <div>
+                <p class="typo-body-small typo-bold" style="margin: 0; color: #558b2f;">📄 PDF Actuel: <%= contract.pdf_filename %></p>
+                <p class="typo-body-small" style="margin: var(--space-xs) 0 0 0; color: #757575;">Taille: <%= contract.pdf_filesize_mb %> Mo</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: var(--space-sm);">
+              <%= link_to rails_blob_path(contract.pdf_document, disposition: "inline"), target: '_blank', class: 'typo-btn-success', style: 'display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-md); font-size: 0.9rem;' do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Voir
+              <% end %>
+              <%= link_to rails_blob_path(contract.pdf_document, disposition: "attachment"), class: 'typo-btn-primary', style: 'display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-md); font-size: 0.9rem;' do %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Télécharger
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- CATEGORY 1: IDENTIFICATION (8 fields) -->
+    <details open style="margin-bottom: var(--space-xl); border: 2px solid #e5e7eb; border-radius: var(--space-sm);">
+      <summary style="background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%); padding: var(--space-lg); cursor: pointer; font-weight: 600; border-radius: var(--space-sm); user-select: none; display: flex; align-items: center; gap: var(--space-md);">
+        <span style="font-size: 1.5rem;">📋</span>
+        <span style="font-size: 1.2rem;">Identification du Contrat (8 champs)</span>
+      </summary>
+      <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Numéro de Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :contract_number, value: contract.contract_number, placeholder: "Ex: CTR-2024-001", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Titre du Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :title, value: contract.title, placeholder: "Ex: Maintenance HVAC", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type de Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :contract_type,
+            [
+              ['Maintenance préventive', 'preventive_maintenance'],
+              ['Maintenance corrective', 'corrective_maintenance'],
+              ['Maintenance mixte', 'mixed_maintenance'],
+              ['Nettoyage', 'cleaning'],
+              ['Contrôle technique', 'technical_control'],
+              ['Fluides', 'utilities'],
+              ['Assurance', 'insurance'],
+              ['Bail', 'lease'],
+              ['Acte de propriété', 'property_deed'],
+              ['Autre', 'other']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.contract_type },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+
+        <div data-controller="contract-family-autocomplete" style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Famille d'Achats
+          </label>
+          
+          <!-- Filter Buttons (7 families) -->
+          <div data-contract-family-autocomplete-target="filterButtons" style="display: flex; gap: var(--space-sm); margin-bottom: var(--space-md); flex-wrap: wrap;">
+            <button type="button" data-family="MAIN" data-action="click->contract-family-autocomplete#filterByFamily" style="padding: 6px 12px; border: 2px solid #3b82f6; border-radius: 6px; background: white; color: #3b82f6; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">MAIN</button>
+            <button type="button" data-family="NETT" data-action="click->contract-family-autocomplete#filterByFamily" style="padding: 6px 12px; border: 2px solid #10b981; border-radius: 6px; background: white; color: #10b981; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">NETT</button>
+            <button type="button" data-family="CTRL" data-action="click->contract-family-autocomplete#filterByFamily" style="padding: 6px 12px; border: 2px solid #f59e0b; border-radius: 6px; background: white; color: #f59e0b; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">CTRL</button>
+            <button type="button" data-family="FLUI" data-action="click->contract-family-autocomplete#filterByFamily" style="padding: 6px 12px; border: 2px solid #a855f7; border-radius: 6px; background: white; color: #a855f7; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">FLUI</button>
+            <button type="button" data-family="ASSU" data-action="click->contract-family-autocomplete#filterByFamily" style="padding: 6px 12px; border: 2px solid #ef4444; border-radius: 6px; background: white; color: #ef4444; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">ASSU</button>
+            <button type="button" data-family="IMMO" data-action="click->contract-family-autocomplete#filterByFamily" style="padding: 6px 12px; border: 2px solid #6366f1; border-radius: 6px; background: white; color: #6366f1; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">IMMO</button>
+            <button type="button" data-family="AUTR" data-action="click->contract-family-autocomplete#filterByFamily" style="padding: 6px 12px; border: 2px solid #6b7280; border-radius: 6px; background: white; color: #6b7280; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">AUTR</button>
+          </div>
+          
+          <!-- Search Input -->
+          <div style="position: relative;">
+            <%= f.text_field :contract_family,
+              value: (contract.contract_family_object&.display_name || contract.contract_family),
+              placeholder: "Rechercher une famille ou sous-famille (min. 2 caractères)",
+              data: {
+                contract_family_autocomplete_target: "input",
+                action: "input->contract-family-autocomplete#search keydown->contract-family-autocomplete#handleKeydown"
+              },
+              autocomplete: "off",
+              style: "width: 100%; padding-right: 40px;" %>
+            
+            <!-- Hidden field to store the selected code -->
+            <%= f.hidden_field :contract_family,
+              value: contract.contract_family,
+              data: { contract_family_autocomplete_target: "hiddenField" } %>
+            
+            <!-- Hidden field for subfamily (auto-populated) -->
+            <%= f.hidden_field :purchase_subfamily,
+              value: contract.purchase_subfamily,
+              data: { contract_family_autocomplete_target: "subfamilyField" } %>
+            
+            <!-- Loading Indicator -->
+            <div data-contract-family-autocomplete-target="loadingIndicator" style="display: none; position: absolute; right: 12px; top: 50%; transform: translateY(-50%);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+          </div>
+          
+          <!-- Suggestions Dropdown -->
+          <div data-contract-family-autocomplete-target="suggestions" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e9ecef; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-height: 400px; overflow-y: auto; z-index: 1000; margin-top: 4px;"></div>
+          
+          <!-- Selected Info Panel -->
+          <div data-contract-family-autocomplete-target="selectedInfo" style="display: none;"></div>
+          
+          <style>
+            @keyframes spin {
+              from { transform: translateY(-50%) rotate(0deg); }
+              to { transform: translateY(-50%) rotate(360deg); }
+            }
+          </style>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Objet du Contrat <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_area :contract_object, value: contract.contract_object, rows: 3, placeholder: "Description de l'objet du contrat", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Description Détaillée
+          </label>
+          <%= f.text_area :detailed_description, value: contract.detailed_description, rows: 3, placeholder: "Description complète des prestations", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Mode de Passation
+          </label>
+          <%= f.text_field :contracting_method, value: contract.contracting_method, placeholder: "Ex: Appel d'offres, Consultation, Gré à gré", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Référence Publique
+          </label>
+          <%= f.text_field :public_reference, value: contract.public_reference, placeholder: "Ex: Référence marché public", style: "width: 100%;" %>
+        </div>
+      </div>
+    </details>
+
+    <!-- CATEGORY 2: PARTIES PRENANTES (10 fields) -->
+    <details open style="margin-bottom: var(--space-xl); border: 2px solid #e5e7eb; border-radius: var(--space-sm);">
+      <summary style="background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%); padding: var(--space-lg); cursor: pointer; font-weight: 600; border-radius: var(--space-sm); user-select: none; display: flex; align-items: center; gap: var(--space-md);">
+        <span style="font-size: 1.5rem;">👥</span>
+        <span style="font-size: 1.2rem;">Parties Prenantes (10 champs)</span>
+      </summary>
+      <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prestataire (Organisation) <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :contractor_organization_name, value: contract.contractor_organization_name, placeholder: "Nom de l'organisation prestataire", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Contact Principal Prestataire
+          </label>
+          <%= f.text_field :contractor_contact_name, value: contract.contractor_contact_name, placeholder: "Nom du contact", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Agence Prestataire
+          </label>
+          <%= f.text_field :contractor_agency_name, value: contract.contractor_agency_name, placeholder: "Nom de l'agence", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Client (Organisation)
+          </label>
+          <%= f.text_field :client_organization_name, value: contract.client_organization_name, placeholder: "Nom de l'organisation cliente", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Contact Client
+          </label>
+          <%= f.text_field :client_contact_name, value: contract.client_contact_name, placeholder: "Nom du contact client", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email Prestataire
+          </label>
+          <%= f.email_field :contractor_email, value: contract.contractor_email, placeholder: "contact@prestataire.fr", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone Prestataire
+          </label>
+          <%= f.text_field :contractor_phone, value: contract.contractor_phone, placeholder: "+33 1 23 45 67 89", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email Contact Client
+          </label>
+          <%= f.email_field :client_contact_email, value: contract.client_contact_email, placeholder: "contact@client.fr", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Département Gestionnaire
+          </label>
+          <%= f.text_field :managing_department, value: contract.managing_department, placeholder: "Ex: Services Généraux", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Responsable Suivi
+          </label>
+          <%= f.text_field :monitoring_manager, value: contract.monitoring_manager, placeholder: "Nom du responsable", style: "width: 100%;" %>
+        </div>
+      </div>
+    </details>
+
+    <!-- CATEGORY 3: PÉRIMÈTRE (15 fields) -->
+    <details style="margin-bottom: var(--space-xl); border: 2px solid #e5e7eb; border-radius: var(--space-sm);">
+      <summary style="background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%); padding: var(--space-lg); cursor: pointer; font-weight: 600; border-radius: var(--space-sm); user-select: none; display: flex; align-items: center; gap: var(--space-md);">
+        <span style="font-size: 1.5rem;">🎯</span>
+        <span style="font-size: 1.2rem;">Périmètre d'Application (15 champs)</span>
+      </summary>
+      <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Sites Couverts
+          </label>
+          <%= f.text_area :covered_sites, value: (contract.covered_sites.is_a?(Array) ? contract.covered_sites.join(', ') : contract.covered_sites), rows: 2, placeholder: "Liste des sites (séparés par des virgules)", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Bâtiments Couverts
+          </label>
+          <%= f.text_area :covered_buildings, value: (contract.covered_buildings.is_a?(Array) ? contract.covered_buildings.join(', ') : contract.covered_buildings), rows: 2, placeholder: "Liste des bâtiments (séparés par des virgules)", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Types d'Équipements Couverts
+          </label>
+          <%= f.text_area :covered_equipment_types, value: (contract.covered_equipment_types.is_a?(Array) ? contract.covered_equipment_types.join(', ') : contract.covered_equipment_types), rows: 2, placeholder: "Types d'équipements (séparés par des virgules)", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Liste Détaillée des Équipements
+          </label>
+          <%= f.text_area :covered_equipment_list, value: contract.covered_equipment_list, rows: 3, placeholder: "Description détaillée de tous les équipements couverts", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nombre d'Équipements
+          </label>
+          <%= f.number_field :equipment_count, value: contract.equipment_count, placeholder: "Ex: 24", min: 0, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Zones Géographiques
+          </label>
+          <%= f.text_field :geographic_areas, value: contract.geographic_areas, placeholder: "Ex: Île-de-France", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Noms des Bâtiments
+          </label>
+          <%= f.text_area :building_names, value: contract.building_names, rows: 2, placeholder: "Noms détaillés des bâtiments", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Niveaux/Étages
+          </label>
+          <%= f.text_field :floor_levels, value: contract.floor_levels, placeholder: "Ex: RDC, 1er, 2ème", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Zones Spécifiques
+          </label>
+          <%= f.text_field :specific_zones, value: contract.specific_zones, placeholder: "Ex: Parking, Local technique", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Lot Technique
+          </label>
+          <%= f.text_field :technical_lot, value: contract.technical_lot, placeholder: "Ex: CVC, Électricité, Plomberie", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Catégories d'Équipements
+          </label>
+          <%= f.text_field :equipment_categories, value: contract.equipment_categories, placeholder: "Ex: Chauffage, Climatisation", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Description du Périmètre
+          </label>
+          <%= f.text_area :coverage_description, value: contract.coverage_description, rows: 3, placeholder: "Description complète du périmètre d'intervention", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Exclusions
+          </label>
+          <%= f.text_area :exclusions, value: contract.exclusions, rows: 2, placeholder: "Équipements ou zones exclus du contrat", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Conditions Spéciales
+          </label>
+          <%= f.text_area :special_conditions, value: contract.special_conditions, rows: 2, placeholder: "Conditions particulières liées au périmètre", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Notes sur le Périmètre
+          </label>
+          <%= f.text_area :scope_notes, value: contract.scope_notes, rows: 2, placeholder: "Notes complémentaires", style: "width: 100%;" %>
+        </div>
+      </div>
+    </details>
+
+    <!-- CATEGORY 4: ASPECTS FINANCIERS (15 fields) -->
+    <details style="margin-bottom: var(--space-xl); border: 2px solid #e5e7eb; border-radius: var(--space-sm);">
+      <summary style="background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%); padding: var(--space-lg); cursor: pointer; font-weight: 600; border-radius: var(--space-sm); user-select: none; display: flex; align-items: center; gap: var(--space-md);">
+        <span style="font-size: 1.5rem;">💰</span>
+        <span style="font-size: 1.2rem;">Aspects Financiers (15 champs)</span>
+      </summary>
+      <div data-controller="vat-calculator" style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <!-- VAT Rate Field - NEW -->
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Taux de TVA (%)
+          </label>
+          <%= f.number_field :vat_rate, 
+            value: contract.vat_rate || 20.0,
+            placeholder: "Ex: 20, 10, 5.5",
+            step: 0.01, 
+            min: 0, 
+            max: 100,
+            data: {
+              vat_calculator_target: "vatRate",
+              action: "input->vat-calculator#calculate"
+            },
+            style: "width: 100%;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            💡 Taux standard France: 20% | Réduit: 10% ou 5.5%
+          </p>
+        </div>
+
+        <div style="grid-column: 2;">
+          <!-- Empty spacing cell -->
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Montant Annuel HT (€)
+          </label>
+          <%= f.number_field :annual_amount_ht, 
+            value: contract.annual_amount_ht, 
+            placeholder: "Ex: 85000", 
+            step: 0.01, 
+            min: 0,
+            data: {
+              vat_calculator_target: "amountHt",
+              action: "input->vat-calculator#calculateFromHt"
+            },
+            style: "width: 100%;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            💡 Montant hors taxes (base de calcul)
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Montant Annuel TTC (€)
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
+          </label>
+          <%= f.number_field :annual_amount_ttc, 
+            value: contract.annual_amount_ttc, 
+            placeholder: "Ex: 102000", 
+            step: 0.01, 
+            min: 0,
+            data: {
+              vat_calculator_target: "amountTtc",
+              action: "input->vat-calculator#calculateFromTtc"
+            },
+            style: "width: 100%; background-color: #f3f4f6;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculé automatiquement : HT × (1 + TVA/100)
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Montant Mensuel (€)
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
+          </label>
+          <%= f.number_field :monthly_amount, 
+            value: contract.monthly_amount, 
+            placeholder: "Ex: 8500", 
+            step: 0.01, 
+            min: 0,
+            readonly: true,
+            data: {
+              vat_calculator_target: "monthlyAmount"
+            },
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculé automatiquement : Montant TTC ÷ 12
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Méthode de Facturation
+          </label>
+          <%= f.select :billing_method,
+            [
+              ['Prix forfaitaire', 'fixed_price'],
+              ['Régie (temps passé)', 'time_materials'],
+              ['Mixte', 'mixed']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.billing_method },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Fréquence de Facturation
+          </label>
+          <%= f.select :billing_frequency,
+            [
+              ['Mensuelle', 'monthly'],
+              ['Trimestrielle', 'quarterly'],
+              ['Semestrielle', 'biannual'],
+              ['Annuelle', 'annual']
+            ],
+            { include_blank: 'Sélectionner...', selected: contract.billing_frequency },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Conditions de Paiement
+          </label>
+          <%= f.text_field :payment_terms, value: contract.payment_terms, placeholder: "Ex: 30 jours fin de mois", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Conditions de Révision
+          </label>
+          <%= f.text_area :revision_conditions, value: contract.revision_conditions, rows: 2, placeholder: "Conditions de révision des prix", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Indice de Révision
+          </label>
+          <%= f.text_field :revision_index, value: contract.revision_index, placeholder: "Ex: TP09, ICHT", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Fréquence de Révision
+          </label>
+          <%= f.text_field :revision_frequency, value: contract.revision_frequency, placeholder: "Ex: Annuelle", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Pénalités de Retard de Paiement
+          </label>
+          <%= f.text_area :late_payment_penalties, value: contract.late_payment_penalties, rows: 2, placeholder: "Description des pénalités", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Garantie Financière
+          </label>
+          <%= f.text_field :financial_guarantee, value: contract.financial_guarantee, placeholder: "Description de la garantie", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Montant Dépôt de Garantie (€)
+          </label>
+          <%= f.number_field :deposit_amount, value: contract.deposit_amount, placeholder: "Ex: 10000", step: 0.01, min: 0, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Révision des Prix
+          </label>
+          <%= f.date_field :price_revision_date, value: contract.price_revision_date, style: "width: 100%;" %>
+        </div>
+
+        <!-- Auto-calculated field: Last Amount Update -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Dernière MAJ du Montant
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
+          </label>
+          <%= f.date_field :last_amount_update, 
+            value: contract.last_amount_update, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Mise à jour automatiquement lors de la modification des montants
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Code Budgétaire
+          </label>
+          <%= f.text_field :budget_code, value: contract.budget_code, placeholder: "Ex: BUD-2024-001", style: "width: 100%;" %>
+        </div>
+      </div>
+    </details>
+
+    <!-- CATEGORY 5: TEMPORALITÉ (10 fields) -->
+    <details style="margin-bottom: var(--space-xl); border: 2px solid #e5e7eb; border-radius: var(--space-sm);">
+      <summary style="background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%); padding: var(--space-lg); cursor: pointer; font-weight: 600; border-radius: var(--space-sm); user-select: none; display: flex; align-items: center; gap: var(--space-md);">
+        <span style="font-size: 1.5rem;">📅</span>
+        <span style="font-size: 1.2rem;">Temporalité (10 champs)</span>
+      </summary>
+      <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Signature
+          </label>
+          <%= f.date_field :signature_date, value: contract.signature_date, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Début d'Exécution
+          </label>
+          <%= f.date_field :execution_start_date, value: contract.execution_start_date, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Durée Initiale (mois)
+          </label>
+          <%= f.number_field :initial_duration_months, value: contract.initial_duration_months, placeholder: "Ex: 12, 24, 36", min: 1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Durée de Reconduction (mois)
+          </label>
+          <%= f.number_field :renewal_duration_months, value: contract.renewal_duration_months, placeholder: "Ex: 12", min: 1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nombre de Reconductions
+          </label>
+          <%= f.number_field :renewal_count, value: contract.renewal_count, placeholder: "Ex: 2, 3", min: 0, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Renouvellement Automatique
+          </label>
+          <%= f.select :automatic_renewal,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.automatic_renewal },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <!-- Auto-calculated field: Contract End Date -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Date d'Expiration du Contrat
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
+          </label>
+          <%= f.date_field :end_date, 
+            value: contract.end_date || contract.calculate_end_date, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculée automatiquement : Date de début + Durée initiale + (N reconductions × Durée reconduction)
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Préavis de Résiliation (jours)
+          </label>
+          <%= f.number_field :notice_period_days, value: contract.notice_period_days, placeholder: "Ex: 30, 60, 90", min: 0, style: "width: 100%;" %>
+        </div>
+
+        <!-- Auto-calculated field: Termination Deadline -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Prochaine Échéance (Délai de Résiliation)
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
+          </label>
+          <%= f.date_field :next_deadline_date, 
+            value: contract.next_deadline_date || contract.calculate_termination_deadline, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculée automatiquement : Date d'expiration - Préavis de résiliation
+          </p>
+        </div>
+
+        <!-- Auto-calculated field: Last Renewal Date -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Date du Dernier Renouvellement
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
+          </label>
+          <%= f.date_field :last_renewal_date, 
+            value: contract.last_renewal_date || contract.calculate_last_renewal_date, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculée automatiquement : Date de début + Durée initiale + (N-1) reconductions
+          </p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Date de Résiliation
+          </label>
+          <%= f.date_field :termination_date, value: contract.termination_date, style: "width: 100%;" %>
+        </div>
+      </div>
+    </details>
+
+    <!-- CATEGORY 6: SERVICES & SLA (12 fields) -->
+    <details style="margin-bottom: var(--space-xl); border: 2px solid #e5e7eb; border-radius: var(--space-sm);">
+      <summary style="background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%); padding: var(--space-lg); cursor: pointer; font-weight: 600; border-radius: var(--space-sm); user-select: none; display: flex; align-items: center; gap: var(--space-md);">
+        <span style="font-size: 1.5rem;">🔧</span>
+        <span style="font-size: 1.2rem;">Services et Niveau de Service (12 champs)</span>
+      </summary>
+      <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nature des Services
+          </label>
+          <%= f.text_area :service_nature, value: contract.service_nature, rows: 3, placeholder: "Description des prestations fournies", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Fréquence d'Intervention
+          </label>
+          <%= f.text_field :intervention_frequency, value: contract.intervention_frequency, placeholder: "Ex: Mensuelle, Trimestrielle", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Délai d'Intervention (heures)
+          </label>
+          <%= f.number_field :intervention_delay_hours, value: contract.intervention_delay_hours, placeholder: "Ex: 4, 24, 48", min: 0, step: 0.5, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Délai de Résolution (heures)
+          </label>
+          <%= f.number_field :resolution_delay_hours, value: contract.resolution_delay_hours, placeholder: "Ex: 24, 48, 72", min: 0, step: 0.5, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Horaires d'Intervention
+          </label>
+          <%= f.text_field :working_hours, value: contract.working_hours, placeholder: "Ex: 8h-18h, Lun-Ven", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Astreinte 24/7
+          </label>
+          <%= f.select :on_call_24_7,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.on_call_24_7 },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Niveau de Service Garanti (%)
+          </label>
+          <%= f.number_field :sla_percentage, value: contract.sla_percentage, placeholder: "Ex: 95, 98, 99", min: 0, max: 100, step: 0.1, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            KPIs (séparés par des virgules)
+          </label>
+          <%= f.text_field :kpis, value: (contract.kpis.is_a?(Array) ? contract.kpis.join(', ') : contract.kpis), placeholder: "Ex: Disponibilité, Temps de réponse", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Pièces de Rechange Incluses
+          </label>
+          <%= f.select :spare_parts_included,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.spare_parts_included },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Fournitures Incluses
+          </label>
+          <%= f.select :supplies_included,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.supplies_included },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Rapport d'Intervention Obligatoire
+          </label>
+          <%= f.select :report_required,
+            [
+              ['Oui', true],
+              ['Non', false]
+            ],
+            { selected: contract.report_required },
+            { style: "width: 100%;" } %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Documents Annexes (séparés par des virgules)
+          </label>
+          <%= f.text_field :appendix_documents, value: (contract.appendix_documents.is_a?(Array) ? contract.appendix_documents.join(', ') : contract.appendix_documents), placeholder: "Ex: Plan, Schéma, Rapport", style: "width: 100%;" %>
+        </div>
+      </div>
+    </details>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 2px solid var(--pink-pale);">
+      <%= link_to contracts_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= (contract.respond_to?(:id) && contract.id.present?) ? "Mettre à Jour le Contrat" : "Créer le Contrat" %>
+      </button>
+    </div>
+  <% end %>
+</div>

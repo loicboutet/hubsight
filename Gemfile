@@ -56,6 +56,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  
+  # Preview emails in browser instead of sending them
+  gem "letter_opener"
 end
 
 group :test do
@@ -65,3 +68,16 @@ group :test do
 end
 
 gem "devise", "~> 4.9"
+gem "kaminari", "~> 1.2"
+
+# OCR and PDF processing
+gem "pdf-reader", "~> 2.12"  # FREE text extraction from digital PDFs
+gem "httparty", "~> 0.21"    # HTTP client for future Mistral API integration
+
+# PDF generation
+gem "prawn", "~> 2.4"        # PDF generation library
+gem "prawn-table", "~> 0.2"  # Table formatting for Prawn
+
+# Excel generation
+gem "caxlsx", "~> 3.4"       # Excel (.xlsx) generation
+gem "caxlsx_rails", "~> 0.6" # Rails integration for caxlsx

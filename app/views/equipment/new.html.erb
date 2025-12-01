@@ -25,7 +25,42 @@
     </div>
   </div>
 
-  <form action="<%= params[:space_id].present? ? space_equipment_index_path(params[:space_id]) : equipment_index_path %>" method="post">
+  <% 
+    # Prepare hierarchy data for cascading dropdowns (BACKEND: This should come from controller)
+    hierarchy_data = {
+      sites: [
+        { id: 1, name: "Tour Montparnasse" },
+        { id: 2, name: "Immeuble La Défense" }
+      ],
+      buildings: [
+        { id: 1, site_id: 1, name: "Bât. A" },
+        { id: 2, site_id: 1, name: "Bât. B" },
+        { id: 3, site_id: 2, name: "Bât. Principal" }
+      ],
+      levels: [
+        { id: 1, building_id: 1, name: "RDC" },
+        { id: 2, building_id: 1, name: "1er étage" },
+        { id: 3, building_id: 2, name: "RDC" },
+        { id: 4, building_id: 3, name: "RDC" }
+      ],
+      spaces: [
+        { id: 1, level_id: 1, name: "Bureau 101" },
+        { id: 2, level_id: 1, name: "Bureau 102" },
+        { id: 3, level_id: 1, name: "Salle de réunion A" },
+        { id: 4, level_id: 1, name: "Local technique RDC" },
+        { id: 5, level_id: 2, name: "Bureau 201" },
+        { id: 6, level_id: 2, name: "Bureau 202" },
+        { id: 7, level_id: 2, name: "Open space Nord" },
+        { id: 8, level_id: 3, name: "Hall d'accueil" },
+        { id: 9, level_id: 3, name: "Local serveurs" }
+      ]
+    }
+  %>
+
+  <form action="<%= params[:space_id].present? ? space_equipment_index_path(params[:space_id]) : equipment_index_path %>" method="post" 
+        data-controller="equipment-location"
+        data-equipment-location-hierarchy-value="<%= hierarchy_data.to_json %>"
+        data-action="turbo:load->equipment-location#populateSites">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     
     <div style="background-color: var(--white); border-radius: var(--space-md);">
@@ -43,64 +78,181 @@
             </label>
             <input type="text" name="equipment[name]" placeholder="Ex: Climatiseur Daikin AC-500" required style="width: 100%;" />
           </div>
+        </div>
+      </div>
 
-          <% if params[:space_id].blank? %>
+      <!-- Location Hierarchy Section -->
+      <% if params[:space_id].blank? %>
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Localisation <span style="color: var(--coral-primary);">*</span>
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Espace <span style="color: var(--coral-primary);">*</span>
+              <%= render 'shared/hierarchy_icons', type: 'site', size: 14 %>
+              Site <span style="color: var(--coral-primary);">*</span>
             </label>
-            <select name="equipment[space_id]" required style="width: 100%;">
-              <option value="">Sélectionner un espace...</option>
-              <optgroup label="Tour Montparnasse - Bât. A - RDC">
-                <option value="1">Bureau 101</option>
-                <option value="2">Bureau 102</option>
-                <option value="3">Salle de réunion A</option>
-                <option value="4">Local technique RDC</option>
-              </optgroup>
-              <optgroup label="Tour Montparnasse - Bât. A - 1er étage">
-                <option value="5">Bureau 201</option>
-                <option value="6">Bureau 202</option>
-                <option value="7">Open space Nord</option>
-              </optgroup>
-              <optgroup label="Tour Montparnasse - Bât. B - RDC">
-                <option value="8">Hall d'accueil</option>
-                <option value="9">Local serveurs</option>
-              </optgroup>
+            <select name="equipment[site_id]" 
+                    data-equipment-location-target="site"
+                    data-action="change->equipment-location#siteChanged"
+                    required 
+                    style="width: 100%;">
+              <option value="">Sélectionner un site...</option>
             </select>
           </div>
-          <% end %>
 
           <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              <%= render 'shared/hierarchy_icons', type: 'building', size: 14 %>
+              Bâtiment <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[building_id]" 
+                    data-equipment-location-target="building"
+                    data-action="change->equipment-location#buildingChanged"
+                    required 
+                    disabled
+                    style="width: 100%;">
+              <option value="">Sélectionner un bâtiment...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              <%= render 'shared/hierarchy_icons', type: 'level', size: 14 %>
+              Niveau <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[level_id]" 
+                    data-equipment-location-target="level"
+                    data-action="change->equipment-location#levelChanged"
+                    required 
+                    disabled
+                    style="width: 100%;">
+              <option value="">Sélectionner un niveau...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              <%= render 'shared/hierarchy_icons', type: 'space', size: 14 %>
+              Espace <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[space_id]" 
+                    data-equipment-location-target="space"
+                    required 
+                    disabled
+                    style="width: 100%;">
+              <option value="">Sélectionner un espace...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <% end %>
+
+      <!-- Basic Information Section (continued) -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations de Base (suite)
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+
+          <!-- Equipment Type Autocomplete -->
+          <div style="grid-column: 1 / -1;">
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
               Type d'Équipement <span style="color: var(--coral-primary);">*</span>
             </label>
-            <select name="equipment[equipment_type_id]" required style="width: 100%;">
-              <option value="">Sélectionner...</option>
-              <optgroup label="CVC - HVAC">
-                <option value="1">Climatiseur</option>
-                <option value="2">Chaudière</option>
-                <option value="3">VMC - Ventilation</option>
-                <option value="4">Radiateur</option>
-              </optgroup>
-              <optgroup label="ELE - Électricité">
-                <option value="5">Luminaire</option>
-                <option value="6">Tableau électrique</option>
-                <option value="7">Onduleur</option>
-              </optgroup>
-              <optgroup label="PLO - Plomberie">
-                <option value="8">Chauffe-eau</option>
-                <option value="9">Pompe</option>
-              </optgroup>
-              <optgroup label="SEC - Sécurité">
-                <option value="10">Détecteur incendie</option>
-                <option value="11">Extincteur</option>
-                <option value="12">Alarme intrusion</option>
-              </optgroup>
-              <optgroup label="ASC - Ascenseurs">
-                <option value="13">Ascenseur</option>
-                <option value="14">Monte-charge</option>
-              </optgroup>
-            </select>
+            
+            <div data-controller="equipment-type-autocomplete">
+              <!-- Technical Lot Filter Buttons -->
+              <div data-equipment-type-autocomplete-target="filterButtons" style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                <button type="button" data-lot="CVC" data-action="click->equipment-type-autocomplete#filterByLot" 
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  CVC
+                </button>
+                <button type="button" data-lot="ELE" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  ELE
+                </button>
+                <button type="button" data-lot="PLO" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  PLO
+                </button>
+                <button type="button" data-lot="SEC" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  SEC
+                </button>
+                <button type="button" data-lot="ASC" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  ASC
+                </button>
+                <button type="button" data-lot="CEA" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  CEA
+                </button>
+                <button type="button" data-lot="CTE" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  CTE
+                </button>
+                <button type="button" data-lot="AUT" data-action="click->equipment-type-autocomplete#filterByLot"
+                        style="padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                  AUT
+                </button>
+              </div>
+              
+              <!-- Search Input with Loading Indicator -->
+              <div style="position: relative;">
+                <input 
+                  type="text" 
+                  data-equipment-type-autocomplete-target="input"
+                  data-action="input->equipment-type-autocomplete#search keydown->equipment-type-autocomplete#handleKeydown"
+                  placeholder="Rechercher un type d'équipement (ex: climatiseur, chaudière...)"
+                  style="width: 100%; padding-right: 40px;"
+                  autocomplete="off"
+                />
+                <input 
+                  type="hidden" 
+                  name="equipment[equipment_type_id]"
+                  data-equipment-type-autocomplete-target="hiddenField"
+                />
+                
+                <!-- Loading Spinner -->
+                <div data-equipment-type-autocomplete-target="loadingIndicator" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: none;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                    <path d="M12 2a10 10 0 0 1 10 10" opacity="0.75">
+                      <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                    </path>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Suggestions Dropdown -->
+              <div 
+                data-equipment-type-autocomplete-target="suggestions"
+                style="
+                  display: none;
+                  position: absolute;
+                  z-index: 1000;
+                  background: white;
+                  border: 1px solid #d1d5db;
+                  border-radius: 8px;
+                  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                  max-height: 400px;
+                  overflow-y: auto;
+                  margin-top: 4px;
+                  width: 100%;
+                ">
+              </div>
+              
+              <!-- Selected Equipment Type Info -->
+              <div data-equipment-type-autocomplete-target="selectedInfo" style="display: none;"></div>
+            </div>
+            
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-sm);">
+              💡 Tapez au moins 2 caractères pour rechercher. Utilisez les filtres pour affiner par lot technique.
+            </p>
           </div>
 
           <div>
