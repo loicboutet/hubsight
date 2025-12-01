@@ -4,10 +4,15 @@ class SiteManagersController < ApplicationController
   before_action :set_site_manager, only: [:show, :edit, :update, :destroy, :resend_invitation]
 
   def index
-    # Portfolio managers see site managers of their organization
-    @site_managers = User.by_role(User::ROLES[:site_manager])
-                        .where(organization_id: current_user.organization_id)
-                        .order(created_at: :desc)
+    # Admins see all site managers, Portfolio managers see only their organization's site managers
+    if current_user.admin?
+      @site_managers = User.by_role(User::ROLES[:site_manager])
+                          .order(created_at: :desc)
+    else
+      @site_managers = User.by_role(User::ROLES[:site_manager])
+                          .where(organization_id: current_user.organization_id)
+                          .order(created_at: :desc)
+    end
   end
 
   def show
@@ -94,7 +99,12 @@ class SiteManagersController < ApplicationController
 
   def assign_sites
     # Load available sites from the organization
-    @available_sites = Site.where(organization_id: current_user.organization_id).order(:name)
+    # Admins can see all sites, portfolio managers see only their organization's sites
+    if current_user.admin?
+      @available_sites = Site.where(organization_id: @site_manager.organization_id).order(:name)
+    else
+      @available_sites = Site.where(organization_id: current_user.organization_id).order(:name)
+    end
     @assigned_site_ids = @site_manager.assigned_sites.pluck(:id)
   end
 
@@ -106,8 +116,12 @@ class SiteManagersController < ApplicationController
       @site_manager.site_assignments.destroy_all
       
       # Create new assignments
+      # Admins can assign any site from the site manager's organization
+      # Portfolio managers can only assign sites from their own organization
+      organization_id = current_user.admin? ? @site_manager.organization_id : current_user.organization_id
+      
       site_ids.each do |site_id|
-        site = Site.find_by(id: site_id, organization_id: current_user.organization_id)
+        site = Site.find_by(id: site_id, organization_id: organization_id)
         if site
           @site_manager.site_assignments.create!(
             site: site,
@@ -127,9 +141,14 @@ class SiteManagersController < ApplicationController
   private
 
   def set_site_manager
-    @site_manager = User.by_role(User::ROLES[:site_manager])
-                       .where(organization_id: current_user.organization_id)
-                       .find(params[:id])
+    # Admins can access any site manager, portfolio managers only their organization's site managers
+    if current_user.admin?
+      @site_manager = User.by_role(User::ROLES[:site_manager]).find(params[:id])
+    else
+      @site_manager = User.by_role(User::ROLES[:site_manager])
+                         .where(organization_id: current_user.organization_id)
+                         .find(params[:id])
+    end
   end
 
   def site_manager_params

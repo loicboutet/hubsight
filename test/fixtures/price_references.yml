@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  contract_family: MyString
+  contract_sub_family: MyString
+  equipment_type: MyString
+  service_type: MyString
+  technical_characteristics: MyText
+  reference_price: 9.99
+  unit: MyString
+  currency: MyString
+  location: MyString
+  city: MyString
+  notes: MyText
+  status: MyString
+
+two:
+  contract_family: MyString
+  contract_sub_family: MyString
+  equipment_type: MyString
+  service_type: MyString
+  technical_characteristics: MyText
+  reference_price: 9.99
+  unit: MyString
+  currency: MyString
+  location: MyString
+  city: MyString
+  notes: MyText
+  status: MyString

@@ -11,6 +11,7 @@ module Admin
     def index
       @organizations = Organization.includes(:users)
                                    .order(created_at: :desc)
+                                   .page(params[:page])
       
       # Get summary statistics for each organization
       @organization_stats = {}

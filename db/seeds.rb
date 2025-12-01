@@ -1146,26 +1146,38 @@ org2_sites_for_contracts = Site.where(organization_id: org2.id).limit(3).to_a
 
 # Create contracts for Organization 1
 puts "  Creating contracts for Organization 1..."
-20.times do |i|
+30.times do |i|
   site = org1_sites_for_contracts.sample
   family = contract_families.sample
   status = statuses.sample
   
-  # Vary dates to test renewals feature
+  # Vary dates to create more alerts
   start_date = Date.today - rand(365..730).days
   contract_duration = [12, 24, 36].sample
   end_date = start_date + contract_duration.months
   
-  # Adjust some contracts to be in renewal windows
-  if i < 3
-    # 30 days window
+  # Distribute contracts across different alert windows
+  if i < 8
+    # 0-30 days window (ALERT - urgent)
     end_date = Date.today + rand(1..30).days
-  elsif i < 6
-    # 60 days window
-    end_date = Date.today + rand(31..60).days
-  elsif i < 9
-    # 90 days window
-    end_date = Date.today + rand(61..90).days
+    status = 'active'  # Ensure these are active for alerts
+  elsif i < 16
+    # 31-90 days window (ATTENTION - warning)
+    end_date = Date.today + rand(31..90).days
+    status = 'active'  # Ensure these are active for alerts
+  elsif i < 20
+    # 91-180 days window (safe zone)
+    end_date = Date.today + rand(91..180).days
+    status = 'active'
+  else
+    # Past expiry or far future
+    if rand > 0.5
+      end_date = Date.today - rand(1..60).days  # Expired
+      status = 'expired'
+    else
+      end_date = Date.today + rand(181..365).days  # Far future
+      status = 'active'
+    end
   end
   
   contract = Contract.find_or_initialize_by(
@@ -1188,7 +1200,7 @@ puts "  Creating contracts for Organization 1..."
   
   if contract.new_record?
     contract.save!
-    puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family})"
+    puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')})"
   else
     contract.save!
   end
@@ -1633,6 +1645,164 @@ puts "   - Spaces: #{Space.count}"
 puts "   - Equipment: #{Equipment.count}"
 puts "     • Organization 1: #{Equipment.where(organization_id: org1.id).count}"
 puts "     • Organization 2: #{Equipment.where(organization_id: org2.id).count}"
+
+# ============================================================================
+# PRICE REFERENCES - Sample price reference data for comparisons
+# ============================================================================
+
+puts "\n💰 Creating price references..."
+
+price_references_data = [
+  # Maintenance CVC
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance CVC', equipment_type: 'Climatisation', service_type: 'Service Annuel', 
+    technical_characteristics: 'Puissance: 10kW, Couverture: 200m², Fréquence: Trimestrielle', 
+    reference_price: 1200.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Basé sur une étude de marché réalisée au T1 2025. Inclut les conditions standard de contrat de maintenance.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance CVC', equipment_type: 'Chaudière Gaz', service_type: 'Entretien Annuel', 
+    technical_characteristics: 'Puissance: 35kW, Type: Murale, Combustible: Gaz naturel', 
+    reference_price: 850.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Prix incluant ramonage et certificat de conformité.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance CVC', equipment_type: 'Système VRV', service_type: 'Maintenance Complète', 
+    technical_characteristics: 'Puissance: 28kW, Type: Multi-split, Unités: 8 intérieures', 
+    reference_price: 2800.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Maintenance trimestrielle avec nettoyage filtres et contrôle fluides.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance CVC', equipment_type: 'Centrale de Traitement d\'Air', service_type: 'Service Bi-Annuel', 
+    technical_characteristics: 'Débit: 5000 m³/h, Filtration F7', 
+    reference_price: 1650.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'La Défense',
+    notes: 'Inclut remplacement des filtres.', status: 'active' },
+  
+  # Maintenance Ascenseurs
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance Ascenseurs', equipment_type: 'Ascenseur Passagers', service_type: 'Inspection Trimestrielle', 
+    technical_characteristics: 'Capacité: 8 personnes, Vitesse: 1m/s, Arrêts: 5', 
+    reference_price: 850.00, unit: 'per_quarter', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Conforme aux normes EN 81-20. Dépannage d\'urgence 24/7 inclus.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance Ascenseurs', equipment_type: 'Ascenseur Passagers', service_type: 'Maintenance Standard', 
+    technical_characteristics: 'Capacité: 6 personnes, Vitesse: 0.63m/s, Arrêts: 4', 
+    reference_price: 2400.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Interventions mensuelles, pièces détachées incluses.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance Ascenseurs', equipment_type: 'Monte-Charge', service_type: 'Service Annuel', 
+    technical_characteristics: 'Charge utile: 500kg, Course: 12m', 
+    reference_price: 1800.00, unit: 'per_year', currency: 'EUR', location: 'Provence-Alpes', city: 'Marseille',
+    notes: 'Visite technique bi-annuelle.', status: 'active' },
+  
+  # Contrôle Technique - Sécurité Incendie
+  { contract_family: 'Contrôle Technique', contract_sub_family: 'Sécurité Incendie', equipment_type: 'Extincteurs', service_type: 'Inspection Annuelle', 
+    technical_characteristics: 'Type: Poudre ABC, Capacité: 6kg, Quantité: jusqu\'à 20 unités', 
+    reference_price: 450.00, unit: 'per_year', currency: 'EUR', location: 'Provence-Alpes', city: 'Marseille',
+    notes: 'Vérification réglementaire annuelle et remplacement si nécessaire.', status: 'active' },
+  
+  { contract_family: 'Contrôle Technique', contract_sub_family: 'Sécurité Incendie', equipment_type: 'Système de Détection Incendie', service_type: 'Maintenance Semestrielle', 
+    technical_characteristics: 'Type: Adressable, Détecteurs: 50, Centrales: 2', 
+    reference_price: 1200.00, unit: 'per_semester', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Test fonctionnel complet avec rapport.', status: 'active' },
+  
+  { contract_family: 'Contrôle Technique', contract_sub_family: 'Sécurité Incendie', equipment_type: 'Portes Coupe-Feu', service_type: 'Vérification Annuelle', 
+    technical_characteristics: 'Nombre: 15 portes, Type: EI 60/90', 
+    reference_price: 650.00, unit: 'per_year', currency: 'EUR', location: 'Auvergne-Rhône-Alpes', city: 'Lyon',
+    notes: 'Vérification des mécanismes de fermeture et joints.', status: 'active' },
+  
+  # Nettoyage
+  { contract_family: 'Nettoyage', contract_sub_family: 'Nettoyage Bureaux', equipment_type: 'Bureaux Standards', service_type: 'Nettoyage Quotidien', 
+    technical_characteristics: 'Surface: 1000m², Fréquence: 5j/7', 
+    reference_price: 2800.00, unit: 'per_month', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Produits écologiques inclus.', status: 'active' },
+  
+  { contract_family: 'Nettoyage', contract_sub_family: 'Nettoyage Vitres', equipment_type: 'Façades Vitrées', service_type: 'Nettoyage Trimestriel', 
+    technical_characteristics: 'Surface: 500m² de vitrage', 
+    reference_price: 1500.00, unit: 'per_quarter', currency: 'EUR', location: 'Île-de-France', city: 'La Défense',
+    notes: 'Intervention par cordistes certifiés.', status: 'active' },
+  
+  # Électricité
+  { contract_family: 'Maintenance', contract_sub_family: 'Électricité', equipment_type: 'Tableau Électrique', service_type: 'Vérification Annuelle', 
+    technical_characteristics: 'Type: TGBT 400A, Protection différentielle', 
+    reference_price: 850.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Thermographie infrarouge incluse.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Électricité', equipment_type: 'Groupe Électrogène', service_type: 'Maintenance Semestrielle', 
+    technical_characteristics: 'Puissance: 100kVA, Type: Diesel', 
+    reference_price: 1600.00, unit: 'per_semester', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Test de charge et vidange inclus.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Électricité', equipment_type: 'Onduleur', service_type: 'Maintenance Annuelle', 
+    technical_characteristics: 'Puissance: 10kVA, Type: Online', 
+    reference_price: 950.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Vérification batteries et capacités.', status: 'active' },
+  
+  # Sécurité
+  { contract_family: 'Sécurité', contract_sub_family: 'Vidéosurveillance', equipment_type: 'Système CCTV', service_type: 'Maintenance Trimestrielle', 
+    technical_characteristics: 'Caméras: 20, Enregistreur: 16 voies, Stockage: 30j', 
+    reference_price: 800.00, unit: 'per_quarter', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Nettoyage optiques et vérification enregistrements.', status: 'active' },
+  
+  { contract_family: 'Sécurité', contract_sub_family: 'Contrôle d\'Accès', equipment_type: 'Badges et Lecteurs', service_type: 'Maintenance Semestrielle', 
+    technical_characteristics: 'Lecteurs: 15, Centrale: 1, Utilisateurs: 200', 
+    reference_price: 650.00, unit: 'per_semester', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Mise à jour logicielle incluse.', status: 'active' },
+  
+  { contract_family: 'Sécurité', contract_sub_family: 'Alarme Intrusion', equipment_type: 'Centrale d\'Alarme', service_type: 'Vérification Annuelle', 
+    technical_characteristics: 'Zones: 32, Détecteurs: 40, Transmetteur GSM', 
+    reference_price: 450.00, unit: 'per_year', currency: 'EUR', location: 'Provence-Alpes', city: 'Nice',
+    notes: 'Test complet avec télésurveillance.', status: 'active' },
+  
+  # Assurances
+  { contract_family: 'Assurance', contract_sub_family: 'Assurance Dommages', equipment_type: 'Immeuble de Bureaux', service_type: 'Couverture Annuelle', 
+    technical_characteristics: 'Surface: 5000m², Valeur: 5M€', 
+    reference_price: 12000.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'Tous risques construction - Franchise 5000€.', status: 'active' },
+  
+  { contract_family: 'Assurance', contract_sub_family: 'Responsabilité Civile', equipment_type: 'Copropriété', service_type: 'Couverture Annuelle', 
+    technical_characteristics: 'Lots: 50, Usage: Résidentiel', 
+    reference_price: 3500.00, unit: 'per_year', currency: 'EUR', location: 'Île-de-France', city: 'Paris',
+    notes: 'RC syndic et copropriété.', status: 'active' },
+  
+  # Regional variations
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance CVC', equipment_type: 'Climatisation', service_type: 'Service Annuel', 
+    technical_characteristics: 'Puissance: 10kW, Couverture: 200m², Fréquence: Trimestrielle', 
+    reference_price: 950.00, unit: 'per_year', currency: 'EUR', location: 'Occitanie', city: 'Toulouse',
+    notes: 'Prix adapté au marché régional.', status: 'active' },
+  
+  { contract_family: 'Maintenance', contract_sub_family: 'Maintenance Ascenseurs', equipment_type: 'Ascenseur Passagers', service_type: 'Maintenance Standard', 
+    technical_characteristics: 'Capacité: 6 personnes, Vitesse: 0.63m/s, Arrêts: 4', 
+    reference_price: 2100.00, unit: 'per_year', currency: 'EUR', location: 'Auvergne-Rhône-Alpes', city: 'Lyon',
+    notes: 'Tarif régional Lyon.', status: 'active' },
+  
+  { contract_family: 'Nettoyage', contract_sub_family: 'Nettoyage Bureaux', equipment_type: 'Bureaux Standards', service_type: 'Nettoyage Quotidien', 
+    technical_characteristics: 'Surface: 1000m², Fréquence: 5j/7', 
+    reference_price: 2200.00, unit: 'per_month', currency: 'EUR', location: 'Nouvelle-Aquitaine', city: 'Bordeaux',
+    notes: 'Prix province, produits écologiques.', status: 'active' },
+  
+  { contract_family: 'Contrôle Technique', contract_sub_family: 'Sécurité Incendie', equipment_type: 'Extincteurs', service_type: 'Inspection Annuelle', 
+    technical_characteristics: 'Type: Poudre ABC, Capacité: 6kg, Quantité: jusqu\'à 20 unités', 
+    reference_price: 380.00, unit: 'per_year', currency: 'EUR', location: 'Bretagne', city: 'Rennes',
+    notes: 'Tarif adapté marché breton.', status: 'active' }
+]
+
+price_references_data.each do |pr_data|
+  pr = PriceReference.find_or_initialize_by(
+    contract_family: pr_data[:contract_family],
+    contract_sub_family: pr_data[:contract_sub_family],
+    equipment_type: pr_data[:equipment_type],
+    service_type: pr_data[:service_type],
+    location: pr_data[:location]
+  )
+  pr.assign_attributes(pr_data)
+  
+  if pr.new_record?
+    pr.save!
+    puts "  ✓ Created price reference: #{pr.contract_family} - #{pr.equipment_type} (#{pr.location})"
+  else
+    pr.save!
+  end
+end
+
+puts "\n📊 Total price references created: #{PriceReference.count}"
+puts "   - Contract families: #{PriceReference.distinct.count(:contract_family)}"
+puts "   - Locations: #{PriceReference.where.not(location: nil).distinct.count(:location)}"
 
 puts "\n✅ Seed completed successfully!"
 puts "\n📝 Test Users Created:"

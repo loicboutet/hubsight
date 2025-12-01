@@ -8,7 +8,7 @@ module PortfolioManagerAuthorization
   private
 
   def require_portfolio_manager!
-    unless current_user&.portfolio_manager?
+    unless current_user&.portfolio_manager? || current_user&.admin?
       # Log unauthorized access attempt
       Rails.logger.warn("Unauthorized portfolio manager access attempt by user #{current_user&.id || 'anonymous'} from IP #{request.remote_ip}")
       

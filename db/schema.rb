@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_121602) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_174907) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -426,6 +426,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_121602) do
     t.index ["name"], name: "index_organizations_on_name", unique: true
     t.index ["siret"], name: "index_organizations_on_siret"
     t.index ["status"], name: "index_organizations_on_status"
+  end
+
+  create_table "price_references", force: :cascade do |t|
+    t.string "contract_family", null: false
+    t.string "contract_sub_family"
+    t.string "equipment_type"
+    t.string "service_type"
+    t.text "technical_characteristics"
+    t.decimal "reference_price", precision: 12, scale: 2
+    t.string "unit"
+    t.string "currency", default: "EUR"
+    t.string "location"
+    t.string "city"
+    t.text "notes"
+    t.string "status", default: "active", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contract_family"], name: "index_price_references_on_contract_family"
+    t.index ["equipment_type"], name: "index_price_references_on_equipment_type"
+    t.index ["location"], name: "index_price_references_on_location"
+    t.index ["status"], name: "index_price_references_on_status"
   end
 
   create_table "site_assignments", force: :cascade do |t|

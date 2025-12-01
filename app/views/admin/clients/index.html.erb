@@ -1,130 +1,127 @@
-<div class="px-4 sm:px-6 lg:px-8 py-10">
-  <div class="sm:flex sm:items-center">
-    <div class="sm:flex-auto">
-      <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900">Accès aux Données Clients</h1>
-      <p class="mt-2 text-sm text-gray-700">
+<div style="padding: var(--space-2xl);">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
+    <div>
+      <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Accès aux Données Clients</h1>
+      <p style="color: var(--gray); margin: 0;">
         Liste des organisations clientes. Vous pouvez accéder aux données d'un client pour consultation ou support.
-        <strong class="text-red-600">Toutes vos actions sont enregistrées et auditées.</strong>
+        <strong style="color: #dc2626;">Toutes vos actions sont enregistrées et auditées.</strong>
       </p>
     </div>
   </div>
 
-  <div class="mt-8 flow-root">
-    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-        <table class="min-w-full divide-y divide-gray-300">
-          <thead>
-            <tr>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                Organisation
-              </th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                Statut
-              </th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                Portfolio Managers
-              </th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                Site Managers
-              </th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                Total Utilisateurs
-              </th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                Date de création
-              </th>
-              <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                <span class="sr-only">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <% if @organizations.empty? %>
-              <tr>
-                <td colspan="7" class="px-3 py-10 text-center text-sm text-gray-500">
-                  Aucune organisation trouvée.
-                </td>
-              </tr>
-            <% else %>
-              <% @organizations.each do |organization| %>
-                <tr class="hover:bg-gray-50">
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">
-                    <div class="flex items-center">
-                      <div>
-                        <div class="font-medium text-gray-900"><%= organization.name %></div>
-                        <% if organization.legal_name.present? && organization.legal_name != organization.name %>
-                          <div class="text-gray-500 text-xs"><%= organization.legal_name %></div>
-                        <% end %>
-                        <% if organization.siret.present? %>
-                          <div class="text-gray-400 text-xs">SIRET: <%= organization.siret %></div>
-                        <% end %>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm">
-                    <% if organization.active? %>
-                      <span class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                        Actif
-                      </span>
-                    <% else %>
-                      <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-                        Inactif
-                      </span>
-                    <% end %>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <%= @organization_stats[organization.id][:portfolio_managers] %>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <%= @organization_stats[organization.id][:site_managers] %>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <%= @organization_stats[organization.id][:total_users] %>
-                  </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <%= l(organization.created_at, format: :short) %>
-                  </td>
-                  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                    <div class="flex justify-end gap-2">
-                      <%= link_to admin_organization_path(organization), 
-                          class: "text-indigo-600 hover:text-indigo-900" do %>
-                        Voir
-                      <% end %>
-                      <%= button_to "Accéder aux données", 
-                          impersonate_admin_client_path(organization), 
-                          method: :post,
-                          data: { 
-                            turbo_confirm: "Êtes-vous sûr de vouloir accéder aux données de #{organization.name}? Cette action sera enregistrée dans les logs d'audit." 
-                          },
-                          class: "inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600" %>
-                    </div>
-                  </td>
-                </tr>
-              <% end %>
+  <% if @organizations.any? %>
+  <div style="background: var(--white); border-radius: var(--space-md); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead style="background-color: var(--pink-pale);">
+        <tr>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Organisation</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Statut</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Portfolio Managers</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Site Managers</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Total Utilisateurs</th>
+          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Date de création</th>
+          <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray);">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @organizations.each do |organization| %>
+        <tr style="border-bottom: 1px solid var(--light-gray);">
+          <td style="padding: var(--space-md);">
+            <div style="font-weight: 500;"><%= organization.name %></div>
+            <% if organization.legal_name.present? && organization.legal_name != organization.name %>
+              <div style="font-size: 0.875rem; color: var(--gray);"><%= organization.legal_name %></div>
             <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
+            <% if organization.siret.present? %>
+              <div style="font-size: 0.75rem; color: var(--gray);">SIRET: <%= organization.siret %></div>
+            <% end %>
+          </td>
+          <td style="padding: var(--space-md);">
+            <% if organization.active? %>
+              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Actif
+              </span>
+            <% else %>
+              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #f5f5f5; color: #666; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Inactif
+              </span>
+            <% end %>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="color: var(--gray);"><%= @organization_stats[organization.id][:portfolio_managers] %></div>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="color: var(--gray);"><%= @organization_stats[organization.id][:site_managers] %></div>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="color: var(--gray);"><%= @organization_stats[organization.id][:total_users] %></div>
+          </td>
+          <td style="padding: var(--space-md);">
+            <div style="font-size: 0.875rem; color: var(--gray);">
+              <%= organization.created_at.strftime('%d/%m/%Y') %>
+            </div>
+          </td>
+          <td style="padding: var(--space-md); text-align: center;">
+            <div style="display: inline-flex; gap: var(--space-sm);">
+              <a href="<%= admin_organization_path(organization) %>" style="padding: 6px 12px; background-color: var(--blue-pale); color: var(--blue-primary); border-radius: var(--space-sm); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 4px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Voir
+              </a>
+              <%= button_to "Accéder aux données", 
+                  impersonate_admin_client_path(organization), 
+                  method: :post,
+                  data: { 
+                    turbo_confirm: "Êtes-vous sûr de vouloir accéder aux données de #{organization.name}? Cette action sera enregistrée dans les logs d'audit." 
+                  },
+                  style: "display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background-color: #dc2626; color: white; border: none; border-radius: var(--space-sm); font-size: 0.875rem; cursor: pointer; font-family: inherit;" %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 
-  <div class="mt-8 rounded-md bg-yellow-50 p-4">
-    <div class="flex">
-      <div class="flex-shrink-0">
-        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+  <!-- Pagination -->
+  <% if @organizations.total_pages > 1 %>
+    <div style="margin-top: var(--space-lg); display: flex; justify-content: center;">
+      <%= paginate @organizations, theme: 'twitter-bootstrap-4' %>
+    </div>
+  <% end %>
+
+  <% else %>
+  <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-2xl); text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); color: var(--gray);">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
+    <h3 class="typo-h4" style="margin-bottom: var(--space-sm); color: var(--dark-gray);">Aucune Organisation Trouvée</h3>
+    <p style="color: var(--gray); margin: 0;">Aucune organisation cliente n'est actuellement enregistrée dans le système.</p>
+  </div>
+  <% end %>
+
+  <div style="margin-top: var(--space-2xl); padding: var(--space-lg); background-color: #fffbeb; border-radius: var(--space-md); border-left: 4px solid #f59e0b;">
+    <div style="display: flex; gap: var(--space-md);">
+      <div style="flex-shrink: 0;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #f59e0b;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       </div>
-      <div class="ml-3">
-        <h3 class="text-sm font-medium text-yellow-800">Attention - Accès aux données client</h3>
-        <div class="mt-2 text-sm text-yellow-700">
-          <ul class="list-disc pl-5 space-y-1">
-            <li>L'accès aux données client doit être justifié par un besoin légitime (support, maintenance, assistance)</li>
-            <li>Toutes vos actions sont enregistrées avec horodatage et adresse IP</li>
-            <li>Les sessions d'accès expirent automatiquement après 2 heures</li>
-            <li>N'accédez aux données que si vous êtes autorisé contractuellement</li>
-          </ul>
-        </div>
+      <div>
+        <h3 style="font-weight: 600; color: #92400e; margin: 0 0 var(--space-sm) 0;">Attention - Accès aux données client</h3>
+        <ul style="margin: 0; padding-left: var(--space-lg); color: #92400e; font-size: 0.875rem; line-height: 1.6;">
+          <li>L'accès aux données client doit être justifié par un besoin légitime (support, maintenance, assistance)</li>
+          <li>Toutes vos actions sont enregistrées avec horodatage et adresse IP</li>
+          <li>Les sessions d'accès expirent automatiquement après 2 heures</li>
+          <li>N'accédez aux données que si vous êtes autorisé contractuellement</li>
+        </ul>
       </div>
     </div>
   </div>
