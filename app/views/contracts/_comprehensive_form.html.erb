@@ -557,11 +557,19 @@
           <%= f.date_field :price_revision_date, value: contract.price_revision_date, style: "width: 100%;" %>
         </div>
 
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+        <!-- Auto-calculated field: Last Amount Update -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
             Dernière MAJ du Montant
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
           </label>
-          <%= f.date_field :last_amount_update, value: contract.last_amount_update, style: "width: 100%;" %>
+          <%= f.date_field :last_amount_update, 
+            value: contract.last_amount_update, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Mise à jour automatiquement lors de la modification des montants
+          </p>
         </div>
 
         <div>
@@ -628,6 +636,21 @@
             { style: "width: 100%;" } %>
         </div>
 
+        <!-- Auto-calculated field: Contract End Date -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Date d'Expiration du Contrat
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
+          </label>
+          <%= f.date_field :end_date, 
+            value: contract.end_date || contract.calculate_end_date, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculée automatiquement : Date de début + Durée initiale + (N reconductions × Durée reconduction)
+          </p>
+        </div>
+
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Préavis de Résiliation (jours)
@@ -635,18 +658,34 @@
           <%= f.number_field :notice_period_days, value: contract.notice_period_days, placeholder: "Ex: 30, 60, 90", min: 0, style: "width: 100%;" %>
         </div>
 
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Prochaine Échéance
+        <!-- Auto-calculated field: Termination Deadline -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
+            Prochaine Échéance (Délai de Résiliation)
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
           </label>
-          <%= f.date_field :next_deadline_date, value: contract.next_deadline_date, style: "width: 100%;" %>
+          <%= f.date_field :next_deadline_date, 
+            value: contract.next_deadline_date || contract.calculate_termination_deadline, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculée automatiquement : Date d'expiration - Préavis de résiliation
+          </p>
         </div>
 
-        <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+        <!-- Auto-calculated field: Last Renewal Date -->
+        <div style="position: relative;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm); display: flex; align-items: center; gap: var(--space-sm);">
             Date du Dernier Renouvellement
+            <span style="font-size: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600;">AUTO</span>
           </label>
-          <%= f.date_field :last_renewal_date, value: contract.last_renewal_date, style: "width: 100%;" %>
+          <%= f.date_field :last_renewal_date, 
+            value: contract.last_renewal_date || contract.calculate_last_renewal_date, 
+            disabled: true,
+            style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
+          <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
+            📊 Calculée automatiquement : Date de début + Durée initiale + (N-1) reconductions
+          </p>
         </div>
 
         <div>

@@ -22,6 +22,8 @@ class Contract < ApplicationRecord
   validate :pdf_document_validation, if: -> { pdf_document.attached? }
 
   # Callbacks
+  before_save :calculate_contract_dates
+  before_save :track_amount_updates
   after_commit :trigger_ocr_extraction, on: [:create, :update], if: :should_trigger_ocr?
   after_commit :trigger_llm_extraction, on: [:update], if: :should_trigger_llm?
 
@@ -263,8 +265,81 @@ class Contract < ApplicationRecord
   def field_corrected?(field_name)
     corrected_fields&.key?(field_name.to_s)
   end
+  
+  # Contract Date Calculation Methods
+  
+  # Calculate the contract end date based on start date, initial duration, and renewals
+  def calculate_end_date
+    return nil unless execution_start_date && initial_duration_months
+    
+    total_months = initial_duration_months.to_i
+    
+    # Add renewal periods if any
+    if renewal_count.to_i > 0 && renewal_duration_months.to_i > 0
+      total_months += (renewal_count.to_i * renewal_duration_months.to_i)
+    end
+    
+    execution_start_date + total_months.months
+  end
+  
+  # Calculate the last renewal date (when the last renewal period started)
+  def calculate_last_renewal_date
+    return nil unless execution_start_date && initial_duration_months
+    return nil if renewal_count.to_i == 0 || renewal_duration_months.to_i == 0
+    
+    months_until_last_renewal = initial_duration_months.to_i + 
+                                 ((renewal_count.to_i - 1) * renewal_duration_months.to_i)
+    
+    execution_start_date + months_until_last_renewal.months
+  end
+  
+  # Calculate the termination notice deadline
+  def calculate_termination_deadline
+    calculated_end_date = calculate_end_date
+    return nil unless calculated_end_date && notice_period_days.to_i > 0
+    
+    calculated_end_date - notice_period_days.to_i.days
+  end
+  
+  # Update all calculated date fields
+  def update_calculated_dates
+    self.end_date = calculate_end_date
+    self.last_renewal_date = calculate_last_renewal_date
+    self.next_deadline_date = calculate_termination_deadline
+  end
+  
+  # Check if date calculation inputs have changed
+  def date_calculation_inputs_changed?
+    execution_start_date_changed? ||
+    initial_duration_months_changed? ||
+    renewal_duration_months_changed? ||
+    renewal_count_changed? ||
+    notice_period_days_changed?
+  end
+  
+  # Check if amount fields have changed
+  def amount_fields_changed?
+    annual_amount_ht_changed? || 
+    annual_amount_ttc_changed? ||
+    monthly_amount_changed?
+  end
 
   private
+  
+  # Callback to automatically calculate contract dates before saving
+  def calculate_contract_dates
+    # Only recalculate if relevant fields have changed or if dates are nil
+    if date_calculation_inputs_changed? || end_date.nil? || last_renewal_date.nil? || next_deadline_date.nil?
+      update_calculated_dates
+    end
+  end
+  
+  # Callback to track when amounts are updated
+  def track_amount_updates
+    if amount_fields_changed?
+      self.last_amount_update = Date.current
+    end
+  end
 
   # Determine if OCR extraction should be triggered
   def should_trigger_ocr?
