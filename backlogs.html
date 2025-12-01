@@ -611,13 +611,13 @@ NOTE: Equipment types are reference data (OmniClass Table 23 classifications) sh
                     <td class="test-col"><span class="empty-cell">-</span></td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
-                <tr>
+                <tr class="implemented">
                     <td class="sl-col">44</td>
                     <td class="brick-col">Brick 1</td>
-                    <td class="title-col">PM - Portfolio Overview Dashboard</td>
-                    <td class="description-col">Dashboard displaying portfolio overview: total sites, buildings, equipment, contracts, total contract value, key metrics</td>
-                    <td class="url-col"><span class="empty-cell">-</span></td>
-                    <td class="test-col"><span class="empty-cell">-</span></td>
+                    <td class="title-col">PM - Portfolio Overview Dashboard<span class="status-badge status-done">✓ DONE</span></td>
+                    <td class="description-col">Dashboard displaying portfolio overview: total sites, buildings, equipment, contracts, total contract value, key metrics based on backlogs.html</td>
+                    <td class="url-col"><a href="/dashboard">/dashboard</a></td>
+                    <td class="test-col">Login as portfolio manager (portfolio@hubsight.com / Password123!). Navigate to /dashboard. VERIFY 7 KPI CARDS with real database data: 1) Sites Total (13 for Org 1, 12 for Org 2), 2) Bâtiments Total with average per site calculation, 3) Contrats Actifs with coverage percentage, 4) Prestataires showing unique provider count, avg contracts per provider, top provider name and count, 5) Budget Annuel Total showing sum of all contracts, 6) Économies Potentielles (locked state - Brick 2), 7) Alertes Actives (Brick 2 coming soon message). VERIFY KEY INDICATORS SECTION: Contrats par Statut (4 statuses with real counts/percentages), Renouvellements à Venir (30/60/90 days with real counts), Dépenses par Catégorie (total + top 3 families). VERIFY CHARTS: Family Distribution (shows all families with percentages, counts, amounts from database), Top 10 Contracts table (real data with contract numbers, titles, providers, amounts, sites, deadlines), Recent Contracts table (5 most recent with real data, status badges). TEST ORGANIZATION ISOLATION: Logout, login as portfolio2@hubsight.com - verify sees completely different data (12 sites vs 13, different contracts, different providers). Verify no data leakage. TEST MULTI-TENANCY: All queries scoped to current_user.organization_id. Buildings count real from database. Providers statistics calculated from actual contract data. Top contracts sorted by annual_amount DESC. Recent contracts sorted by created_at DESC. Verify sidebar alerts replaced with Brick 2 feature message (🔔 icon, "Fonctionnalité à venir", "Les alertes seront disponibles dans Brique 2"). Verify all amounts display without "HT Contrat initial + HT Avenant 1 + HT Avenant 2" text (simplified format). Verify responsive design works on mobile (tables adapt, grid changes to single column).</td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr class="implemented">

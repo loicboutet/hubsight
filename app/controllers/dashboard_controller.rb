@@ -44,8 +44,33 @@ class DashboardController < ApplicationController
     # Sites count
     @sites_count = Site.where(organization_id: org_id).count
     
+    # Buildings count
+    @buildings_count = Building.where(organization_id: org_id).count
+    
     # Equipment count
     @equipment_count = Equipment.where(organization_id: org_id).count
+    
+    # Service providers (unique contractor organizations)
+    @providers_count = contracts.where.not(contractor_organization_name: nil)
+      .distinct
+      .count('contractor_organization_name')
+    
+    # Provider statistics
+    if @providers_count > 0
+      @avg_contracts_per_provider = (@total_contracts.to_f / @providers_count).round(1)
+      
+      # Find top provider by contract count
+      top_provider_data = contracts.where.not(contractor_organization_name: nil)
+        .group('contractor_organization_name')
+        .select('contractor_organization_name, COUNT(*) as contract_count')
+        .order('contract_count DESC')
+        .first
+      
+      if top_provider_data
+        @top_provider_name = top_provider_data.contractor_organization_name
+        @top_provider_count = top_provider_data.contract_count
+      end
+    end
     
     # Recent contracts
     @recent_contracts = contracts.order(created_at: :desc).limit(5)
