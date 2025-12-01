@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_115753) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_121602) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -67,6 +67,34 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_115753) do
     t.index ["organization_id"], name: "index_admin_access_logs_on_organization_id"
   end
 
+  create_table "agencies", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.string "name", null: false
+    t.string "code"
+    t.string "agency_type"
+    t.string "address"
+    t.string "city"
+    t.string "postal_code"
+    t.string "region"
+    t.string "phone"
+    t.string "email"
+    t.text "service_area"
+    t.text "certifications"
+    t.text "specialties"
+    t.string "manager_name"
+    t.string "manager_contact"
+    t.string "operating_hours"
+    t.string "status", default: "active", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city"], name: "index_agencies_on_city"
+    t.index ["organization_id", "code"], name: "index_agencies_on_organization_id_and_code", unique: true
+    t.index ["organization_id", "name"], name: "index_agencies_on_organization_id_and_name"
+    t.index ["organization_id"], name: "index_agencies_on_organization_id"
+    t.index ["status"], name: "index_agencies_on_status"
+  end
+
   create_table "buildings", force: :cascade do |t|
     t.string "name", null: false
     t.string "code"
@@ -103,6 +131,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_115753) do
     t.index ["site_id"], name: "index_buildings_on_site_id"
     t.index ["status"], name: "index_buildings_on_status"
     t.index ["user_id"], name: "index_buildings_on_user_id"
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "position"
+    t.string "department"
+    t.string "phone"
+    t.string "mobile"
+    t.string "email"
+    t.text "availability"
+    t.string "languages"
+    t.text "notes"
+    t.string "status", default: "active", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id", "email"], name: "index_contacts_on_organization_id_and_email", unique: true
+    t.index ["organization_id", "last_name"], name: "index_contacts_on_organization_id_and_last_name"
+    t.index ["organization_id"], name: "index_contacts_on_organization_id"
+    t.index ["status"], name: "index_contacts_on_status"
   end
 
   create_table "contract_families", force: :cascade do |t|
@@ -517,9 +566,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_115753) do
   add_foreign_key "active_sessions", "users"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "agencies", "organizations"
   add_foreign_key "buildings", "organizations"
   add_foreign_key "buildings", "sites"
   add_foreign_key "buildings", "users"
+  add_foreign_key "contacts", "organizations"
   add_foreign_key "equipment", "buildings"
   add_foreign_key "equipment", "equipment_types"
   add_foreign_key "equipment", "levels"

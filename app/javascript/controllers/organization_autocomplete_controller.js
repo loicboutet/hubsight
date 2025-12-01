@@ -1,25 +1,12 @@
-// Items 22-23: Organization Autocomplete with Fuzzy Matching
+// Tasks 38-39: Organization Autocomplete with Real API
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "hiddenField", "suggestions", "similarNames", "similarList", "aliases"]
+  static targets = ["input", "hiddenField", "suggestions", "detailsPanel", "contactSelect"]
   
   connect() {
     console.log("Organization autocomplete controller connected")
-    
-    // Sample organizations data - in production this would come from an API
-    this.organizations = [
-      { id: 1, name: "ENGIE Solutions", aliases: ["ENGIE SA", "ENGIE Services", "Groupe ENGIE"], former_names: ["GDF Suez"] },
-      { id: 2, name: "ENGIE SA", aliases: ["ENGIE Solutions", "ENGIE Services"], former_names: [] },
-      { id: 3, name: "Bouygues Energies & Services", aliases: ["Bouygues E&S"], former_names: ["ETDE"] },
-      { id: 4, name: "Veolia", aliases: ["Veolia Environnement"], former_names: ["Vivendi Environnement"] },
-      { id: 5, name: "Sodexo", aliases: ["Sodexo Facilities Management"], former_names: [] },
-      { id: 6, name: "SPIE Facilities", aliases: ["SPIE", "SPIE Batignolles"], former_names: [] },
-      { id: 7, name: "Elior Services", aliases: ["Elior Group"], former_names: [] },
-      { id: 8, name: "Dalkia", aliases: ["Dalkia France"], former_names: [] },
-      { id: 9, name: "Cofely", aliases: ["Cofely Services"], former_names: [] },
-      { id: 10, name: "Eiffage Energie Systèmes", aliases: ["Eiffage Energie", "Clemessy"], former_names: [] }
-    ]
+    this.debounceTimer = null
   }
 
   search(event) {
@@ -27,90 +14,52 @@ export default class extends Controller {
     
     if (query.length < 2) {
       this.hideSuggestions()
-      this.hideSimilarNames()
+      this.hideDetailsPanel()
       return
     }
 
-    // Perform fuzzy matching
-    const matches = this.fuzzySearch(query)
-    
-    if (matches.exact.length > 0) {
-      this.showSuggestions(matches.exact)
-      this.hideSimilarNames()
-    } else if (matches.similar.length > 0) {
-      this.showSuggestions(matches.similar.slice(0, 5))
-      this.showSimilarNames(matches.similar.slice(0, 3))
-    } else {
-      this.showNoResults()
-    }
+    // Debounce API calls (300ms delay)
+    clearTimeout(this.debounceTimer)
+    this.debounceTimer = setTimeout(() => {
+      this.performSearch(query)
+    }, 300)
   }
 
-  fuzzySearch(query) {
-    const lowerQuery = query.toLowerCase()
-    const exact = []
-    const similar = []
-
-    this.organizations.forEach(org => {
-      const lowerName = org.name.toLowerCase()
+  async performSearch(query) {
+    try {
+      this.showLoading()
       
-      // Exact match or starts with
-      if (lowerName.includes(lowerQuery)) {
-        exact.push(org)
-      } 
-      // Check aliases
-      else if (org.aliases.some(alias => alias.toLowerCase().includes(lowerQuery))) {
-        similar.push({ ...org, matchedAlias: org.aliases.find(a => a.toLowerCase().includes(lowerQuery)) })
+      const response = await fetch(`/api/organizations/autocomplete?query=${encodeURIComponent(query)}`)
+      
+      if (!response.ok) {
+        throw new Error('API request failed')
       }
-      // Check former names
-      else if (org.former_names.some(fn => fn.toLowerCase().includes(lowerQuery))) {
-        similar.push({ ...org, matchedFormerName: org.former_names.find(fn => fn.toLowerCase().includes(lowerQuery)) })
+      
+      const data = await response.json()
+      
+      if (data.organizations && data.organizations.length > 0) {
+        this.showSuggestions(data.organizations)
+      } else {
+        this.showNoResults()
       }
-      // Fuzzy matching based on similarity
-      else if (this.calculateSimilarity(lowerName, lowerQuery) > 0.6) {
-        similar.push(org)
-      }
-    })
-
-    return { exact, similar }
+    } catch (error) {
+      console.error('Organization search error:', error)
+      this.showError()
+    }
   }
 
-  calculateSimilarity(str1, str2) {
-    // Simple Levenshtein distance-based similarity
-    const longer = str1.length > str2.length ? str1 : str2
-    const shorter = str1.length > str2.length ? str2 : str1
+  showLoading() {
+    if (!this.hasSuggestionsTarget) return
     
-    if (longer.length === 0) return 1.0
-    
-    const editDistance = this.levenshteinDistance(longer, shorter)
-    return (longer.length - editDistance) / longer.length
-  }
-
-  levenshteinDistance(str1, str2) {
-    const matrix = []
-
-    for (let i = 0; i <= str2.length; i++) {
-      matrix[i] = [i]
-    }
-
-    for (let j = 0; j <= str1.length; j++) {
-      matrix[0][j] = j
-    }
-
-    for (let i = 1; i <= str2.length; i++) {
-      for (let j = 1; j <= str1.length; j++) {
-        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
-          matrix[i][j] = matrix[i - 1][j - 1]
-        } else {
-          matrix[i][j] = Math.min(
-            matrix[i - 1][j - 1] + 1,
-            matrix[i][j - 1] + 1,
-            matrix[i - 1][j] + 1
-          )
-        }
-      }
-    }
-
-    return matrix[str2.length][str1.length]
+    this.suggestionsTarget.innerHTML = `
+      <div style="padding: 16px; text-align: center; color: #6c757d;">
+        <div class="spinner-border spinner-border-sm" role="status" style="margin-right: 8px;">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        Recherche en cours...
+      </div>
+    `
+    this.suggestionsTarget.style.display = "block"
   }
 
   showSuggestions(organizations) {
@@ -125,20 +74,15 @@ export default class extends Controller {
       item.onmouseenter = () => item.style.backgroundColor = "#f8f9fa"
       item.onmouseleave = () => item.style.backgroundColor = "white"
       
-      let displayName = org.name
-      let subtitle = ""
-      
-      if (org.matchedAlias) {
-        subtitle = `<span style="color: #6c757d; font-size: 0.875rem; display: block; margin-top: 2px;">Aussi connu sous: ${org.matchedAlias}</span>`
-      } else if (org.matchedFormerName) {
-        subtitle = `<span style="color: #6c757d; font-size: 0.875rem; display: block; margin-top: 2px;">Ancien nom: ${org.matchedFormerName}</span>`
-      } else if (org.aliases && org.aliases.length > 0) {
-        subtitle = `<span style="color: #6c757d; font-size: 0.875rem; display: block; margin-top: 2px;">Aliases: ${org.aliases.join(", ")}</span>`
-      }
+      const legalName = org.legal_name ? `<span style="color: #6c757d; font-size: 0.875rem; display: block; margin-top: 2px;">${org.legal_name}</span>` : ''
+      const typeLabel = org.type_label ? `<span style="display: inline-block; background: #667eea; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-top: 4px;">${org.type_label}</span>` : ''
+      const specialties = org.specialties ? `<span style="color: #6c757d; font-size: 0.875rem; display: block; margin-top: 2px;">🔧 ${org.specialties}</span>` : ''
       
       item.innerHTML = `
-        <div style="font-weight: 500;">${displayName}</div>
-        ${subtitle}
+        <div style="font-weight: 500;">${org.name}</div>
+        ${legalName}
+        ${specialties}
+        ${typeLabel}
       `
       
       item.addEventListener("click", () => this.select(org))
@@ -203,14 +147,79 @@ export default class extends Controller {
     this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }))
   }
 
+  showError() {
+    if (!this.hasSuggestionsTarget) return
+
+    this.suggestionsTarget.innerHTML = `
+      <div style="padding: 16px; text-align: center; color: #dc3545;">
+        <p style="margin: 0;">❌ Erreur lors de la recherche</p>
+        <p style="margin: 8px 0 0; font-size: 0.875rem;">Veuillez réessayer</p>
+      </div>
+    `
+    this.suggestionsTarget.style.display = "block"
+  }
+
   hideSuggestions() {
     if (this.hasSuggestionsTarget) {
       this.suggestionsTarget.style.display = "none"
     }
   }
+  
+  hideDetailsPanel() {
+    if (this.hasDetailsPanelTarget) {
+      this.detailsPanelTarget.style.display = "none"
+    }
+  }
+  
+  showDetailsPanel(organization) {
+    if (!this.hasDetailsPanelTarget) return
+    
+    // Build details panel HTML
+    let contactsHTML = ''
+    if (organization.contacts && organization.contacts.length > 0) {
+      contactsHTML = `
+        <div style="margin-top: 12px;">
+          <strong>Contacts:</strong>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            ${organization.contacts.map(c => `
+              <li>${c.display_name}${c.phone ? ` - ${c.phone}` : ''}</li>
+            `).join('')}
+          </ul>
+        </div>
+      `
+    }
+    
+    let agenciesHTML = ''
+    if (organization.agencies && organization.agencies.length > 0) {
+      agenciesHTML = `
+        <div style="margin-top: 12px;">
+          <strong>Agences:</strong>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            ${organization.agencies.map(a => `
+              <li>${a.name}${a.city ? ` (${a.city})` : ''}</li>
+            `).join('')}
+          </ul>
+        </div>
+      `
+    }
+    
+    this.detailsPanelTarget.innerHTML = `
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px; border-radius: 8px; margin-top: 12px;">
+        <h4 style="margin: 0 0 12px 0;">${organization.name}</h4>
+        ${organization.legal_name ? `<p style="margin: 4px 0;"><strong>Raison sociale:</strong> ${organization.legal_name}</p>` : ''}
+        ${organization.formatted_siret ? `<p style="margin: 4px 0;"><strong>SIRET:</strong> ${organization.formatted_siret}</p>` : ''}
+        ${organization.phone ? `<p style="margin: 4px 0;"><strong>Téléphone:</strong> ${organization.phone}</p>` : ''}
+        ${organization.email ? `<p style="margin: 4px 0;"><strong>Email:</strong> ${organization.email}</p>` : ''}
+        ${organization.specialties ? `<p style="margin: 4px 0;"><strong>Spécialités:</strong> ${organization.specialties}</p>` : ''}
+        ${contactsHTML}
+        ${agenciesHTML}
+      </div>
+    `
+    this.detailsPanelTarget.style.display = "block"
+  }
 
   // Close suggestions when clicking outside
   disconnect() {
-    document.removeEventListener("click", this.handleClickOutside)
+    clearTimeout(this.debounceTimer)
   }
 }

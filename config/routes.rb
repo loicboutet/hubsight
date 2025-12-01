@@ -119,14 +119,23 @@ Rails.application.routes.draw do
   # Organizations Management
   resources :organizations do
     # Contacts nested under organizations
-    resources :contacts, only: [:index, :new, :create]
+    resources :contacts, only: [:new, :create]
+    # Agencies nested under organizations
+    resources :agencies, only: [:new, :create]
     collection do
       get :search
     end
   end
   
-  # Contacts Management (standalone index + nested actions)
+  # Contacts Management (full CRUD with standalone routes)
   resources :contacts do
+    collection do
+      get :search
+    end
+  end
+  
+  # Agencies Management (full CRUD with standalone routes)
+  resources :agencies do
     collection do
       get :search
     end
@@ -286,6 +295,9 @@ Rails.application.routes.draw do
     
     # Contract Families autocomplete/search
     get 'contract_families/autocomplete', to: 'contract_families#autocomplete'
+    
+    # Organizations autocomplete/search (Task 38)
+    get 'organizations/autocomplete', to: 'organizations#autocomplete'
     
     # Autocomplete endpoints
     namespace :autocomplete do

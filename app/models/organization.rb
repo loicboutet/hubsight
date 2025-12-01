@@ -6,6 +6,8 @@ class Organization < ApplicationRecord
   has_many :levels, dependent: :restrict_with_error
   has_many :spaces, dependent: :restrict_with_error
   has_many :equipment, dependent: :restrict_with_error
+  has_many :contacts, dependent: :destroy
+  has_many :agencies, dependent: :destroy
 
   # Constants
   ORGANIZATION_TYPES = [

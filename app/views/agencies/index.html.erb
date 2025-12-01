@@ -1,54 +1,54 @@
-<% content_for :header, "Contacts" %>
+<% content_for :header, "Agences" %>
 
 <div style="max-width: 1400px; margin: 0 auto; padding: 24px;">
   <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
       <h1 style="font-size: 24px; font-weight: 600; color: #111827; margin: 0;">
-        Contacts
+        Agences
       </h1>
-      <%= link_to "Nouveau Contact", new_contact_path, class: "btn btn-primary" %>
+      <%= link_to "Nouvelle Agence", new_agency_path, class: "btn btn-primary" %>
     </div>
 
     <!-- Search Form -->
-    <%= form_with url: contacts_path, method: :get, style: "margin-bottom: 24px;" do |f| %>
+    <%= form_with url: agencies_path, method: :get, style: "margin-bottom: 24px;" do |f| %>
       <div style="display: flex; gap: 12px;">
-        <%= f.text_field :search, value: params[:search], placeholder: "Rechercher un contact...", style: "flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px;" %>
+        <%= f.text_field :search, value: params[:search], placeholder: "Rechercher une agence...", style: "flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px;" %>
         <%= f.submit "Rechercher", style: "background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;" %>
       </div>
     <% end %>
 
-    <% if @contacts.any? %>
+    <% if @agencies.any? %>
       <div class="table-responsive">
         <table class="table">
           <thead>
             <tr>
               <th>Nom</th>
               <th>Organisation</th>
-              <th>Poste</th>
+              <th>Type</th>
+              <th>Ville</th>
               <th>Téléphone</th>
-              <th>Email</th>
               <th>Statut</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <% @contacts.each do |contact| %>
+            <% @agencies.each do |agency| %>
               <tr>
-                <td><%= link_to contact.full_name, contact %></td>
-                <td><%= link_to contact.organization.name, contact.organization if contact.organization %></td>
-                <td><%= contact.position %></td>
-                <td><%= contact.phone %></td>
-                <td><%= contact.email %></td>
+                <td><%= link_to agency.display_name, agency %></td>
+                <td><%= link_to agency.organization.name, agency.organization if agency.organization %></td>
+                <td><%= agency.type_label %></td>
+                <td><%= agency.city %></td>
+                <td><%= agency.phone %></td>
                 <td>
-                  <% if contact.active? %>
+                  <% if agency.active? %>
                     <span class="badge bg-success">Actif</span>
                   <% else %>
                     <span class="badge bg-secondary">Inactif</span>
                   <% end %>
                 </td>
                 <td>
-                  <%= link_to "Voir", contact, class: "btn btn-sm btn-outline-primary" %>
-                  <%= link_to "Modifier", edit_contact_path(contact), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= link_to "Voir", agency, class: "btn btn-sm btn-outline-primary" %>
+                  <%= link_to "Modifier", edit_agency_path(agency), class: "btn btn-sm btn-outline-secondary" %>
                 </td>
               </tr>
             <% end %>
@@ -57,7 +57,7 @@
       </div>
     <% else %>
       <div style="text-align: center; padding: 48px; color: #6b7280;">
-        <p>Aucun contact trouvé.</p>
+        <p>Aucune agence trouvée.</p>
       </div>
     <% end %>
   </div>
