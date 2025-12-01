@@ -1658,13 +1658,756 @@ if site_org1
 end
 
 
-puts "\n📊 Hierarchy Summary:"
+puts "\n📊 Hierarchy Summary (Initial):"
 puts "   - Buildings: #{Building.count}"
 puts "   - Levels: #{Level.count}"
 puts "   - Spaces: #{Space.count}"
 puts "   - Equipment: #{Equipment.count}"
-puts "     • Organization 1: #{Equipment.where(organization_id: org1.id).count}"
-puts "     • Organization 2: #{Equipment.where(organization_id: org2.id).count}"
+
+# ============================================================================
+# ADDITIONAL EQUIPMENT FOR SITE MANAGER'S ASSIGNED SITES
+# ============================================================================
+
+puts "\n🔧 Creating additional equipment for Site Manager 1's assigned sites..."
+
+# Get the first 5 sites for Site Manager 1 (already assigned in site assignments section)
+sm1_sites = Site.where(organization_id: org1.id).order(:name).limit(5).to_a
+
+# SITE 2: Campus La Défense
+if sm1_sites.length > 1
+  site2 = sm1_sites[1]
+  puts "\n  Building hierarchy for: #{site2.name}"
+  
+  # Building
+  building2_1 = Building.find_or_initialize_by(site: site2, code: "CLD-A")
+  building2_1.assign_attributes(
+    name: "Tour Nord",
+    organization_id: org1.id,
+    user_id: pm1.id,
+    construction_year: 2018,
+    area: 8500,
+    number_of_levels: 10,
+    status: 'active',
+    created_by_name: pm1.full_name
+  )
+  building2_1.save! if building2_1.changed?
+  puts "    ✓ Building: #{building2_1.name}"
+  
+  # Level 0
+  level2_1 = Level.find_or_initialize_by(building: building2_1, level_number: 0)
+  level2_1.assign_attributes(
+    name: "Rez-de-chaussée",
+    organization_id: org1.id,
+    area: 850,
+    created_by_name: pm1.full_name
+  )
+  level2_1.save! if level2_1.changed?
+  
+  # Lobby Space
+  space2_1 = Space.find_or_initialize_by(level: level2_1, name: "Hall d'accueil")
+  space2_1.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Accueil",
+    area: 120,
+    created_by_name: pm1.full_name
+  )
+  space2_1.save! if space2_1.changed?
+  
+  # Equipment 1: Access Control System
+  eq2_1 = Equipment.find_or_initialize_by(space: space2_1, name: "Système contrôle d'accès Honeywell")
+  access_control_type = EquipmentType.find_by(code: 'SEC-008')
+  eq2_1.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_1.id,
+    equipment_type_id: access_control_type&.id,
+    manufacturer: "Honeywell", model: "Pro-Watch", serial_number: "HW-CLD-001",
+    commissioning_date: Date.new(2023, 6, 1),
+    warranty_end_date: Date.new(2026, 6, 1),
+    next_maintenance_date: Date.new(2025, 4, 15),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq2_1.save! if eq2_1.changed?
+  puts "      ✓ Equipment: #{eq2_1.name}"
+  
+  # Equipment 2: CCTV System
+  eq2_2 = Equipment.find_or_initialize_by(space: space2_1, name: "Système vidéosurveillance Hikvision")
+  eq2_2.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_1.id,
+    manufacturer: "Hikvision", model: "DS-7732NI-K4", serial_number: "HK-CLD-001",
+    commissioning_date: Date.new(2023, 6, 1),
+    warranty_end_date: Date.new(2026, 6, 1),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq2_2.save! if eq2_2.changed?
+  puts "      ✓ Equipment: #{eq2_2.name}"
+  
+  # Technical Room Space
+  space2_2 = Space.find_or_initialize_by(level: level2_1, name: "Local technique principal")
+  space2_2.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Local technique",
+    area: 45,
+    created_by_name: pm1.full_name
+  )
+  space2_2.save! if space2_2.changed?
+  
+  # Equipment 3: Main Electrical Panel
+  eq2_3 = Equipment.find_or_initialize_by(space: space2_2, name: "Tableau électrique général TGBT")
+  electrical_panel_type = EquipmentType.find_by(code: 'ELE-001')
+  eq2_3.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_1.id,
+    equipment_type_id: electrical_panel_type&.id,
+    manufacturer: "Schneider Electric", model: "Prisma Plus", serial_number: "SE-CLD-TGBT",
+    nominal_power: 630, nominal_voltage: 400,
+    commissioning_date: Date.new(2018, 3, 1),
+    next_maintenance_date: Date.new(2025, 3, 1),
+    status: "active", criticality: "critical",
+    created_by_name: pm1.full_name
+  )
+  eq2_3.save! if eq2_3.changed?
+  puts "      ✓ Equipment: #{eq2_3.name}"
+  
+  # Equipment 4: UPS System
+  eq2_4 = Equipment.find_or_initialize_by(space: space2_2, name: "Onduleur APC Smart-UPS")
+  ups_type = EquipmentType.find_by(code: 'ELE-007')
+  eq2_4.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_1.id,
+    equipment_type_id: ups_type&.id,
+    manufacturer: "APC", model: "Smart-UPS SRT 10kVA", serial_number: "APC-CLD-001",
+    nominal_power: 10, nominal_voltage: 230,
+    commissioning_date: Date.new(2020, 9, 15),
+    warranty_end_date: Date.new(2025, 9, 15),
+    next_maintenance_date: Date.new(2025, 6, 1),
+    status: "active", criticality: "critical",
+    created_by_name: pm1.full_name
+  )
+  eq2_4.save! if eq2_4.changed?
+  puts "      ✓ Equipment: #{eq2_4.name}"
+  
+  # Level 3
+  level2_2 = Level.find_or_initialize_by(building: building2_1, level_number: 3)
+  level2_2.assign_attributes(
+    name: "3ème étage",
+    organization_id: org1.id,
+    altitude: 10.5,
+    area: 850,
+    created_by_name: pm1.full_name
+  )
+  level2_2.save! if level2_2.changed?
+  
+  # Open Space
+  space2_3 = Space.find_or_initialize_by(level: level2_2, name: "Open Space 301")
+  space2_3.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Bureau",
+    area: 200,
+    capacity: 40,
+    created_by_name: pm1.full_name
+  )
+  space2_3.save! if space2_3.changed?
+  
+  # Equipment 5: VRV System
+  eq2_5 = Equipment.find_or_initialize_by(space: space2_3, name: "Climatisation VRV Daikin")
+  vrv_type = EquipmentType.find_by(code: 'CVC-008')
+  eq2_5.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_2.id,
+    equipment_type_id: vrv_type&.id,
+    manufacturer: "Daikin", model: "VRV IV", serial_number: "DKN-CLD-VRV3",
+    nominal_power: 32,
+    commissioning_date: Date.new(2019, 4, 1),
+    warranty_end_date: Date.new(2024, 4, 1),
+    next_maintenance_date: Date.new(2025, 2, 15),
+    status: "active", criticality: "high",
+    notes: "Maintenance trimestrielle requise",
+    created_by_name: pm1.full_name
+  )
+  eq2_5.save! if eq2_5.changed?
+  puts "      ✓ Equipment: #{eq2_5.name}"
+  
+  # Equipment 6: Fire Detection Panel
+  eq2_6 = Equipment.find_or_initialize_by(space: space2_3, name: "Centrale détection incendie")
+  fire_detection_type = EquipmentType.find_by(code: 'SEC-001')
+  eq2_6.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_2.id,
+    equipment_type_id: fire_detection_type&.id,
+    manufacturer: "Siemens", model: "Cerberus Pro", serial_number: "SI-CLD-FD3",
+    commissioning_date: Date.new(2018, 3, 1),
+    next_maintenance_date: Date.new(2025, 1, 15),
+    status: "active", criticality: "critical",
+    created_by_name: pm1.full_name
+  )
+  eq2_6.save! if eq2_6.changed?
+  puts "      ✓ Equipment: #{eq2_6.name}"
+  
+  # Elevator Equipment (standalone - not in a space)
+  eq2_7 = Equipment.find_or_initialize_by(building: building2_1, name: "Ascenseur 1 - Otis")
+  elevator_type = EquipmentType.find_by(code: 'TRA-001')
+  eq2_7.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, level_id: nil, space_id: nil,
+    equipment_type_id: elevator_type&.id,
+    manufacturer: "Otis", model: "Gen2", serial_number: "OTIS-CLD-01",
+    commissioning_date: Date.new(2018, 3, 1),
+    warranty_end_date: Date.new(2028, 3, 1),
+    next_maintenance_date: Date.new(2025, 1, 10),
+    status: "active", criticality: "high",
+    notes: "Charge: 630kg, 8 personnes, Vitesse: 1.6m/s",
+    created_by_name: pm1.full_name
+  )
+  eq2_7.save! if eq2_7.changed?
+  puts "      ✓ Equipment: #{eq2_7.name}"
+  
+  # Equipment 8: Elevator 2
+  eq2_8 = Equipment.find_or_initialize_by(building: building2_1, name: "Ascenseur 2 - Otis")
+  eq2_8.assign_attributes(
+    organization_id: org1.id, site_id: site2.id, level_id: nil, space_id: nil,
+    equipment_type_id: elevator_type&.id,
+    manufacturer: "Otis", model: "Gen2", serial_number: "OTIS-CLD-02",
+    commissioning_date: Date.new(2018, 3, 1),
+    warranty_end_date: Date.new(2028, 3, 1),
+    next_maintenance_date: Date.new(2025, 1, 10),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq2_8.save! if eq2_8.changed?
+  puts "      ✓ Equipment: #{eq2_8.name}"
+end
+
+# SITE 3: Centre Commercial Odysseum
+if sm1_sites.length > 2
+  site3 = sm1_sites[2]
+  puts "\n  Building hierarchy for: #{site3.name}"
+  
+  # Building
+  building3_1 = Building.find_or_initialize_by(site: site3, code: "CCO-MAIN")
+  building3_1.assign_attributes(
+    name: "Galerie Principale",
+    organization_id: org1.id,
+    user_id: pm1.id,
+    construction_year: 2012,
+    area: 32000,
+    number_of_levels: 2,
+    status: 'active',
+    created_by_name: pm1.full_name
+  )
+  building3_1.save! if building3_1.changed?
+  puts "    ✓ Building: #{building3_1.name}"
+  
+  # Level 0
+  level3_1 = Level.find_or_initialize_by(building: building3_1, level_number: 0)
+  level3_1.assign_attributes(
+    name: "Niveau galerie",
+    organization_id: org1.id,
+    area: 16000,
+    created_by_name: pm1.full_name
+  )
+  level3_1.save! if level3_1.changed?
+  
+  # Central Mall Area
+  space3_1 = Space.find_or_initialize_by(level: level3_1, name: "Allée centrale")
+  space3_1.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Circulation",
+    area: 2000,
+    created_by_name: pm1.full_name
+  )
+  space3_1.save! if space3_1.changed?
+  
+  # Equipment 1: Main HVAC System
+  eq3_1 = Equipment.find_or_initialize_by(space: space3_1, name: "CTA principale galerie")
+  cta_type = EquipmentType.find_by(code: 'CVC-009')
+  eq3_1.assign_attributes(
+    organization_id: org1.id, site_id: site3.id, building_id: building3_1.id, level_id: level3_1.id,
+    equipment_type_id: cta_type&.id,
+    manufacturer: "Carrier", model: "AquaForce 30XA", serial_number: "CAR-CCO-CTA1",
+    nominal_power: 450,
+    commissioning_date: Date.new(2012, 6, 1),
+    warranty_end_date: Date.new(2017, 6, 1),
+    next_maintenance_date: Date.new(2024, 12, 15),
+    status: "maintenance", criticality: "critical",
+    notes: "Révision complète en cours",
+    created_by_name: pm1.full_name
+  )
+  eq3_1.save! if eq3_1.changed?
+  puts "      ✓ Equipment: #{eq3_1.name}"
+  
+  # Equipment 2: LED Lighting System
+  eq3_2 = Equipment.find_or_initialize_by(space: space3_1, name: "Système éclairage LED central")
+  led_type = EquipmentType.find_by(code: 'ELE-005')
+  eq3_2.assign_attributes(
+    organization_id: org1.id, site_id: site3.id, building_id: building3_1.id, level_id: level3_1.id,
+    equipment_type_id: led_type&.id,
+    manufacturer: "Philips", model: "CoralCare LED", serial_number: "PH-CCO-LED1",
+    nominal_power: 85,
+    commissioning_date: Date.new(2021, 3, 1),
+    warranty_end_date: Date.new(2031, 3, 1),
+    status: "active", criticality: "medium",
+    created_by_name: pm1.full_name
+  )
+  eq3_2.save! if eq3_2.changed?
+  puts "      ✓ Equipment: #{eq3_2.name}"
+  
+  # Technical Room
+  space3_2 = Space.find_or_initialize_by(level: level3_1, name: "Local technique climatisation")
+  space3_2.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Local technique",
+    area: 80,
+    created_by_name: pm1.full_name
+  )
+  space3_2.save! if space3_2.changed?
+  
+  # Equipment 3: Chiller
+  eq3_3 = Equipment.find_or_initialize_by(space: space3_2, name: "Groupe froid Carrier")
+  chiller_type = EquipmentType.find_by(code: 'CVC-010')
+  eq3_3.assign_attributes(
+    organization_id: org1.id, site_id: site3.id, building_id: building3_1.id, level_id: level3_1.id,
+    equipment_type_id: chiller_type&.id,
+    manufacturer: "Carrier", model: "30RB", serial_number: "CAR-CCO-CH1",
+    nominal_power: 380,
+    commissioning_date: Date.new(2012, 6, 1),
+    next_maintenance_date: Date.new(2025, 3, 1),
+    status: "active", criticality: "critical",
+    created_by_name: pm1.full_name
+  )
+  eq3_3.save! if eq3_3.changed?
+  puts "      ✓ Equipment: #{eq3_3.name}"
+  
+  # Equipment 4: Generator
+  eq3_4 = Equipment.find_or_initialize_by(space: space3_2, name: "Groupe électrogène Caterpillar")
+  generator_type = EquipmentType.find_by(code: 'ELE-006')
+  eq3_4.assign_attributes(
+    organization_id: org1.id, site_id: site3.id, building_id: building3_1.id, level_id: level3_1.id,
+    equipment_type_id: generator_type&.id,
+    manufacturer: "Caterpillar", model: "C18", serial_number: "CAT-CCO-GE1",
+    nominal_power: 500,
+    commissioning_date: Date.new(2012, 6, 1),
+    next_maintenance_date: Date.new(2025, 2, 1),
+    status: "active", criticality: "high",
+    notes: "Test mensuel obligatoire",
+    created_by_name: pm1.full_name
+  )
+  eq3_4.save! if eq3_4.changed?
+  puts "      ✓ Equipment: #{eq3_4.name}"
+  
+  # Parking Level
+  level3_2 = Level.find_or_initialize_by(building: building3_1, level_number: -1)
+  level3_2.assign_attributes(
+    name: "Parking -1",
+    organization_id: org1.id,
+    altitude: -3,
+    area: 16000,
+    created_by_name: pm1.full_name
+  )
+  level3_2.save! if level3_2.changed?
+  
+  # Parking Space
+  space3_3 = Space.find_or_initialize_by(level: level3_2, name: "Zone parking A")
+  space3_3.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Parking",
+    area: 4000,
+    capacity: 200,
+    created_by_name: pm1.full_name
+  )
+  space3_3.save! if space3_3.changed?
+  
+  # Equipment 5: Parking Ventilation
+  eq3_5 = Equipment.find_or_initialize_by(space: space3_3, name: "Ventilation parking - Extracteur 1")
+  ventilation_type = EquipmentType.find_by(code: 'CVC-011')
+  eq3_5.assign_attributes(
+    organization_id: org1.id, site_id: site3.id, building_id: building3_1.id, level_id: level3_2.id,
+    equipment_type_id: ventilation_type&.id,
+    manufacturer: "Soler & Palau", model: "CJTHT", serial_number: "SP-CCO-V1",
+    nominal_power: 15,
+    commissioning_date: Date.new(2012, 6, 1),
+    next_maintenance_date: Date.new(2025, 4, 1),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq3_5.save! if eq3_5.changed?
+  puts "      ✓ Equipment: #{eq3_5.name}"
+  
+  # Equipment 6: Fire Sprinkler System
+  eq3_6 = Equipment.find_or_initialize_by(space: space3_3, name: "Système sprinkler parking")
+  sprinkler_type = EquipmentType.find_by(code: 'SEC-002')
+  eq3_6.assign_attributes(
+    organization_id: org1.id, site_id: site3.id, building_id: building3_1.id, level_id: level3_2.id,
+    equipment_type_id: sprinkler_type&.id,
+    manufacturer: "Viking", model: "VK500", serial_number: "VIK-CCO-SP1",
+    commissioning_date: Date.new(2012, 6, 1),
+    next_maintenance_date: Date.new(2025, 6, 1),
+    status: "active", criticality: "critical",
+    created_by_name: pm1.full_name
+  )
+  eq3_6.save! if eq3_6.changed?
+  puts "      ✓ Equipment: #{eq3_6.name}"
+  
+  # Equipment 7-10: Escalators
+  4.times do |i|
+    eq_esc = Equipment.find_or_initialize_by(building: building3_1, name: "Escalator #{i+1}")
+    escalator_type = EquipmentType.find_by(code: 'TRA-002')
+    eq_esc.assign_attributes(
+      organization_id: org1.id, site_id: site3.id, level_id: nil, space_id: nil,
+      equipment_type_id: escalator_type&.id,
+      manufacturer: "Schindler", model: "9300 AE", serial_number: "SCH-CCO-ESC#{i+1}",
+      commissioning_date: Date.new(2012, 6, 1),
+      next_maintenance_date: Date.new(2025, 2, 15),
+      status: "active", criticality: "high",
+      created_by_name: pm1.full_name
+    )
+    eq_esc.save! if eq_esc.changed?
+  end
+  puts "      ✓ Equipment: 4 Escalators"
+end
+
+# SITE 4: Site Industriel Lyon Nord
+if sm1_sites.length > 3
+  site4 = sm1_sites[3]
+  puts "\n  Building hierarchy for: #{site4.name}"
+  
+  # Building
+  building4_1 = Building.find_or_initialize_by(site: site4, code: "SIL-PROD")
+  building4_1.assign_attributes(
+    name: "Atelier de production",
+    organization_id: org1.id,
+    user_id: pm1.id,
+    construction_year: 2005,
+    area: 22500,
+    number_of_levels: 1,
+    status: 'active',
+    created_by_name: pm1.full_name
+  )
+  building4_1.save! if building4_1.changed?
+  puts "    ✓ Building: #{building4_1.name}"
+  
+  # Level 0 - Production Floor
+  level4_1 = Level.find_or_initialize_by(building: building4_1, level_number: 0)
+  level4_1.assign_attributes(
+    name: "Niveau production",
+    organization_id: org1.id,
+    area: 22500,
+    created_by_name: pm1.full_name
+  )
+  level4_1.save! if level4_1.changed?
+  
+  # Production Zone
+  space4_1 = Space.find_or_initialize_by(level: level4_1, name: "Zone production A")
+  space4_1.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Production",
+    area: 8000,
+    created_by_name: pm1.full_name
+  )
+  space4_1.save! if space4_1.changed?
+  
+  # Equipment 1: Compressed Air System
+  eq4_1 = Equipment.find_or_initialize_by(space: space4_1, name: "Compresseur air Atlas Copco")
+  compressor_type = EquipmentType.find_by(code: 'IND-001')
+  eq4_1.assign_attributes(
+    organization_id: org1.id, site_id: site4.id, building_id: building4_1.id, level_id: level4_1.id,
+    equipment_type_id: compressor_type&.id,
+    manufacturer: "Atlas Copco", model: "GA 75", serial_number: "AC-SIL-C1",
+    nominal_power: 75,
+    commissioning_date: Date.new(2015, 9, 1),
+    warranty_end_date: Date.new(2020, 9, 1),
+    next_maintenance_date: Date.new(2024, 12, 20),
+    status: "maintenance", criticality: "critical",
+    notes: "Révision 8000h en cours",
+    created_by_name: pm1.full_name
+  )
+  eq4_1.save! if eq4_1.changed?
+  puts "      ✓ Equipment: #{eq4_1.name}"
+  
+  # Equipment 2: Bridge Crane
+  eq4_2 = Equipment.find_or_initialize_by(space: space4_1, name: "Pont roulant 10T")
+  eq4_2.assign_attributes(
+    organization_id: org1.id, site_id: site4.id, building_id: building4_1.id, level_id: level4_1.id,
+    manufacturer: "Konecranes", model: "CXT", serial_number: "KC-SIL-PR1",
+    commissioning_date: Date.new(2010, 12, 1),
+    next_maintenance_date: Date.new(2025, 1, 15),
+    status: "active", criticality: "high",
+    notes: "Capacité 10 tonnes, portée 15m",
+    created_by_name: pm1.full_name
+  )
+  eq4_2.save! if eq4_2.changed?
+  puts "      ✓ Equipment: #{eq4_2.name}"
+  
+  # Equipment 3: Industrial Ventilation
+  eq4_3 = Equipment.find_or_initialize_by(space: space4_1, name: "Ventilation industrielle zone A")
+  eq4_3.assign_attributes(
+    organization_id: org1.id, site_id: site4.id, building_id: building4_1.id, level_id: level4_1.id,
+    manufacturer: "Soler & Palau", model: "CJHTD", serial_number: "SP-SIL-V1",
+    nominal_power: 45,
+    commissioning_date: Date.new(2015, 3, 1),
+    next_maintenance_date: Date.new(2025, 3, 15),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq4_3.save! if eq4_3.changed?
+  puts "      ✓ Equipment: #{eq4_3.name}"
+  
+  # Technical Space
+  space4_2 = Space.find_or_initialize_by(level: level4_1, name: "Local transformateur")
+  space4_2.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Local technique",
+    area: 50,
+    created_by_name: pm1.full_name
+  )
+  space4_2.save! if space4_2.changed?
+  
+  # Equipment 4: Transformer
+  eq4_4 = Equipment.find_or_initialize_by(space: space4_2, name: "Transformateur HT/BT 1000kVA")
+  transformer_type = EquipmentType.find_by(code: 'ELE-002')
+  eq4_4.assign_attributes(
+    organization_id: org1.id, site_id: site4.id, building_id: building4_1.id, level_id: level4_1.id,
+    equipment_type_id: transformer_type&.id,
+    manufacturer: "Schneider Electric", model: "Trihal", serial_number: "SE-SIL-TR1",
+    nominal_power: 1000, nominal_voltage: 20000,
+    commissioning_date: Date.new(2005, 11, 1),
+    next_maintenance_date: Date.new(2025, 11, 1),
+    status: "active", criticality: "critical",
+    notes: "Transformateur principal 20kV/400V",
+    created_by_name: pm1.full_name
+  )
+  eq4_4.save! if eq4_4.changed?
+  puts "      ✓ Equipment: #{eq4_4.name}"
+  
+  # Equipment 5: Fire Safety System
+  eq4_5 = Equipment.find_or_initialize_by(space: space4_1, name: "Système détection incendie zone production")
+  fire_det_type = EquipmentType.find_by(code: 'SEC-001')
+  eq4_5.assign_attributes(
+    organization_id: org1.id, site_id: site4.id, building_id: building4_1.id, level_id: level4_1.id,
+    equipment_type_id: fire_det_type&.id,
+    manufacturer: "Siemens", model: "Cerberus Fit", serial_number: "SI-SIL-FD1",
+    commissioning_date: Date.new(2015, 3, 1),
+    next_maintenance_date: Date.new(2025, 2, 1),
+    status: "active", criticality: "critical",
+    created_by_name: pm1.full_name
+  )
+  eq4_5.save! if eq4_5.changed?
+  puts "      ✓ Equipment: #{eq4_5.name}"
+  
+  # Equipment 6: Industrial Overhead Door
+  eq4_6 = Equipment.find_or_initialize_by(building: building4_1, name: "Porte sectionnelle industrielle")
+  eq4_6.assign_attributes(
+    organization_id: org1.id, site_id: site4.id, level_id: nil, space_id: nil,
+    manufacturer: "Hörmann", model: "SPU F42", serial_number: "HOR-SIL-PD1",
+    commissioning_date: Date.new(2010, 5, 1),
+    next_maintenance_date: Date.new(2025, 5, 1),
+    status: "active", criticality: "medium",
+    notes: "Porte motorisée 5m x 4m",
+    created_by_name: pm1.full_name
+  )
+  eq4_6.save! if eq4_6.changed?
+  puts "      ✓ Equipment: #{eq4_6.name}"
+end
+
+# SITE 5: Résidence Le Parc
+if sm1_sites.length > 4
+  site5 = sm1_sites[4]
+  puts "\n  Building hierarchy for: #{site5.name}"
+  
+  # Building
+  building5_1 = Building.find_or_initialize_by(site: site5, code: "RLP-MAIN")
+  building5_1.assign_attributes(
+    name: "Bâtiment Résidentiel",
+    organization_id: org1.id,
+    user_id: pm1.id,
+    construction_year: 2019,
+    area: 6250,
+    number_of_levels: 8,
+    status: 'active',
+    created_by_name: pm1.full_name
+  )
+  building5_1.save! if building5_1.changed?
+  puts "    ✓ Building: #{building5_1.name}"
+  
+  # Level 0 - Ground Floor
+  level5_1 = Level.find_or_initialize_by(building: building5_1, level_number: 0)
+  level5_1.assign_attributes(
+    name: "Rez-de-chaussée",
+    organization_id: org1.id,
+    area: 780,
+    created_by_name: pm1.full_name
+  )
+  level5_1.save! if level5_1.changed?
+  
+  # Entrance Hall
+  space5_1 = Space.find_or_initialize_by(level: level5_1, name: "Hall d'entrée")
+  space5_1.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Accueil",
+    area: 80,
+    created_by_name: pm1.full_name
+  )
+  space5_1.save! if space5_1.changed?
+  
+  # Equipment 1: Intercom System
+  eq5_1 = Equipment.find_or_initialize_by(space: space5_1, name: "Interphone vidéo Aiphone")
+  eq5_1.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_1.id,
+    manufacturer: "Aiphone", model: "GT Series", serial_number: "AIP-RLP-001",
+    commissioning_date: Date.new(2019, 11, 1),
+    warranty_end_date: Date.new(2024, 11, 1),
+    next_maintenance_date: Date.new(2025, 11, 1),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq5_1.save! if eq5_1.changed?
+  puts "      ✓ Equipment: #{eq5_1.name}"
+  
+  # Equipment 2: Access Control
+  eq5_2 = Equipment.find_or_initialize_by(space: space5_1, name: "Contrôle d'accès résidentiel")
+  access_ctrl_type = EquipmentType.find_by(code: 'SEC-008')
+  eq5_2.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_1.id,
+    equipment_type_id: access_ctrl_type&.id,
+    manufacturer: "Came", model: "BPT Perla", serial_number: "CAME-RLP-001",
+    commissioning_date: Date.new(2019, 11, 1),
+    warranty_end_date: Date.new(2024, 11, 1),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq5_2.save! if eq5_2.changed?
+  puts "      ✓ Equipment: #{eq5_2.name}"
+  
+  # Technical Room
+  space5_2 = Space.find_or_initialize_by(level: level5_1, name: "Local technique")
+  space5_2.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Local technique",
+    area: 25,
+    created_by_name: pm1.full_name
+  )
+  space5_2.save! if space5_2.changed?
+  
+  # Equipment 3: Heating System
+  eq5_3 = Equipment.find_or_initialize_by(space: space5_2, name: "Chaudière collective Frisquet")
+  boiler_type = EquipmentType.find_by(code: 'CVC-001')
+  eq5_3.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_1.id,
+    equipment_type_id: boiler_type&.id,
+    manufacturer: "Frisquet", model: "Hydromotrix", serial_number: "FRQ-RLP-001",
+    nominal_power: 120,
+    commissioning_date: Date.new(2019, 10, 1),
+    warranty_end_date: Date.new(2024, 10, 1),
+    next_maintenance_date: Date.new(2025, 10, 1),
+    status: "active", criticality: "critical",
+    notes: "Chaudière gaz collective pour chauffage central",
+    created_by_name: pm1.full_name
+  )
+  eq5_3.save! if eq5_3.changed?
+  puts "      ✓ Equipment: #{eq5_3.name}"
+  
+  # Equipment 4: Domestic Hot Water System
+  eq5_4 = Equipment.find_or_initialize_by(space: space5_2, name: "Ballon eau chaude sanitaire")
+  eq5_4.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_1.id,
+    manufacturer: "Atlantic", model: "Chauffeo Plus", serial_number: "ATL-RLP-001",
+    commissioning_date: Date.new(2019, 10, 1),
+    warranty_end_date: Date.new(2026, 10, 1),
+    next_maintenance_date: Date.new(2025, 4, 1),
+    status: "active", criticality: "high",
+    notes: "Capacité 300L, résidence 45 logements",
+    created_by_name: pm1.full_name
+  )
+  eq5_4.save! if eq5_4.changed?
+  puts "      ✓ Equipment: #{eq5_4.name}"
+  
+  # Equipment 5: Ventilation System
+  eq5_5 = Equipment.find_or_initialize_by(space: space5_2, name: "VMC double flux collective")
+  ventilation_type = EquipmentType.find_by(code: 'CVC-011')
+  eq5_5.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_1.id,
+    equipment_type_id: ventilation_type&.id,
+    manufacturer: "France Air", model: "Températion", serial_number: "FA-RLP-VMC1",
+    nominal_power: 8,
+    commissioning_date: Date.new(2019, 10, 1),
+    warranty_end_date: Date.new(2024, 10, 1),
+    next_maintenance_date: Date.new(2025, 3, 1),
+    status: "active", criticality: "high",
+    created_by_name: pm1.full_name
+  )
+  eq5_5.save! if eq5_5.changed?
+  puts "      ✓ Equipment: #{eq5_5.name}"
+  
+  # Elevators (standalone)
+  eq5_6 = Equipment.find_or_initialize_by(building: building5_1, name: "Ascenseur résidentiel Schindler")
+  elevator_type = EquipmentType.find_by(code: 'TRA-001')
+  eq5_6.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, level_id: nil, space_id: nil,
+    equipment_type_id: elevator_type&.id,
+    manufacturer: "Schindler", model: "3300", serial_number: "SCH-RLP-01",
+    commissioning_date: Date.new(2019, 10, 1),
+    warranty_end_date: Date.new(2029, 10, 1),
+    next_maintenance_date: Date.new(2025, 2, 1),
+    status: "active", criticality: "critical",
+    notes: "Capacité 630kg, 8 personnes, dessert 8 niveaux",
+    created_by_name: pm1.full_name
+  )
+  eq5_6.save! if eq5_6.changed?
+  puts "      ✓ Equipment: #{eq5_6.name}"
+  
+  # Level -1 - Parking
+  level5_2 = Level.find_or_initialize_by(building: building5_1, level_number: -1)
+  level5_2.assign_attributes(
+    name: "Parking sous-sol",
+    organization_id: org1.id,
+    altitude: -3,
+    area: 1250,
+    created_by_name: pm1.full_name
+  )
+  level5_2.save! if level5_2.changed?
+  
+  # Parking Space
+  space5_3 = Space.find_or_initialize_by(level: level5_2, name: "Parking résidents")
+  space5_3.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Parking",
+    area: 1000,
+    capacity: 50,
+    created_by_name: pm1.full_name
+  )
+  space5_3.save! if space5_3.changed?
+  
+  # Equipment 7: Parking Ventilation
+  eq5_7 = Equipment.find_or_initialize_by(space: space5_3, name: "Extraction parking résidentiel")
+  eq5_7.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_2.id,
+    manufacturer: "Soler & Palau", model: "TD-500", serial_number: "SP-RLP-V1",
+    nominal_power: 3,
+    commissioning_date: Date.new(2019, 10, 1),
+    next_maintenance_date: Date.new(2025, 10, 1),
+    status: "active", criticality: "medium",
+    created_by_name: pm1.full_name
+  )
+  eq5_7.save! if eq5_7.changed?
+  puts "      ✓ Equipment: #{eq5_7.name}"
+  
+  # Equipment 8: Fire Safety in Parking
+  eq5_8 = Equipment.find_or_initialize_by(space: space5_3, name: "Détection incendie parking")
+  fire_type = EquipmentType.find_by(code: 'SEC-001')
+  eq5_8.assign_attributes(
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_2.id,
+    equipment_type_id: fire_type&.id,
+    manufacturer: "Honeywell", model: "Morley-IAS", serial_number: "HON-RLP-FD1",
+    commissioning_date: Date.new(2019, 10, 1),
+    next_maintenance_date: Date.new(2025, 4, 1),
+    status: "active", criticality: "critical",
+    created_by_name: pm1.full_name
+  )
+  eq5_8.save! if eq5_8.changed?
+  puts "      ✓ Equipment: #{eq5_8.name}"
+end
+
+puts "\n📊 Final Equipment Summary:"
+puts "   - Total Buildings: #{Building.count}"
+puts "   - Total Levels: #{Level.count}"
+puts "   - Total Spaces: #{Space.count}"
+puts "   - Total Equipment: #{Equipment.count}"
+puts "   - Equipment for Site Manager 1's sites: #{Equipment.where(site_id: sm1_sites.pluck(:id)).count}"
 
 # ============================================================================
 # PRICE REFERENCES - Sample price reference data for comparisons

@@ -115,7 +115,7 @@
                       <%= contract.title || contract.contract_type&.humanize || '-' %>
                     </td>
                     <td class="typo-body-small" style="padding: var(--space-md); color: #666;">
-                      <%= contract.contractor_organization || '-' %>
+                      <%= contract.contractor_organization_name || '-' %>
                     </td>
                     <td style="padding: var(--space-md);">
                       <% if contract.contract_family.present? %>
