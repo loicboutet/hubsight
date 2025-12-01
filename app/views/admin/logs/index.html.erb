@@ -6,7 +6,7 @@
       <h1 class="text-3xl font-bold text-gray-900">Application Logs</h1>
       <p class="text-gray-600 mt-1">
         Viewing last 1000 lines from
-        <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+        <span class="font-mono text-sm px-2 py-1 rounded">
           <%= @environment %>.log
         </span>
       </p>
@@ -44,37 +44,20 @@
 
   <!-- Log Display -->
   <% if @log_lines.any? %>
-    <div class="bg-gray-900 rounded-xl shadow-lg border border-gray-700 overflow-hidden">
-      <div class="bg-gray-800 px-4 py-2 border-b border-gray-700">
+    <div class="bg-black rounded-xl shadow-lg border border-gray-800 overflow-hidden">
+      <div class="bg-gray-900 px-4 py-2 border-b border-gray-800">
         <h3 class="text-sm font-semibold text-gray-300">Log Output</h3>
       </div>
-      <div class="p-4 overflow-auto max-h-[600px]">
-        <pre class="text-xs text-gray-100 font-mono leading-relaxed"><% @log_lines.each do |line| %><%= format_log_line(line) %>
+      <div class="p-4 overflow-auto max-h-[600px] bg-black">
+        <pre class="text-xs font-mono leading-relaxed"><% @log_lines.each do |line| %><%= format_log_line(line) %>
 <% end %></pre>
       </div>
     </div>
 
-    <!-- Legend -->
+    <!-- Info Note -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-      <h3 class="text-sm font-semibold text-gray-700 mb-2">Log Level Colors</h3>
-      <div class="flex flex-wrap gap-4 text-xs">
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-red-500"></span>
-          <span class="text-gray-600">ERROR / FATAL</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
-          <span class="text-gray-600">WARN</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-          <span class="text-gray-600">INFO</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-gray-500"></span>
-          <span class="text-gray-600">DEBUG</span>
-        </div>
-      </div>
+      <h3 class="text-sm font-semibold text-gray-700 mb-2">Display Info</h3>
+      <p class="text-xs text-gray-600">Log entries are displayed in white text on black background for optimal readability.</p>
     </div>
   <% else %>
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
