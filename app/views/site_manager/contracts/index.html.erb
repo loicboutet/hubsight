@@ -4,7 +4,15 @@
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Mes Contrats</h2>
-      <p class="typo-body-small">Contrats liés à vos sites assignés (accès en lecture seule)</p>
+      <p class="typo-body-small">Contrats liés à vos sites assignés</p>
+    </div>
+    <div>
+      <%= link_to new_my_contract_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Nouveau Contrat
+      <% end %>
     </div>
   </div>
 

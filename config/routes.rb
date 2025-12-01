@@ -187,6 +187,8 @@ Rails.application.routes.draw do
   
   # Contracts (Limited access)
   get 'my_contracts', to: 'site_manager/contracts#index'
+  get 'my_contracts/new', to: 'site_manager/contracts#new', as: :new_my_contract
+  post 'my_contracts', to: 'site_manager/contracts#create'
   get 'my_contracts/:id', to: 'site_manager/contracts#show', as: :my_contract
   get 'my_contracts/:id/pdf', to: 'site_manager/contracts#pdf', as: :my_contract_pdf
   get 'my_contracts/upload', to: 'site_manager/contracts#upload'
