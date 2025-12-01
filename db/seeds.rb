@@ -1126,6 +1126,11 @@ puts "\n📊 Total agencies created: #{Agency.count}"
 
 puts "\n📄 Creating sample contracts..."
 
+# Delete existing contracts to ensure fresh data with correct dates
+puts "  Deleting existing contracts..."
+Contract.delete_all
+puts "  ✓ Deleted all existing contracts"
+
 # Contract families
 contract_families = [
   'Maintenance CVC',
@@ -1149,29 +1154,26 @@ puts "  Creating contracts for Organization 1..."
 30.times do |i|
   site = org1_sites_for_contracts.sample
   family = contract_families.sample
-  status = statuses.sample
   
-  # Vary dates to create more alerts
+  # Calculate dates with better distribution
   start_date = Date.today - rand(365..730).days
-  contract_duration = [12, 24, 36].sample
-  end_date = start_date + contract_duration.months
   
-  # Distribute contracts across different alert windows
-  if i < 8
-    # 0-30 days window (ALERT - urgent)
+  # Distribute contracts across different alert windows for better visibility
+  if i < 10
+    # 0-30 days window (ALERTE - urgent red alerts)
     end_date = Date.today + rand(1..30).days
     status = 'active'  # Ensure these are active for alerts
-  elsif i < 16
-    # 31-90 days window (ATTENTION - warning)
+  elsif i < 20
+    # 31-90 days window (ATTENTION - orange warnings)
     end_date = Date.today + rand(31..90).days
     status = 'active'  # Ensure these are active for alerts
-  elsif i < 20
+  elsif i < 25
     # 91-180 days window (safe zone)
     end_date = Date.today + rand(91..180).days
     status = 'active'
   else
     # Past expiry or far future
-    if rand > 0.5
+    if i % 2 == 0
       end_date = Date.today - rand(1..60).days  # Expired
       status = 'expired'
     else
@@ -1180,12 +1182,9 @@ puts "  Creating contracts for Organization 1..."
     end
   end
   
-  contract = Contract.find_or_initialize_by(
+  contract = Contract.new(
     organization_id: org1.id,
-    contract_number: "CTR-2024-#{sprintf('%03d', i + 1)}"
-  )
-  
-  contract.assign_attributes(
+    contract_number: "CTR-2024-#{sprintf('%03d', i + 1)}",
     site_id: site.id,
     title: "Contrat #{family} - #{site.name}",
     contract_type: "Contrat de maintenance",
@@ -1195,15 +1194,12 @@ puts "  Creating contracts for Organization 1..."
     status: status,
     annual_amount: rand(5000..150000),
     start_date: start_date,
-    end_date: end_date
+    end_date: end_date,
+    execution_start_date: start_date,
+    initial_duration_months: ((end_date - start_date) / 30).to_i
   )
-  
-  if contract.new_record?
-    contract.save!
-    puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')})"
-  else
-    contract.save!
-  end
+  contract.save!
+  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
 end
 
 # Create contracts for Organization 2
@@ -1211,27 +1207,36 @@ puts "  Creating contracts for Organization 2..."
 15.times do |i|
   site = org2_sites_for_contracts.sample
   family = contract_families.sample
-  status = statuses.sample
   
   start_date = Date.today - rand(365..730).days
-  contract_duration = [12, 24, 36].sample
-  end_date = start_date + contract_duration.months
   
-  # Adjust some for renewal windows
-  if i < 2
+  # Distribute for better alert visibility
+  if i < 5
+    # 0-30 days window (ALERTE - urgent)
     end_date = Date.today + rand(1..30).days
-  elsif i < 4
-    end_date = Date.today + rand(31..60).days
-  elsif i < 6
-    end_date = Date.today + rand(61..90).days
+    status = 'active'
+  elsif i < 10
+    # 31-90 days window (ATTENTION - warning)
+    end_date = Date.today + rand(31..90).days
+    status = 'active'
+  elsif i < 12
+    # 91-180 days window (safe zone)
+    end_date = Date.today + rand(91..180).days
+    status = 'active'
+  else
+    # Past expiry or far future
+    if i % 2 == 0
+      end_date = Date.today - rand(1..60).days  # Expired
+      status = 'expired'
+    else
+      end_date = Date.today + rand(181..365).days  # Far future
+      status = 'active'
+    end
   end
   
-  contract = Contract.find_or_initialize_by(
+  contract = Contract.new(
     organization_id: org2.id,
-    contract_number: "CTR-2025-#{sprintf('%03d', i + 1)}"
-  )
-  
-  contract.assign_attributes(
+    contract_number: "CTR-2025-#{sprintf('%03d', i + 1)}",
     site_id: site.id,
     title: "Contrat #{family} - #{site.name}",
     contract_type: "Contrat de maintenance",
@@ -1241,15 +1246,12 @@ puts "  Creating contracts for Organization 2..."
     status: status,
     annual_amount: rand(5000..120000),
     start_date: start_date,
-    end_date: end_date
+    end_date: end_date,
+    execution_start_date: start_date,
+    initial_duration_months: ((end_date - start_date) / 30).to_i
   )
-  
-  if contract.new_record?
-    contract.save!
-    puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family})"
-  else
-    contract.save!
-  end
+  contract.save!
+  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
 end
 
 puts "\n📊 Total contracts created: #{Contract.count}"
@@ -1338,6 +1340,9 @@ if site_org1
   climatiseur_type = EquipmentType.find_by(code: 'CVC-007') # Climatiseur split system
   equipment1.assign_attributes(
     organization_id: org1.id,
+    site_id: site_org1.id,
+    building_id: building1.id,
+    level_id: level1.id,
     equipment_type_id: climatiseur_type&.id,
     manufacturer: "Daikin",
     model: "AC-500",
@@ -1377,6 +1382,9 @@ if site_org1
   led_type = EquipmentType.find_by(code: 'ELE-005') # Luminaire LED encastré
   equipment2.assign_attributes(
     organization_id: org1.id,
+    site_id: site_org1.id,
+    building_id: building1.id,
+    level_id: level1.id,
     equipment_type_id: led_type&.id,
     manufacturer: "Philips",
     model: "X300",
@@ -1422,6 +1430,9 @@ if site_org1
   )
   equipment3.assign_attributes(
     organization_id: org1.id,
+    site_id: site_org1.id,
+    building_id: building1.id,
+    level_id: level1.id,
     manufacturer: "Epson",
     model: "EB-2250U",
     serial_number: "SN456789123",
@@ -1465,6 +1476,9 @@ if site_org1
   chaudiere_type = EquipmentType.find_by(code: 'CVC-001') # Chaudière gaz murale
   equipment4.assign_attributes(
     organization_id: org1.id,
+    site_id: site_org1.id,
+    building_id: building1.id,
+    level_id: level1.id,
     equipment_type_id: chaudiere_type&.id,
     manufacturer: "Viessmann",
     model: "Vitodens 200-W",
@@ -1532,6 +1546,9 @@ if site_org1
   vrv_type = EquipmentType.find_by(code: 'CVC-008') # Climatiseur VRV/VRF
   equipment5.assign_attributes(
     organization_id: org1.id,
+    site_id: site_org1.id,
+    building_id: building1.id,
+    level_id: level2.id,
     equipment_type_id: vrv_type&.id,
     manufacturer: "Mitsubishi Electric",
     model: "VRF City Multi",
@@ -1619,6 +1636,9 @@ if site_org1
   access_control_type = EquipmentType.find_by(code: 'SEC-008') # Centrale de contrôle d'accès
   equipment6.assign_attributes(
     organization_id: org1.id,
+    site_id: site_org1.id,
+    building_id: building2.id,
+    level_id: level3.id,
     equipment_type_id: access_control_type&.id,
     manufacturer: "Salto",
     model: "KS Series",
@@ -1803,6 +1823,102 @@ end
 puts "\n📊 Total price references created: #{PriceReference.count}"
 puts "   - Contract families: #{PriceReference.distinct.count(:contract_family)}"
 puts "   - Locations: #{PriceReference.where.not(location: nil).distinct.count(:location)}"
+
+# ============================================================================
+# ACTIVE SESSIONS - User connection data for analytics
+# ============================================================================
+
+puts "\n🔗 Creating active sessions for analytics..."
+
+# Delete existing sessions to ensure fresh data
+puts "  Deleting existing active sessions..."
+ActiveSession.delete_all
+puts "  ✓ Deleted all existing active sessions"
+
+# Get users for both organizations
+org1_users = User.where(organization_id: org1.id, status: 'active').to_a
+org2_users = User.where(organization_id: org2.id, status: 'active').to_a
+
+# Helper method to create sessions
+def create_session_for_user(user, created_at, last_activity_at = nil)
+  session = ActiveSession.new(
+    user: user,
+    session_id: SecureRandom.hex(32),
+    created_at: created_at,
+    last_activity_at: last_activity_at || created_at
+  )
+  session.save!
+  session
+end
+
+# Create sessions for Organization 1 users
+puts "  Creating sessions for Organization 1 users..."
+
+# Sessions this week (last 7 days)
+15.times do |i|
+  user = org1_users.sample
+  days_ago = rand(0..6)
+  hours_ago = rand(0..23)
+  created_at = Time.current - days_ago.days - hours_ago.hours
+  last_activity = created_at + rand(5..120).minutes
+  
+  create_session_for_user(user, created_at, last_activity)
+end
+
+# Sessions this month but not this week (7-30 days ago)
+20.times do |i|
+  user = org1_users.sample
+  days_ago = rand(7..29)
+  hours_ago = rand(0..23)
+  created_at = Time.current - days_ago.days - hours_ago.hours
+  last_activity = created_at + rand(5..120).minutes
+  
+  create_session_for_user(user, created_at, last_activity)
+end
+
+# Some older sessions (for historical data)
+10.times do |i|
+  user = org1_users.sample
+  days_ago = rand(31..60)
+  created_at = Time.current - days_ago.days
+  
+  create_session_for_user(user, created_at)
+end
+
+puts "  ✓ Created #{ActiveSession.joins(:user).where(users: { organization_id: org1.id }).count} sessions for Organization 1"
+
+# Create sessions for Organization 2 users
+puts "  Creating sessions for Organization 2 users..."
+
+# Sessions this week (last 7 days)
+10.times do |i|
+  user = org2_users.sample
+  days_ago = rand(0..6)
+  hours_ago = rand(0..23)
+  created_at = Time.current - days_ago.days - hours_ago.hours
+  last_activity = created_at + rand(5..120).minutes
+  
+  create_session_for_user(user, created_at, last_activity)
+end
+
+# Sessions this month but not this week (7-30 days ago)
+12.times do |i|
+  user = org2_users.sample
+  days_ago = rand(7..29)
+  hours_ago = rand(0..23)
+  created_at = Time.current - days_ago.days - hours_ago.hours
+  last_activity = created_at + rand(5..120).minutes
+  
+  create_session_for_user(user, created_at, last_activity)
+end
+
+puts "  ✓ Created #{ActiveSession.joins(:user).where(users: { organization_id: org2.id }).count} sessions for Organization 2"
+
+puts "\n📊 Total active sessions created: #{ActiveSession.count}"
+puts "   - Organization 1 (this week): #{ActiveSession.joins(:user).where(users: { organization_id: org1.id }).where('active_sessions.created_at >= ?', 7.days.ago).count}"
+puts "   - Organization 1 (this month): #{ActiveSession.joins(:user).where(users: { organization_id: org1.id }).where('active_sessions.created_at >= ?', 30.days.ago).count}"
+puts "   - Organization 2 (this week): #{ActiveSession.joins(:user).where(users: { organization_id: org2.id }).where('active_sessions.created_at >= ?', 7.days.ago).count}"
+puts "   - Organization 2 (this month): #{ActiveSession.joins(:user).where(users: { organization_id: org2.id }).where('active_sessions.created_at >= ?', 30.days.ago).count}"
 
 puts "\n✅ Seed completed successfully!"
 puts "\n📝 Test Users Created:"

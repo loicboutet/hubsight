@@ -317,7 +317,10 @@ class AnalyticsController < ApplicationController
     # EQUIPMENT DISTRIBUTION ANALYSIS
     # ===========================================
     # Equipment distribution by type
-    equipment_by_type = Equipment.where(organization_id: org_id).group(:equipment_type).count
+    equipment_by_type = Equipment.where(organization_id: org_id)
+                                  .joins(:equipment_type)
+                                  .group('equipment_types.equipment_type_name')
+                                  .count
     total_equipment = equipment_by_type.values.sum.to_f
     total_equipment = 1 if total_equipment == 0
     
