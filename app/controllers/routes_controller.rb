@@ -1,4 +1,5 @@
 class RoutesController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:index]
   skip_before_action :track_session, only: [:index]
   
   def index

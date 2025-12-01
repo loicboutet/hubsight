@@ -2,6 +2,10 @@ class ApplicationController < ActionController::Base
   # Include impersonation functionality
   include Impersonation
   
+  # Require authentication for all controllers by default
+  # Child controllers can skip this with: skip_before_action :authenticate_user!
+  before_action :authenticate_user!
+  
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   
