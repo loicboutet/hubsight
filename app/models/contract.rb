@@ -7,13 +7,18 @@ class Contract < ApplicationRecord
 
   # Validations
   validates :organization_id, presence: true
-  validates :status, inclusion: { in: %w[active expired pending suspended] }
+  validates :contract_number, presence: true
+  validates :title, presence: true
+  validates :contract_type, presence: true
+  validates :contractor_organization_name, presence: true
+  validates :contract_object, presence: true
+  validates :status, inclusion: { in: %w[active expired pending suspended] }, allow_nil: true
   validates :annual_amount, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :ocr_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
   validates :extraction_status, inclusion: { in: %w[pending processing completed failed] }, allow_nil: true
   validates :validation_status, inclusion: { in: %w[pending in_progress validated] }, allow_nil: true
   
-  # PDF validations
+  # PDF validations - OPTIONAL for manual contract creation
   validate :pdf_document_validation, if: -> { pdf_document.attached? }
 
   # Callbacks
