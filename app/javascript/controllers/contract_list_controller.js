@@ -95,7 +95,7 @@ export default class extends Controller {
     // or prevent and handle via AJAX if needed
   }
 
-  // Clear all filters
+  // Clear all filters (updated for Task 34 - includes advanced filters)
   clearFilters(event) {
     event.preventDefault()
     
@@ -103,10 +103,38 @@ export default class extends Controller {
       // Clear all form inputs
       const form = this.filterFormTarget
       form.querySelectorAll('input[type="text"]').forEach(input => input.value = '')
+      form.querySelectorAll('input[type="number"]').forEach(input => input.value = '')
+      form.querySelectorAll('input[type="date"]').forEach(input => input.value = '')
       form.querySelectorAll('select').forEach(select => select.value = '')
       
       // Submit form to reload with no filters
       form.submit()
+    }
+  }
+
+  // Toggle advanced filters panel (NEW - Task 34)
+  toggleAdvancedFilters(event) {
+    event.preventDefault()
+    
+    const advancedPanel = document.getElementById('advanced-filters')
+    const toggleButton = event.currentTarget
+    const icon = toggleButton.querySelector('.advanced-filters-icon')
+    const text = toggleButton.querySelector('.advanced-filters-text')
+    
+    if (advancedPanel) {
+      const isHidden = advancedPanel.classList.contains('hidden')
+      
+      if (isHidden) {
+        // Show advanced filters
+        advancedPanel.classList.remove('hidden')
+        icon.style.transform = 'rotate(180deg)'
+        text.textContent = 'Masquer les Filtres Avancés'
+      } else {
+        // Hide advanced filters
+        advancedPanel.classList.add('hidden')
+        icon.style.transform = 'rotate(0deg)'
+        text.textContent = 'Filtres Avancés (Dates, Montants, etc.)'
+      }
     }
   }
 

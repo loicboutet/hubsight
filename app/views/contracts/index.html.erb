@@ -59,7 +59,9 @@
     <!-- Filters Section -->
     <%= form_with url: contracts_path, method: :get, data: { contract_list_target: "filterForm" } do |f| %>
       <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
-        <div class="filters-grid-contracts" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-md); align-items: end;">
+        
+        <!-- Basic Filters (Always Visible) -->
+        <div class="filters-grid-contracts" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-md); align-items: end; margin-bottom: var(--space-md);">
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
             <%= f.text_field :search, placeholder: "N° contrat, titre...", value: @filter_params[:search], style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
@@ -69,8 +71,8 @@
             <%= f.select :site, options_for_select([['Tous les sites', '']] + @sites.map { |s| [s.name, s.id] }, @filter_params[:site]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
           </div>
           <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type</label>
-            <%= f.select :type, options_for_select([['Tous les types', '']] + @contract_types.map { |t| [t, t] }, @filter_params[:type]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Bâtiment</label>
+            <%= f.select :building, options_for_select([['Tous les bâtiments', '']] + @buildings.map { |b| [b.name, b.id] }, @filter_params[:building]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
           </div>
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Famille</label>
@@ -80,17 +82,112 @@
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
             <%= f.select :status, options_for_select([['Tous', ''], ['Actif', 'active'], ['Expiré', 'expired'], ['En attente', 'pending'], ['Suspendu', 'suspended']], @filter_params[:status]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
           </div>
-          <div style="grid-column: 1 / -1; display: flex; gap: var(--space-md); justify-content: flex-end; align-items: center;">
-            <span class="typo-body-small">Afficher:</span>
-            <%= f.select :per_page, options_for_select([[15, 15], [25, 25], [50, 50], [100, 100]], @per_page), {}, { onchange: "this.form.submit()", style: "padding: 8px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" } %>
-            <button type="button" data-action="click->contract-list#clearFilters" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Effacer
-            </button>
-            <%= f.submit "Filtrer", class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" %>
+        </div>
+
+        <!-- Advanced Filters Toggle Button -->
+        <div style="margin-bottom: var(--space-md);">
+          <button type="button" data-action="click->contract-list#toggleAdvancedFilters" class="advanced-filters-toggle" style="display: inline-flex; align-items: center; gap: var(--space-sm); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="advanced-filters-icon" style="transition: transform 0.3s;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+            <span class="advanced-filters-text">Filtres Avancés (Dates, Montants, etc.)</span>
+          </button>
+        </div>
+
+        <!-- Advanced Filters (Collapsible) -->
+        <div id="advanced-filters" class="hidden" style="border-top: 2px solid #dee2e6; padding-top: var(--space-lg); margin-top: var(--space-md);">
+          
+          <!-- Type, Subfamily, Provider, Renewal -->
+          <h4 style="margin-bottom: var(--space-md); font-weight: 600; color: #667eea;">Filtres Additionnels</h4>
+          <div class="filters-grid-contracts" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); margin-bottom: var(--space-lg);">
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type de Contrat</label>
+              <%= f.select :type, options_for_select([['Tous les types', '']] + @contract_types.map { |t| [t, t] }, @filter_params[:type]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+            </div>
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Sous-famille</label>
+              <%= f.select :subfamily, options_for_select([['Toutes', '']] + @subfamilies.map { |sf| [sf.name, sf.name] }, @filter_params[:subfamily]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+            </div>
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Prestataire</label>
+              <%= f.text_field :provider, placeholder: "Nom prestataire...", value: @filter_params[:provider], style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+            </div>
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Mode de Reconduction</label>
+              <%= f.select :renewal, options_for_select([['Tous', ''], ['Automatique', 'automatic'], ['Manuelle', 'manual'], ['Tacite', 'tacit']], @filter_params[:renewal]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+            </div>
           </div>
+
+          <!-- Date Range Filters -->
+          <h4 style="margin-bottom: var(--space-md); margin-top: var(--space-xl); font-weight: 600; color: #667eea;">Filtres par Dates</h4>
+          <div class="filters-grid-contracts" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
+            <!-- Signature Date Range -->
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Date de Signature</label>
+              <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                <%= f.date_field :signature_date_from, value: @filter_params[:signature_date_from], placeholder: "Du", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+                <span style="color: #666;">→</span>
+                <%= f.date_field :signature_date_to, value: @filter_params[:signature_date_to], placeholder: "Au", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+              </div>
+            </div>
+            
+            <!-- Start Date Range -->
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Date de Début</label>
+              <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                <%= f.date_field :start_date_from, value: @filter_params[:start_date_from], placeholder: "Du", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+                <span style="color: #666;">→</span>
+                <%= f.date_field :start_date_to, value: @filter_params[:start_date_to], placeholder: "Au", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+              </div>
+            </div>
+            
+            <!-- End Date Range -->
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Date de Fin</label>
+              <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                <%= f.date_field :end_date_from, value: @filter_params[:end_date_from], placeholder: "Du", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+                <span style="color: #666;">→</span>
+                <%= f.date_field :end_date_to, value: @filter_params[:end_date_to], placeholder: "Au", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amount Range Filters -->
+          <h4 style="margin-bottom: var(--space-md); margin-top: var(--space-xl); font-weight: 600; color: #667eea;">Filtres par Montants</h4>
+          <div class="filters-grid-contracts" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
+            <!-- Amount HT Range -->
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Montant Annuel HT (€)</label>
+              <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                <%= f.number_field :amount_ht_min, value: @filter_params[:amount_ht_min], placeholder: "Min", step: "0.01", min: "0", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+                <span style="color: #666;">→</span>
+                <%= f.number_field :amount_ht_max, value: @filter_params[:amount_ht_max], placeholder: "Max", step: "0.01", min: "0", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+              </div>
+            </div>
+            
+            <!-- Amount TTC Range -->
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Montant Annuel TTC (€)</label>
+              <div style="display: flex; gap: var(--space-sm); align-items: center;">
+                <%= f.number_field :amount_ttc_min, value: @filter_params[:amount_ttc_min], placeholder: "Min", step: "0.01", min: "0", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+                <span style="color: #666;">→</span>
+                <%= f.number_field :amount_ttc_max, value: @filter_params[:amount_ttc_max], placeholder: "Max", step: "0.01", min: "0", style: "flex: 1; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="grid-column: 1 / -1; display: flex; gap: var(--space-md); justify-content: flex-end; align-items: center; margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid #dee2e6;">
+          <span class="typo-body-small">Afficher:</span>
+          <%= f.select :per_page, options_for_select([[15, 15], [25, 25], [50, 50], [100, 100]], @per_page), {}, { onchange: "this.form.submit()", style: "padding: 8px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" } %>
+          <button type="button" data-action="click->contract-list#clearFilters" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer
+          </button>
+          <%= f.submit "Filtrer", class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" %>
         </div>
       </div>
     <% end %>
@@ -186,8 +283,10 @@
 </div>
 
 <style>
-  .filters-grid-contracts { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-md); }
+  .filters-grid-contracts { display: grid; gap: var(--space-md); }
   @media (max-width: 1200px) { .filters-grid-contracts { grid-template-columns: 1fr 1fr 1fr !important; } }
   @media (max-width: 768px) { .filters-grid-contracts { grid-template-columns: 1fr !important; } }
   .hidden { display: none; }
+  .advanced-filters-toggle:hover { opacity: 0.9; }
+  #advanced-filters.hidden { display: none; }
 </style>

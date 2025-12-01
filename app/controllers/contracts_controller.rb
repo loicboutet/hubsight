@@ -26,20 +26,32 @@ class ContractsController < ApplicationController
     @per_page = (params[:per_page] || 15).to_i
     @contracts = @contracts.page(params[:page]).per(@per_page)
     
-    # Store filter values for the view
+    # Store filter values for the view (17 total filters)
     @filter_params = {
       search: params[:search],
       site: params[:site],
+      building: params[:building],
       type: params[:type],
       family: params[:family],
       subfamily: params[:subfamily],
       provider: params[:provider],
       renewal: params[:renewal],
-      status: params[:status]
+      status: params[:status],
+      signature_date_from: params[:signature_date_from],
+      signature_date_to: params[:signature_date_to],
+      start_date_from: params[:start_date_from],
+      start_date_to: params[:start_date_to],
+      end_date_from: params[:end_date_from],
+      end_date_to: params[:end_date_to],
+      amount_ht_min: params[:amount_ht_min],
+      amount_ht_max: params[:amount_ht_max],
+      amount_ttc_min: params[:amount_ttc_min],
+      amount_ttc_max: params[:amount_ttc_max]
     }
     
     # Get unique values for filter dropdowns
     @sites = Site.by_organization(current_user.organization_id).order(:name)
+    @buildings = Building.by_organization(current_user.organization_id).order(:name)
     @contract_types = Contract.by_organization(current_user.organization_id).distinct.pluck(:contract_type).compact.sort
     @families = ContractFamily.families_only.order(:display_order)
     @subfamilies = ContractFamily.subfamilies_only.order(:name)
@@ -241,6 +253,11 @@ class ContractsController < ApplicationController
       contracts = contracts.where(site_id: params[:site])
     end
     
+    # Building filter (NEW - Task 34)
+    if params[:building].present?
+      contracts = contracts.where(building_id: params[:building])
+    end
+    
     # Contract type filter
     if params[:type].present?
       contracts = contracts.where(contract_type: params[:type])
@@ -270,6 +287,48 @@ class ContractsController < ApplicationController
     # Status filter
     if params[:status].present?
       contracts = contracts.where(status: params[:status])
+    end
+    
+    # Date range filters (NEW - Task 34)
+    # Signature date range
+    if params[:signature_date_from].present?
+      contracts = contracts.where("signature_date >= ?", params[:signature_date_from])
+    end
+    if params[:signature_date_to].present?
+      contracts = contracts.where("signature_date <= ?", params[:signature_date_to])
+    end
+    
+    # Start date range
+    if params[:start_date_from].present?
+      contracts = contracts.where("execution_start_date >= ?", params[:start_date_from])
+    end
+    if params[:start_date_to].present?
+      contracts = contracts.where("execution_start_date <= ?", params[:start_date_to])
+    end
+    
+    # End date range
+    if params[:end_date_from].present?
+      contracts = contracts.where("end_date >= ?", params[:end_date_from])
+    end
+    if params[:end_date_to].present?
+      contracts = contracts.where("end_date <= ?", params[:end_date_to])
+    end
+    
+    # Amount range filters (NEW - Task 34)
+    # Amount HT range
+    if params[:amount_ht_min].present?
+      contracts = contracts.where("annual_amount_ht >= ?", params[:amount_ht_min].to_f)
+    end
+    if params[:amount_ht_max].present?
+      contracts = contracts.where("annual_amount_ht <= ?", params[:amount_ht_max].to_f)
+    end
+    
+    # Amount TTC range
+    if params[:amount_ttc_min].present?
+      contracts = contracts.where("annual_amount_ttc >= ?", params[:amount_ttc_min].to_f)
+    end
+    if params[:amount_ttc_max].present?
+      contracts = contracts.where("annual_amount_ttc <= ?", params[:amount_ttc_max].to_f)
     end
     
     contracts
