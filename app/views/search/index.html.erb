@@ -26,24 +26,24 @@
     <!-- Search Tabs -->
     <div style="margin-bottom: var(--space-xl); border-bottom: 2px solid var(--pink-pale);">
       <div style="display: flex; gap: var(--space-md); overflow-x: auto;">
-        <button class="typo-body-small typo-bold" style="padding: var(--space-md) var(--space-lg); border: none; background: none; cursor: pointer; border-bottom: 3px solid var(--coral-primary); color: var(--coral-primary); white-space: nowrap;">
+        <%= link_to search_path, class: "typo-body-small typo-bold", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid var(--coral-primary); color: var(--coral-primary); white-space: nowrap;" do %>
           Tous les résultats
-        </button>
-        <button class="typo-body-small" style="padding: var(--space-md) var(--space-lg); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap;">
+        <% end %>
+        <%= link_to search_sites_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
           Sites
-        </button>
-        <button class="typo-body-small" style="padding: var(--space-md) var(--space-lg); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap;">
+        <% end %>
+        <%= link_to search_contracts_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
           Contrats
-        </button>
-        <button class="typo-body-small" style="padding: var(--space-md) var(--space-lg); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap;">
+        <% end %>
+        <%= link_to search_equipment_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
           Équipements
-        </button>
-        <button class="typo-body-small" style="padding: var(--space-md) var(--space-lg); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap;">
+        <% end %>
+        <%= link_to search_organizations_path, class: "typo-body-small", style: "padding: var(--space-md) var(--space-lg); text-decoration: none; display: inline-block; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap; transition: color 0.2s, border-color 0.2s;", onmouseover: "this.style.color='var(--coral-primary)'; this.style.borderBottomColor='var(--coral-primary)';", onmouseout: "this.style.color='var(--medium-gray)'; this.style.borderBottomColor='transparent';" do %>
           Organisations
-        </button>
-        <button class="typo-body-small" style="padding: var(--space-md) var(--space-lg); border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; color: var(--medium-gray); white-space: nowrap;">
+        <% end %>
+        <span class="typo-body-small" style="padding: var(--space-md) var(--space-lg); display: inline-block; border-bottom: 3px solid transparent; color: var(--light-gray); white-space: nowrap; cursor: not-allowed;">
           Contacts
-        </button>
+        </span>
       </div>
     </div>
 
@@ -51,68 +51,165 @@
     <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
       <h5 class="typo-h5" style="margin-bottom: var(--space-md);">Filtres Rapides</h5>
       <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
-        <button class="typo-label-primary" style="border: none; cursor: pointer;">Tous</button>
-        <button class="typo-label" style="border: none; cursor: pointer;">Actifs</button>
-        <button class="typo-label" style="border: none; cursor: pointer;">Récents</button>
-        <button class="typo-label" style="border: none; cursor: pointer;">Favorites</button>
+        <button class="typo-label typo-label-primary">Tous</button>
+        <button class="typo-label">Actifs</button>
+        <button class="typo-label">Récents</button>
+        <button class="typo-label">Favoris</button>
       </div>
     </div>
 
-    <!-- Search Results (Empty State) -->
-    <div style="text-align: center; padding: var(--space-3xl) var(--space-xl);">
-      <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); color: var(--light-gray);">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-      <h3 class="typo-h3" style="color: var(--dark-gray); margin-bottom: var(--space-sm);">Aucune recherche effectuée</h3>
-      <p class="typo-body-small" style="color: var(--medium-gray); max-width: 500px; margin: 0 auto;">
-        Utilisez la barre de recherche ci-dessus pour trouver des sites, contrats, équipements, organisations ou contacts dans votre portefeuille.
-      </p>
-      
-      <!-- Suggestions -->
-      <div style="margin-top: var(--space-2xl); text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
-        <h5 class="typo-h5" style="margin-bottom: var(--space-md);">Suggestions de recherche :</h5>
-        <ul class="typo-list" style="color: var(--medium-gray);">
-          <li class="typo-body-small">Recherchez par nom de site : "Tour Montparnasse", "Campus La Défense"</li>
-          <li class="typo-body-small">Recherchez par type de contrat : "Maintenance CVC", "Nettoyage"</li>
-          <li class="typo-body-small">Recherchez par équipement : "Ascenseur", "Groupe froid"</li>
-          <li class="typo-body-small">Recherchez par organisation : "Entreprise", "Fournisseur"</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Example Results (Hidden by default, shown when search is performed) -->
-    <div style="display: none;">
-      <div style="margin-bottom: var(--space-md);">
+    <!-- Recent Content from Seed Data -->
+    <div>
+      <div style="margin-bottom: var(--space-lg);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-sm);">Contenu Récent</h3>
         <p class="typo-body-small" style="color: var(--medium-gray);">
-          <span class="typo-bold" style="color: var(--dark-gray);">42 résultats</span> trouvés pour "maintenance"
+          Explorez les derniers sites, contrats, équipements et organisations ajoutés
         </p>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
-        <!-- Result Item Example -->
-        <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); padding: var(--space-lg); transition: box-shadow 0.2s;">
-          <div style="display: flex; align-items: start; gap: var(--space-md);">
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
-                <span class="typo-label-primary">Contrat</span>
-                <h4 class="typo-h4" style="margin: 0;">Maintenance Annuelle CVC</h4>
+      <!-- Sites Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--coral-primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <h4 class="typo-h4" style="margin: 0;">Sites</h4>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-md);">
+          <% Site.order(created_at: :desc).limit(6).each do |site| %>
+            <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); padding: var(--space-lg); transition: all 0.2s; background: var(--white);" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'; this.style.borderColor='var(--coral-primary)';" onmouseout="this.style.boxShadow='none'; this.style.borderColor='var(--light-gray)';">
+              <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: var(--space-sm);">
+                <span class="typo-label typo-label-primary">Site</span>
+                <span class="typo-label typo-label-<%= site.status == 'active' ? 'success' : 'warning' %>"><%= site.status.capitalize %></span>
               </div>
-              <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);">
-                Contrat de maintenance préventive et corrective pour les systèmes de climatisation...
+              <h5 class="typo-h5" style="margin-bottom: var(--space-xs); color: var(--dark-gray);"><%= site.name %></h5>
+              <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
+                <%= site.city %>, <%= site.department %> • <%= number_with_delimiter(site.total_area || 0, delimiter: ' ') %> m²
               </p>
-              <div style="display: flex; gap: var(--space-lg);">
-                <span class="typo-body-small" style="color: var(--medium-gray);">
-                  <strong>Site:</strong> Tour Montparnasse
-                </span>
-                <span class="typo-body-small" style="color: var(--medium-gray);">
-                  <strong>Montant:</strong> 45,000 € HT/an
-                </span>
+              <div style="display: flex; gap: var(--space-sm);">
+                <%= link_to 'Voir', site_path(site), class: 'typo-btn-small-secondary', style: 'text-decoration: none; font-size: 0.875rem;' %>
               </div>
             </div>
-            <a href="#" class="typo-btn-small-secondary" style="text-decoration: none;">Voir</a>
-          </div>
+          <% end %>
         </div>
       </div>
+
+      <!-- Contracts Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--coral-primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h4 class="typo-h4" style="margin: 0;">Contrats</h4>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+          <% Contract.order(created_at: :desc).limit(5).each do |contract| %>
+            <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); padding: var(--space-lg); transition: all 0.2s; background: var(--white);" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'; this.style.borderColor='var(--coral-primary)';" onmouseout="this.style.boxShadow='none'; this.style.borderColor='var(--light-gray)';">
+              <div style="display: flex; align-items: start; gap: var(--space-md);">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs); flex-wrap: wrap;">
+                    <span class="typo-label typo-label-primary">Contrat</span>
+                    <span class="typo-label"><%= contract.contract_family %></span>
+                    <% if contract.status == 'active' %>
+                      <span class="typo-label typo-label-success">Actif</span>
+                    <% elsif contract.status == 'pending' %>
+                      <span class="typo-label typo-label-info">En attente</span>
+                    <% elsif contract.status == 'expired' %>
+                      <span class="typo-label typo-label-danger">Expiré</span>
+                    <% end %>
+                  </div>
+                  <h5 class="typo-h5" style="margin: var(--space-xs) 0;"><%= contract.title %></h5>
+                  <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);">
+                    <%= truncate(contract.contract_object, length: 100) %>
+                  </p>
+                  <div style="display: flex; gap: var(--space-lg); flex-wrap: wrap;">
+                    <span class="typo-body-small" style="color: var(--medium-gray);">
+                      <strong>Site:</strong> <%= contract.site&.name || 'N/A' %>
+                    </span>
+                    <% if contract.annual_amount %>
+                      <span class="typo-body-small" style="color: var(--medium-gray);">
+                        <strong>Montant:</strong> <%= number_to_currency(contract.annual_amount, unit: '€', format: '%n %u', precision: 0) %>/an
+                      </span>
+                    <% end %>
+                    <% if contract.end_date %>
+                      <span class="typo-body-small" style="color: var(--medium-gray);">
+                        <strong>Fin:</strong> <%= l(contract.end_date, format: :short) %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+                <%= link_to 'Voir', contract_path(contract), class: 'typo-btn-small-secondary', style: 'text-decoration: none;' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Equipment Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--coral-primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <h4 class="typo-h4" style="margin: 0;">Équipements</h4>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-md);">
+          <% Equipment.order(created_at: :desc).limit(6).each do |equipment| %>
+            <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); padding: var(--space-lg); transition: all 0.2s; background: var(--white);" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'; this.style.borderColor='var(--coral-primary)';" onmouseout="this.style.boxShadow='none'; this.style.borderColor='var(--light-gray)';">
+              <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: var(--space-sm);">
+                <span class="typo-label typo-label-primary">Équipement</span>
+                <% if equipment.criticality == 'critical' %>
+                  <span class="typo-label typo-label-danger">Critique</span>
+                <% elsif equipment.criticality == 'high' %>
+                  <span class="typo-label typo-label-warning">Haute</span>
+                <% end %>
+              </div>
+              <h5 class="typo-h5" style="margin-bottom: var(--space-xs); color: var(--dark-gray); font-size: 1rem;"><%= truncate(equipment.name, length: 35) %></h5>
+              <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);">
+                <%= equipment.manufacturer %> <%= equipment.model %>
+              </p>
+              <% if equipment.space %>
+                <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.8rem;">
+                  📍 <%= equipment.space.name %>
+                </p>
+              <% end %>
+              <div style="margin-top: var(--space-md);">
+                <%= link_to 'Voir', equipment_path(equipment), class: 'typo-btn-small-secondary', style: 'text-decoration: none; font-size: 0.875rem;' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Organizations Section -->
+      <div style="margin-bottom: var(--space-xl);">
+        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--coral-primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <h4 class="typo-h4" style="margin: 0;">Organisations</h4>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-md);">
+          <% Organization.order(created_at: :desc).limit(8).each do |org| %>
+            <div style="border: 1px solid var(--light-gray); border-radius: var(--space-md); padding: var(--space-lg); transition: all 0.2s; background: var(--white);" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'; this.style.borderColor='var(--coral-primary)';" onmouseout="this.style.boxShadow='none'; this.style.borderColor='var(--light-gray)';">
+              <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: var(--space-sm);">
+                <span class="typo-label typo-label-primary"><%= org.organization_type&.capitalize || 'Organization' %></span>
+              </div>
+              <h5 class="typo-h5" style="margin-bottom: var(--space-xs); color: var(--dark-gray);"><%= org.name %></h5>
+              <% if org.headquarters_address.present? %>
+                <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-sm);">
+                  <%= truncate(org.headquarters_address, length: 50) %>
+                </p>
+              <% end %>
+              <div style="margin-top: var(--space-md);">
+                <%= link_to 'Voir', organization_path(org), class: 'typo-btn-small-secondary', style: 'text-decoration: none; font-size: 0.875rem;' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
     </div>
 
   </div>

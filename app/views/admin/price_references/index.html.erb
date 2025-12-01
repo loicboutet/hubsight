@@ -34,7 +34,7 @@
       <div class="admin-stat-header">
         <div>
           <div class="admin-stat-label">Total Références</div>
-          <div class="admin-stat-value">0</div>
+          <div class="admin-stat-value"><%= @total_references %></div>
           <div class="admin-stat-change">Points de prix en base</div>
         </div>
         <div class="admin-stat-icon blue">
@@ -49,7 +49,7 @@
       <div class="admin-stat-header">
         <div>
           <div class="admin-stat-label">Familles de Contrats</div>
-          <div class="admin-stat-value">0</div>
+          <div class="admin-stat-value"><%= @contract_families_count %></div>
           <div class="admin-stat-change">Catégories uniques</div>
         </div>
         <div class="admin-stat-icon green">
@@ -64,7 +64,7 @@
       <div class="admin-stat-header">
         <div>
           <div class="admin-stat-label">Dernière Mise à Jour</div>
-          <div class="admin-stat-value">--</div>
+          <div class="admin-stat-value"><%= @last_update.strftime('%d %b %Y') if @last_update %></div>
           <div class="admin-stat-change">État de la base</div>
         </div>
         <div class="admin-stat-icon purple">
@@ -126,30 +126,31 @@
         </tr>
       </thead>
       <tbody>
+        <% @price_references.each do |ref| %>
         <tr>
-          <td class="typo-bold">Maintenance</td>
-          <td>Maintenance CVC</td>
-          <td>Climatisation</td>
-          <td>Service Annuel</td>
-          <td>Île-de-France</td>
-          <td style="text-align: right;"><span class="typo-bold">1 200 €</span></td>
-          <td>15 jan. 2025</td>
+          <td class="typo-bold"><%= ref.contract_family %></td>
+          <td><%= ref.contract_sub_family %></td>
+          <td><%= ref.equipment_type %></td>
+          <td><%= ref.service_type %></td>
+          <td><%= ref.city %></td>
+          <td style="text-align: right;"><span class="typo-bold"><%= number_to_currency(ref.reference_price, unit: "€", separator: ",", delimiter: " ", format: "%n %u") %></span></td>
+          <td><%= ref.updated_at.strftime('%d %b %Y') %></td>
           <td style="text-align: right;">
             <div style="display: inline-flex; gap: var(--space-sm); flex-wrap: nowrap; justify-content: flex-end;">
-              <%= link_to admin_price_reference_path(1), class: "typo-btn-small typo-btn-small-secondary" do %>
+              <%= link_to admin_price_reference_path(ref.id), class: "typo-btn-small typo-btn-small-secondary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
                 Voir
               <% end %>
-              <%= link_to edit_admin_price_reference_path(1), class: "typo-btn-small typo-btn-small-primary" do %>
+              <%= link_to edit_admin_price_reference_path(ref.id), class: "typo-btn-small typo-btn-small-primary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 Modifier
               <% end %>
-              <%= link_to admin_price_reference_path(1), method: :delete, data: { confirm: 'Êtes-vous sûr ?' }, class: "typo-btn-small typo-btn-small-danger" do %>
+              <%= link_to admin_price_reference_path(ref.id), method: :delete, data: { confirm: 'Êtes-vous sûr ?' }, class: "typo-btn-small typo-btn-small-danger" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
@@ -158,70 +159,7 @@
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="typo-bold">Maintenance</td>
-          <td>Maintenance Ascenseurs</td>
-          <td>Ascenseur Passagers</td>
-          <td>Inspection Trimestrielle</td>
-          <td>Paris</td>
-          <td style="text-align: right;"><span class="typo-bold">850 €</span></td>
-          <td>10 déc. 2024</td>
-          <td style="text-align: right;">
-            <div style="display: inline-flex; gap: var(--space-sm); flex-wrap: nowrap; justify-content: flex-end;">
-              <%= link_to admin_price_reference_path(2), class: "typo-btn-small typo-btn-small-secondary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Voir
-              <% end %>
-              <%= link_to edit_admin_price_reference_path(2), class: "typo-btn-small typo-btn-small-primary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Modifier
-              <% end %>
-              <%= link_to admin_price_reference_path(2), method: :delete, data: { confirm: 'Êtes-vous sûr ?' }, class: "typo-btn-small typo-btn-small-danger" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Supprimer
-              <% end %>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td class="typo-bold">Contrôle Technique</td>
-          <td>Sécurité Incendie</td>
-          <td>Extincteurs</td>
-          <td>Inspection Annuelle</td>
-          <td>Provence-Alpes</td>
-          <td style="text-align: right;"><span class="typo-bold">450 €</span></td>
-          <td>5 nov. 2024</td>
-          <td style="text-align: right;">
-            <div style="display: inline-flex; gap: var(--space-sm); flex-wrap: nowrap; justify-content: flex-end;">
-              <%= link_to admin_price_reference_path(3), class: "typo-btn-small typo-btn-small-secondary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Voir
-              <% end %>
-              <%= link_to edit_admin_price_reference_path(3), class: "typo-btn-small typo-btn-small-primary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Modifier
-              <% end %>
-              <%= link_to admin_price_reference_path(3), method: :delete, data: { confirm: 'Êtes-vous sûr ?' }, class: "typo-btn-small typo-btn-small-danger" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Supprimer
-              <% end %>
-            </div>
-          </td>
-        </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
