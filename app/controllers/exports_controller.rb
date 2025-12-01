@@ -8,8 +8,22 @@ class ExportsController < ApplicationController
   end
 
   def equipment
-    # Handle equipment export
-    send_data "equipment export", filename: "equipment.csv"
+    organization = current_user.organization
+
+    # Generate Excel file using service class
+    exporter = EquipmentListExporter.new(organization)
+    excel_data = exporter.generate
+
+    # Send file to user
+    filename = "equipements_#{organization.name.parameterize}_#{Date.today.strftime('%Y%m%d')}.xlsx"
+    
+    send_data excel_data,
+              filename: filename,
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              disposition: 'attachment'
+  rescue StandardError => e
+    Rails.logger.error "Equipment export error: #{e.message}"
+    redirect_to equipment_index_path, alert: "Erreur lors de l'export: #{e.message}"
   end
 
   def sites
