@@ -686,6 +686,18 @@ body {
   box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
 }
 
+/* Success Button - Green (Positive/Success Action) */
+.typo-btn-small-success {
+  background-color: #10b981;
+  color: var(--white);
+}
+
+.typo-btn-small-success:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
 /* Delete Button - Light with Red Accent (Destructive Action) */
 .typo-btn-small-danger {
   background-color: #fff5f5;

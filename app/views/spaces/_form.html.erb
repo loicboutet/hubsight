@@ -1,4 +1,4 @@
-<%= form_with(model: [level, space], local: true) do |f| %>
+<%= form_with(model: space.new_record? ? [level, space] : space, local: true) do |f| %>
   <div style="background-color: var(--white); border-radius: var(--space-md);">
     
     <!-- Basic Information -->

@@ -1,0 +1,57 @@
+<% content_for :header, "Database Seed Runner" %>
+
+<div class="admin-content-header">
+  <div>
+    <h1 class="admin-content-title">Database Seed Runner</h1>
+    <p class="admin-content-description">Run the database seed file to populate reference data</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="space-y-4">
+      <div class="alert alert-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <strong>Warning:</strong> This will run the database seed file (db/seeds.rb). Depending on how the seed file is configured, this may create, update, or delete data.
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Seed File Location</h3>
+        <code class="block bg-gray-100 p-3 rounded text-sm">db/seeds.rb</code>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-semibold mb-2">What will be seeded?</h3>
+        <ul class="list-disc list-inside space-y-1 text-gray-700">
+          <li>Equipment Types (if not already present)</li>
+          <li>OmniClass Spaces (if not already present)</li>
+          <li>Contract Families (if not already present)</li>
+          <li>Any other reference data defined in the seed file</li>
+        </ul>
+      </div>
+
+      <div class="mt-6">
+        <%= button_to "Run Database Seed", run_admin_seeds_path, 
+            method: :post,
+            class: "btn btn-primary",
+            data: { 
+              turbo_confirm: "Are you sure you want to run the database seed? This action will process all seed data." 
+            } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-4">
+  <div class="card-body">
+    <h3 class="text-lg font-semibold mb-3">Recent Activity</h3>
+    <p class="text-gray-600 text-sm">
+      Check the application logs for details about the last seed run and any errors that may have occurred.
+    </p>
+    <div class="mt-3">
+      <%= link_to "View Application Logs", admin_logs_path, class: "btn btn-secondary btn-sm" %>
+    </div>
+  </div>
+</div>

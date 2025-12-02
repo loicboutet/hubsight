@@ -1840,11 +1840,21 @@ if sm1_sites.length > 1
   eq2_6.save! if eq2_6.changed?
   puts "      ✓ Equipment: #{eq2_6.name}"
   
-  # Elevator Equipment (standalone - not in a space)
-  eq2_7 = Equipment.find_or_initialize_by(building: building2_1, name: "Ascenseur 1 - Otis")
+  # Create elevator shaft space
+  space2_4 = Space.find_or_initialize_by(level: level2_1, name: "Cage ascenseurs")
+  space2_4.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Local technique",
+    area: 10,
+    created_by_name: pm1.full_name
+  )
+  space2_4.save! if space2_4.changed?
+  
+  # Elevator Equipment
+  eq2_7 = Equipment.find_or_initialize_by(space: space2_4, name: "Ascenseur 1 - Otis")
   elevator_type = EquipmentType.find_by(code: 'TRA-001')
   eq2_7.assign_attributes(
-    organization_id: org1.id, site_id: site2.id, level_id: nil, space_id: nil,
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_1.id,
     equipment_type_id: elevator_type&.id,
     manufacturer: "Otis", model: "Gen2", serial_number: "OTIS-CLD-01",
     commissioning_date: Date.new(2018, 3, 1),
@@ -1858,9 +1868,9 @@ if sm1_sites.length > 1
   puts "      ✓ Equipment: #{eq2_7.name}"
   
   # Equipment 8: Elevator 2
-  eq2_8 = Equipment.find_or_initialize_by(building: building2_1, name: "Ascenseur 2 - Otis")
+  eq2_8 = Equipment.find_or_initialize_by(space: space2_4, name: "Ascenseur 2 - Otis")
   eq2_8.assign_attributes(
-    organization_id: org1.id, site_id: site2.id, level_id: nil, space_id: nil,
+    organization_id: org1.id, site_id: site2.id, building_id: building2_1.id, level_id: level2_1.id,
     equipment_type_id: elevator_type&.id,
     manufacturer: "Otis", model: "Gen2", serial_number: "OTIS-CLD-02",
     commissioning_date: Date.new(2018, 3, 1),
@@ -2043,12 +2053,22 @@ if sm1_sites.length > 2
   eq3_6.save! if eq3_6.changed?
   puts "      ✓ Equipment: #{eq3_6.name}"
   
+  # Create space for escalators
+  space3_4 = Space.find_or_initialize_by(level: level3_1, name: "Zone escalators")
+  space3_4.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Circulation",
+    area: 30,
+    created_by_name: pm1.full_name
+  )
+  space3_4.save! if space3_4.changed?
+  
   # Equipment 7-10: Escalators
   4.times do |i|
-    eq_esc = Equipment.find_or_initialize_by(building: building3_1, name: "Escalator #{i+1}")
+    eq_esc = Equipment.find_or_initialize_by(space: space3_4, name: "Escalator #{i+1}")
     escalator_type = EquipmentType.find_by(code: 'TRA-002')
     eq_esc.assign_attributes(
-      organization_id: org1.id, site_id: site3.id, level_id: nil, space_id: nil,
+      organization_id: org1.id, site_id: site3.id, building_id: building3_1.id, level_id: level3_1.id,
       equipment_type_id: escalator_type&.id,
       manufacturer: "Schindler", model: "9300 AE", serial_number: "SCH-CCO-ESC#{i+1}",
       commissioning_date: Date.new(2012, 6, 1),
@@ -2189,10 +2209,20 @@ if sm1_sites.length > 3
   eq4_5.save! if eq4_5.changed?
   puts "      ✓ Equipment: #{eq4_5.name}"
   
+  # Create loading dock space for door
+  space4_3 = Space.find_or_initialize_by(level: level4_1, name: "Quai de chargement")
+  space4_3.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Logistique",
+    area: 100,
+    created_by_name: pm1.full_name
+  )
+  space4_3.save! if space4_3.changed?
+  
   # Equipment 6: Industrial Overhead Door
-  eq4_6 = Equipment.find_or_initialize_by(building: building4_1, name: "Porte sectionnelle industrielle")
+  eq4_6 = Equipment.find_or_initialize_by(space: space4_3, name: "Porte sectionnelle industrielle")
   eq4_6.assign_attributes(
-    organization_id: org1.id, site_id: site4.id, level_id: nil, space_id: nil,
+    organization_id: org1.id, site_id: site4.id, building_id: building4_1.id, level_id: level4_1.id,
     manufacturer: "Hörmann", model: "SPU F42", serial_number: "HOR-SIL-PD1",
     commissioning_date: Date.new(2010, 5, 1),
     next_maintenance_date: Date.new(2025, 5, 1),
@@ -2333,11 +2363,21 @@ if sm1_sites.length > 4
   eq5_5.save! if eq5_5.changed?
   puts "      ✓ Equipment: #{eq5_5.name}"
   
-  # Elevators (standalone)
-  eq5_6 = Equipment.find_or_initialize_by(building: building5_1, name: "Ascenseur résidentiel Schindler")
+  # Create elevator shaft space
+  space5_4 = Space.find_or_initialize_by(level: level5_1, name: "Cage ascenseur")
+  space5_4.assign_attributes(
+    organization_id: org1.id,
+    space_type: "Local technique",
+    area: 5,
+    created_by_name: pm1.full_name
+  )
+  space5_4.save! if space5_4.changed?
+  
+  # Elevator
+  eq5_6 = Equipment.find_or_initialize_by(space: space5_4, name: "Ascenseur résidentiel Schindler")
   elevator_type = EquipmentType.find_by(code: 'TRA-001')
   eq5_6.assign_attributes(
-    organization_id: org1.id, site_id: site5.id, level_id: nil, space_id: nil,
+    organization_id: org1.id, site_id: site5.id, building_id: building5_1.id, level_id: level5_1.id,
     equipment_type_id: elevator_type&.id,
     manufacturer: "Schindler", model: "3300", serial_number: "SCH-RLP-01",
     commissioning_date: Date.new(2019, 10, 1),

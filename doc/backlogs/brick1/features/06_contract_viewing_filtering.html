@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSight - Contract Viewing & Filtering (Brick 1)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background-color: white; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 2.5em; }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1em; }
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .stat-card { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 20px; border-radius: 8px; flex: 1; min-width: 200px; }
+        .stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { opacity: 0.9; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        thead { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; }
+        th { padding: 12px 8px; text-align: left; font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        td { padding: 10px 8px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+        tr:hover { background-color: #f8f9fa; }
+        .sl-col { width: 50px; text-align: center; font-weight: bold; color: #e74c3c; }
+        .title-col { width: 220px; font-weight: 600; color: #2c3e50; }
+        .description-col { min-width: 250px; }
+        .url-col { width: 180px; word-break: break-word; }
+        .url-col a { color: #e74c3c; text-decoration: none; }
+        .url-col a:hover { text-decoration: underline; }
+        .test-col { min-width: 350px; font-size: 12px; color: #555; }
+        .video-col { width: 100px; text-align: center; }
+        .empty-cell { color: #bdc3c7; font-style: italic; }
+        .role-badges { margin-bottom: 10px; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; margin-right: 5px; margin-bottom: 5px; }
+        .badge-admin { background-color: #e74c3c; color: white; }
+        .badge-pm { background-color: #3498db; color: white; }
+        .badge-sm { background-color: #27ae60; color: white; }
+        .test-section { margin-top: 8px; }
+        .test-section strong { color: #e74c3c; }
+        @media (max-width: 768px) { .container { padding: 15px; } h1 { font-size: 1.8em; } table { font-size: 11px; } th, td { padding: 6px 4px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Contract Viewing & Filtering Features</h1>
+        <p class="subtitle">View, sort, filter contracts with 17 filter options and customizable columns</p>
+        
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number">2</div><div class="stat-label">Total Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">17</div><div class="stat-label">Filter Options</div></div>
+            <div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Table Columns</div></div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th class="sl-col">SL</th>
+                    <th class="title-col">Task Title</th>
+                    <th class="description-col">Task Description</th>
+                    <th class="url-col">URL</th>
+                    <th class="test-col">How to Test</th>
+                    <th class="video-col">Video</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="sl-col">33</td>
+                    <td class="title-col">View Contract List</td>
+                    <td class="description-col">Display contracts in table view with pagination, sorting, and column customization</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                            <span class="badge badge-sm">Site Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/contracts</li>
+                                <li>Verify contracts table displays with all columns</li>
+                                <li>Test sorting: click column headers (number, title, site, status)</li>
+                                <li>Verify ascending/descending sort indicators</li>
+                                <li>Click "Colonnes" button to customize columns</li>
+                                <li>Hide/show various columns using checkboxes</li>
+                                <li>Verify table updates dynamically</li>
+                                <li>Test pagination: change per-page (15/25/50/100)</li>
+                                <li>Navigate through pages using pagination controls</li>
+                                <li>Verify total count and current page displayed</li>
+                                <li>Verify preferences persist on page refresh</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">34</td>
+                    <td class="title-col">Filter Contracts</td>
+                    <td class="description-col">17 filter options: 5 basic (site, building, family, status, search) + 12 advanced (dates, amounts, etc)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                            <span class="badge badge-sm">Site Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/contracts</li>
+                                <li>Test 5 basic filters: site dropdown, building dropdown, family dropdown, status dropdown, search text</li>
+                                <li>Click "Filtres Avancés" button to expand advanced filters</li>
+                                <li>Test 3 date range filters: start date, end date, renewal date</li>
+                                <li>Test 2 amount range filters: annual amount HT, annual amount TTC</li>
+                                <li>Test 4 additional filters: contract type, client, provider, equipment</li>
+                                <li>Combine multiple filters together</li>
+                                <li>Verify results update dynamically</li>
+                                <li>Click "Réinitialiser" to clear all filters</li>
+                                <li>Verify all 17 filters can work simultaneously</li>
+                                <li>Verify filter state persists in URL</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
