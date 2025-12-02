@@ -1,5 +1,7 @@
-<div style="padding: var(--space-2xl);">
-  <div style="margin-bottom: var(--space-2xl);">
+<% content_for :header, "Modifier l'Organisation" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
     <a href="<%= admin_organization_path(@organization) %>" style="color: var(--coral-primary); text-decoration: none; display: inline-flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-lg);">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -7,8 +9,8 @@
       Retour aux détails
     </a>
     
-    <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier l'Organisation</h1>
-    <p style="color: var(--gray); margin: 0;"><%= @organization.name %></p>
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier l'Organisation</h2>
+    <p class="typo-body-small"><%= @organization.name %></p>
   </div>
 
   <%= render 'form' %>
