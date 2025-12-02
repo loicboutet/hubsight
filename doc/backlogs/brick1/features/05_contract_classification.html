@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSight - Contract Classification (Brick 1)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background-color: white; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 2.5em; }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1em; }
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .stat-card { background: linear-gradient(135deg, #16a085 0%, #138d75 100%); color: white; padding: 20px; border-radius: 8px; flex: 1; min-width: 200px; }
+        .stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { opacity: 0.9; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        thead { background: linear-gradient(135deg, #16a085 0%, #138d75 100%); color: white; }
+        th { padding: 12px 8px; text-align: left; font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        td { padding: 10px 8px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+        tr:hover { background-color: #f8f9fa; }
+        .sl-col { width: 50px; text-align: center; font-weight: bold; color: #16a085; }
+        .title-col { width: 220px; font-weight: 600; color: #2c3e50; }
+        .description-col { min-width: 250px; }
+        .url-col { width: 180px; word-break: break-word; }
+        .url-col a { color: #16a085; text-decoration: none; }
+        .url-col a:hover { text-decoration: underline; }
+        .test-col { min-width: 350px; font-size: 12px; color: #555; }
+        .video-col { width: 100px; text-align: center; }
+        .empty-cell { color: #bdc3c7; font-style: italic; }
+        .role-badges { margin-bottom: 10px; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; margin-right: 5px; margin-bottom: 5px; }
+        .badge-admin { background-color: #e74c3c; color: white; }
+        .badge-pm { background-color: #3498db; color: white; }
+        .test-section { margin-top: 8px; }
+        .test-section strong { color: #16a085; }
+        @media (max-width: 768px) { .container { padding: 15px; } h1 { font-size: 1.8em; } table { font-size: 11px; } th, td { padding: 6px 4px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏷️ Contract Classification Features</h1>
+        <p class="subtitle">Contract families, service linking, automatic date and VAT calculations</p>
+        
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Total Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">Contract Families</div></div>
+            <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">VAT Rates</div></div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th class="sl-col">SL</th>
+                    <th class="title-col">Task Title</th>
+                    <th class="description-col">Task Description</th>
+                    <th class="url-col">URL</th>
+                    <th class="test-col">How to Test</th>
+                    <th class="video-col">Video</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="sl-col">29</td>
+                    <td class="title-col">Contract Family Search</td>
+                    <td class="description-col">Search and autocomplete for contract families/subfamilies with 7 filter buttons</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/contracts/new</li>
+                                <li>Locate "Famille d'Achats" autocomplete field</li>
+                                <li>Type minimum 2 characters (e.g., "ma")</li>
+                                <li>Verify dropdown appears with results</li>
+                                <li>Verify hierarchy displayed: Family > Subfamily format</li>
+                                <li>Test 7 filter buttons: MAIN, NETT, CTRL, FLUI, ASSU, IMMO, AUTR</li>
+                                <li>Click "MAIN" filter - verify only MAIN subfamilies shown</li>
+                                <li>Click "ALL" to clear filter</li>
+                                <li>Select a subfamily (e.g., MAIN-CVC)</li>
+                                <li>Verify selected value displays with full hierarchy</li>
+                                <li>Test keyboard navigation with arrow keys</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">30</td>
+                    <td class="title-col">Link Services to Contract Families</td>
+                    <td class="description-col">Manual linking of services to Contract Family/Subfamily (implemented via Task 29)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/contracts/new</li>
+                                <li>Use family autocomplete to search and select family/subfamily</li>
+                                <li>Verify selected info panel shows family details</li>
+                                <li>Fill service description field</li>
+                                <li>Fill other required fields and create contract</li>
+                                <li>Navigate to contract show page</li>
+                                <li>Verify "Famille d'Achats" section displays</li>
+                                <li>Verify shows: Family code, Family name, Subfamily</li>
+                                <li>Verify service description displays correctly</li>
+                                <li>Test editing contract - family autocomplete should retain value</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">31</td>
+                    <td class="title-col">Auto-Calculate Contract Dates</td>
+                    <td class="description-col">Automatically calculate end date, last renewal date, termination deadline based on contract parameters</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/contracts/new</li>
+                                <li>Fill start date (e.g., 2024-01-01)</li>
+                                <li>Fill initial duration in months (e.g., 12)</li>
+                                <li>Fill renewal duration in months (e.g., 12)</li>
+                                <li>Fill number of renewals (e.g., 2)</li>
+                                <li>Fill notice period in months (e.g., 3)</li>
+                                <li>Verify end date auto-calculates with purple AUTO badge</li>
+                                <li>Verify last renewal date auto-calculates with purple AUTO badge</li>
+                                <li>Verify termination deadline auto-calculates with purple AUTO badge</li>
+                                <li>Test changing values - verify dates recalculate immediately</li>
+                                <li>Create contract and verify calculated dates saved correctly</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">32</td>
+                    <td class="title-col">Auto-Calculate VAT Amounts</td>
+                    <td class="description-col">Automatically calculate VAT inclusive amounts with French VAT rates (20%, 10%, 5.5%, 0%)</td>
+                    <td class="url-col"><a href="http://localhost:3000/contracts/new">localhost:3000/contracts/new</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/contracts/new</li>
+                                <li>Select VAT rate: 20% from dropdown (20%, 10%, 5.5%, 0%)</li>
+                                <li>Fill annual amount HT (excluding VAT): 85000€</li>
+                                <li>Verify annual amount TTC auto-calculates: 102000€</li>
+                                <li>Verify monthly amounts auto-calculate (HT and TTC)</li>
+                                <li>Test bidirectional: change TTC amount, verify HT recalculates</li>
+                                <li>Test different VAT rates - verify calculations correct</li>
+                                <li>Verify all amounts display with proper € formatting</li>
+                                <li>Create contract and verify amounts saved correctly</li>
+                                <li>Verify calculations displayed on contract show page</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

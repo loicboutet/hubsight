@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HubSight - Dashboard & Analytics (Brick 1)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background-color: white; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; font-size: 2.5em; }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1.1em; }
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .stat-card { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 20px; border-radius: 8px; flex: 1; min-width: 200px; }
+        .stat-number { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { opacity: 0.9; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        thead { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; }
+        th { padding: 12px 8px; text-align: left; font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        td { padding: 10px 8px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
+        tr:hover { background-color: #f8f9fa; }
+        .sl-col { width: 50px; text-align: center; font-weight: bold; color: #3498db; }
+        .title-col { width: 220px; font-weight: 600; color: #2c3e50; }
+        .description-col { min-width: 250px; }
+        .url-col { width: 180px; word-break: break-word; }
+        .url-col a { color: #3498db; text-decoration: none; }
+        .url-col a:hover { text-decoration: underline; }
+        .test-col { min-width: 350px; font-size: 12px; color: #555; }
+        .video-col { width: 100px; text-align: center; }
+        .empty-cell { color: #bdc3c7; font-style: italic; }
+        .role-badges { margin-bottom: 10px; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; margin-right: 5px; margin-bottom: 5px; }
+        .badge-admin { background-color: #e74c3c; color: white; }
+        .badge-pm { background-color: #3498db; color: white; }
+        .test-section { margin-top: 8px; }
+        .test-section strong { color: #3498db; }
+        @media (max-width: 768px) { .container { padding: 15px; } h1 { font-size: 1.8em; } table { font-size: 11px; } th, td { padding: 6px 4px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Dashboard & Analytics Features</h1>
+        <p class="subtitle">Portfolio overview dashboards with KPIs, key indicators, and analytics charts</p>
+        
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Total Tasks</div></div>
+            <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">KPI Cards</div></div>
+            <div class="stat-card"><div class="stat-number">Real-time</div><div class="stat-label">Data Updates</div></div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th class="sl-col">SL</th>
+                    <th class="title-col">Task Title</th>
+                    <th class="description-col">Task Description</th>
+                    <th class="url-col">URL</th>
+                    <th class="test-col">How to Test</th>
+                    <th class="video-col">Video</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="sl-col">44</td>
+                    <td class="title-col">Portfolio Overview Dashboard</td>
+                    <td class="description-col">Dashboard displaying 7 KPIs, key indicators, and charts with real database data</td>
+                    <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/dashboard</li>
+                                <li>Verify 7 KPI cards display: Total Sites, Total Buildings, Total Equipment, Active Contracts, Total Spend, Upcoming Renewals, Alerts</li>
+                                <li>Verify each KPI shows real data from database</li>
+                                <li>Verify key indicators section displays</li>
+                                <li>Verify contracts by status breakdown (4 statuses)</li>
+                                <li>Verify upcoming renewals (30/60/90 days)</li>
+                                <li>Verify family distribution with percentages</li>
+                                <li>Verify charts render correctly (no errors)</li>
+                                <li>Test responsive design (resize browser)</li>
+                                <li>Verify data updates when contracts change</li>
+                                <li>Verify organization isolation (only see own data)</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">45</td>
+                    <td class="title-col">Key Indicators Display</td>
+                    <td class="description-col">Display key indicators: contracts by status/family, upcoming renewals, spending by category</td>
+                    <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/dashboard</li>
+                                <li>Scroll to "Key Indicators" section</li>
+                                <li>Verify "Contracts by Status" displays 4 statuses: Active, Pending, Expired, Terminated</li>
+                                <li>Verify count and percentage for each status</li>
+                                <li>Verify "Upcoming Renewals" section shows renewals in 30/60/90 day windows</li>
+                                <li>Verify count for each renewal period</li>
+                                <li>Verify "Family Distribution" shows contract families with percentages</li>
+                                <li>Verify percentages sum to 100%</li>
+                                <li>Verify visual indicators (colors, icons) appropriate</li>
+                                <li>Test clicking indicators (should link to filtered views)</li>
+                                <li>Verify real-time data accuracy</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+                <tr>
+                    <td class="sl-col">46</td>
+                    <td class="title-col">Analytics Dashboard</td>
+                    <td class="description-col">Analytics page with charts showing contract distribution, spending trends, equipment distribution</td>
+                    <td class="url-col"><a href="http://localhost:3000/analytics">localhost:3000/analytics</a></td>
+                    <td class="test-col">
+                        <div class="role-badges">
+                            <span class="badge badge-admin">Admin</span>
+                            <span class="badge badge-pm">Portfolio Manager</span>
+                        </div>
+                        <div class="test-section">
+                            <strong>Test as Portfolio Manager:</strong>
+                            <ol>
+                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
+                                <li>Navigate to localhost:3000/analytics</li>
+                                <li>Verify "Contract Distribution" section with donut charts</li>
+                                <li>Verify charts show: by status, by family, by site</li>
+                                <li>Verify "Spending Trends" section with monthly line/bar chart</li>
+                                <li>Verify chart shows monthly spending over 12 months</li>
+                                <li>Verify "Equipment Distribution" section</li>
+                                <li>Verify charts show: by type, by site, by age</li>
+                                <li>Test chart interactions (hover, click, zoom if available)</li>
+                                <li>Verify legends display correctly</li>
+                                <li>Verify data labels clear and readable</li>
+                                <li>Test export/print functionality if available</li>
+                            </ol>
+                        </div>
+                    </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
