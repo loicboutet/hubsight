@@ -5,14 +5,14 @@ class SiteManagersController < ApplicationController
 
   def index
     # Admins see all site managers, Portfolio managers see only their organization's site managers
-    if current_user.admin?
-      @site_managers = User.by_role(User::ROLES[:site_manager])
-                          .order(created_at: :desc)
+    base_query = if current_user.admin?
+      User.by_role(User::ROLES[:site_manager])
     else
-      @site_managers = User.by_role(User::ROLES[:site_manager])
-                          .where(organization_id: current_user.organization_id)
-                          .order(created_at: :desc)
+      User.by_role(User::ROLES[:site_manager])
+          .where(organization_id: current_user.organization_id)
     end
+    
+    @site_managers = base_query.order(created_at: :desc).page(params[:page]).per(10)
   end
 
   def show
