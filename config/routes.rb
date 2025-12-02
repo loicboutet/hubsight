@@ -50,6 +50,13 @@ Rails.application.routes.draw do
     # Application Logs Viewer
     resources :logs, only: [:index]
     
+    # Database Seed Runner
+    resources :seeds, only: [:index] do
+      collection do
+        post :run
+      end
+    end
+    
     # Price Reference Management (BRIQUE 2)
     resources :price_references do
       collection do
