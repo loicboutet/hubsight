@@ -56,9 +56,6 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  
-  # Preview emails in browser instead of sending them
-  gem "letter_opener"
 end
 
 group :test do
@@ -69,6 +66,9 @@ end
 
 gem "devise", "~> 4.9"
 gem "kaminari", "~> 1.2"
+
+# Email delivery
+gem "postmark-rails"
 
 # OCR and PDF processing
 gem "pdf-reader", "~> 2.12"  # FREE text extraction from digital PDFs
