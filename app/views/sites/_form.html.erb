@@ -215,8 +215,18 @@
 
     <!-- Form Actions -->
     <div style="display: flex; gap: var(--space-md); justify-content: flex-end; border-top: 1px solid var(--light-gray); padding-top: var(--space-lg);">
-      <%= link_to "Annuler", sites_path, class: "typo-btn-cancel" %>
-      <%= f.submit site.new_record? ? "Créer le site" : "Mettre à jour le site", class: "typo-btn-success" %>
+      <%= link_to sites_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= site.new_record? ? "Créer le site" : "Mettre à jour le site" %>
+      </button>
     </div>
   </div>
 <% end %>
