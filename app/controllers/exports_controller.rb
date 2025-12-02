@@ -70,15 +70,28 @@ class ExportsController < ApplicationController
 
   def sites
     # Determine export format (hierarchical or sheets)
-    format = params[:format] || 'hierarchical'
-    organization = current_user.organization
+    export_format = params[:export_format] || 'hierarchical'
+    
+    # Get organization - for admins, get first org or handle differently
+    organization = if current_user.admin?
+                     # Admin users might not have an organization, use first org or all sites
+                     Organization.first
+                   else
+                     current_user.organization
+                   end
+    
+    unless organization
+      redirect_to sites_path, alert: "Aucune organisation trouvée pour l'export."
+      return
+    end
 
     # Generate Excel file using service class
-    exporter = SitesStructureExporter.new(organization, format)
+    exporter = SitesStructureExporter.new(organization, export_format)
     excel_data = exporter.generate
 
     # Send file to user
-    filename = "structure_sites_#{organization.name.parameterize}_#{Date.today.strftime('%Y%m%d')}.xlsx"
+    format_label = export_format == 'sheets' ? 'multi_feuilles' : 'hierarchique'
+    filename = "structure_sites_#{format_label}_#{organization.name.parameterize}_#{Date.today.strftime('%Y%m%d')}.xlsx"
     
     send_data excel_data,
               filename: filename,
@@ -86,6 +99,7 @@ class ExportsController < ApplicationController
               disposition: 'attachment'
   rescue StandardError => e
     Rails.logger.error "Sites export error: #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
     redirect_to sites_path, alert: "Erreur lors de l'export: #{e.message}"
   end
 

@@ -13,6 +13,15 @@ class SitesStructureExporter
   def generate
     package = Axlsx::Package.new
     workbook = package.workbook
+    
+    # Create styles
+    @header_style = workbook.styles.add_style(
+      bg_color: '4F46E5',
+      fg_color: 'FFFFFF',
+      b: true,
+      sz: 11,
+      alignment: { horizontal: :center, vertical: :center, wrap_text: true }
+    )
 
     case @format
     when 'sheets', 'nested'
@@ -50,7 +59,7 @@ class SitesStructureExporter
       'Année/Date',
       'Statut',
       'Détails'
-    ], style: header_style
+    ]
   end
 
   def add_hierarchical_data(sheet)
@@ -395,13 +404,7 @@ class SitesStructureExporter
   end
 
   def header_style
-    {
-      bg_color: '4F46E5',
-      fg_color: 'FFFFFF',
-      b: true,
-      sz: 11,
-      alignment: { horizontal: :center, vertical: :center, wrap_text: true }
-    }
+    @header_style
   end
 
   def format_number(value)

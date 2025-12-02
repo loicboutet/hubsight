@@ -12,8 +12,11 @@ class SitesController < ApplicationController
     end
     
     # Apply filters BEFORE pagination
-    @sites = @sites.search_by_name(params[:search]) if params[:search].present?
-    @sites = @sites.search_by_city(params[:search]) if params[:search].present?
+    if params[:search].present?
+      # Search in both name and city (OR condition)
+      search_term = "%#{params[:search]}%"
+      @sites = @sites.where("name LIKE ? OR city LIKE ?", search_term, search_term)
+    end
     @sites = @sites.by_type(params[:site_type]) if params[:site_type].present?
     @sites = @sites.by_region(params[:region]) if params[:region].present?
     
