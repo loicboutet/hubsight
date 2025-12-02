@@ -6,23 +6,23 @@
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);"><%= @contract.title %></h2>
       <p class="typo-body-small">Contrat N° <%= @contract.contract_number %></p>
     </div>
-    <div style="display: flex; gap: var(--space-md);">
+    <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
       <%= link_to validate_contract_path(@contract.id), class: "typo-btn-small typo-btn-small-success", style: "position: relative;" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
         Voir Validation
         <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4757; color: white; font-size: 0.625rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; text-transform: uppercase;">NEW</span>
       <% end %>
-      <%= link_to audit_trail_path(entity_type: 'Contract', entity_id: @contract.id), class: "typo-btn-small", style: "display: inline-flex; align-items: center; gap: 6px; background-color: #6c757d; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 600; transition: background-color 0.2s;" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <%= link_to audit_trail_path(entity_type: 'Contract', entity_id: @contract.id), class: "typo-btn-small typo-btn-small-primary" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         Historique
       <% end %>
       <%= link_to edit_contract_path(@contract.id), class: "typo-btn-small typo-btn-small-primary" do %>
-        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
         Éditer
       <% end %>
@@ -46,7 +46,7 @@
         </div>
         <div>
           <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">MONTANT ANNUEL</p>
-          <p class="typo-h4" style="color: white;"><%= number_to_currency(@contract.annual_amount_excl_tax, unit: "€", separator: ",", delimiter: " ", format: "%n %u") %></p>
+          <p class="typo-h4" style="color: white;"><%= number_to_currency(@contract.annual_amount_ht, unit: "€", separator: ",", delimiter: " ", format: "%n %u") %></p>
         </div>
         <div>
           <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">STATUT</p>
@@ -55,39 +55,8 @@
       </div>
     </div>
 
-  <!-- Contract Type & PDF Section -->
-  <% if @contract.contract_classification.present? %>
-    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-lg); background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg); color: white;">
-        <div>
-          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">TYPE DE CONTRAT</p>
-          <p class="typo-h3" style="color: white;">
-            <% case @contract.contract_classification %>
-            <% when 'initial' %>
-              📋 Contrat Initial
-            <% when 'amendment' %>
-              📝 Avenant
-            <% when 'framework' %>
-              📑 Accord Cadre
-            <% end %>
-          </p>
-        </div>
-        <div>
-          <p style="color: rgba(255,255,255,0.8); font-size: 0.75rem; margin-bottom: var(--space-xs);">DOCUMENT PDF</p>
-          <% if @contract.pdf_url.present? %>
-            <%= link_to @contract.pdf_url, target: '_blank', style: "color: white; text-decoration: underline; font-weight: bold;" do %>
-              📄 Voir le PDF du contrat →
-            <% end %>
-          <% else %>
-            <p style="color: rgba(255,255,255,0.6);">Aucun PDF disponible</p>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
   <!-- Related Contracts Section (only for initial contracts) -->
-  <% if @contract.contract_classification == 'initial' && (@amendments.any? || @framework_agreements.any?) %>
+  <% if false && (@amendments.any? || @framework_agreements.any?) %>
     <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
       <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
         Contrats Associés
@@ -225,7 +194,7 @@
           </div>
           <div>
             <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Propriétaire (Organisation)</p>
-            <p class="typo-body typo-bold"><%= @contract.contractor_organization || '-' %></p>
+            <p class="typo-body typo-bold"><%= @contract.contractor_organization_name || '-' %></p>
           </div>
           <div>
             <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Type de Bail</p>
@@ -322,20 +291,12 @@
         <p class="typo-body"><%= @contract.contract_number %></p>
       </div>
       <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Référence Contrat Client</p>
-        <p class="typo-body"><%= @contract.client_contract_reference || '-' %></p>
-      </div>
-      <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Référence Contrat Fournisseur</p>
-        <p class="typo-body"><%= @contract.supplier_contract_reference || '-' %></p>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Référence Publique</p>
+        <p class="typo-body"><%= @contract.public_reference || '-' %></p>
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Type de Contrat</p>
         <p class="typo-body"><%= @contract.contract_type %></p>
-      </div>
-      <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Mode de Renouvellement</p>
-        <p class="typo-body"><%= @contract.renewal_mode || '-' %></p>
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">État du Contrat</p>
@@ -345,19 +306,15 @@
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Famille d'Achats</p>
-        <p class="typo-body"><%= @contract.purchase_family %></p>
+        <p class="typo-body"><%= @contract.contract_family %></p>
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Sous-Famille d'Achats</p>
         <p class="typo-body"><%= @contract.purchase_subfamily || '-' %></p>
       </div>
-      <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Devise Applicable</p>
-        <p class="typo-body"><%= @contract.currency || 'EUR' %></p>
-      </div>
       <div style="grid-column: 1 / -1;">
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Objet du Contrat</p>
-        <p class="typo-body"><%= @contract.object %></p>
+        <p class="typo-body"><%= @contract.contract_object %></p>
       </div>
       <div style="grid-column: 1 / -1;">
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nature des Prestations</p>
@@ -381,43 +338,31 @@
           <p class="typo-body typo-bold"><%= @contract.client_organization_name || '-' %></p>
         </div>
         <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Adresse</p>
-          <p class="typo-body"><%= @contract.client_organization_address || '-' %></p>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Contact Principal</p>
+          <p class="typo-body"><%= @contract.client_contact_name || '-' %></p>
         </div>
         <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Représentant Signataire</p>
-          <p class="typo-body"><%= @contract.client_signatory_representative || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Poste du Signataire</p>
-          <p class="typo-body"><%= @contract.client_signatory_position || '-' %></p>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email Contact</p>
+          <p class="typo-body"><%= @contract.client_contact_email || '-' %></p>
         </div>
       </div>
     </div>
 
     <!-- Supplier Organization -->
     <div style="margin-bottom: var(--space-lg);">
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Organisation Fournisseur</h5>
+      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Organisation Prestataire</h5>
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nom de l'Organisation</p>
-          <p class="typo-body typo-bold"><%= @contract.contractor_organization %></p>
+          <p class="typo-body typo-bold"><%= @contract.contractor_organization_name || '-' %></p>
         </div>
         <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Adresse</p>
-          <p class="typo-body"><%= @contract.supplier_organization_address || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Représentant Signataire</p>
-          <p class="typo-body"><%= @contract.supplier_signatory_representative || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Poste du Signataire</p>
-          <p class="typo-body"><%= @contract.supplier_signatory_position || '-' %></p>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Agence</p>
+          <p class="typo-body"><%= @contract.contractor_agency_name || '-' %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Contact Principal</p>
-          <p class="typo-body"><%= @contract.contractor_contact || '-' %></p>
+          <p class="typo-body"><%= @contract.contractor_contact_name || '-' %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email</p>
@@ -436,7 +381,7 @@
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Gestionnaire du Contrat</p>
-          <p class="typo-body"><%= @contract.contract_manager || '-' %></p>
+          <p class="typo-body"><%= @contract.monitoring_manager || '-' %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Département Gestionnaire</p>
@@ -458,23 +403,23 @@
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Montant Initial Annualisé HT</p>
-          <p class="typo-body"><%= number_to_currency(@contract.initial_annual_amount_excl_tax || @contract.annual_amount_excl_tax, unit: "#{@contract.currency || 'EUR'}", separator: ",", delimiter: " ", format: "%n %u") %></p>
+          <p class="typo-body"><%= number_to_currency(@contract.annual_amount_ht, unit: "EUR", separator: ",", delimiter: " ", format: "%n %u") %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Montant Annualisé HT (Auto-calc)</p>
-          <p class="typo-body typo-bold" style="color: var(--coral-primary);"><%= number_to_currency(@contract.annual_amount_excl_tax, unit: "#{@contract.currency || 'EUR'}", separator: ",", delimiter: " ", format: "%n %u") %></p>
+          <p class="typo-body typo-bold" style="color: var(--coral-primary);"><%= number_to_currency(@contract.annual_amount_ht, unit: "EUR", separator: ",", delimiter: " ", format: "%n %u") %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Montant Estimatif Annualisé HT</p>
-          <p class="typo-body"><%= number_to_currency(@contract.estimated_annual_amount_excl_tax, unit: "#{@contract.currency || 'EUR'}", separator: ",", delimiter: " ", format: "%n %u") if @contract.estimated_annual_amount_excl_tax %></p>
+          <p class="typo-body"><%= number_to_currency(@contract.annual_amount_ht, unit: "EUR", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount_ht %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Montant Annualisé TTC (Manuel)</p>
-          <p class="typo-body"><%= number_to_currency(@contract.manual_annual_amount_incl_tax, unit: "#{@contract.currency || 'EUR'}", separator: ",", delimiter: " ", format: "%n %u") if @contract.manual_annual_amount_incl_tax %></p>
+          <p class="typo-body"><%= number_to_currency(@contract.annual_amount_ttc, unit: "EUR", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount_ttc %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Montant Annualisé TTC (Auto-calc)</p>
-          <p class="typo-body"><%= number_to_currency(@contract.annual_amount_incl_tax, unit: "#{@contract.currency || 'EUR'}", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount_incl_tax %></p>
+          <p class="typo-body"><%= number_to_currency(@contract.annual_amount_ttc, unit: "EUR", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount_ttc %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Taux de TVA</p>
@@ -492,34 +437,18 @@
           <p class="typo-body"><%= @contract.revision_index || '-' %></p>
         </div>
         <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date Publication Dernier Indice</p>
-          <p class="typo-body"><%= @contract.last_index_publication_date&.strftime("%d/%m/%Y") || '-' %></p>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Fréquence de Révision</p>
+          <p class="typo-body"><%= @contract.revision_frequency || '-' %></p>
         </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Valeur Dernier Indice</p>
-          <p class="typo-body"><%= @contract.last_index_value || '-' %></p>
-        </div>
-        <div style="grid-column: 1 / -1;">
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Formule d'Indexation</p>
-          <p class="typo-body"><%= @contract.price_indexation_formula || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">% Minimum de Révision</p>
-          <p class="typo-body"><%= @contract.minimum_price_revision_percent || '-' %>%</p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date MAJ Montant Estimatif HT</p>
-          <p class="typo-body"><%= @contract.estimated_amount_last_update_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date MAJ Montant TTC Manuel</p>
-          <p class="typo-body"><%= @contract.manual_ttc_amount_last_update_date&.strftime("%d/%m/%Y") || '-' %></p>
+        <div  style="grid-column: 1 / -1;">
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Conditions de Révision</p>
+          <p class="typo-body"><%= @contract.revision_conditions || '-' %></p>
         </div>
       </div>
     </div>
 
     <!-- Payment & Billing Sub-section -->
-    <div style="margin-bottom: var(--space-lg);">
+    <div>
       <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Facturation et Règlement</h5>
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
         <div>
@@ -528,34 +457,11 @@
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Mode de Règlement</p>
-          <p class="typo-body"><%= @contract.billing_method %></p>
+          <p class="typo-body"><%= @contract.billing_method || '-' %></p>
         </div>
         <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Échéance de Règlement</p>
-          <p class="typo-body"><%= @contract.payment_deadline || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Type de Terme</p>
-          <p class="typo-body"><%= @contract.term_type || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Support de Facturation</p>
-          <p class="typo-body"><%= @contract.invoicing_support || '-' %></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Other Economic Conditions -->
-    <div>
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Autres Conditions Économiques</h5>
-      <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-lg);">
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Conditions Économiques</p>
-          <p class="typo-body"><%= @contract.other_economic_conditions || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Bordereaux de Prix Hors Contrats</p>
-          <p class="typo-body"><%= @contract.off_contract_price_schedules || '-' %></p>
+          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Conditions de Paiement</p>
+          <p class="typo-body"><%= @contract.payment_terms || '-' %></p>
         </div>
       </div>
     </div>
@@ -567,33 +473,21 @@
       Périmètre
     </h4>
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
-      <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nom du Site Concerné</p>
-        <p class="typo-body"><%= @contract.covered_sites || '-' %></p>
+      <div style="grid-column: 1 / -1;">
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Sites Couverts</p>
+        <p class="typo-body"><%= Array(@contract.covered_sites).join(', ') if @contract.covered_sites.present? || '-' %></p>
       </div>
-      <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Adresse du Site</p>
-        <p class="typo-body"><%= @contract.site_address || '-' %></p>
-      </div>
-      <div>
+      <div style="grid-column: 1 / -1;">
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Bâtiments Couverts</p>
-        <p class="typo-body"><%= @contract.covered_buildings || '-' %></p>
+        <p class="typo-body"><%= Array(@contract.covered_buildings).join(', ') if @contract.covered_buildings.present? || '-' %></p>
       </div>
-      <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Type d'Équipement</p>
-        <p class="typo-body"><%= @contract.equipment_type || '-' %></p>
+      <div style="grid-column: 1 / -1;">
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Types d'Équipement Couverts</p>
+        <p class="typo-body"><%= Array(@contract.covered_equipment_types).join(', ') if @contract.covered_equipment_types.present? || '-' %></p>
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nombre d'Équipements</p>
         <p class="typo-body"><%= @contract.equipment_count || '-' %></p>
-      </div>
-      <div style="grid-column: 1 / -1;">
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Périmètre du Contrat (Espaces Concernés)</p>
-        <p class="typo-body"><%= @contract.contract_scope_spaces || '-' %></p>
-      </div>
-      <div style="grid-column: 1 / -1;">
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Détail des Équipements Concernés</p>
-        <p class="typo-body"><%= @contract.equipment_details || '-' %></p>
       </div>
     </div>
   </div>
@@ -604,163 +498,50 @@
       Temporalité
     </h4>
     
-    <!-- Key Dates -->
-    <div style="margin-bottom: var(--space-lg);">
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Dates Principales</h5>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg);">
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Signature</p>
-          <p class="typo-body"><%= @contract.signature_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Prise d'Effet</p>
-          <p class="typo-body"><%= @contract.effective_date&.strftime("%d/%m/%Y") || @contract.start_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Fin Effective</p>
-          <p class="typo-body"><%= @contract.effective_end_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date Révision Annuelle Prix</p>
-          <p class="typo-body"><%= @contract.annual_price_revision_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Signature</p>
+        <p class="typo-body"><%= @contract.signature_date&.strftime("%d/%m/%Y") if @contract.signature_date || '-' %></p>
       </div>
-    </div>
-
-    <!-- First Period -->
-    <div style="margin-bottom: var(--space-lg);">
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Première Période</h5>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Durée</p>
-          <p class="typo-body"><%= @contract.first_period_duration || @contract.initial_duration || '-' %> mois</p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date d'Échéance</p>
-          <p class="typo-body"><%= @contract.first_period_expiry_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Début</p>
+        <p class="typo-body"><%= @contract.start_date&.strftime("%d/%m/%Y") if @contract.start_date || '-' %></p>
       </div>
-    </div>
-
-    <!-- Second Period -->
-    <div style="margin-bottom: var(--space-lg);">
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Seconde Période</h5>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Durée</p>
-          <p class="typo-body"><%= @contract.second_period_duration || '-' %> <%= 'mois' if @contract.second_period_duration %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date d'Échéance</p>
-          <p class="typo-body"><%= @contract.second_period_expiry_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Fin</p>
+        <p class="typo-body"><%= @contract.end_date&.strftime("%d/%m/%Y") if @contract.end_date || '-' %></p>
       </div>
-    </div>
-
-    <!-- Third Period -->
-    <div style="margin-bottom: var(--space-lg);">
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Troisième Période</h5>
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Durée</p>
-          <p class="typo-body"><%= @contract.third_period_duration || '-' %> <%= 'mois' if @contract.third_period_duration %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date d'Échéance</p>
-          <p class="typo-body"><%= @contract.third_period_expiry_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Durée Initiale (mois)</p>
+        <p class="typo-body"><%= @contract.initial_duration_months || '-' %></p>
       </div>
-    </div>
-
-    <!-- Renewal & Termination -->
-    <div>
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Renouvellement et Résiliation</h5>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg);">
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Reconduction Automatique</p>
-          <p class="typo-body"><%= @contract.automatic_renewal ? 'Oui' : 'Non' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai de Préavis</p>
-          <p class="typo-body"><%= @contract.notice_period_months || '-' %> <%= 'mois' if @contract.notice_period_months %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date Dernier Renouvellement</p>
-          <p class="typo-body"><%= @contract.last_tacit_renewal_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date Limite de Résiliation</p>
-          <p class="typo-body typo-bold" style="color: var(--coral-primary);"><%= @contract.termination_deadline_before_renewal&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Résiliation</p>
-          <p class="typo-body"><%= @contract.termination_date&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Prochaine Échéance</p>
-          <p class="typo-body typo-bold" style="color: var(--coral-primary);"><%= @contract.next_deadline&.strftime("%d/%m/%Y") || '-' %></p>
-        </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Durée Renouvellement (mois)</p>
+        <p class="typo-body"><%= @contract.renewal_duration_months || '-' %></p>
       </div>
-    </div>
-  </div>
-
-  <!-- Emergency Services Section -->
-  <div style="background-color: var(--white); border-radius: var(--space-md);  margin-bottom: var(--space-lg);">
-    <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-      Services de Dépannage d'Urgence
-    </h4>
-    
-    <!-- Business Days -->
-    <div style="margin-bottom: var(--space-lg);">
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Jours Ouvrés</h5>
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-        <div style="grid-column: 1 / -1;">
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Conditions de Dépannage</p>
-          <p class="typo-body"><%= @contract.business_day_breakdown_conditions || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Planning et Horaires</p>
-          <p class="typo-body"><%= @contract.business_day_schedule_hours || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délais d'Intervention</p>
-          <p class="typo-body"><%= @contract.business_day_intervention_delay || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email Demande Dépannage</p>
-          <p class="typo-body"><%= @contract.business_day_breakdown_email || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Téléphone Demande Dépannage</p>
-          <p class="typo-body"><%= @contract.business_day_breakdown_phone || '-' %></p>
-        </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nombre de Renouvellements</p>
+        <p class="typo-body"><%= @contract.renewal_count || '-' %></p>
       </div>
-    </div>
-
-    <!-- On-Call -->
-    <div>
-      <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Astreinte</h5>
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-        <div style="grid-column: 1 / -1;">
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Conditions de Dépannage</p>
-          <p class="typo-body"><%= @contract.on_call_breakdown_conditions || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Planning et Horaires</p>
-          <p class="typo-body"><%= @contract.on_call_schedule_hours || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délais d'Intervention</p>
-          <p class="typo-body"><%= @contract.on_call_intervention_delay || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email Demande Dépannage</p>
-          <p class="typo-body"><%= @contract.on_call_breakdown_email || '-' %></p>
-        </div>
-        <div>
-          <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Téléphone Demande Dépannage</p>
-          <p class="typo-body"><%= @contract.on_call_breakdown_phone || '-' %></p>
-        </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Reconduction Automatique</p>
+        <p class="typo-body"><%= @contract.automatic_renewal ? 'Oui' : 'Non' %></p>
+      </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai de Préavis (jours)</p>
+        <p class="typo-body"><%= @contract.notice_period_days || '-' %></p>
+      </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Prochaine Échéance</p>
+        <p class="typo-body typo-bold" style="color: var(--coral-primary);"><%= @contract.next_deadline_date&.strftime("%d/%m/%Y") if @contract.next_deadline_date || '-' %></p>
+      </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Dernier Renouvellement</p>
+        <p class="typo-body"><%= @contract.last_renewal_date&.strftime("%d/%m/%Y") if @contract.last_renewal_date || '-' %></p>
+      </div>
+      <div>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Résiliation</p>
+        <p class="typo-body"><%= @contract.termination_date&.strftime("%d/%m/%Y") if @contract.termination_date || '-' %></p>
       </div>
     </div>
   </div>
@@ -780,24 +561,24 @@
         <p class="typo-body"><%= @contract.intervention_frequency || '-' %></p>
       </div>
       <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai d'Intervention</p>
-        <p class="typo-body"><%= @contract.intervention_delay || '-' %> <%= 'heures' if @contract.intervention_delay %></p>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai d'Intervention (heures)</p>
+        <p class="typo-body"><%= @contract.intervention_delay_hours || '-' %></p>
       </div>
       <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai de Résolution</p>
-        <p class="typo-body"><%= @contract.resolution_delay || '-' %> <%= 'heures' if @contract.resolution_delay %></p>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai de Résolution (heures)</p>
+        <p class="typo-body"><%= @contract.resolution_delay_hours || '-' %></p>
       </div>
       <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Horaires d'Intervention</p>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Horaires de Travail</p>
         <p class="typo-body"><%= @contract.working_hours || '-' %></p>
       </div>
       <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Astreinte 24/7</p>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Service 24/7</p>
         <p class="typo-body"><%= @contract.on_call_24_7 ? 'Oui' : 'Non' %></p>
       </div>
       <div>
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Niveau de Service</p>
-        <p class="typo-body"><%= @contract.service_level || '-' %> <%= '%' if @contract.service_level %></p>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Niveau de Service (SLA %)</p>
+        <p class="typo-body"><%= @contract.sla_percentage || '-' %></p>
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Pièces de Rechange</p>
@@ -805,79 +586,15 @@
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Rapport d'Intervention</p>
-        <p class="typo-body"><%= @contract.intervention_report_required ? 'Obligatoire' : 'Non obligatoire' %></p>
+        <p class="typo-body"><%= @contract.report_required ? 'Obligatoire' : 'Non obligatoire' %></p>
       </div>
       <div style="grid-column: 1 / -1;">
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">KPI</p>
-        <p class="typo-body"><%= @contract.kpi || '-' %></p>
+        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Indicateurs de Performance (KPI)</p>
+        <p class="typo-body"><%= Array(@contract.kpis).join(', ') if @contract.kpis.present? || '-' %></p>
       </div>
     </div>
   </div>
-
-  <!-- Notes Section -->
-  <% if @contract.notes.present? %>
-    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        Notes et Observations
-      </h4>
-      <p class="typo-body"><%= @contract.notes %></p>
-    </div>
-  <% end %>
 
   <!-- LLM Extracted Data Section -->
   <%= render 'extracted_data' %>
-
-  <!-- Item 12: Data Source Tracking Section -->
-  <div style="background-color: #f8f9fa; border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg); border: 1px solid #e9ecef;">
-    <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid #dee2e6; display: flex; align-items-center; gap: var(--space-sm);">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #6c757d;">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-      Source des Données et Historique
-    </h4>
-    
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-      <div style="background-color: white; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #0d6efd;">
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs); display: flex; align-items-center; gap: 6px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          Créé par
-        </p>
-        <p class="typo-body" style="color: #0d6efd; font-weight: 600;"><%= @contract.created_by %></p>
-        <p class="typo-body-small" style="color: var(--medium-gray); margin-top: 4px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-bottom;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <%= @contract.created_at %>
-        </p>
-      </div>
-
-      <div style="background-color: white; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #198754;">
-        <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs); display: flex; align-items-center; gap: 6px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          Dernière modification par
-        </p>
-        <p class="typo-body" style="color: #198754; font-weight: 600;"><%= @contract.updated_by %></p>
-        <p class="typo-body-small" style="color: var(--medium-gray); margin-top: 4px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block; vertical-align: text-bottom;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <%= @contract.updated_at %>
-        </p>
-      </div>
-
-      <div style="grid-column: 1 / -1; background-color: #e7f3ff; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #0dcaf0;">
-        <p class="typo-body-small typo-bold" style="color: #055160; margin-bottom: var(--space-xs); display: flex; align-items-center; gap: 6px;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-          Source d'importation
-        </p>
-        <p class="typo-body" style="color: #055160;">Importé depuis <%= @contract.import_source %> le <%= @contract.import_date %> par <%= @contract.import_user %></p>
-      </div>
-    </div>
-  </div>
 </div>

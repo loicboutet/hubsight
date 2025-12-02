@@ -65,6 +65,34 @@
     
     <div style="background-color: var(--white); border-radius: var(--space-md);">
       
+      <% if current_user.admin? %>
+      <!-- Organization Selection for Admin -->
+      <div style="margin-bottom: var(--space-xl);">
+        <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Sélection de l'Organisation <span style="color: var(--coral-primary);">*</span>
+        </h4>
+        
+        <div style="display: grid; gap: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Organisation <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <select name="equipment[organization_id]" required style="width: 100%;">
+              <option value="">Sélectionner une organisation...</option>
+              <% @organizations.each do |org| %>
+                <option value="<%= org.id %>" <%= 'selected' if @equipment.organization_id == org.id %>>
+                  <%= org.name %>
+                </option>
+              <% end %>
+            </select>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-sm);">
+              💡 Sélectionnez l'organisation à laquelle cet équipement appartient.
+            </p>
+          </div>
+        </div>
+      </div>
+      <% end %>
+      
       <!-- Basic Information Section -->
       <div style="margin-bottom: var(--space-xl);">
         <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
