@@ -6,31 +6,31 @@ class SitesController < ApplicationController
   def index
     # Admin sees all sites, other users see only their organization's sites
     if current_user.admin?
-      @sites = Site.includes(:buildings)
-                   .page(params[:page])
-                   .per(10)
+      @sites = Site.all
     else
       @sites = current_user.sites
-                          .includes(:buildings)
-                          .page(params[:page])
-                          .per(10)
     end
     
-    # Apply filters
+    # Apply filters BEFORE pagination
     @sites = @sites.search_by_name(params[:search]) if params[:search].present?
     @sites = @sites.search_by_city(params[:search]) if params[:search].present?
     @sites = @sites.by_type(params[:site_type]) if params[:site_type].present?
     @sites = @sites.by_region(params[:region]) if params[:region].present?
     
-    # Apply sorting
+    # Apply sorting BEFORE pagination
     case params[:sort_by]
     when 'area'
       @sites = @sites.order(total_area: :desc)
     when 'buildings_count'
-      @sites = @sites.left_joins(:buildings).group(:id).order('COUNT(buildings.id) DESC')
+      @sites = @sites.left_joins(:buildings).group('sites.id').order('COUNT(buildings.id) DESC')
     else
       @sites = @sites.ordered_by_name
     end
+    
+    # Apply eager loading and pagination LAST
+    @sites = @sites.includes(:buildings)
+                   .page(params[:page])
+                   .per(10)
   end
 
   def show
