@@ -37,12 +37,7 @@ Rails.application.routes.draw do
     end
     
     # Client Data Access
-    resources :clients, only: [:index] do
-      member do
-        post :impersonate
-      end
-    end
-    post 'stop_impersonation', to: 'clients#stop_impersonation'
+    resources :clients, only: [:index]
     
     # Admin Access Logs (Audit trail for client data access)
     resources :access_logs, only: [:index, :show]

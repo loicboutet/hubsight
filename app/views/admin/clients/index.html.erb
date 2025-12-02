@@ -1,10 +1,9 @@
-<div style="">
+  <div style="">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
     <div>
-      <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Accès aux Données Clients</h1>
+      <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Organisations Clientes</h1>
       <p style="color: var(--gray); margin: 0;">
-        Liste des organisations clientes. Vous pouvez accéder aux données d'un client pour consultation ou support.
-        <strong style="color: #dc2626;">Toutes vos actions sont enregistrées et auditées.</strong>
+        Liste des organisations clientes et leurs statistiques.
       </p>
     </div>
   </div>
@@ -67,27 +66,13 @@
             </div>
           </td>
           <td style="padding: var(--space-md); text-align: center;">
-            <div style="display: inline-flex; gap: var(--space-sm);">
-              <%= link_to admin_organization_path(organization), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Voir
-              <% end %>
-              <%= button_to impersonate_admin_client_path(organization), 
-                  method: :post,
-                  data: { 
-                    turbo_confirm: "Êtes-vous sûr de vouloir accéder aux données de #{organization.name}? Cette action sera enregistrée dans les logs d'audit." 
-                  },
-                  class: "typo-btn-small",
-                  style: "background-color: #dc2626; color: white; border: none; cursor: pointer; font-family: inherit;" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                </svg>
-                Accéder
-              <% end %>
-            </div>
+            <%= link_to admin_organization_path(organization), title: "Voir l'organisation", class: "typo-btn-small" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Voir Détails
+            <% end %>
           </td>
         </tr>
         <% end %>
@@ -96,11 +81,14 @@
   </div>
 
   <!-- Pagination -->
-  <% if @organizations.total_pages > 1 %>
-    <div style="margin-top: var(--space-lg); display: flex; justify-content: center;">
-      <%= paginate @organizations, theme: 'twitter-bootstrap-4' %>
-    </div>
-  <% end %>
+  <div style="margin-top: var(--space-xl);">
+    <%= render 'shared/pagination', 
+      current_page: @organizations.current_page, 
+      total_pages: @organizations.total_pages, 
+      total_count: @organizations.total_count, 
+      per_page: 5,
+      path: admin_clients_path %>
+  </div>
 
   <% else %>
   <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-2xl); text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
@@ -112,22 +100,4 @@
   </div>
   <% end %>
 
-  <div style="margin-top: var(--space-2xl); padding: var(--space-lg); background-color: #fffbeb; border-radius: var(--space-md); border-left: 4px solid #f59e0b;">
-    <div style="display: flex; gap: var(--space-md);">
-      <div style="flex-shrink: 0;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: #f59e0b;">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-      </div>
-      <div>
-        <h3 style="font-weight: 600; color: #92400e; margin: 0 0 var(--space-sm) 0;">Attention - Accès aux données client</h3>
-        <ul style="margin: 0; padding-left: var(--space-lg); color: #92400e; font-size: 0.875rem; line-height: 1.6;">
-          <li>L'accès aux données client doit être justifié par un besoin légitime (support, maintenance, assistance)</li>
-          <li>Toutes vos actions sont enregistrées avec horodatage et adresse IP</li>
-          <li>Les sessions d'accès expirent automatiquement après 2 heures</li>
-          <li>N'accédez aux données que si vous êtes autorisé contractuellement</li>
-        </ul>
-      </div>
-    </div>
-  </div>
 </div>

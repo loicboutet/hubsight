@@ -106,12 +106,12 @@
                             </ol>
                         </div>
                     </td>
-                    <td class="video-col"><span class="empty-cell">-</span></td>
+                    <td class="video-col">https://drive.google.com/file/d/1vZg0Rb8VecWBEfHQfHcAiQByL_fAgZt6/view?usp=sharing</td>
                 </tr>
                 <tr>
                     <td class="sl-col">9</td>
                     <td class="title-col">Admin - Access Client Data</td>
-                    <td class="description-col">Enable Admin to access client data with formalized contractual authorization, including data isolation and audit logging</td>
+                    <td class="description-col">Enable Admin to view and manage all client organizations and their data. Admins have full access to all organizations without requiring special impersonation mode.</td>
                     <td class="url-col"><a href="http://localhost:3000/admin/clients">localhost:3000/admin/clients</a></td>
                     <td class="test-col">
                         <div class="role-badges">
@@ -122,19 +122,15 @@
                             <ol>
                                 <li>Login as admin (admin@hubsight.com / Password123!)</li>
                                 <li>Navigate to localhost:3000/admin/clients</li>
-                                <li>View all client organizations with user statistics</li>
-                                <li>Click 'Accéder aux données' button for any organization</li>
-                                <li>Confirm security warning dialog</li>
-                                <li>Verify prominent red banner appears showing organization name</li>
-                                <li>Verify 'Terminer l'accès' button present in banner</li>
-                                <li>Access client data (sites, contracts, equipment)</li>
-                                <li>Verify all queries automatically scoped to selected organization</li>
-                                <li>Navigate to localhost:3000/admin/access_logs</li>
-                                <li>Verify log entry shows admin email, organization, IP, start time, status 'Active'</li>
-                                <li>Click 'Terminer l'accès' in red banner</li>
-                                <li>Verify redirect to localhost:3000/admin/clients with success message</li>
-                                <li>Return to access logs and verify 'Terminée' status with duration</li>
-                                <li>Test timeout and data isolation features</li>
+                                <li>View list of all client organizations with statistics (Portfolio Managers, Site Managers, Total Users)</li>
+                                <li>Verify organization status indicators (Active/Inactive)</li>
+                                <li>Click 'Voir Détails' button for any organization</li>
+                                <li>View organization details page with all information</li>
+                                <li>Access client data through normal admin interface (sites, contracts, equipment, users)</li>
+                                <li>Verify admin can view/manage all organizations without restrictions</li>
+                                <li>Test organization management (edit, create, view) functionality</li>
+                                <li>Navigate to localhost:3000/admin/access_logs (audit trail still available)</li>
+                                <li>Verify admin navigation and permissions work correctly</li>
                             </ol>
                         </div>
                     </td>
@@ -143,13 +139,13 @@
                 <tr>
                     <td class="sl-col">10</td>
                     <td class="title-col">Admin - Client Impersonation</td>
-                    <td class="description-col">Implement secure client impersonation feature allowing Admin to view and navigate the platform as a specific client for support purposes</td>
-                    <td class="url-col"><span class="empty-cell">See task 9</span></td>
+                    <td class="description-col"><strong>NO LONGER REQUIRED:</strong> Removed impersonation system. Admins have direct access to all client data through standard admin interface. No special "impersonation mode" needed.</td>
+                    <td class="url-col"><span class="empty-cell">Not implemented</span></td>
                     <td class="test-col">
                         <div class="role-badges">
                             <span class="badge badge-admin">Admin Only</span>
                         </div>
-                        <strong>Functionality covered in task 9 (Admin - Access Client Data)</strong>
+                        <strong>Feature removed - not aligned with specification requirements. Admin access is natural and doesn't require special impersonation mode.</strong>
                     </td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
