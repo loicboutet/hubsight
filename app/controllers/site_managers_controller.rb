@@ -1,7 +1,7 @@
 class SiteManagersController < ApplicationController
   include PortfolioManagerAuthorization
   
-  before_action :set_site_manager, only: [:show, :edit, :update, :destroy, :resend_invitation]
+  before_action :set_site_manager, only: [:show, :edit, :update, :destroy, :resend_invitation, :assign_sites, :update_site_assignments]
 
   def index
     # Admins see all site managers, Portfolio managers see only their organization's site managers
@@ -98,17 +98,38 @@ class SiteManagersController < ApplicationController
   end
 
   def assign_sites
+    # Prevent assigning sites to inactive users
+    unless @site_manager.active?
+      redirect_to site_manager_path(@site_manager), 
+                  alert: "Impossible d'assigner des sites à un utilisateur inactif."
+      return
+    end
+    
+    # Check if site manager has an organization
+    unless @site_manager.organization_id.present?
+      redirect_to site_manager_path(@site_manager), 
+                  alert: "Ce responsable de site n'a pas d'organisation assignée. Veuillez d'abord lui attribuer une organisation."
+      return
+    end
+    
     # Load available sites from the organization
-    # Admins can see all sites, portfolio managers see only their organization's sites
+    # Admins can see all active sites, portfolio managers see only their organization's active sites
     if current_user.admin?
-      @available_sites = Site.where(organization_id: @site_manager.organization_id).order(:name)
+      @available_sites = Site.active.where(organization_id: @site_manager.organization_id).order(:name)
     else
-      @available_sites = Site.where(organization_id: current_user.organization_id).order(:name)
+      @available_sites = Site.active.where(organization_id: current_user.organization_id).order(:name)
     end
     @assigned_site_ids = @site_manager.assigned_sites.pluck(:id)
   end
 
   def update_site_assignments
+    # Prevent assigning sites to inactive users
+    unless @site_manager.active?
+      redirect_to site_manager_path(@site_manager), 
+                  alert: "Impossible d'assigner des sites à un utilisateur inactif."
+      return
+    end
+    
     site_ids = params[:site_ids] || []
     
     ActiveRecord::Base.transaction do
@@ -116,12 +137,12 @@ class SiteManagersController < ApplicationController
       @site_manager.site_assignments.destroy_all
       
       # Create new assignments
-      # Admins can assign any site from the site manager's organization
-      # Portfolio managers can only assign sites from their own organization
+      # Admins can assign any active site from the site manager's organization
+      # Portfolio managers can only assign active sites from their own organization
       organization_id = current_user.admin? ? @site_manager.organization_id : current_user.organization_id
       
       site_ids.each do |site_id|
-        site = Site.find_by(id: site_id, organization_id: organization_id)
+        site = Site.active.find_by(id: site_id, organization_id: organization_id)
         if site
           @site_manager.site_assignments.create!(
             site: site,
@@ -131,7 +152,7 @@ class SiteManagersController < ApplicationController
       end
     end
     
-    redirect_to site_manager_path(@site_manager), 
+    redirect_to assign_sites_site_manager_path(@site_manager), 
                 notice: "Sites assignés avec succès."
   rescue ActiveRecord::RecordInvalid => e
     redirect_to assign_sites_site_manager_path(@site_manager),
