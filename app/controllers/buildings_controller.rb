@@ -88,27 +88,25 @@ class BuildingsController < ApplicationController
   end
 
   def new
-    @site = MockModel.new(id: params[:site_id], name: "Tour Montparnasse")
-    def @site.model_name
-      ActiveModel::Name.new(self.class, nil, "Site")
-    end
-    
-    @building = MockModel.new(
-      name: "",
-      code: "",
-      area: nil,
+    @site = Site.find(params[:site_id])
+    @building = @site.buildings.build(
       construction_year: Time.current.year,
-      status: "active",
-      description: ""
+      status: "active"
     )
-    def @building.model_name
-      ActiveModel::Name.new(self.class, nil, "Building")
-    end
   end
 
   def create
-    # Handle building creation
-    redirect_to site_path(params[:site_id]), notice: "Bâtiment créé avec succès"
+    @site = Site.find(params[:site_id])
+    @building = @site.buildings.build(building_params)
+    @building.user = current_user  # Track who created it
+    @building.organization = @site.organization  # Inherit organization from site
+    
+    if @building.save
+      redirect_to site_path(@site), notice: "Bâtiment créé avec succès"
+    else
+      flash.now[:alert] = "Erreur lors de la création du bâtiment : #{@building.errors.full_messages.join(', ')}"
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -141,5 +139,29 @@ class BuildingsController < ApplicationController
     # Handle building deletion
     site_id = params[:site_id] || 1
     redirect_to site_path(site_id), notice: "Bâtiment supprimé avec succès"
+  end
+
+  private
+
+  def building_params
+    params.require(:building).permit(
+      :name,
+      :cadastral_reference,
+      :construction_year,
+      :renovation_year,
+      :area,
+      :number_of_levels,
+      :height_m,
+      :structure_type,
+      :erp_category,
+      :erp_type,
+      :capacity,
+      :pmr_accessibility,
+      :environmental_certification,
+      :energy_consumption,
+      :dpe_rating,
+      :ghg_rating,
+      :notes
+    )
   end
 end

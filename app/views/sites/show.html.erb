@@ -272,6 +272,22 @@
 
   <!-- Buildings Section -->
   <div style="margin-bottom: var(--space-xl);">
+    <!-- Buildings Section Header with Action Button -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      <h4 class="typo-h4" style="margin-bottom: 0; display: flex; align-items: center; gap: var(--space-sm);">
+        <%= render 'shared/hierarchy_icons', type: 'building', size: 24, color: '#10b981' %>
+        Bâtiments
+      </h4>
+      <% if current_user.admin? || current_user.portfolio_manager? %>
+        <%= link_to new_site_building_path(@site), class: "typo-btn-small typo-btn-small-primary" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Nouveau Bâtiment
+        <% end %>
+      <% end %>
+    </div>
+
     <div style="display: grid; gap: var(--space-md);">
       <%
         # Mock buildings data - replace with actual data when available
