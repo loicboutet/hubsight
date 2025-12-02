@@ -14,7 +14,7 @@ class User < ApplicationRecord
   }.freeze
 
   # Associations
-  has_many :active_sessions, dependent: :destroy
+  has_many :active_sessions, dependent: :destroy, inverse_of: :user, autosave: false, validate: false
   has_many :sites, dependent: :destroy
   has_many :site_assignments, dependent: :destroy
   has_many :assigned_sites, through: :site_assignments, source: :site

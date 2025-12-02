@@ -257,8 +257,18 @@
 
     <!-- Action Buttons -->
     <div style="display: flex; gap: var(--space-md); justify-content: flex-end; margin-top: var(--space-xl);">
-      <%= link_to "Annuler", dashboard_path, class: "typo-btn-cancel" %>
-      <%= f.submit "Enregistrer les modifications", class: "typo-btn-success", style: "cursor: pointer;" %>
+      <%= link_to dashboard_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: 6px;" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <span>Annuler</span>
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: inline-block;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Enregistrer les modifications</span>
+      </button>
     </div>
   <% end %>
 </div>
