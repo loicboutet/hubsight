@@ -7,12 +7,21 @@
       <p class="typo-body-small">Contrat N° <%= @contract.contract_number %></p>
     </div>
     <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
-      <%= link_to validate_contract_path(@contract.id), class: "typo-btn-small typo-btn-small-success", style: "position: relative;" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        Voir Validation
-       
+      <% if @contract.extraction_completed? %>
+        <%= link_to validate_contract_path(@contract.id), class: "typo-btn-small typo-btn-small-success", style: "position: relative;" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Voir Validation
+        <% end %>
+      <% else %>
+        <button disabled class="typo-btn-small" style="background-color: #d1d5db; color: #6b7280; cursor: not-allowed; opacity: 0.6; position: relative;" title="L'extraction des données doit être terminée avant la validation">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          Voir Validation
+          <span style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">🔒</span>
+        </button>
       <% end %>
       <%= link_to audit_trail_path(entity_type: 'Contract', entity_id: @contract.id), class: "typo-btn-small typo-btn-small-primary" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
