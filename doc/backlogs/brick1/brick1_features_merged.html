@@ -772,88 +772,7 @@
         </table>
 </div>
 
-<div class="container" id="viewing-filtering">
-<div class="section-header section-viewing">
-<h2>🔍 Contract Viewing & Filtering Features</h2>
-<p class="subtitle">List views, advanced filtering, and sorting capabilities</p>
-</div>
-        <table>
-            <thead>
-                <tr>
-                    <th class="sl-col">SL</th>
-                    <th class="title-col">Task Title</th>
-                    <th class="description-col">Task Description</th>
-                    <th class="url-col">URL</th>
-                    <th class="test-col">How to Test</th>
-                    <th class="video-col">Video</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="sl-col">22</td>
-                    <td class="title-col">View Contract List</td>
-                    <td class="description-col">Display contracts in table view with pagination, sorting, and column customization</td>
-                    <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
-                    <td class="test-col">
-                        <div class="role-badges">
-                            <span class="badge badge-admin">Admin</span>
-                            <span class="badge badge-pm">Portfolio Manager</span>
-                            <span class="badge badge-sm">Site Manager</span>
-                        </div>
-                        <div class="test-section">
-                            <strong>Test as Portfolio Manager:</strong>
-                            <ol>
-                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
-                                <li>Navigate to localhost:3000/contracts</li>
-                                <li>Verify contracts table displays with all columns</li>
-                                <li>Test sorting: click column headers (number, title, site, status)</li>
-                                <li>Verify ascending/descending sort indicators</li>
-                                <li>Click "Colonnes" button to customize columns</li>
-                                <li>Hide/show various columns using checkboxes</li>
-                                <li>Verify table updates dynamically</li>
-                                <li>Test pagination: change per-page (15/25/50/100)</li>
-                                <li>Navigate through pages using pagination controls</li>
-                                <li>Verify total count and current page displayed</li>
-                                <li>Verify preferences persist on page refresh</li>
-                            </ol>
-                        </div>
-                    </td>
-                    <td class="video-col"><span class="empty-cell">-</span></td>
-                </tr>
-                <tr>
-                    <td class="sl-col">23</td>
-                    <td class="title-col">Filter Contracts</td>
-                    <td class="description-col">17 filter options: 5 basic (site, building, family, status, search) + 12 advanced (dates, amounts, etc)</td>
-                    <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
-                    <td class="test-col">
-                        <div class="role-badges">
-                            <span class="badge badge-admin">Admin</span>
-                            <span class="badge badge-pm">Portfolio Manager</span>
-                            <span class="badge badge-sm">Site Manager</span>
-                        </div>
-                        <div class="test-section">
-                            <strong>Test as Portfolio Manager:</strong>
-                            <ol>
-                                <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
-                                <li>Navigate to localhost:3000/contracts</li>
-                                <li>Test 5 basic filters: site dropdown, building dropdown, family dropdown, status dropdown, search text</li>
-                                <li>Click "Filtres Avancés" button to expand advanced filters</li>
-                                <li>Test 3 date range filters: start date, end date, renewal date</li>
-                                <li>Test 2 amount range filters: annual amount HT, annual amount TTC</li>
-                                <li>Test 4 additional filters: contract type, client, provider, equipment</li>
-                                <li>Combine multiple filters together</li>
-                                <li>Verify results update dynamically</li>
-                                <li>Click "Réinitialiser" to clear all filters</li>
-                                <li>Verify all 17 filters can work simultaneously</li>
-                                <li>Verify filter state persists in URL</li>
-                            </ol>
-                        </div>
-                    </td>
-                    <td class="video-col"><span class="empty-cell">-</span></td>
-                </tr>
-            </tbody>
-        </table>
-</div>
+
 <div class="container" id="organizations">
 <div class="section-header section-organizations">
 <h2>🏢 Organizations & Contacts Features</h2>
@@ -872,7 +791,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="sl-col">24</td>
+                    <td class="sl-col">23</td>
                     <td class="title-col">Create Organizations</td>
                     <td class="description-col">Create and manage organizations with 12 fields: name, legal name, SIRET, type, address, contacts</td>
                     <td class="url-col"><a href="http://localhost:3000/organizations">localhost:3000/organizations</a></td>
@@ -899,7 +818,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">25</td>
+                    <td class="sl-col">24</td>
                     <td class="title-col">Create Contacts</td>
                     <td class="description-col">Create and manage contacts nested under organizations with 11 fields</td>
                     <td class="url-col"><a href="http://localhost:3000/contacts">localhost:3000/contacts</a></td>
@@ -923,7 +842,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">26</td>
+                    <td class="sl-col">25</td>
                     <td class="title-col">Create Agencies</td>
                     <td class="description-col">Create and manage agencies/establishments under organizations with 18 fields</td>
                     <td class="url-col"><a href="http://localhost:3000/agencies">localhost:3000/agencies</a></td>
@@ -943,7 +862,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">27</td>
+                    <td class="sl-col">26</td>
                     <td class="title-col">Organization Search & Autocomplete</td>
                     <td class="description-col">Search and autocomplete for organizations with real-time API</td>
                     <td class="url-col"><a href="http://localhost:3000/api/organizations/autocomplete">API endpoint</a></td>
@@ -963,7 +882,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">28</td>
+                    <td class="sl-col">27</td>
                     <td class="title-col">Link Organizations to Contracts</td>
                     <td class="description-col">API and controller ready for linking organizations to contracts</td>
                     <td class="url-col"><span class="empty-cell">Pending integration</span></td>
@@ -1003,7 +922,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="sl-col">29</td>
+                    <td class="sl-col">28</td>
                     <td class="title-col">Generate Contract PDF Summary</td>
                     <td class="description-col">Generate PDF summary sheets per contract with 10 sections (shared service with SM)</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts/:id">localhost:3000/contracts/:id</a></td>
@@ -1033,7 +952,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">30</td>
+                    <td class="sl-col">29</td>
                     <td class="title-col">Export Contract ListTo Excel</td>
                     <td class="description-col">Export contract list to Excel with selected columns and applied filters</td>
                     <td class="url-col"><a href="http://localhost:3000/contracts">localhost:3000/contracts</a></td>
@@ -1063,7 +982,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">31</td>
+                    <td class="sl-col">30</td>
                     <td class="title-col">Export Equipment List</td>
                     <td class="description-col">Export equipment list to Excel with hierarchy context (site > building > level > space)</td>
                     <td class="url-col"><a href="http://localhost:3000/equipment">localhost:3000/equipment</a></td>
@@ -1093,7 +1012,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">32</td>
+                    <td class="sl-col">31</td>
                     <td class="title-col">Export Sites Structure</td>
                     <td class="description-col">Export complete sites structure to Excel (hierarchical or multi-sheet)</td>
                     <td class="url-col"><a href="http://localhost:3000/sites">localhost:3000/sites</a></td>
@@ -1143,7 +1062,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="sl-col">33</td>
+                    <td class="sl-col">32</td>
                     <td class="title-col">Portfolio Overview Dashboard</td>
                     <td class="description-col">Dashboard displaying 7 KPIs, key indicators, and charts with real database data</td>
                     <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
@@ -1173,7 +1092,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">34</td>
+                    <td class="sl-col">33</td>
                     <td class="title-col">Key Indicators Display</td>
                     <td class="description-col">Display key indicators: contracts by status/family, upcoming renewals, spending by category</td>
                     <td class="url-col"><a href="http://localhost:3000/dashboard">localhost:3000/dashboard</a></td>
@@ -1203,7 +1122,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">35</td>
+                    <td class="sl-col">34</td>
                     <td class="title-col">Analytics Dashboard</td>
                     <td class="description-col">Analytics page with charts showing contract distribution, spending trends, equipment distribution</td>
                     <td class="url-col"><a href="http://localhost:3000/analytics">localhost:3000/analytics</a></td>
@@ -1253,7 +1172,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="sl-col">36</td>
+                    <td class="sl-col">35</td>
                     <td class="title-col">Audit Trail</td>
                     <td class="description-col">Automatic logging of all actions</td>
                     <td class="url-col"><a href="http://localhost:3000/audit_trail">localhost:3000/audit_trail</a></td>
@@ -1264,7 +1183,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">37</td>
+                    <td class="sl-col">36</td>
                     <td class="title-col">Global Search</td>
                     <td class="description-col">Search across 4 resource types</td>
                     <td class="url-col"><a href="http://localhost:3000/search">localhost:3000/search</a></td>
@@ -1275,7 +1194,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">38</td>
+                    <td class="sl-col">37</td>
                     <td class="title-col">Portfolio Tree View</td>
                     <td class="description-col">Interactive hierarchy tree</td>
                     <td class="url-col"><a href="http://localhost:3000/portfolio">localhost:3000/portfolio</a></td>
@@ -1286,7 +1205,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">39</td>
+                    <td class="sl-col">38</td>
                     <td class="title-col">Settings Page</td>
                     <td class="description-col">User settings and preferences</td>
                     <td class="url-col"><a href="http://localhost:3000/settings">localhost:3000/settings</a></td>
@@ -1297,7 +1216,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">40</td>
+                    <td class="sl-col">39</td>
                     <td class="title-col">User Management</td>
                     <td class="description-col">Create/edit users, manage roles</td>
                     <td class="url-col"><a href="http://localhost:3000/users">localhost:3000/users</a></td>
@@ -1308,7 +1227,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">41</td>
+                    <td class="sl-col">40</td>
                     <td class="title-col">Import OmniClass Table 23</td>
                     <td class="description-col">Import OmniClass Table 23 equipment classification (68 representative types from 256 total)</td>
                     <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
@@ -1335,7 +1254,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">42</td>
+                    <td class="sl-col">41</td>
                     <td class="title-col">Import Space Structure</td>
                     <td class="description-col">Import OmniClass Table 13 space classifications (127 representative types from 966 total)</td>
                     <td class="url-col"><span class="empty-cell">bin/rails console</span></td>
@@ -1362,7 +1281,7 @@
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
-                    <td class="sl-col">43</td>
+                    <td class="sl-col">42</td>
                     <td class="title-col">Import Contract Families</td>
                     <td class="description-col">Import contract families and subfamilies (7 families + 35 subfamilies = 42 total)</td>
                     <td class="url-col"><span class="empty-cell">bin/rails console</span></td>

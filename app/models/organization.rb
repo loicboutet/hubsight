@@ -18,6 +18,9 @@ class Organization < ApplicationRecord
     ['Autre', 'other']
   ].freeze
 
+  # Callbacks
+  before_validation :normalize_siret
+
   # Validations
   validates :name, presence: true, uniqueness: true
   validates :organization_type, presence: true
@@ -59,5 +62,20 @@ class Organization < ApplicationRecord
 
   def full_address
     [headquarters_address, postal_code, city].compact.join(', ')
+  end
+
+  private
+
+  # Normalize SIRET before validation
+  # Strips whitespace and removes formatting characters (spaces, dashes, etc.)
+  # Converts empty strings to nil so allow_blank: true works correctly
+  def normalize_siret
+    return if siret.nil?
+    
+    # Remove all whitespace and formatting characters
+    normalized = siret.to_s.gsub(/[\s\-\.]/, '')
+    
+    # Convert empty string to nil
+    self.siret = normalized.present? ? normalized : nil
   end
 end
