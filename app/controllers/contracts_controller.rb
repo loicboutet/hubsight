@@ -140,7 +140,8 @@ class ContractsController < ApplicationController
 
   def validate
     # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Admins can access all contracts across all organizations
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
@@ -159,7 +160,8 @@ class ContractsController < ApplicationController
 
   def confirm_validation
     # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Admins can access all contracts across all organizations
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
@@ -194,7 +196,8 @@ class ContractsController < ApplicationController
 
   def delete_pdf
     # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Admins can access all contracts across all organizations
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
@@ -209,7 +212,8 @@ class ContractsController < ApplicationController
 
   def retry_ocr
     # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Admins can access all contracts across all organizations
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
@@ -223,7 +227,8 @@ class ContractsController < ApplicationController
   
   def retry_extraction
     # Check authorization
-    unless @contract.organization_id == current_user.organization_id
+    # Admins can access all contracts across all organizations
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end

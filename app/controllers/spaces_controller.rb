@@ -14,13 +14,13 @@ class SpacesController < ApplicationController
 
   def new
     @space = @level.spaces.build(
-      organization_id: current_user.organization_id
+      organization_id: @level.organization_id
     )
   end
 
   def create
     @space = @level.spaces.build(space_params)
-    @space.organization_id = current_user.organization_id
+    @space.organization_id = @level.organization_id
     @space.created_by_name = current_user.full_name
 
     if @space.save
@@ -55,7 +55,8 @@ class SpacesController < ApplicationController
   def set_level
     @level = Level.find(params[:level_id])
     # Ensure user has access to this level's organization
-    unless @level.organization_id == current_user.organization_id
+    # Admins can access all levels across all organizations
+    unless current_user.admin? || @level.organization_id == current_user.organization_id
       redirect_to root_path, alert: "Accès non autorisé."
     end
   end
@@ -63,7 +64,8 @@ class SpacesController < ApplicationController
   def set_space
     @space = Space.find(params[:id])
     # Ensure user has access to this space's organization
-    unless @space.organization_id == current_user.organization_id
+    # Admins can access all spaces across all organizations
+    unless current_user.admin? || @space.organization_id == current_user.organization_id
       redirect_to root_path, alert: "Accès non autorisé."
     end
   end
