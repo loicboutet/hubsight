@@ -9,6 +9,9 @@ class LevelsController < ApplicationController
   def show
     @building = @level.building
     @site = @building.site
+    
+    # Calculate equipment count for this level
+    @equipment_count = Equipment.joins(:space).where(spaces: { level_id: @level.id }).count
   end
 
   def new

@@ -7,14 +7,28 @@
   <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
   <% space_icon = capture { render 'shared/hierarchy_icons', type: 'space', size: 16 } %>
   <% equipment_icon = capture { render 'shared/hierarchy_icons', type: 'equipment', size: 16 } %>
-  <%= render 'shared/breadcrumb', path: [
-    { name: 'Sites', url: sites_path, icon: site_icon },
-    { name: 'Tour Montparnasse', url: site_path(1), icon: site_icon },
-    { name: 'Bât. A', url: building_path(1), icon: building_icon },
-    { name: 'RDC', url: level_path(1), icon: level_icon },
-    { name: 'Bureau 101', url: space_path(1), icon: space_icon },
-    { name: 'Climatiseur Daikin AC-500', url: nil, icon: equipment_icon }
-  ] %>
+  <% 
+    breadcrumb_path = [{ name: 'Sites', url: sites_path, icon: site_icon }]
+    
+    if @equipment.space&.level&.building&.site
+      breadcrumb_path << { name: @equipment.space.level.building.site.name, url: site_path(@equipment.space.level.building.site), icon: site_icon }
+    end
+    
+    if @equipment.space&.level&.building
+      breadcrumb_path << { name: @equipment.space.level.building.name, url: building_path(@equipment.space.level.building), icon: building_icon }
+    end
+    
+    if @equipment.space&.level
+      breadcrumb_path << { name: @equipment.space.level.name, url: level_path(@equipment.space.level), icon: level_icon }
+    end
+    
+    if @equipment.space
+      breadcrumb_path << { name: @equipment.space.name, url: space_path(@equipment.space), icon: space_icon }
+    end
+    
+    breadcrumb_path << { name: @equipment.name, url: nil, icon: equipment_icon }
+  %>
+  <%= render 'shared/breadcrumb', path: breadcrumb_path %>
 
   <!-- Header Section -->
   <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
