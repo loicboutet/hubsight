@@ -16,6 +16,8 @@ class SpacesController < ApplicationController
     @space = @level.spaces.build(
       organization_id: @level.organization_id
     )
+    @building = @level.building
+    @site = @building.site
   end
 
   def create
