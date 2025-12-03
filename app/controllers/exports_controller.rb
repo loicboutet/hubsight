@@ -3,7 +3,19 @@ class ExportsController < ApplicationController
   before_action :authorize_portfolio_manager!
 
   def contracts
-    organization = current_user.organization
+    # Handle admin vs portfolio manager
+    # Admin users don't have an organization, so we need to handle them differently
+    if current_user.admin?
+      organization = nil
+      organization_name = "tous_contrats"
+    else
+      organization = current_user.organization
+      unless organization
+        redirect_to contracts_path, alert: "Aucune organisation associée à votre compte."
+        return
+      end
+      organization_name = organization.name.parameterize
+    end
 
     # Extract filter parameters from request (including advanced filters)
     filter_params = {
@@ -38,7 +50,7 @@ class ExportsController < ApplicationController
     excel_data = exporter.generate
 
     # Send file to user
-    filename = "contrats_#{organization.name.parameterize}_#{Date.today.strftime('%Y%m%d')}.xlsx"
+    filename = "contrats_#{organization_name}_#{Date.today.strftime('%Y%m%d')}.xlsx"
     
     send_data excel_data,
               filename: filename,
@@ -107,7 +119,7 @@ class ExportsController < ApplicationController
 
   def authorize_portfolio_manager!
     unless current_user.portfolio_manager? || current_user.admin?
-      redirect_to root_path, alert: "Accès non autorisé. Seuls les gestionnaires de portefeuille peuvent exporter des données."
+      redirect_to root_path, alert: "Accès non autorisé. Seuls les gestionnaires de portefeuille et administrateurs peuvent exporter des données."
     end
   end
 

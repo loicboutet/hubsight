@@ -113,7 +113,13 @@ class ContractListExporter
 
   def contracts_list
     @contracts_list ||= begin
-      contracts = Contract.by_organization(@organization.id)
+      # Handle admin users (no organization) vs portfolio managers
+      contracts = if @organization
+                    Contract.by_organization(@organization.id)
+                  else
+                    # Admin users see all contracts
+                    Contract.all
+                  end
       contracts = apply_filters(contracts)
       contracts = apply_sorting(contracts)
       contracts.includes(:site)
