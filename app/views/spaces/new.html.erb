@@ -1,7 +1,20 @@
 <% content_for :header, "Nouvel Espace" %>
 
 <div class="section">
-  <div style="margin-bottom: var(--space-xl);">
+  <!-- Breadcrumb Navigation -->
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
+  <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
+  <% space_icon = capture { render 'shared/hierarchy_icons', type: 'space', size: 16 } %>
+  <%= render 'shared/breadcrumb', path: [
+    { name: 'Sites', url: sites_path, icon: site_icon },
+    { name: @site.name, url: site_path(@site), icon: site_icon },
+    { name: @building.name, url: building_path(@building), icon: building_icon },
+    { name: @level.name, url: level_path(@level), icon: level_icon },
+    { name: 'Nouvel Espace', url: nil, icon: space_icon }
+  ] %>
+
+  <div style="margin-bottom: var(--space-xl); margin-top: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un Nouvel Espace</h2>
     <p class="typo-body-small">Ajouter un espace au niveau <%= @level.name %></p>
   </div>
