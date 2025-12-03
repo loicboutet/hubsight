@@ -1,0 +1,94 @@
+<% # Display OCR extraction status and results %>
+<% if @contract.pdf_attached? %>
+  <div style="margin-top: 2rem; margin-bottom: 2rem;">
+    <div style="background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: white; padding: 1.5rem; border-radius: 8px 8px 0 0;">
+      <h2 style="margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+        <span>📄</span>
+        <span>Extraction OCR</span>
+        <span style="display: inline-block; padding: 0.25rem 0.75rem; background: <%= @contract.ocr_status_badge_color %>; color: white; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
+          <%= @contract.ocr_status_display %>
+        </span>
+      </h2>
+    </div>
+
+    <div style="background: white; border: 1px solid #e5e7eb; border-top: none; padding: 1.5rem; border-radius: 0 0 8px 8px;">
+      
+      <!-- OCR Metadata -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 8px;">
+        <div>
+          <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; margin-bottom: 0.25rem;">Fichier PDF</div>
+          <div style="font-weight: 600;"><%= @contract.pdf_filename %></div>
+          <div style="font-size: 0.875rem; color: #6b7280;"><%= @contract.pdf_filesize_mb %> MB</div>
+        </div>
+        <div>
+          <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; margin-bottom: 0.25rem;">Fournisseur OCR</div>
+          <div style="font-weight: 600;"><%= @contract.ocr_provider&.titleize || 'N/A' %></div>
+        </div>
+        <div>
+          <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; margin-bottom: 0.25rem;">Nombre de Pages</div>
+          <div style="font-weight: 600;"><%= @contract.ocr_page_count || 'N/A' %></div>
+        </div>
+        <div>
+          <div style="font-size: 0.75rem; color: #6b7280; text-transform: uppercase; margin-bottom: 0.25rem;">Traité le</div>
+          <div style="font-weight: 600;"><%= @contract.ocr_processed_at&.strftime('%d/%m/%Y %H:%M') || 'N/A' %></div>
+        </div>
+      </div>
+
+      <!-- OCR Status Messages -->
+      <% if @contract.ocr_pending? %>
+        <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+          <div style="color: #92400e; font-weight: 600; margin-bottom: 0.5rem;">⏳ Extraction en attente</div>
+          <div style="color: #78350f; font-size: 0.875rem;">L'extraction OCR du PDF sera lancée sous peu. Veuillez rafraîchir la page dans quelques secondes.</div>
+        </div>
+      <% end %>
+
+      <% if @contract.ocr_in_progress? %>
+        <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+          <div style="color: #1e40af; font-weight: 600; margin-bottom: 0.5rem;">⚙️ Extraction en cours</div>
+          <div style="color: #1e3a8a; font-size: 0.875rem;">Le texte est en cours d'extraction depuis le PDF. Veuillez rafraîchir la page dans quelques instants.</div>
+        </div>
+      <% end %>
+
+      <% if @contract.ocr_failed? %>
+        <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+          <div style="color: #991b1b; font-weight: 600; margin-bottom: 0.5rem;">❌ Échec de l'extraction OCR</div>
+          <div style="color: #7f1d1d; font-size: 0.875rem; margin-bottom: 1rem;"><%= @contract.ocr_error_message %></div>
+          <%= button_to '🔄 Relancer l\'extraction OCR', retry_ocr_contract_path(@contract), method: :post, class: 'typo-btn-small typo-btn-small-primary', style: 'display: inline-block;' %>
+        </div>
+      <% end %>
+
+      <% if @contract.ocr_completed? %>
+        <!-- Success Message -->
+        <div style="background: #dcfce7; border-left: 4px solid #10b981; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;">
+          <div style="color: #065f46; font-weight: 600; margin-bottom: 0.5rem;">✅ Extraction OCR terminée avec succès</div>
+          <div style="color: #047857; font-size: 0.875rem;">
+            <%= @contract.ocr_page_count %> page<%= @contract.ocr_page_count > 1 ? 's' : '' %> extraite<%= @contract.ocr_page_count > 1 ? 's' : '' %> 
+            • <%= @contract.ocr_text&.length || 0 %> caractères extraits
+          </div>
+        </div>
+
+        <!-- View Extracted Text Button -->
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <button 
+            onclick="document.getElementById('ocr-text-modal').style.display='flex'" 
+            class="typo-btn-small typo-btn-small-success"
+            style="display: inline-flex; align-items: center; gap: 0.5rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Voir le texte extrait
+          </button>
+          
+          <div style="font-size: 0.875rem; color: #6b7280;">
+            Le texte extrait sera utilisé pour l'extraction automatique des données du contrat
+          </div>
+        </div>
+
+        <!-- OCR Text Modal -->
+        <%= render 'ocr_text_modal' %>
+      <% end %>
+
+    </div>
+  </div>
+<% end %>

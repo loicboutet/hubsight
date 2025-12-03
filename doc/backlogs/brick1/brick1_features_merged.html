@@ -702,19 +702,25 @@
                             <span class="badge badge-sm">Site Manager</span>
                         </div>
                         <div class="test-section">
-                            <strong>Test as Portfolio Manager:</strong>
+                            <strong>Test OCR Display and Extraction:</strong>
                             <ol>
                                 <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
                                 <li>Navigate to localhost:3000/contracts/new</li>
-                                <li>Upload a PDF contract file</li>
-                                <li>Fill required fields and submit</li>
-                                <li>On contract detail page, locate "Extraction OCR" section</li>
-                                <li>Verify OCR status shows "En attente" or "Terminé"</li>
-                                <li>If "En attente", wait ~10 seconds and refresh</li>
-                                <li>Once "Terminé", click "Voir le texte extrait" button</li>
-                                <li>Verify extracted text modal displays</li>
-                                <li>Verify text extraction quality</li>
-                                <li>Close modal and verify can proceed to data extraction</li>
+                                <li>Upload a PDF contract file (max 10MB)</li>
+                                <li>Fill required fields (contract_number, title, contractor_organization_name) and submit</li>
+                                <li>On contract detail page, scroll down to find "Extraction OCR" section (purple gradient header)</li>
+                                <li>Verify OCR status badge appears (yellow "En attente", blue "En cours", or green "Terminé")</li>
+                                <li>Verify metadata displays: PDF filename, file size, provider, page count, processing date</li>
+                                <li>If status is "En attente" or "En cours", wait 10-15 seconds and refresh page</li>
+                                <li>Once status shows "Terminé", verify green success message with page count and character count</li>
+                                <li>Click "Voir le texte extrait" button</li>
+                                <li>Verify modal opens displaying raw OCR text in monospace font</li>
+                                <li>Verify modal header shows metadata (pages, characters, provider)</li>
+                                <li>Test "Copier le texte" button - verify text is copied to clipboard</li>
+                                <li>Test closing modal with X button or clicking outside</li>
+                                <li>If OCR fails, verify red error box displays with error message</li>
+                                <li>Test "🔄 Relancer l'extraction OCR" button to retry failed extractions</li>
+                                <li>Verify OCR section appears BEFORE "Données Extraites Automatiquement" section</li>
                             </ol>
                         </div>
                     </td>

@@ -1,0 +1,134 @@
+<% # Modal to display OCR extracted text %>
+<div id="ocr-text-modal" style="
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+">
+  <div style="
+    background: white;
+    border-radius: 12px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  ">
+    <!-- Modal Header -->
+    <div style="
+      background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    ">
+      <div>
+        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">
+          📄 Texte Extrait par OCR
+        </h3>
+        <div style="font-size: 0.875rem; opacity: 0.9;">
+          <%= @contract.ocr_page_count %> page<%= @contract.ocr_page_count > 1 ? 's' : '' %> 
+          • <%= @contract.ocr_text&.length || 0 %> caractères
+          • Extrait par <%= @contract.ocr_provider&.titleize %>
+        </div>
+      </div>
+      <button 
+        onclick="document.getElementById('ocr-text-modal').style.display='none'"
+        style="
+          background: rgba(255, 255, 255, 0.2);
+          border: none;
+          color: white;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5rem;
+          transition: background 0.2s;
+        "
+        onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'"
+        onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'"
+      >
+        ×
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+      <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+        <div style="font-size: 0.875rem; color: #6b7280;">
+          <strong>Note:</strong> Ce texte brut a été extrait du PDF. Il sert de base pour l'extraction automatique des données structurées du contrat.
+        </div>
+      </div>
+
+      <textarea 
+        readonly 
+        style="
+          width: 100%;
+          min-height: 400px;
+          padding: 1rem;
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          font-family: 'Courier New', monospace;
+          font-size: 0.875rem;
+          line-height: 1.6;
+          resize: vertical;
+          background: white;
+        "
+      ><%= @contract.ocr_text %></textarea>
+
+      <div style="margin-top: 1rem; font-size: 0.75rem; color: #9ca3af;">
+        Traité le <%= @contract.ocr_processed_at&.strftime('%d/%m/%Y à %H:%M') %>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div style="
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      background: #f9fafb;
+      border-radius: 0 0 12px 12px;
+    ">
+      <button 
+        onclick="navigator.clipboard.writeText(document.querySelector('#ocr-text-modal textarea').value).then(() => alert('Texte copié dans le presse-papiers!'))"
+        class="typo-btn-small typo-btn-small-secondary"
+        style="display: inline-flex; align-items: center; gap: 0.5rem;"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        Copier le texte
+      </button>
+      <button 
+        onclick="document.getElementById('ocr-text-modal').style.display='none'"
+        class="typo-btn-small typo-btn-small-primary"
+      >
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Close modal when clicking outside -->
+<script>
+  document.getElementById('ocr-text-modal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+    }
+  });
+</script>
