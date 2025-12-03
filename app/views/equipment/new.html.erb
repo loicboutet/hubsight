@@ -110,7 +110,10 @@
       </div>
 
       <!-- Location Hierarchy Section -->
-      <% if params[:space_id].blank? %>
+      <% if params[:space_id].present? %>
+        <!-- Hidden field to preserve space_id when coming from a space -->
+        <%= hidden_field_tag 'equipment[space_id]', params[:space_id] %>
+      <% else %>
       <div style="margin-bottom: var(--space-xl);">
         <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
           Localisation <span style="color: var(--coral-primary);">*</span>

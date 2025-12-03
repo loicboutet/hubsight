@@ -69,6 +69,11 @@ class BuildingsController < ApplicationController
     @site = @building.site
     @levels = @building.levels.ordered
     
+    # Calculate statistics from database
+    @levels_count = @building.levels.count
+    @spaces_count = Space.joins(:level).where(levels: { building_id: @building.id }).count
+    @equipment_count = Equipment.joins(space: :level).where(levels: { building_id: @building.id }).count
+    
     # Ensure user has access to this building's organization
     # Admins can access all buildings across all organizations
     unless current_user.admin? || @building.organization_id == current_user.organization_id

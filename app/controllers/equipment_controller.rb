@@ -98,9 +98,9 @@ class EquipmentController < ApplicationController
 
   def set_equipment
     @equipment = if current_user.admin?
-                   Equipment.find(params[:id])
+                   Equipment.includes(space: { level: { building: :site } }).find(params[:id])
                  else
-                   current_organization.equipment.find(params[:id])
+                   current_organization.equipment.includes(space: { level: { building: :site } }).find(params[:id])
                  end
   rescue ActiveRecord::RecordNotFound
     redirect_to equipment_index_path, alert: 'Équipement non trouvé.'
