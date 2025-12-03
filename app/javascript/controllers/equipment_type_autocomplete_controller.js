@@ -21,6 +21,9 @@ export default class extends Controller {
     this.selectedIndex = -1
     this.equipmentTypes = []
     
+    // Set parent container to position relative for proper dropdown positioning
+    this.element.style.position = "relative"
+    
     // Close dropdown when clicking outside
     this.boundHandleClickOutside = this.handleClickOutside.bind(this)
     document.addEventListener("click", this.boundHandleClickOutside)
@@ -153,6 +156,11 @@ export default class extends Controller {
     if (!this.hasSuggestionsTarget) return
     
     this.suggestionsTarget.innerHTML = ""
+    
+    // Set max width to prevent overflow
+    this.suggestionsTarget.style.maxWidth = "100%"
+    this.suggestionsTarget.style.width = "100%"
+    this.suggestionsTarget.style.boxSizing = "border-box"
     
     equipmentTypes.forEach((type, index) => {
       const item = this.createSuggestionItem(type, index)
