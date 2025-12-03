@@ -1,30 +1,38 @@
-<div style="padding: var(--space-lg);">
-  <!-- Breadcrumb Navigation -->
-  <nav style="margin-bottom: var(--space-lg);">
-    <ol style="display: flex; list-style: none; padding: 0; margin: 0; gap: var(--space-sm); align-items: center;">
-      <li><%= link_to "Organisations", organizations_path, style: "color: var(--purple-primary); text-decoration: none;" %></li>
-      <li style="color: #999;">/</li>
-      <li class="typo-body-small" style="color: #666;"><%= @organization.name %></li>
-    </ol>
-  </nav>
+<% content_for :header, @organization.name %>
 
-  <!-- Page Header -->
-  <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-xl);">
-    <div>
-      <h1 class="typo-h1" style="margin-bottom: var(--space-sm);">🏢 <%= @organization.name %></h1>
-      <% if @organization.legal_name.present? %>
-        <p class="typo-body" style="color: #666;"><%= @organization.legal_name %></p>
-      <% end %>
+<div class="section">
+  <!-- Breadcrumb Navigation -->
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Organisations', url: organizations_path },
+      { name: @organization.name, url: nil }
+    ] %>
+  </div>
+
+  <!-- Header Section -->
+  <div style="margin-bottom: var(--space-xl); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-md);">
+    <div style="display: flex; align-items: center; gap: var(--space-md); flex: 1; min-width: 300px;">
+      <div style="font-size: 32px;">🏢</div>
+      <div>
+        <h2 class="typo-h2" style="margin-bottom: var(--space-xs);"><%= @organization.name %></h2>
+        <% if @organization.legal_name.present? %>
+          <p class="typo-body-small" style="color: var(--medium-gray);"><%= @organization.legal_name %></p>
+        <% end %>
+      </div>
     </div>
-    <div style="display: flex; gap: var(--space-sm);">
-      <%= link_to edit_organization_path(@organization), class: "typo-btn-secondary", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+      <%= link_to edit_organization_path(@organization), class: "typo-btn-small typo-btn-small-primary" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
         Éditer
       <% end %>
-      <%= link_to organization_path(@organization), method: :delete, data: { confirm: "Êtes-vous sûr de vouloir supprimer cette organisation ?" }, class: "typo-btn-danger", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      
+      <%= link_to organizations_path, class: "typo-btn-cancel" do %>
+        ← Retour à la liste
+      <% end %>
+      <%= link_to organization_path(@organization), data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette organisation ?" }, class: "typo-btn-small typo-btn-small-danger" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
         </svg>
         Supprimer
@@ -195,26 +203,23 @@
         </div>
       </div>
 
-      <!-- Related Data (Placeholder for future features) -->
+      <!-- Related Data -->
       <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-lg);">
         <h4 class="typo-h4" style="margin-bottom: var(--space-md);">Données Liées</h4>
         <div style="display: grid; gap: var(--space-sm);">
-          <div style="padding: var(--space-sm); background-color: var(--pink-pale); border-radius: var(--space-sm); display: flex; justify-content: space-between; align-items: center;">
-            <span class="typo-body-small">Contacts</span>
-            <span class="typo-body-small typo-bold" style="color: var(--purple-primary);">—</span>
-          </div>
-          <div style="padding: var(--space-sm); background-color: var(--pink-pale); border-radius: var(--space-sm); display: flex; justify-content: space-between; align-items: center;">
-            <span class="typo-body-small">Agences</span>
-            <span class="typo-body-small typo-bold" style="color: var(--purple-primary);">—</span>
-          </div>
+          <%= link_to contacts_path(organization_id: @organization.id), style: "padding: var(--space-sm); background-color: var(--pink-pale); border-radius: var(--space-sm); display: flex; justify-content: space-between; align-items: center; text-decoration: none; transition: background-color 0.2s;" do %>
+            <span class="typo-body-small" style="color: var(--dark-gray);">Contacts</span>
+            <span class="typo-body-small typo-bold" style="color: var(--purple-primary);"><%= @organization.contacts.count %></span>
+          <% end %>
+          <%= link_to agencies_path(organization_id: @organization.id), style: "padding: var(--space-sm); background-color: var(--pink-pale); border-radius: var(--space-sm); display: flex; justify-content: space-between; align-items: center; text-decoration: none; transition: background-color 0.2s;" do %>
+            <span class="typo-body-small" style="color: var(--dark-gray);">Agences</span>
+            <span class="typo-body-small typo-bold" style="color: var(--purple-primary);"><%= @organization.agencies.count %></span>
+          <% end %>
           <div style="padding: var(--space-sm); background-color: var(--pink-pale); border-radius: var(--space-sm); display: flex; justify-content: space-between; align-items: center;">
             <span class="typo-body-small">Contrats</span>
-            <span class="typo-body-small typo-bold" style="color: var(--purple-primary);">—</span>
+            <span class="typo-body-small typo-bold" style="color: var(--purple-primary);">0</span>
           </div>
         </div>
-        <p class="typo-body-small" style="color: #999; margin-top: var(--space-md); font-style: italic;">
-          Les fonctionnalités contacts et agences seront disponibles prochainement.
-        </p>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 class OrganizationsController < ApplicationController
-  before_action :require_portfolio_manager
+  before_action :require_organization_access
   before_action :set_organization, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -78,9 +78,9 @@ class OrganizationsController < ApplicationController
     )
   end
 
-  def require_portfolio_manager
-    unless current_user&.portfolio_manager?
-      redirect_to root_path, alert: 'Accès non autorisé. Seuls les gestionnaires de portefeuille peuvent gérer les organisations.'
+  def require_organization_access
+    unless current_user&.portfolio_manager? || current_user&.admin?
+      redirect_to root_path, alert: 'Accès non autorisé. Seuls les administrateurs et les gestionnaires de portefeuille peuvent gérer les organisations.'
     end
   end
 end
