@@ -206,7 +206,7 @@
                                                 
                                                 <!-- Equipment Type -->
                                                 <% if equipment.equipment_type.present? %>
-                                                  <span style="color: var(--gray); font-size: 0.75rem;">- <%= equipment.equipment_type %></span>
+                                                  <span style="color: var(--gray); font-size: 0.75rem;">- <%= equipment.equipment_type&.equipment_type_name %></span>
                                                 <% end %>
                                               </div>
                                             </div>
