@@ -7,14 +7,21 @@
   <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
   <% space_icon = capture { render 'shared/hierarchy_icons', type: 'space', size: 16 } %>
   <% equipment_icon = capture { render 'shared/hierarchy_icons', type: 'equipment', size: 16 } %>
-  <%= render 'shared/breadcrumb', path: [
-    { name: 'Sites', url: sites_path, icon: site_icon },
-    { name: 'Tour Montparnasse', url: site_path(1), icon: site_icon },
-    { name: 'Bât. A', url: building_path(1), icon: building_icon },
-    { name: 'RDC', url: level_path(1), icon: level_icon },
-    { name: 'Bureau 101', url: space_path(1), icon: space_icon },
-    { name: 'Nouvel Équipement', url: nil, icon: equipment_icon }
-  ] %>
+  <% if @space %>
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: sites_path, icon: site_icon },
+      { name: @space.level.building.site.name, url: site_path(@space.level.building.site), icon: site_icon },
+      { name: @space.level.building.name, url: building_path(@space.level.building), icon: building_icon },
+      { name: @space.level.name, url: level_path(@space.level), icon: level_icon },
+      { name: @space.name, url: space_path(@space), icon: space_icon },
+      { name: 'Nouvel Équipement', url: nil, icon: equipment_icon }
+    ] %>
+  <% else %>
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Équipements', url: equipment_index_path, icon: equipment_icon },
+      { name: 'Nouvel Équipement', url: nil, icon: equipment_icon }
+    ] %>
+  <% end %>
 
   <!-- Header Section -->
   <div style="margin-bottom: var(--space-xl); display: flex; align-items: center; gap: var(--space-md);">

@@ -227,8 +227,14 @@ export default class extends Controller {
       if (data.success) {
         this.showSuccessMessage(entityType, entityName)
         this.closeModal(modalId)
-        // Reload page after short delay
-        setTimeout(() => window.location.reload(), 1000)
+        // Redirect to the specified URL or reload page after short delay
+        setTimeout(() => {
+          if (data.redirect_url) {
+            window.location.href = data.redirect_url
+          } else {
+            window.location.reload()
+          }
+        }, 1000)
       } else {
         this.showErrorMessage(data.error || 'Une erreur est survenue lors de la suppression')
         this.resetButton(button)
