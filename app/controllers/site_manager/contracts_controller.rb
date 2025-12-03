@@ -90,11 +90,7 @@ class SiteManager::ContractsController < ApplicationController
     end
     
     if @contract.save
-      # Trigger OCR extraction if PDF is attached
-      if @contract.pdf_attached?
-        @contract.trigger_ocr_extraction!
-      end
-      
+      # OCR extraction will be triggered automatically via after_commit callback
       redirect_to my_contract_path(@contract), notice: "Contrat créé avec succès. L'extraction des données va démarrer automatiquement."
     else
       render :new, status: :unprocessable_entity
@@ -143,25 +139,24 @@ class SiteManager::ContractsController < ApplicationController
       :contract_number,
       :title,
       :contract_type,
-      :purchase_family,
+      :contract_family,
       :purchase_subfamily,
       :status,
-      :object,
-      :contractor_organization,
-      :contractor_contact,
+      :contract_object,
+      :contractor_organization_name,
+      :contractor_contact_name,
       :contractor_email,
       :contractor_phone,
-      :annual_amount_excl_tax,
-      :annual_amount_incl_tax,
+      :annual_amount_ht,
+      :annual_amount_ttc,
       :billing_method,
       :billing_frequency,
       :signature_date,
       :start_date,
       :end_date,
-      :initial_duration,
+      :initial_duration_months,
       :automatic_renewal,
-      :termination_notice,
-      :notes
+      :notice_period_days
     )
   end
 end

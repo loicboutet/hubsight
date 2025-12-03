@@ -176,7 +176,7 @@
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Famille d'Achats <span style="color: var(--coral-primary);">*</span>
           </label>
-          <%= f.select :purchase_family,
+          <%= f.select :contract_family,
             [
               ['Maintenance', 'maintenance'],
               ['Nettoyage et Hygiène', 'cleaning'],
@@ -185,7 +185,7 @@
               ['Sécurité', 'security'],
               ['Autres Contrats', 'other']
             ],
-            { include_blank: 'Sélectionner...', selected: @contract.purchase_family },
+            { include_blank: 'Sélectionner...', selected: @contract.contract_family },
             { required: true, style: "width: 100%;" } %>
         </div>
 
@@ -200,14 +200,14 @@
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Prestataire
           </label>
-          <%= f.text_field :contractor_organization, value: @contract.contractor_organization, placeholder: "Nom de l'entreprise", style: "width: 100%;" %>
+          <%= f.text_field :contractor_organization_name, value: @contract.contractor_organization_name, placeholder: "Nom de l'entreprise", style: "width: 100%;" %>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Contact Prestataire
           </label>
-          <%= f.text_field :contractor_contact, value: @contract.contractor_contact, placeholder: "Nom du contact", style: "width: 100%;" %>
+          <%= f.text_field :contractor_contact_name, value: @contract.contractor_contact_name, placeholder: "Nom du contact", style: "width: 100%;" %>
         </div>
 
         <div>
@@ -228,14 +228,14 @@
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Montant Annuel HT (€)
           </label>
-          <%= f.number_field :annual_amount_excl_tax, value: @contract.annual_amount_excl_tax, placeholder: "Ex: 50000", step: 0.01, style: "width: 100%;" %>
+          <%= f.number_field :annual_amount_ht, value: @contract.annual_amount_ht, placeholder: "Ex: 50000", step: 0.01, style: "width: 100%;" %>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Montant Annuel TTC (€)
           </label>
-          <%= f.number_field :annual_amount_incl_tax, value: @contract.annual_amount_incl_tax, placeholder: "Ex: 60000", step: 0.01, style: "width: 100%;" %>
+          <%= f.number_field :annual_amount_ttc, value: @contract.annual_amount_ttc, placeholder: "Ex: 60000", step: 0.01, style: "width: 100%;" %>
         </div>
 
         <div>
@@ -256,14 +256,7 @@
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Objet du Contrat
           </label>
-          <%= f.text_area :object, value: @contract.object, rows: 3, placeholder: "Description de l'objet du contrat", style: "width: 100%;" %>
-        </div>
-
-        <div style="grid-column: 1 / -1;">
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Notes
-          </label>
-          <%= f.text_area :notes, value: @contract.notes, rows: 2, placeholder: "Notes complémentaires", style: "width: 100%;" %>
+          <%= f.text_area :contract_object, value: @contract.contract_object, rows: 3, placeholder: "Description de l'objet du contrat", style: "width: 100%;" %>
         </div>
       </div>
     </div>
