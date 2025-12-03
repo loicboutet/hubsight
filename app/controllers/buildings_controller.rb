@@ -70,7 +70,8 @@ class BuildingsController < ApplicationController
     @levels = @building.levels.ordered
     
     # Ensure user has access to this building's organization
-    unless @building.organization_id == current_user.organization_id
+    # Admins can access all buildings across all organizations
+    unless current_user.admin? || @building.organization_id == current_user.organization_id
       redirect_to root_path, alert: "Accès non autorisé."
     end
   end
