@@ -37,26 +37,24 @@ class SitesController < ApplicationController
   end
 
   def show
-    @opening_hours = [
-      { day: "Lundi", open: true, from: "08:00", to: "20:00" },
-      { day: "Mardi", open: true, from: "08:00", to: "20:00" },
-      { day: "Mercredi", open: true, from: "08:00", to: "20:00" },
-      { day: "Jeudi", open: true, from: "08:00", to: "20:00" },
-      { day: "Vendredi", open: true, from: "08:00", to: "20:00" },
-      { day: "Samedi", open: true, from: "09:00", to: "21:00" },
-      { day: "Dimanche", open: true, from: "10:00", to: "19:00" },
-      { day: "Jours fériés", open: false, from: "Fermé", to: "Fermé" }
-    ]
+    # Calculate real statistics from database
+    @buildings_count = @site.buildings.count
+    @levels_count = @site.levels.count
+    @spaces_count = Space.joins(level: :building).where(buildings: { site_id: @site.id }).count
+    @equipment_count = Equipment.joins(space: { level: :building }).where(buildings: { site_id: @site.id }).count
     
-    @contacts = [
-      {
-        name: @site.site_manager || "N/A",
+    # Get actual contacts associated with this site
+    # For now, use site manager info as primary contact
+    @contacts = []
+    if @site.site_manager.present? || @site.contact_email.present? || @site.contact_phone.present?
+      @contacts << {
+        name: @site.site_manager || "Non renseigné",
         role: "Responsable de Site",
-        phone: @site.contact_phone || "N/A",
-        email: @site.contact_email || "N/A",
+        phone: @site.contact_phone || "Non renseigné",
+        email: @site.contact_email || "Non renseigné",
         organization: @site.name
       }
-    ]
+    end
   end
 
   def new

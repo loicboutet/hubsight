@@ -67,7 +67,7 @@
         <div class="admin-stat-header">
           <div>
             <div class="admin-stat-label">Bâtiments</div>
-            <div class="admin-stat-value">2</div>
+            <div class="admin-stat-value"><%= @buildings_count %></div>
             <div class="admin-stat-change">Structures principales</div>
           </div>
           <div class="admin-stat-icon green">
@@ -80,7 +80,7 @@
         <div class="admin-stat-header">
           <div>
             <div class="admin-stat-label">Niveaux</div>
-            <div class="admin-stat-value">12</div>
+            <div class="admin-stat-value"><%= @levels_count %></div>
             <div class="admin-stat-change">Étages au total</div>
           </div>
           <div class="admin-stat-icon blue">
@@ -93,7 +93,7 @@
         <div class="admin-stat-header">
           <div>
             <div class="admin-stat-label">Espaces</div>
-            <div class="admin-stat-value">156</div>
+            <div class="admin-stat-value"><%= @spaces_count %></div>
             <div class="admin-stat-change">Zones fonctionnelles</div>
           </div>
           <div class="admin-stat-icon purple">
@@ -106,7 +106,7 @@
         <div class="admin-stat-header">
           <div>
             <div class="admin-stat-label">Équipements</div>
-            <div class="admin-stat-value">324</div>
+            <div class="admin-stat-value"><%= @equipment_count %></div>
             <div class="admin-stat-change">Actifs gérés</div>
           </div>
           <div class="admin-stat-icon coral">
@@ -196,47 +196,16 @@
       </div>
     </div>
 
-    <!-- Right Column - Opening Hours & Contacts -->
+    <!-- Right Column - Contacts -->
     <div>
       
-      <!-- Opening Hours Section -->
-      <div style="margin-bottom: var(--space-xl);">
-        <h3 class="typo-h3" style="margin-bottom: var(--space-md); text-align: center;">Horaire d'ouverture du site</h3>
-        <div style="background-color: white; border-radius: var(--space-md); overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
-          <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background-color: #f8f9fa;">
-                <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">Jour</th>
-                <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">Ouvert ?</th>
-                <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">De</th>
-                <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray); border-bottom: 2px solid #e5e7eb;">à</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @opening_hours.each_with_index do |hours, index| %>
-                <tr style="<%= 'background-color: #f8f9fa;' if index.even? %>">
-                  <td style="padding: var(--space-sm) var(--space-md); color: #1f2937; font-weight: 500; border-bottom: 1px solid #e5e7eb;"><%= hours[:day] %></td>
-                  <td style="padding: var(--space-sm) var(--space-md); text-align: center; border-bottom: 1px solid #e5e7eb;">
-                    <% if hours[:open] %>
-                      <span style="display: inline-block; padding: 2px 8px; background-color: #d1fae5; color: #065f46; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ouvert</span>
-                    <% else %>
-                      <span style="display: inline-block; padding: 2px 8px; background-color: #fee2e2; color: #991b1b; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Fermé</span>
-                    <% end %>
-                  </td>
-                  <td style="padding: var(--space-sm) var(--space-md); text-align: center; color: #1f2937; border-bottom: 1px solid #e5e7eb;"><%= hours[:from] %></td>
-                  <td style="padding: var(--space-sm) var(--space-md); text-align: center; color: #1f2937; border-bottom: 1px solid #e5e7eb;"><%= hours[:to] %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
+      <!-- Contacts Section -->
       <!-- Contacts Section -->
       <div>
         <h3 class="typo-h3" style="margin-bottom: var(--space-md); text-align: center;">Contacts et interlocuteurs du site</h3>
-        <div style="display: grid; gap: var(--space-md);">
-          <% @contacts.each do |contact| %>
+        <% if @contacts.any? %>
+          <div style="display: grid; gap: var(--space-md);">
+            <% @contacts.each do |contact| %>
             <div style="background-color: white; padding: var(--space-lg); border-radius: var(--space-md); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border-left: 4px solid #3b82f6;">
               <div style="margin-bottom: var(--space-sm);">
                 <h4 class="typo-h5" style="color: var(--dark-gray); margin-bottom: 4px;"><%= contact[:name] %></h4>
@@ -262,9 +231,19 @@
                   <p class="typo-body-small" style="color: #6b7280; margin-bottom: 0;"><%= contact[:organization] %></p>
                 </div>
               </div>
-            </div>
-          <% end %>
-        </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div style="background-color: white; padding: var(--space-xl); border-radius: var(--space-md); text-align: center; border: 2px dashed #dee2e6;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#cbd5e1" style="margin: 0 auto;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <p class="typo-body" style="color: var(--medium-gray); margin-top: var(--space-md); margin-bottom: 0;">
+              Aucun contact configuré pour ce site
+            </p>
+          </div>
+        <% end %>
       </div>
 
     </div>

@@ -65,26 +65,14 @@ class BuildingsController < ApplicationController
   end
 
   def show
-    @building = OpenStruct.new(
-      id: params[:id],
-      name: "Bâtiment A - Principal",
-      code: "BAT-A",
-      area: 12500,
-      construction_year: 2005,
-      status: "active",
-      description: "Bâtiment principal avec zones commerciales et bureaux",
-      site_id: params[:site_id] || 1,
-      
-      # Item 15: Data Source Tracking fields
-      created_by: "Thomas Bernard",
-      created_at: "25/02/2023 à 10:15",
-      updated_by: "Isabelle Moreau",
-      updated_at: "08/11/2024 à 14:20",
-      import_source: "Excel",
-      import_date: "20/02/2023 à 09:30",
-      import_user: "Gestionnaire Principal"
-    )
-    @site = OpenStruct.new(id: @building.site_id, name: "Tour Montparnasse")
+    @building = Building.find(params[:id])
+    @site = @building.site
+    @levels = @building.levels.ordered
+    
+    # Ensure user has access to this building's organization
+    unless @building.organization_id == current_user.organization_id
+      redirect_to root_path, alert: "Accès non autorisé."
+    end
   end
 
   def new
