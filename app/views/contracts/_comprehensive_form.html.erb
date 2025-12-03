@@ -663,7 +663,7 @@
         <span style="font-size: 1.5rem;">📅</span>
         <span style="font-size: 1.2rem;">Temporalité (10 champs)</span>
       </summary>
-      <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+      <div data-controller="contract-dates-calculator" style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Date de Signature
@@ -675,28 +675,58 @@
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Date de Début d'Exécution
           </label>
-          <%= f.date_field :execution_start_date, value: contract.execution_start_date, style: "width: 100%;" %>
+          <%= f.date_field :execution_start_date, 
+            value: contract.execution_start_date,
+            data: {
+              contract_dates_calculator_target: "executionStartDate",
+              action: "input->contract-dates-calculator#recalculate"
+            },
+            style: "width: 100%;" %>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Durée Initiale (mois)
           </label>
-          <%= f.number_field :initial_duration_months, value: contract.initial_duration_months, placeholder: "Ex: 12, 24, 36", min: 1, style: "width: 100%;" %>
+          <%= f.number_field :initial_duration_months, 
+            value: contract.initial_duration_months, 
+            placeholder: "Ex: 12, 24, 36", 
+            min: 1,
+            data: {
+              contract_dates_calculator_target: "initialDurationMonths",
+              action: "input->contract-dates-calculator#recalculate"
+            },
+            style: "width: 100%;" %>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Durée de Reconduction (mois)
           </label>
-          <%= f.number_field :renewal_duration_months, value: contract.renewal_duration_months, placeholder: "Ex: 12", min: 1, style: "width: 100%;" %>
+          <%= f.number_field :renewal_duration_months, 
+            value: contract.renewal_duration_months, 
+            placeholder: "Ex: 12", 
+            min: 1,
+            data: {
+              contract_dates_calculator_target: "renewalDurationMonths",
+              action: "input->contract-dates-calculator#recalculate"
+            },
+            style: "width: 100%;" %>
         </div>
 
         <div>
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Nombre de Reconductions
           </label>
-          <%= f.number_field :renewal_count, value: contract.renewal_count, placeholder: "Ex: 2, 3", min: 0, style: "width: 100%;" %>
+          <%= f.number_field :renewal_count, 
+            value: contract.renewal_count, 
+            placeholder: "Ex: 2, 3", 
+            min: 0,
+            data: {
+              contract_dates_calculator_target: "renewalCount",
+              action: "input->contract-dates-calculator#recalculate"
+            },
+            style: "width: 100%;" %>
         </div>
 
         <div>
@@ -720,7 +750,10 @@
           </label>
           <%= f.date_field :end_date, 
             value: contract.end_date || contract.calculate_end_date, 
-            disabled: true,
+            readonly: true,
+            data: {
+              contract_dates_calculator_target: "endDate"
+            },
             style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
           <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
             📊 Calculée automatiquement : Date de début + Durée initiale + (N reconductions × Durée reconduction)
@@ -731,7 +764,15 @@
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Préavis de Résiliation (jours)
           </label>
-          <%= f.number_field :notice_period_days, value: contract.notice_period_days, placeholder: "Ex: 30, 60, 90", min: 0, style: "width: 100%;" %>
+          <%= f.number_field :notice_period_days, 
+            value: contract.notice_period_days, 
+            placeholder: "Ex: 30, 60, 90", 
+            min: 0,
+            data: {
+              contract_dates_calculator_target: "noticePeriodDays",
+              action: "input->contract-dates-calculator#recalculate"
+            },
+            style: "width: 100%;" %>
         </div>
 
         <!-- Auto-calculated field: Termination Deadline -->
@@ -742,7 +783,10 @@
           </label>
           <%= f.date_field :next_deadline_date, 
             value: contract.next_deadline_date || contract.calculate_termination_deadline, 
-            disabled: true,
+            readonly: true,
+            data: {
+              contract_dates_calculator_target: "nextDeadlineDate"
+            },
             style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
           <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
             📊 Calculée automatiquement : Date d'expiration - Préavis de résiliation
@@ -757,7 +801,10 @@
           </label>
           <%= f.date_field :last_renewal_date, 
             value: contract.last_renewal_date || contract.calculate_last_renewal_date, 
-            disabled: true,
+            readonly: true,
+            data: {
+              contract_dates_calculator_target: "lastRenewalDate"
+            },
             style: "width: 100%; background-color: #f3f4f6; cursor: not-allowed; color: #6b7280;" %>
           <p class="typo-body-small" style="margin-top: var(--space-xs); color: #6b7280; font-style: italic;">
             📊 Calculée automatiquement : Date de début + Durée initiale + (N-1) reconductions
