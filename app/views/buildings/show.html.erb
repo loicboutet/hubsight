@@ -121,65 +121,56 @@
     </div>
 
     <div style="display: grid; gap: var(--space-md);">
-        <%
-          # Mock levels data
-          levels = [
-            { id: 1, name: 'Rez-de-chaussée', altitude: 0, area: 1500, spaces: 15, equipment: 28 },
-            { id: 2, name: 'Étage 1', altitude: 3.5, area: 1500, spaces: 12, equipment: 24 },
-            { id: 3, name: 'Étage 2', altitude: 7.0, area: 1500, spaces: 12, equipment: 23 },
-            { id: 4, name: 'Étage 3', altitude: 10.5, area: 1500, spaces: 12, equipment: 23 }
-          ]
-        %>
-
-      <% levels.each do |level| %>
+      <% if @levels.any? %>
+        <% @levels.each do |level| %>
         <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md); border-left: 4px solid #f59e0b;">
           <div style="display: flex; justify-content: space-between; align-items: start;">
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                 <%= render 'shared/hierarchy_icons', type: 'level', size: 20, color: '#f59e0b' %>
-                <%= link_to building_level_path(@building.id, level[:id]), style: "text-decoration: none;" do %>
-                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= level[:name] %></h5>
+                <%= link_to building_level_path(@building.id, level.id), style: "text-decoration: none;" do %>
+                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= level.name %></h5>
                 <% end %>
               </div>
               <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
-                <%= number_with_delimiter(level[:area], delimiter: ' ') %> m² • Altitude: <%= level[:altitude] %> m
+                <%= level.area ? "#{number_with_delimiter(level.area, delimiter: ' ')} m²" : 'N/A' %> • Altitude: <%= level.altitude || 'N/A' %> m
               </p>
               
               <div style="display: flex; gap: var(--space-lg);">
                 <div style="display: flex; align-items: center; gap: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'space', size: 16, color: '#8b5cf6' %>
-                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= level[:spaces] %></span>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= level.spaces_count %></span>
                   <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Espaces</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'equipment', size: 16, color: '#6b7280' %>
-                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= level[:equipment] %></span>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= level.equipment_count %></span>
                   <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Équipements</span>
                 </div>
               </div>
             </div>
             
             <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
-              <%= link_to building_level_path(@building.id, level[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
+              <%= link_to building_level_path(@building.id, level.id), class: "typo-btn-small typo-btn-small-secondary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
                 Voir
               <% end %>
-              <%= link_to edit_level_path(level[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+              <%= link_to edit_level_path(level.id), class: "typo-btn-small typo-btn-small-primary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 Éditer
               <% end %>
-              <%= link_to new_level_space_path(level[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+              <%= link_to new_level_space_path(level.id), class: "typo-btn-small typo-btn-small-primary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Ajouter Espace
               <% end %>
-              <%= link_to level_path(level[:id]), method: :delete, class: "typo-btn-small typo-btn-small-danger", onclick: "return confirm('ATTENTION : Cette action est irréversible !\\n\\nÊtes-vous sûr de vouloir supprimer définitivement ce niveau ?\\n\\nToutes les données associées (espaces, équipements) seront également supprimées.');" do %>
+              <%= link_to level_path(level.id), method: :delete, class: "typo-btn-small typo-btn-small-danger", onclick: "return confirm('ATTENTION : Cette action est irréversible !\\n\\nÊtes-vous sûr de vouloir supprimer définitivement ce niveau ?\\n\\nToutes les données associées (espaces, équipements) seront également supprimées.');" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
@@ -187,6 +178,23 @@
               <% end %>
             </div>
           </div>
+        </div>
+        <% end %>
+      <% else %>
+        <div style="padding: var(--space-xl); background-color: #f8f9fa; border-radius: var(--space-md); text-align: center; border: 2px dashed #dee2e6;">
+          <%= render 'shared/hierarchy_icons', type: 'level', size: 48, color: '#dee2e6' %>
+          <p class="typo-body" style="color: var(--medium-gray); margin-top: var(--space-md); margin-bottom: var(--space-sm);">
+            Aucun niveau dans ce bâtiment
+          </p>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
+            Commencez par créer votre premier niveau pour organiser les espaces
+          </p>
+          <%= link_to new_building_level_path(@building.id), class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Créer le Premier Niveau
+          <% end %>
         </div>
       <% end %>
     </div>
@@ -232,13 +240,13 @@
       <!-- Nom technique du bâtiment -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
         <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Nom technique du bâtiment</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.technical_name || @building.name %></p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.name %></p>
       </div>
 
       <!-- Nom d'usage du bâtiment -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
         <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Nom d'usage du bâtiment</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.usage_name || @building.name %></p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.name %></p>
       </div>
 
       <!-- Nom du site auquel est associé ce bâtiment -->
@@ -247,100 +255,76 @@
         <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @site.name %></p>
       </div>
 
-      <!-- Typologie d'usage principal du bâtiment -->
+      <!-- Catégorie ERP -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Typologie d'usage principal du bâtiment</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.main_usage_type || 'Type W - Bureaux' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Catégorie ERP</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.erp_category || 'N/A' %></p>
       </div>
 
-      <!-- Effectif maximal du public admis dans le bâtiment calculé à partir de la somme des effectifs des différents espaces -->
+      <!-- Type ERP -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Effectif maximal du public admis dans le bâtiment calculé à partir de la somme des effectifs des différents espaces</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.calculated_public_capacity || '450' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Type ERP</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.erp_type || 'N/A' %></p>
       </div>
 
-      <!-- Effectif maximal du public admis dans le bâtiment -->
+      <!-- Capacité d'Accueil -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Effectif maximal du public admis dans le bâtiment</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.max_public_capacity || '500' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Capacité d'Accueil</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.capacity || 'N/A' %></p>
       </div>
 
-      <!-- Effectif maximal du personnel dans le bâtiment calculé à partir de la somme des effectifs des différents espaces -->
+      <!-- Accessibilité PMR -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Effectif maximal du personnel dans le bâtiment calculé à partir de la somme des effectifs des différents espaces</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.calculated_staff_capacity || '85' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Accessibilité PMR</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.pmr_accessibility ? 'Oui' : 'Non' %></p>
       </div>
 
-      <!-- Effectif maximal du personnel admis dans le bâtiment -->
+      <!-- Certification environnementale -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Effectif maximal du personnel admis dans le bâtiment</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.max_staff_capacity || '100' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Certification environnementale</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.environmental_certification || 'N/A' %></p>
       </div>
 
-      <!-- Réglementation applicable -->
+      <!-- Classement DPE -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Réglementation applicable</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.applicable_regulation || 'ERP' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Classement DPE</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.dpe_rating || 'N/A' %></p>
       </div>
 
-      <!-- Catégorie réglementation applicable -->
+      <!-- Classement GES -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Catégorie réglementation applicable</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.regulation_category || 'Type W' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Classement GES</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.ghg_rating || 'N/A' %></p>
       </div>
 
-      <!-- Classement réglementation applicable -->
+      <!-- Surface totale -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Classement réglementation applicable</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.regulation_classification || '4ème catégorie' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Surface totale</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.area ? "#{number_with_delimiter(@building.area, delimiter: ' ')} m²" : 'N/A' %></p>
       </div>
 
-      <!-- Type de mesure de surface utilisé -->
+      <!-- Année de construction -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Type de mesure de surface utilisé</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.surface_measurement_type || 'Surface utile brute relativement exploitable' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Année de construction</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.construction_year || 'N/A' %></p>
       </div>
 
-      <!-- Surface du bâtiment en m2 calculé à partir de la somme des espaces -->
+      <!-- Année de rénovation -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Surface du bâtiment en m2 calculé à partir de la somme des espaces</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= number_with_delimiter(@building.calculated_area || @building.area, delimiter: ' ') %> m²</p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Année de rénovation</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.renovation_year || 'N/A' %></p>
       </div>
 
-      <!-- Surface du bâtiment estimé -->
+      <!-- Référence cadastrale -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Surface du bâtiment estimé</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= number_with_delimiter(@building.estimated_area || @building.area, delimiter: ' ') %> m²</p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Référence cadastrale</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.cadastral_reference || 'N/A' %></p>
       </div>
 
-      <!-- Date de constuction -->
+      <!-- Type de structure -->
       <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Date de constuction</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.construction_date || @building.construction_year %></p>
-      </div>
-
-      <!-- Date de dernière rénovation -->
-      <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Date de dernière rénovation</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.last_renovation_date || 'N/A' %></p>
-      </div>
-
-      <!-- Identifiant cadastral de l'espace -->
-      <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Identifiant cadastral de l'espace</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.cadastral_id ||'AB-123-456' %></p>
-      </div>
-
-      <!-- Identifiant RnB de l'espace -->
-      <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Identifiant RnB de l'espace</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.rnb_id || 'N/A' %></p>
-      </div>
-
-      <!-- Coordonnées GPS -->
-      <div style="padding: var(--space-md); background-color: white; border-radius: var(--space-sm);">
-        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Coordonnées GPS</p>
-        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.gps_coordinates || 'N/A' %></p>
+        <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.75rem; text-transform: uppercase; margin-bottom: var(--space-xs);">Type de structure</p>
+        <p class="typo-body typo-bold" style="color: var(--dark-gray);"><%= @building.structure_type || 'N/A' %></p>
       </div>
 
     </div>

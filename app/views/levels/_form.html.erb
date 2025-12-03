@@ -1,4 +1,4 @@
-l<%= form_with(model: [building, level], local: true) do |f| %>
+<%= form_with(model: (building && !local_assigns[:is_edit]) ? [building, level] : level, local: true) do |f| %>
   <div style="background-color: var(--white); border-radius: var(--space-md); ">
     
     <!-- Level Information -->
