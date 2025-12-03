@@ -12,7 +12,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
         Voir Validation
-        <span style="position: absolute; top: -8px; right: -8px; background-color: #ff4757; color: white; font-size: 0.625rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; text-transform: uppercase;">NEW</span>
+       
       <% end %>
       <%= link_to audit_trail_path(entity_type: 'Contract', entity_id: @contract.id), class: "typo-btn-small typo-btn-small-primary" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -167,14 +167,16 @@
           </div>
         </div>
 
-        <% 
-          gain = @contract.property_deed_current_value - @contract.property_deed_acquisition_price
-          gain_percent = ((gain / @contract.property_deed_acquisition_price) * 100).round(2)
-        %>
-        <div style="background-color: #ecfdf5; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #10b981; margin-top: var(--space-lg);">
-          <p class="typo-body-small typo-bold" style="color: #065f46; margin-bottom: var(--space-xs);">📊 Plus-Value Potentielle</p>
-          <p class="typo-body" style="color: #065f46;">+ <%= number_to_currency(gain, unit: "€", separator: ",", delimiter: " ", format: "%n %u") %> (+<%= gain_percent %>%) depuis l'acquisition</p>
-        </div>
+        <% if @contract.property_deed_current_value.present? && @contract.property_deed_acquisition_price.present? %>
+          <% 
+            gain = @contract.property_deed_current_value - @contract.property_deed_acquisition_price
+            gain_percent = ((gain / @contract.property_deed_acquisition_price) * 100).round(2)
+          %>
+          <div style="background-color: #ecfdf5; padding: var(--space-md); border-radius: var(--space-sm); border-left: 4px solid #10b981; margin-top: var(--space-lg);">
+            <p class="typo-body-small typo-bold" style="color: #065f46; margin-bottom: var(--space-xs);">📊 Plus-Value Potentielle</p>
+            <p class="typo-body" style="color: #065f46;">+ <%= number_to_currency(gain, unit: "€", separator: ",", delimiter: " ", format: "%n %u") %> (+<%= gain_percent %>%) depuis l'acquisition</p>
+          </div>
+        <% end %>
       </div>
     </div>
   <% end %>
