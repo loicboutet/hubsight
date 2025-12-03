@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_02_215248) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_03_131213) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -290,6 +290,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_02_215248) do
     t.text "validation_notes"
     t.json "corrected_fields", default: {}
     t.decimal "vat_rate", precision: 5, scale: 2, default: "20.0"
+    t.string "property_deed_site"
+    t.date "property_deed_acquisition_date"
+    t.decimal "property_deed_area", precision: 10, scale: 2
+    t.string "property_deed_usage_type"
+    t.string "property_deed_type"
+    t.decimal "property_deed_acquisition_price", precision: 12, scale: 2
+    t.decimal "property_deed_current_value", precision: 12, scale: 2
+    t.date "property_deed_value_update_date"
+    t.text "property_deed_alerts"
+    t.string "lease_type"
+    t.decimal "lease_area", precision: 10, scale: 2
+    t.decimal "monthly_rent_excl_tax", precision: 12, scale: 2
+    t.decimal "monthly_charges", precision: 12, scale: 2
+    t.string "indexation_type"
+    t.decimal "indexation_rate", precision: 5, scale: 2
+    t.date "lease_effective_date"
+    t.integer "lease_duration_months"
+    t.date "next_lease_deadline"
+    t.text "lease_alerts"
     t.index ["contract_family"], name: "index_contracts_on_contract_family"
     t.index ["contract_type"], name: "index_contracts_on_contract_type"
     t.index ["contractor_organization_name"], name: "index_contracts_on_contractor_organization_name"
