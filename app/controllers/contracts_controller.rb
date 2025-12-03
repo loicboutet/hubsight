@@ -87,12 +87,21 @@ class ContractsController < ApplicationController
   end
 
   def new
-    @contract = Contract.new(organization_id: current_user.organization_id)
+    # Admins don't have organization_id, so we leave it nil for them to select
+    @contract = Contract.new(organization_id: current_user.organization_id) unless current_user.admin?
+    @contract = Contract.new if current_user.admin?
   end
 
   def create
     @contract = Contract.new(contract_params)
-    @contract.organization_id = current_user.organization_id
+    # For non-admin users, always use their organization
+    # For admins, they can select from params or we use a default (first org)
+    if current_user.admin?
+      # If admin didn't select an organization, use the first available one
+      @contract.organization_id = params[:contract][:organization_id].presence || Organization.first&.id
+    else
+      @contract.organization_id = current_user.organization_id
+    end
     
     if @contract.save
       redirect_to contracts_path, notice: "Contrat créé avec succès"
@@ -183,15 +192,6 @@ class ContractsController < ApplicationController
 
   def compare
     # Renders contracts/compare.html.erb
-  end
-
-  def upload
-    # Renders contracts/upload.html.erb
-  end
-
-  def process_upload
-    # Handle contract upload
-    redirect_to contracts_path, notice: "Contrat importé avec succès"
   end
 
   def delete_pdf

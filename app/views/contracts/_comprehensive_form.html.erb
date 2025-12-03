@@ -1,6 +1,20 @@
 <div style="background-color: var(--white); border-radius: var(--space-md);">
   <%= form_with(model: contract, local: true) do |f| %>
     
+    <!-- Error Messages Display -->
+    <% if contract.errors.any? %>
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #fee; border-left: 4px solid #c00; border-radius: var(--space-sm);">
+        <h4 style="margin: 0 0 var(--space-md) 0; color: #c00; font-size: 1.2rem;">
+          ❌ <%= pluralize(contract.errors.count, "erreur") %> <%= contract.errors.count > 1 ? 'ont empêché' : 'a empêché' %> la sauvegarde du contrat:
+        </h4>
+        <ul style="margin: 0; padding-left: var(--space-lg);">
+          <% contract.errors.full_messages.each do |message| %>
+            <li style="color: #900; margin-bottom: var(--space-xs);"><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    
     <!-- Creation Method Banner (only on new) -->
     <% unless contract.respond_to?(:id) && contract.id.present? %>
       <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: var(--space-sm);">
@@ -85,7 +99,7 @@
         </div>
       </div>
 
-      <% if contract.respond_to?(:pdf_attached?) && contract.pdf_attached? %>
+      <% if contract.persisted? && contract.respond_to?(:pdf_attached?) && contract.pdf_attached? %>
         <div style="margin-top: var(--space-lg); padding: var(--space-md); background-color: #f1f8e9; border-left: 4px solid #8bc34a; border-radius: var(--space-xs);">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: var(--space-md);">
