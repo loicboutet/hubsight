@@ -1,8 +1,12 @@
-<div class="page-header" style="margin-bottom: var(--space-lg);">
-  <h1 class="typo-h1">Nouveau Contrat</h1>
-  <p class="typo-body-small" style="color: var(--grey-primary); margin-top: var(--space-sm);">
-    Créez un nouveau contrat en téléchargeant un PDF pour extraction automatique, ou en saisissant manuellement toutes les informations
-  </p>
-</div>
+<% content_for :header, "Contrats" %>
 
-<%= render 'comprehensive_form', contract: @contract %>
+<div class="section">
+  <div class="page-header-responsive">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Nouveau Contrat</h2>
+      <p class="typo-body-small">Créez un nouveau contrat en téléchargeant un PDF pour extraction automatique, ou en saisissant manuellement toutes les informations</p>
+    </div>
+  </div>
+
+  <%= render 'comprehensive_form', contract: @contract %>
+</div>

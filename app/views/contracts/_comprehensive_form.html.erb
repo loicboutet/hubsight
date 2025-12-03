@@ -1,5 +1,5 @@
 <div style="background-color: var(--white); border-radius: var(--space-md);">
-  <%= form_with(url: contract.respond_to?(:id) && contract.id.present? ? contract_path(contract.id) : contracts_path, method: contract.respond_to?(:id) && contract.id.present? ? :patch : :post, local: true) do |f| %>
+  <%= form_with(model: contract, local: true) do |f| %>
     
     <!-- Creation Method Banner (only on new) -->
     <% unless contract.respond_to?(:id) && contract.id.present? %>
@@ -25,9 +25,8 @@
       <!-- Drag and Drop Zone -->
       <div 
         data-pdf-upload-target="dropzone"
-        data-action="dragenter->pdf-upload#handleDragEnter dragover->pdf-upload#handleDragOver dragleave->pdf-upload#handleDragLeave drop->pdf-upload#handleDrop"
-        style="border: 3px dashed #ffb74d; border-radius: var(--space-sm); padding: var(--space-xl); text-align: center; background-color: white; transition: all 0.3s ease; cursor: pointer;"
-        onclick="this.querySelector('input[type=file]').click()">
+        data-action="dragenter->pdf-upload#handleDragEnter dragover->pdf-upload#handleDragOver dragleave->pdf-upload#handleDragLeave drop->pdf-upload#handleDrop click->pdf-upload#handleDropzoneClick"
+        style="border: 3px dashed #ffb74d; border-radius: var(--space-sm); padding: var(--space-xl); text-align: center; background-color: white; transition: all 0.3s ease; cursor: pointer;">
         
         <%= f.file_field :pdf_document, 
           accept: 'application/pdf',
