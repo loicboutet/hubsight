@@ -31,6 +31,17 @@ export default class extends Controller {
 
   // Handle file selection via button click
   selectFile(event) {
+    event.stopPropagation() // Prevent dropzone click from also firing
+    this.inputTarget.click()
+  }
+
+  // Handle dropzone click (but not button clicks inside it)
+  handleDropzoneClick(event) {
+    // If the click target is the button or inside the button, ignore it
+    // The button's own click handler will take care of it
+    if (event.target.closest('button')) {
+      return
+    }
     this.inputTarget.click()
   }
 
