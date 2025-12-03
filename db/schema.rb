@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_174907) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_02_215248) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -93,6 +93,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_174907) do
     t.index ["organization_id", "name"], name: "index_agencies_on_organization_id_and_name"
     t.index ["organization_id"], name: "index_agencies_on_organization_id"
     t.index ["status"], name: "index_agencies_on_status"
+  end
+
+  create_table "audit_logs", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "action", null: false
+    t.string "auditable_type", null: false
+    t.integer "auditable_id"
+    t.json "change_data", default: {}
+    t.json "metadata", default: {}
+    t.string "ip_address"
+    t.text "user_agent"
+    t.string "status", default: "success"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["action"], name: "index_audit_logs_on_action"
+    t.index ["auditable_type", "auditable_id"], name: "index_audit_logs_on_auditable_type_and_auditable_id"
+    t.index ["created_at"], name: "index_audit_logs_on_created_at"
+    t.index ["status"], name: "index_audit_logs_on_status"
+    t.index ["user_id"], name: "index_audit_logs_on_user_id"
   end
 
   create_table "buildings", force: :cascade do |t|
@@ -588,6 +608,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_174907) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "agencies", "organizations"
+  add_foreign_key "audit_logs", "users"
   add_foreign_key "buildings", "organizations"
   add_foreign_key "buildings", "sites"
   add_foreign_key "buildings", "users"
