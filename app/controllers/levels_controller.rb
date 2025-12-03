@@ -13,13 +13,13 @@ class LevelsController < ApplicationController
 
   def new
     @level = @building.levels.build(
-      organization_id: current_user.organization_id
+      organization_id: @building.organization_id
     )
   end
 
   def create
     @level = @building.levels.build(level_params)
-    @level.organization_id = current_user.organization_id
+    @level.organization_id = @building.organization_id
     @level.created_by_name = current_user.full_name
 
     if @level.save
@@ -54,7 +54,8 @@ class LevelsController < ApplicationController
   def set_building
     @building = Building.find(params[:building_id])
     # Ensure user has access to this building's organization
-    unless @building.organization_id == current_user.organization_id
+    # Admins can access all buildings across all organizations
+    unless current_user.admin? || @building.organization_id == current_user.organization_id
       redirect_to root_path, alert: "Accès non autorisé."
     end
   end
@@ -62,7 +63,8 @@ class LevelsController < ApplicationController
   def set_level
     @level = Level.find(params[:id])
     # Ensure user has access to this level's organization
-    unless @level.organization_id == current_user.organization_id
+    # Admins can access all levels across all organizations
+    unless current_user.admin? || @level.organization_id == current_user.organization_id
       redirect_to root_path, alert: "Accès non autorisé."
     end
   end
