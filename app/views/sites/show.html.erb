@@ -289,62 +289,60 @@
     </div>
 
     <div style="display: grid; gap: var(--space-md);">
-      <%
-        # Mock buildings data - replace with actual data when available
-        buildings = [
-          { id: 1, name: 'Bâtiment A - Principal', area: 12500, levels: 8, spaces: 98, equipment: 187, year: 2005 },
-          { id: 2, name: 'Bâtiment B - Annexe', area: 8200, levels: 4, spaces: 58, equipment: 137, year: 2010 }
-        ]
-      %>
-
-      <% buildings.each do |building| %>
+      <% @site.buildings.includes(levels: { spaces: :equipment }).each do |building| %>
+        <%
+          levels_count = building.levels.count
+          spaces_count = building.levels.sum { |level| level.spaces.count }
+          equipment_count = building.levels.sum { |level| level.spaces.sum { |space| space.equipment.count } }
+        %>
         <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md); border-left: 4px solid #10b981;">
           <div style="display: flex; justify-content: space-between; align-items: start;">
             <div style="flex: 1;">
               <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs);">
                 <%= render 'shared/hierarchy_icons', type: 'building', size: 20, color: '#10b981' %>
-                <%= link_to building_path(building[:id]), style: "text-decoration: none;" do %>
-                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= building[:name] %></h5>
+                <%= link_to building_path(building.id), style: "text-decoration: none;" do %>
+                  <h5 class="typo-h5" style="color: var(--coral-primary); margin-bottom: 0; transition: color 0.2s;"><%= building.name %></h5>
                 <% end %>
               </div>
               <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-md);">
-                <%= number_with_delimiter(building[:area], delimiter: ' ') %> m² • Construit en <%= building[:year] %>
+                <%= building.area ? "#{number_with_delimiter(building.area, delimiter: ' ')} m²" : "Surface non renseignée" %>
+                <%= " • Construit en #{building.construction_year}" if building.construction_year %>
               </p>
               
               <div style="display: flex; gap: var(--space-lg);">
                 <div style="display: flex; align-items: center; gap: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'level', size: 16, color: '#f59e0b' %>
-                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:levels] %></span>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= levels_count %></span>
                   <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Niveaux</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'space', size: 16, color: '#8b5cf6' %>
-                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:spaces] %></span>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= spaces_count %></span>
                   <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Espaces</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: var(--space-xs);">
                   <%= render 'shared/hierarchy_icons', type: 'equipment', size: 16, color: '#6b7280' %>
-                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= building[:equipment] %></span>
+                  <span class="typo-body-small typo-bold" style="margin-bottom: 0"><%= equipment_count %></span>
                   <span class="typo-body-small" style="color: var(--medium-gray); margin-bottom: 0">Équipements</span>
                 </div>
               </div>
             </div>
             
             <div style="display: flex; gap: var(--space-xs); flex-wrap: wrap;">
-              <%= link_to building_path(building[:id]), class: "typo-btn-small typo-btn-small-secondary" do %>
+              <%= link_to building_path(building.id), class: "typo-btn-small typo-btn-small-secondary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
                 Voir
               <% end %>
-              <%= link_to edit_building_path(building[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+              <%= link_to edit_building_path(building.id), class: "typo-btn-small typo-btn-small-primary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 Éditer
               <% end %>
-              <%= link_to new_building_level_path(building[:id]), class: "typo-btn-small typo-btn-small-primary" do %>
+              <%= link_to new_building_level_path(building.id), class: "typo-btn-small typo-btn-small-primary" do %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -353,6 +351,20 @@
               
             </div>
           </div>
+        </div>
+      <% end %>
+      
+      <% if @site.buildings.empty? %>
+        <div style="padding: var(--space-xl); background-color: #f8f9fa; border-radius: var(--space-md); text-align: center; border: 2px dashed #dee2e6;">
+          <%= render 'shared/hierarchy_icons', type: 'building', size: 48, color: '#cbd5e1' %>
+          <p class="typo-body" style="color: var(--medium-gray); margin-top: var(--space-md); margin-bottom: var(--space-sm);">
+            Aucun bâtiment pour ce site
+          </p>
+          <% if current_user.admin? || current_user.portfolio_manager? %>
+            <p class="typo-body-small" style="color: var(--medium-gray);">
+              Cliquez sur "Nouveau Bâtiment" pour en créer un
+            </p>
+          <% end %>
         </div>
       <% end %>
     </div>

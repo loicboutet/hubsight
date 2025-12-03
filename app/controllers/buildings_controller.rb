@@ -110,29 +110,20 @@ class BuildingsController < ApplicationController
   end
 
   def edit
-    @building = MockModel.new(
-      id: params[:id],
-      name: "Bâtiment A - Principal",
-      code: "BAT-A",
-      area: 12500,
-      construction_year: 2005,
-      status: "active",
-      description: "Bâtiment principal avec zones commerciales et bureaux",
-      site_id: 1
-    )
-    def @building.model_name
-      ActiveModel::Name.new(self.class, nil, "Building")
-    end
-    
-    @site = MockModel.new(id: @building.site_id, name: "Tour Montparnasse")
-    def @site.model_name
-      ActiveModel::Name.new(self.class, nil, "Site")
-    end
+    @building = Building.find(params[:id])
+    @site = @building.site
   end
 
   def update
-    # Handle building update
-    redirect_to building_path(params[:id]), notice: "Bâtiment mis à jour avec succès"
+    @building = Building.find(params[:id])
+    @site = @building.site
+    
+    if @building.update(building_params)
+      redirect_to site_path(@site), notice: "Bâtiment mis à jour avec succès"
+    else
+      flash.now[:alert] = "Erreur lors de la mise à jour du bâtiment : #{@building.errors.full_messages.join(', ')}"
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
