@@ -1,260 +1,142 @@
 <% content_for :header, "Paramètres" %>
 
 <div class="section">
+  <!-- Flash Messages -->
+  <% if flash[:notice] %>
+    <div style="background-color: #d1fae5; border: 1px solid #34d399; color: #065f46; padding: 1rem; border-radius: 8px; margin-bottom: var(--space-lg); display: flex; align-items: center; gap: 12px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span><%= flash[:notice] %></span>
+    </div>
+  <% end %>
+  
+  <% if flash[:alert] %>
+    <div style="background-color: #fee2e2; border: 1px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: var(--space-lg); display: flex; align-items: center; gap: 12px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span><%= flash[:alert] %></span>
+    </div>
+  <% end %>
+
   <!-- Page Header -->
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Paramètres</h2>
-      <p class="typo-body-small">Configurez vos préférences et votre profil</p>
+      <p class="typo-body-small">Gérez vos informations personnelles et votre sécurité</p>
     </div>
   </div>
 
-  <!-- Settings Tabs/Sections -->
-  <div style="margin-top: var(--space-xl);">
+  <!-- Settings Content -->
+  <div style="margin-top: var(--space-xl); max-width: 800px;">
     
-    <!-- Profile Settings Section -->
+    <!-- Profile Information Section -->
     <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-lg); border: 1px solid var(--pink-pale);">
-      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Profil</h3>
-      
-      <%= form_with url: settings_path, method: :patch, local: true do |f| %>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-xl);">
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Nom complet</label>
-            <input type="text" name="user[name]" value="John Doe" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-          </div>
-          
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Email</label>
-            <input type="email" name="user[email]" value="john.doe@example.com" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-          </div>
-        </div>
-        
-        <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-md);">
-          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            Enregistrer
-          </button>
-          <button type="button" class="typo-btn-cancel">Annuler</button>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Email Notifications Section -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-lg); border: 1px solid var(--pink-pale);">
-      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Notifications Email</h3>
-      
-      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--medium-gray);">Configurez les types d'alertes pour lesquelles vous souhaitez recevoir des notifications par email.</p>
-      
-      <%= form_with url: settings_path, method: :patch, local: true do |f| %>
-        <div style="margin-bottom: var(--space-xl);">
-          <h4 class="typo-h4" style="margin-bottom: var(--space-md); font-size: 1.105rem;">Types d'alertes</h4>
-          
-          <div style="display: flex; flex-direction: column; gap: var(--space-md);">
-            <label style="display: flex; align-items: center; gap: var(--space-md); cursor: pointer;">
-              <input type="checkbox" name="notifications[upcoming_deadlines]" checked style="width: 20px; height: 20px; cursor: pointer;">
-              <div>
-                <p class="typo-body-small typo-bold" style="margin-bottom: 2px;">Échéances à venir</p>
-                <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.85rem;">Recevoir des alertes X jours avant la date limite de résiliation</p>
-              </div>
-            </label>
-            
-            <label style="display: flex; align-items: center; gap: var(--space-md); cursor: pointer;">
-              <input type="checkbox" name="notifications[at_risk]" checked style="width: 20px; height: 20px; cursor: pointer;">
-              <div>
-                <p class="typo-body-small typo-bold" style="margin-bottom: 2px;">Contrats à risque</p>
-                <p class="typo-body-small" style="color: var(--medium-gray); font-size: 0.85rem;">Échéances dépassées sans action</p>
-              </div>
-            </label>
-          </div>
-        </div>
-        
-        <div style="margin-bottom: var(--space-xl);">
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Fréquence des notifications</label>
-          <select name="notifications[frequency]" style="width: 100%; max-width: 400px; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-            <option value="immediate">Immédiat (en temps réel)</option>
-            <option value="daily" selected>Quotidien (résumé journalier)</option>
-            <option value="weekly">Hebdomadaire (résumé hebdomadaire)</option>
-          </select>
-        </div>
-        
-        <div style="margin-bottom: var(--space-xl);">
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Délai d'alerte (jours avant l'échéance)</label>
-          <input type="number" name="notifications[deadline_days]" value="30" min="1" max="365" style="width: 200px; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-        </div>
-        
-        <div style="display: flex; gap: var(--space-md);">
-          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            Enregistrer
-          </button>
-          <button type="button" class="typo-btn-cancel">Annuler</button>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Display Preferences Section -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); border: 1px solid var(--pink-pale);">
-      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Préférences d'affichage</h3>
-      
-      <%= form_with url: settings_path, method: :patch, local: true do |f| %>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-xl);">
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Langue</label>
-            <select name="user[language]" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-              <option value="fr" selected>Français</option>
-              <option value="en">English</option>
-            </select>
-          </div>
-          
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Fuseau horaire</label>
-            <select name="user[timezone]" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-              <option value="Paris" selected>Paris (UTC+1)</option>
-              <option value="London">Londres (UTC+0)</option>
-              <option value="NewYork">New York (UTC-5)</option>
-            </select>
-          </div>
-          
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Format de date</label>
-            <select name="user[date_format]" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-              <option value="dd/mm/yyyy" selected>JJ/MM/AAAA</option>
-              <option value="mm/dd/yyyy">MM/JJ/AAAA</option>
-              <option value="yyyy-mm-dd">AAAA-MM-JJ</option>
-            </select>
-          </div>
-        </div>
-        
-        <div style="display: flex; gap: var(--space-md);">
-          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            Enregistrer
-          </button>
-          <button type="button" class="typo-btn-cancel">Annuler</button>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Item 17: Data History Section -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-top: var(--space-lg); border: 1px solid var(--pink-pale);">
-      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        📊 Historique des Modifications
-      </h3>
-      
-      <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--medium-gray);">
-        Consultez l'historique complet de toutes les modifications effectuées dans la plateforme. Filtrez par date, utilisateur ou type d'entité.
-      </p>
-      
-      <!-- Filter Form -->
-      <%= form_with url: audit_trail_path, method: :get, local: true do |f| %>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Date de début</label>
-            <input type="date" name="start_date" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-          </div>
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Date de fin</label>
-            <input type="date" name="end_date" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-          </div>
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Utilisateur</label>
-            <select name="user_id" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-              <option value="">Tous les utilisateurs</option>
-              <option value="1">Admin User</option>
-              <option value="2">John Doe</option>
-              <option value="3">Jane Smith</option>
-            </select>
-          </div>
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type d'entité</label>
-            <select name="entity_type" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
-              <option value="">Tous les types</option>
-              <option value="Contract">Contrats</option>
-              <option value="Equipment">Équipements</option>
-              <option value="Site">Sites</option>
-              <option value="Building">Bâtiments</option>
-              <option value="Organization">Organisations</option>
-            </select>
-          </div>
-        </div>
-        
-        <div style="display: flex; gap: var(--space-md); margin-bottom: var(--space-xl);">
-          <button type="submit" class="typo-btn-primary" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            Filtrer l'historique
-          </button>
-          <%= link_to audit_trail_path, class: "typo-btn-cancel" do %>
-            Voir tout l'historique
-          <% end %>
-          <button type="button" class="typo-btn-success" onclick="window.print()" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-            </svg>
-            Exporter en PDF
-          </button>
-        </div>
-      <% end %>
-      
-      <!-- Preview of Recent Changes -->
-      <div style="padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm); border: 1px solid #dee2e6;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md);">
-          <h4 class="typo-h4" style="margin: 0;">Dernières modifications</h4>
-          <%= link_to "Voir l'historique complet →", audit_trail_path, class: "typo-body-small", style: "color: var(--coral-primary); text-decoration: none; font-weight: 600;" %>
-        </div>
-        
-        <div style="display: flex; flex-direction: column; gap: var(--space-sm);">
-          <div style="padding: var(--space-sm); background-color: white; border-radius: 4px; border-left: 3px solid #0d6efd;">
-            <p class="typo-body-small" style="margin-bottom: 2px;">
-              <strong>Admin User</strong> a modifié le contrat <strong>CTR-2025-001</strong>
-            </p>
-            <p class="typo-body-small" style="color: #6c757d;">26/11/2025 à 14:30</p>
-          </div>
-          <div style="padding: var(--space-sm); background-color: white; border-radius: 4px; border-left: 3px solid #198754;">
-            <p class="typo-body-small" style="margin-bottom: 2px;">
-              <strong>John Doe</strong> a créé un nouvel équipement <strong>EQ-2025-042</strong>
-            </p>
-            <p class="typo-body-small" style="color: #6c757d;">26/11/2025 à 13:15</p>
-          </div>
-          <div style="padding: var(--space-sm); background-color: white; border-radius: 4px; border-left: 3px solid #dc3545;">
-            <p class="typo-body-small" style="margin-bottom: 2px;">
-              <strong>Jane Smith</strong> a supprimé le site <strong>Ancienne Succursale Paris</strong>
-            </p>
-            <p class="typo-body-small" style="color: #6c757d;">26/11/2025 à 11:45</p>
-          </div>
-        </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        <h3 class="typo-h3" style="margin: 0;">Informations Personnelles</h3>
+        <span style="background-color: var(--coral-primary); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+          <%= current_user.role.titleize %>
+        </span>
       </div>
+      
+      <%= form_with model: current_user, url: settings_path, method: :patch, local: true do |f| %>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-lg);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Prénom <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <%= f.text_field :first_name, 
+                value: current_user.first_name, 
+                required: true,
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+          
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Nom <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <%= f.text_field :last_name, 
+                value: current_user.last_name, 
+                required: true,
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-xl);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Email <span style="color: var(--coral-primary);">*</span>
+            </label>
+            <%= f.email_field :email, 
+                value: current_user.email, 
+                required: true,
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+          
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Téléphone
+            </label>
+            <%= f.text_field :phone, 
+                value: current_user.phone, 
+                placeholder: "+33 1 23 45 67 89",
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: var(--space-md);">
+          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Enregistrer les modifications
+          </button>
+          <%= link_to "Annuler", settings_path, class: "typo-btn-cancel" %>
+        </div>
+      <% end %>
     </div>
 
-    <!-- Security Section -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-top: var(--space-lg); border: 1px solid var(--pink-pale);">
+    <!-- Security / Password Section -->
+    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); border: 1px solid var(--pink-pale);">
       <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Sécurité</h3>
       
-      <%= form_with url: settings_path, method: :patch, local: true do |f| %>
-        <div style="margin-bottom: var(--space-xl);">
+      <%= form_with model: current_user, url: settings_path, method: :patch, local: true do |f| %>
+        <div style="margin-bottom: var(--space-lg);">
           <h4 class="typo-h4" style="margin-bottom: var(--space-md); font-size: 1.105rem;">Changer le mot de passe</h4>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-lg);">
+            Pour modifier votre mot de passe, veuillez remplir tous les champs ci-dessous.
+          </p>
           
           <div style="display: flex; flex-direction: column; gap: var(--space-md); max-width: 500px;">
             <div>
-              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Mot de passe actuel</label>
-              <input type="password" name="user[current_password]" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                Mot de passe actuel <span style="color: var(--coral-primary);">*</span>
+              </label>
+              <%= f.password_field :current_password, 
+                  autocomplete: "current-password",
+                  placeholder: "Entrez votre mot de passe actuel",
+                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
             </div>
             
             <div>
-              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Nouveau mot de passe</label>
-              <input type="password" name="user[password]" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                Nouveau mot de passe <span style="color: var(--coral-primary);">*</span>
+              </label>
+              <%= f.password_field :password, 
+                  autocomplete: "new-password",
+                  placeholder: "Minimum 6 caractères",
+                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
             </div>
             
             <div>
-              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Confirmer le nouveau mot de passe</label>
-              <input type="password" name="user[password_confirmation]" style="width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);">
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                Confirmer le nouveau mot de passe <span style="color: var(--coral-primary);">*</span>
+              </label>
+              <%= f.password_field :password_confirmation, 
+                  autocomplete: "new-password",
+                  placeholder: "Retapez le nouveau mot de passe",
+                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
             </div>
           </div>
         </div>
@@ -262,11 +144,11 @@
         <div style="display: flex; gap: var(--space-md);">
           <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             Mettre à jour le mot de passe
           </button>
-          <button type="button" class="typo-btn-cancel">Annuler</button>
+          <%= link_to "Annuler", settings_path, class: "typo-btn-cancel" %>
         </div>
       <% end %>
     </div>
