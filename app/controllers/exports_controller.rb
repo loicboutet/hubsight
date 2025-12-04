@@ -75,8 +75,19 @@ class ExportsController < ApplicationController
       organization_name = organization.name.parameterize
     end
 
+    # Extract filter parameters from request
+    filter_params = {
+      search: params[:search],
+      organization: params[:organization],
+      site: params[:site],
+      building: params[:building],
+      equipment_type: params[:equipment_type],
+      status: params[:status],
+      criticality: params[:criticality]
+    }
+
     # Generate Excel file using service class
-    exporter = EquipmentListExporter.new(organization)
+    exporter = EquipmentListExporter.new(organization, filter_params, current_user)
     excel_data = exporter.generate
 
     # Send file to user

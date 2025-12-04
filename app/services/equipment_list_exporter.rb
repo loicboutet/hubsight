@@ -3,8 +3,10 @@
 # Service class for exporting equipment list to Excel
 # Includes full hierarchy context (Site > Building > Level > Space)
 class EquipmentListExporter
-  def initialize(organization)
+  def initialize(organization, filter_params = {}, current_user = nil)
     @organization = organization
+    @filter_params = filter_params
+    @current_user = current_user
   end
 
   def generate
@@ -76,7 +78,7 @@ class EquipmentListExporter
         equipment.level&.name || '-',
         equipment.space&.name || '-',
         equipment.name,
-        equipment.equipment_type || '-',
+        equipment.equipment_type&.equipment_type_name || '-',
         equipment.equipment_category || '-',
         equipment.manufacturer || '-',
         equipment.model || '-',
@@ -149,15 +151,65 @@ class EquipmentListExporter
   # =============================================================================
 
   def equipment_list
-    @equipment_list ||= if @organization
-                          @organization.equipment
-                                       .includes(space: { level: { building: :site } })
-                                       .order('sites.name, buildings.name, levels.level_number, spaces.name, equipment.name')
-                        else
-                          # For admin users without organization, export all equipment
-                          Equipment.includes(space: { level: { building: :site } })
-                                   .order('sites.name, buildings.name, levels.level_number, spaces.name, equipment.name')
-                        end
+    @equipment_list ||= begin
+      # Get base query
+      equipment = if @organization
+                    @organization.equipment
+                  else
+                    # For admin users without organization, export all equipment
+                    Equipment.all
+                  end
+      
+      # Apply filters
+      equipment = apply_filters(equipment)
+      
+      # Apply includes and ordering
+      equipment.includes(:equipment_type, space: { level: { building: :site } })
+               .order('sites.name, buildings.name, levels.level_number, spaces.name, equipment.name')
+    end
+  end
+
+  def apply_filters(equipment)
+    # Search filter (name, serial number, manufacturer, model)
+    if @filter_params[:search].present?
+      search_term = "%#{@filter_params[:search]}%"
+      equipment = equipment.where(
+        "name LIKE ? OR serial_number LIKE ? OR manufacturer LIKE ? OR model LIKE ?",
+        search_term, search_term, search_term, search_term
+      )
+    end
+    
+    # Organization filter (admin only)
+    if @filter_params[:organization].present? && @current_user&.admin?
+      equipment = equipment.where(organization_id: @filter_params[:organization])
+    end
+    
+    # Site filter
+    if @filter_params[:site].present?
+      equipment = equipment.where(site_id: @filter_params[:site])
+    end
+    
+    # Building filter
+    if @filter_params[:building].present?
+      equipment = equipment.where(building_id: @filter_params[:building])
+    end
+    
+    # Equipment type filter
+    if @filter_params[:equipment_type].present?
+      equipment = equipment.where(equipment_type_id: @filter_params[:equipment_type])
+    end
+    
+    # Status filter
+    if @filter_params[:status].present?
+      equipment = equipment.where(status: @filter_params[:status])
+    end
+    
+    # Criticality filter
+    if @filter_params[:criticality].present?
+      equipment = equipment.where(criticality: @filter_params[:criticality])
+    end
+    
+    equipment
   end
 
   def format_number(value)
