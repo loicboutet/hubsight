@@ -185,7 +185,8 @@ Rails.application.routes.draw do
   delete 'active_sessions/:id', to: 'sessions#destroy', as: :session
   
   # Settings
-  resources :settings, only: [:index, :update]
+  get 'settings', to: 'settings#index', as: :settings
+  patch 'settings', to: 'settings#update'
   
   # Referrals
   resources :referrals, only: [:index, :create]
