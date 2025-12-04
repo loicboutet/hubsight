@@ -1334,11 +1334,15 @@ statuses = ['active', 'active', 'active', 'active', 'active', 'pending', 'expire
 org1_sites_for_contracts = Site.where(organization_id: org1.id).limit(5).to_a
 org2_sites_for_contracts = Site.where(organization_id: org2.id).limit(3).to_a
 
+# Get supplier organizations to use as contractors
+supplier_orgs = Organization.where(organization_type: 'supplier').to_a
+
 # Create contracts for Organization 1
 puts "  Creating contracts for Organization 1..."
 30.times do |i|
   site = org1_sites_for_contracts.sample
   family = contract_families.sample
+  contractor_org = supplier_orgs.sample
   
   # Calculate dates with better distribution
   start_date = Date.today - rand(365..730).days
@@ -1373,7 +1377,10 @@ puts "  Creating contracts for Organization 1..."
     site_id: site.id,
     title: "Contrat #{family} - #{site.name}",
     contract_type: "Contrat de maintenance",
-    contractor_organization_name: "Prestataire Maintenance",
+    contractor_organization_id: contractor_org.id,
+    contractor_organization_name: contractor_org.name,
+    client_organization_id: org1.id,
+    client_organization_name: org1.name,
     contract_object: "Maintenance et entretien des équipements",
     contract_family: family,
     status: status,
@@ -1384,7 +1391,7 @@ puts "  Creating contracts for Organization 1..."
     initial_duration_months: ((end_date - start_date) / 30).to_i
   )
   contract.save!
-  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
+  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, contractor: #{contractor_org.name}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
 end
 
 # Create contracts for Organization 2
@@ -1392,6 +1399,7 @@ puts "  Creating contracts for Organization 2..."
 15.times do |i|
   site = org2_sites_for_contracts.sample
   family = contract_families.sample
+  contractor_org = supplier_orgs.sample
   
   start_date = Date.today - rand(365..730).days
   
@@ -1425,7 +1433,10 @@ puts "  Creating contracts for Organization 2..."
     site_id: site.id,
     title: "Contrat #{family} - #{site.name}",
     contract_type: "Contrat de maintenance",
-    contractor_organization_name: "Prestataire Maintenance",
+    contractor_organization_id: contractor_org.id,
+    contractor_organization_name: contractor_org.name,
+    client_organization_id: org2.id,
+    client_organization_name: org2.name,
     contract_object: "Maintenance et entretien des équipements",
     contract_family: family,
     status: status,
@@ -1436,7 +1447,7 @@ puts "  Creating contracts for Organization 2..."
     initial_duration_months: ((end_date - start_date) / 30).to_i
   )
   contract.save!
-  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
+  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, contractor: #{contractor_org.name}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
 end
 
 puts "\n📊 Total contracts created: #{Contract.count}"
@@ -2942,6 +2953,9 @@ Contract.find_each.with_index do |contract, index|
     # Try partial match if still not found
     org ||= Organization.where("name LIKE ?", "%#{contract.contractor_organization_name}%").first
     
+    # If still no match, assign a random supplier organization
+    org ||= Organization.where(organization_type: 'supplier').order("RANDOM()").first
+    
     if org
       contract.update_columns(
         contractor_organization_id: org.id,
@@ -2972,6 +2986,9 @@ Contract.find_each.with_index do |contract, index|
     
     # Try partial match if still not found
     org ||= Organization.where("name LIKE ?", "%#{contract.client_organization_name}%").first
+    
+    # If still no match, assign a random owner organization
+    org ||= Organization.where(organization_type: 'owner').order("RANDOM()").first
     
     if org
       contract.update_columns(
