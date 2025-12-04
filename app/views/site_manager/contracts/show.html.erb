@@ -96,7 +96,7 @@
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Devise Applicable</p>
-          <p class="typo-body"><%= @contract.currency || 'EUR' %></p>
+          <p class="typo-body">EUR</p>
         </div>
       </div>
     </div>
@@ -113,11 +113,11 @@
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
           <div>
             <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nom de l'Organisation</p>
-            <p class="typo-body typo-bold"><%= @contract.contractor_organization || '-' %></p>
+            <p class="typo-body typo-bold"><%= @contract.contractor_organization_name || '-' %></p>
           </div>
           <div>
             <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Contact Principal</p>
-            <p class="typo-body"><%= @contract.contractor_contact || '-' %></p>
+            <p class="typo-body"><%= @contract.contractor_contact_name || '-' %></p>
           </div>
           <div>
             <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email</p>
@@ -140,7 +140,7 @@
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Montant Annualisé HT</p>
           <p class="typo-body typo-bold" style="color: var(--coral-primary); font-size: 1.25rem;">
-            <%= number_to_currency(@contract.annual_amount, unit: "#{@contract.currency || 'EUR'}", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount %>
+            <%= number_to_currency(@contract.annual_amount, unit: "EUR", separator: ",", delimiter: " ", format: "%n %u") if @contract.annual_amount %>
           </p>
         </div>
         <div>
@@ -179,58 +179,6 @@
       </div>
     </div>
 
-    <!-- Emergency Services Section -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
-      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        Services de Dépannage d'Urgence
-      </h4>
-      
-      <!-- Business Days -->
-      <div style="margin-bottom: var(--space-lg);">
-        <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Jours Ouvrés</h5>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Planning et Horaires</p>
-            <p class="typo-body"><%= @contract.business_day_schedule_hours || '-' %></p>
-          </div>
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délais d'Intervention</p>
-            <p class="typo-body"><%= @contract.business_day_intervention_delay || '-' %></p>
-          </div>
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email Demande Dépannage</p>
-            <p class="typo-body"><%= @contract.business_day_breakdown_email || '-' %></p>
-          </div>
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Téléphone Demande Dépannage</p>
-            <p class="typo-body typo-bold" style="color: var(--coral-primary); font-size: 1.125rem;"><%= @contract.business_day_breakdown_phone || '-' %></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- On-Call -->
-      <div>
-        <h5 class="typo-body typo-bold" style="color: var(--coral-primary); margin-bottom: var(--space-md); font-size: 1rem;">Astreinte</h5>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Planning et Horaires</p>
-            <p class="typo-body"><%= @contract.on_call_schedule_hours || '-' %></p>
-          </div>
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délais d'Intervention</p>
-            <p class="typo-body"><%= @contract.on_call_intervention_delay || '-' %></p>
-          </div>
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Email Demande Dépannage</p>
-            <p class="typo-body"><%= @contract.on_call_breakdown_email || '-' %></p>
-          </div>
-          <div>
-            <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Téléphone Demande Dépannage</p>
-            <p class="typo-body typo-bold" style="color: #dc2626; font-size: 1.125rem;"><%= @contract.on_call_breakdown_phone || '-' %></p>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Services & SLA Section -->
     <div style="background-color: var(--white); border-radius: var(--space-md); margin-bottom: var(--space-lg);">
@@ -244,7 +192,7 @@
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Délai d'Intervention</p>
-          <p class="typo-body"><%= @contract.intervention_delay || '-' %> <%= 'heures' if @contract.intervention_delay %></p>
+          <p class="typo-body"><%= @contract.intervention_delay_hours || '-' %> <%= 'heures' if @contract.intervention_delay_hours %></p>
         </div>
         <div>
           <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Horaires d'Intervention</p>

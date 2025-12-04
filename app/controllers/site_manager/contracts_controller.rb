@@ -3,7 +3,7 @@ class SiteManager::ContractsController < ApplicationController
   
   before_action :authenticate_user!
   before_action :ensure_site_manager_role
-  before_action :set_contract, only: [:show, :pdf]
+  before_action :set_contract, only: [:show, :pdf, :generate_summary_pdf]
   before_action :load_assigned_sites, only: [:new, :create, :upload, :process_upload]
   
   def index
@@ -36,14 +36,11 @@ class SiteManager::ContractsController < ApplicationController
       )
     end
     
-    # Group contracts by site for better organization
-    @contracts_by_site = @contracts.group_by(&:site)
-    
-    # Pagination
-    @contracts = @contracts.page(params[:page]).per(15)
-    
     # Get assigned sites for filter dropdown
     @assigned_sites = current_user.assigned_sites.order(:name)
+    
+    # Group contracts by site for better organization
+    @contracts_by_site = @contracts.group_by(&:site)
     
     # Check if site manager has any assigned sites
     unless has_assigned_sites?
