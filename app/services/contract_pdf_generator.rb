@@ -22,10 +22,20 @@ class ContractPdfGenerator
       page_size: 'A4', 
       margin: 40,
       info: {
-        Title: sanitize_text("Contrat #{contract.contract_number}"),
+        Title: "Contrat #{contract.contract_number}",
         Creator: "HubSight"
       }
     )
+    
+    # Register and set UTF-8 compatible font to support emojis and special characters
+    font_path = Rails.root.join('app', 'assets', 'fonts', 'DejaVuSans.ttf')
+    @pdf.font_families.update(
+      'DejaVuSans' => {
+        normal: font_path.to_s,
+        bold: font_path.to_s  # Prawn will synthesize bold from normal
+      }
+    )
+    @pdf.font 'DejaVuSans'
   end
   
   def generate
@@ -52,12 +62,12 @@ class ContractPdfGenerator
       
       @pdf.fill_color 'FFFFFF'
       @pdf.move_down 15
-      @pdf.font('Helvetica-Bold', size: 20) do
+      @pdf.font('DejaVuSans', size: 20, style: :bold) do
         @pdf.text 'FICHE RÉCAPITULATIVE DE CONTRAT', align: :center
       end
       
       @pdf.move_down 5
-      @pdf.font('Helvetica', size: 10) do
+      @pdf.font('DejaVuSans', size: 10) do
         @pdf.text @contract.organization&.name || 'HubSight', align: :center
       end
       
@@ -75,11 +85,11 @@ class ContractPdfGenerator
       
       @pdf.move_down 10
       @pdf.indent(20) do
-        @pdf.font('Helvetica-Bold', size: 14) do
+        @pdf.font('DejaVuSans', size: 14, style: :bold) do
           @pdf.text @contract.title || @contract.contract_number
         end
         @pdf.move_down 5
-        @pdf.font('Helvetica', size: 10) do
+        @pdf.font('DejaVuSans', size: 10) do
           @pdf.text "Contrat N° #{@contract.contract_number}"
           @pdf.text "Site: #{@contract.site&.name || @contract.covered_sites || 'Non spécifié'}"
         end
@@ -103,7 +113,7 @@ class ContractPdfGenerator
       @pdf.indent(15) do
         # Use available contractor contact information
         if @contract.contractor_phone.present?
-          @pdf.font('Helvetica-Bold', size: 11) do
+          @pdf.font('DejaVuSans', size: 11, style: :bold) do
             @pdf.fill_color COLORS[:coral]
             @pdf.text 'Contact Principal'
             @pdf.fill_color '000000'
@@ -114,14 +124,14 @@ class ContractPdfGenerator
           contact_row('Horaires', @contract.working_hours)
           contact_row('Délai d\'intervention', @contract.intervention_delay_hours ? "#{@contract.intervention_delay_hours}h" : nil)
           
-          @pdf.font('Helvetica-Bold', size: 12) do
+          @pdf.font('DejaVuSans', size: 12, style: :bold) do
             @pdf.fill_color COLORS[:emergency]
             @pdf.text "☎ #{@contract.contractor_phone}"
             @pdf.fill_color '000000'
           end
           
           if @contract.contractor_email.present?
-            @pdf.font('Helvetica', size: 9) do
+            @pdf.font('DejaVuSans', size: 9) do
               @pdf.text "✉ #{@contract.contractor_email}"
             end
           end
@@ -131,7 +141,7 @@ class ContractPdfGenerator
         
         # On-call / Astreinte info if available
         if @contract.on_call_24_7
-          @pdf.font('Helvetica-Bold', size: 11) do
+          @pdf.font('DejaVuSans', size: 11, style: :bold) do
             @pdf.fill_color COLORS[:coral]
             @pdf.text 'Astreinte 24/7 Disponible'
             @pdf.fill_color '000000'
@@ -163,7 +173,7 @@ class ContractPdfGenerator
   def add_stakeholders
     section_header('👥 PARTIES PRENANTES', COLORS[:primary])
     
-    @pdf.font('Helvetica-Bold', size: 10) do
+    @pdf.font('DejaVuSans', size: 10, style: :bold) do
       @pdf.fill_color COLORS[:coral]
       @pdf.text 'Prestataire / Fournisseur'
       @pdf.fill_color '000000'
@@ -230,7 +240,7 @@ class ContractPdfGenerator
     return if equipment.empty?
     
     @pdf.move_down 10
-    @pdf.font('Helvetica-Bold', size: 10) do
+    @pdf.font('DejaVuSans', size: 10, style: :bold) do
       @pdf.text 'Équipements du Site (extrait)'
     end
     @pdf.move_down 5
@@ -259,7 +269,7 @@ class ContractPdfGenerator
     
     if equipment.count == 20
       @pdf.move_down 5
-      @pdf.font('Helvetica', size: 8) do
+      @pdf.font('DejaVuSans', size: 8) do
         @pdf.text '(Liste limitée aux 20 premiers équipements)', style: :italic, color: COLORS[:gray]
       end
     end
@@ -322,7 +332,7 @@ class ContractPdfGenerator
     
     @pdf.repeat(:all) do
       @pdf.bounding_box([0, 20], width: @pdf.bounds.width) do
-        @pdf.font('Helvetica', size: 8) do
+        @pdf.font('DejaVuSans', size: 8) do
           @pdf.fill_color COLORS[:gray]
           @pdf.text "Généré le #{Time.current.strftime('%d/%m/%Y à %H:%M')}", align: :left
           @pdf.fill_color '000000'
@@ -335,9 +345,9 @@ class ContractPdfGenerator
   
   def section_header(title, color = COLORS[:primary])
     @pdf.move_down 5
-    @pdf.font('Helvetica-Bold', size: 12) do
+    @pdf.font('DejaVuSans', size: 12, style: :bold) do
       @pdf.fill_color color
-      @pdf.text sanitize_text(title)
+      @pdf.text title  # No need to sanitize - UTF-8 font supports all characters
       @pdf.fill_color '000000'
     end
     @pdf.stroke_color color
@@ -369,7 +379,7 @@ class ContractPdfGenerator
   def contact_row(label, value)
     return unless value.present?
     
-    @pdf.font('Helvetica', size: 9) do
+    @pdf.font('DejaVuSans', size: 9) do
       @pdf.text "#{label}: #{value}"
     end
   end
