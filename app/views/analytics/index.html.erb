@@ -594,7 +594,7 @@
     <!-- Equipment by Site (Top 10) -->
     <div style="margin-bottom: var(--space-2xl);">
       <h4 class="typo-h4" style="margin-bottom: var(--space-lg);">Top 10 Sites par Nombre d'Équipements</h4>
-      <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 220px; gap: 8px; padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md);">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 320px; gap: 8px; padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-md);">
         <% max_equipment = @equipment_by_site.map { |s| s[:count] }.max %>
         <% @equipment_by_site.each_with_index do |site_data, index| %>
           <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
