@@ -154,8 +154,13 @@
 
     <!-- Pagination -->
     <% if @equipment.respond_to?(:total_pages) && @equipment.total_pages > 1 %>
-      <div style="margin-top: var(--space-lg); text-align: center;">
-        <%= paginate @equipment %>
+      <div style="margin-top: var(--space-xl);">
+        <%= render 'shared/pagination', 
+          current_page: @equipment.current_page, 
+          total_pages: @equipment.total_pages, 
+          total_count: @equipment.total_count, 
+          per_page: 25,
+          path: my_equipment_index_path({ search: params[:search], site_id: params[:site_id], building_id: params[:building_id], level_id: params[:level_id], space_id: params[:space_id], status: params[:status], criticality: params[:criticality], equipment_type_id: params[:equipment_type_id] }.compact) %>
       </div>
     <% end %>
   </div>
