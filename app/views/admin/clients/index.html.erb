@@ -1,111 +1,166 @@
-  <div style="">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
+<% content_for :header, "Organisations Clientes" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
     <div>
-      <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Organisations Clientes</h1>
-      <p style="color: var(--gray); margin: 0;">
-        Liste des organisations clientes et leurs statistiques.
-      </p>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Organisations Clientes</h2>
+      <p class="typo-body-small">Liste des organisations clientes et leurs statistiques</p>
     </div>
+    <%= link_to new_admin_organization_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nouvelle Organisation
+    <% end %>
   </div>
 
-  <% if @organizations.any? %>
-  <div style="background: var(--white); border-radius: var(--space-md); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead style="background-color: var(--pink-pale);">
-        <tr>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Organisation</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Statut</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Portfolio Managers</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Site Managers</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Total Utilisateurs</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Date de création</th>
-          <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray);">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @organizations.each do |organization| %>
-        <tr style="border-bottom: 1px solid var(--light-gray);">
-          <td style="padding: var(--space-md);">
-            <div style="font-weight: 500;"><%= organization.name %></div>
-            <% if organization.legal_name.present? && organization.legal_name != organization.name %>
-              <div style="font-size: 0.875rem; color: var(--gray);"><%= organization.legal_name %></div>
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    
+    <!-- Filters Section -->
+    <%= form_with url: admin_clients_path, method: :get, local: true do |f| %>
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+            <%= f.text_field :search, value: params[:search], placeholder: "Nom, SIRET...", style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
+            <%= f.select :status, 
+                options_for_select([['Tous', 'all'], ['Actif', 'active'], ['Inactif', 'inactive']], params[:status] || 'all'),
+                {},
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <%= link_to admin_clients_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer
+          <% end %>
+          <%= f.submit "Filtrer", class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Organizations Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ORGANISATION</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">PORTFOLIO MANAGERS</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">SITE MANAGERS</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TOTAL UTILISATEURS</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DATE CRÉATION</th>
+            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @organizations.empty? %>
+            <tr>
+              <td colspan="7" style="padding: var(--space-xl); text-align: center; color: var(--medium-gray);">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-md);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <p class="typo-body">Aucune organisation trouvée</p>
+                  <p class="typo-body-small">Aucune organisation cliente n'a été trouvée avec ces critères</p>
+                </div>
+              </td>
+            </tr>
+          <% else %>
+            <% @organizations.each_with_index do |organization, index| %>
+              <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
+                <!-- Organization -->
+                <td style="padding: var(--space-md);">
+                  <div>
+                    <p class="typo-body-small typo-bold"><%= organization.name %></p>
+                    <% if organization.legal_name.present? && organization.legal_name != organization.name %>
+                      <p class="typo-body-small" style="color: var(--gray); font-size: 0.75rem;"><%= organization.legal_name %></p>
+                    <% end %>
+                    <% if organization.siret.present? %>
+                      <p class="typo-body-small" style="color: var(--gray); font-size: 0.7rem;">SIRET: <%= organization.siret %></p>
+                    <% end %>
+                  </div>
+                </td>
+                
+                <!-- Status -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <% if organization.active? %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #d4edda; color: #155724;">
+                      Actif
+                    </span>
+                  <% else %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #f8d7da; color: #721c24;">
+                      Inactif
+                    </span>
+                  <% end %>
+                </td>
+                
+                <!-- Portfolio Managers -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                    <%= @organization_stats[organization.id][:portfolio_managers] %>
+                  </span>
+                </td>
+                
+                <!-- Site Managers -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                    <%= @organization_stats[organization.id][:site_managers] %>
+                  </span>
+                </td>
+                
+                <!-- Total Users -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <span style="display: inline-block; padding: 4px 12px; background-color: #f0f0f0; color: #333; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                    <%= @organization_stats[organization.id][:total_users] %>
+                  </span>
+                </td>
+                
+                <!-- Created At -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <p class="typo-body-small" style="color: #666;">
+                    <%= organization.created_at.strftime('%d/%m/%Y') %>
+                  </p>
+                </td>
+                
+                <!-- Actions -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                    <%= link_to admin_organization_path(organization), title: "Voir l'organisation", class: "typo-btn-small typo-btn-small-secondary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Voir
+                    <% end %>
+                    <%= link_to edit_admin_organization_path(organization), title: "Modifier l'organisation", class: "typo-btn-small typo-btn-small-primary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Modifier
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
             <% end %>
-            <% if organization.siret.present? %>
-              <div style="font-size: 0.75rem; color: var(--gray);">SIRET: <%= organization.siret %></div>
-            <% end %>
-          </td>
-          <td style="padding: var(--space-md);">
-            <% if organization.active? %>
-              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Actif
-              </span>
-            <% else %>
-              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #f5f5f5; color: #666; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Inactif
-              </span>
-            <% end %>
-          </td>
-          <td style="padding: var(--space-md);">
-            <div style="color: var(--gray);"><%= @organization_stats[organization.id][:portfolio_managers] %></div>
-          </td>
-          <td style="padding: var(--space-md);">
-            <div style="color: var(--gray);"><%= @organization_stats[organization.id][:site_managers] %></div>
-          </td>
-          <td style="padding: var(--space-md);">
-            <div style="color: var(--gray);"><%= @organization_stats[organization.id][:total_users] %></div>
-          </td>
-          <td style="padding: var(--space-md);">
-            <div style="font-size: 0.875rem; color: var(--gray);">
-              <%= organization.created_at.strftime('%d/%m/%Y') %>
-            </div>
-          </td>
-          <td style="padding: var(--space-md); text-align: center;">
-            <div style="display: inline-flex; gap: var(--space-sm); justify-content: center;">
-              <%= link_to admin_organization_path(organization), title: "Voir l'organisation", class: "typo-btn-small typo-btn-small-secondary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Voir
-              <% end %>
-              <%= link_to edit_admin_organization_path(organization), title: "Modifier l'organisation", class: "typo-btn-small typo-btn-small-primary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Modifier
-              <% end %>
-            </div>
-          </td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
 
-  <!-- Pagination -->
-  <div style="margin-top: var(--space-xl);">
-    <%= render 'shared/pagination', 
-      current_page: @organizations.current_page, 
-      total_pages: @organizations.total_pages, 
-      total_count: @organizations.total_count, 
-      per_page: 5,
-      path: admin_clients_path %>
+    <!-- Pagination -->
+    <% if @organizations.any? %>
+      <div style="margin-top: var(--space-xl);">
+        <%= render 'shared/pagination', 
+          current_page: @organizations.current_page, 
+          total_pages: @organizations.total_pages, 
+          total_count: @organizations.total_count, 
+          per_page: @organizations.limit_value,
+          path: admin_clients_path %>
+      </div>
+    <% end %>
   </div>
-
-  <% else %>
-  <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-2xl); text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); color: var(--gray);">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-    </svg>
-    <h3 class="typo-h4" style="margin-bottom: var(--space-sm); color: var(--dark-gray);">Aucune Organisation Trouvée</h3>
-    <p style="color: var(--gray); margin: 0;">Aucune organisation cliente n'est actuellement enregistrée dans le système.</p>
-  </div>
-  <% end %>
-
 </div>

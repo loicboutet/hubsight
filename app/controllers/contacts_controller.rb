@@ -6,7 +6,7 @@ class ContactsController < ApplicationController
     @contacts = Contact.includes(:organization)
                       .ordered
                       .page(params[:page])
-                      .per(50)
+                      .per(15)
     
     if params[:search].present?
       @contacts = @contacts.search(params[:search])

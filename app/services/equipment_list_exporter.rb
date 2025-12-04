@@ -19,6 +19,15 @@ class EquipmentListExporter
   private
 
   def generate_equipment_sheet(workbook)
+    # Create header style
+    @header_style = workbook.styles.add_style(
+      bg_color: '4F46E5',
+      fg_color: 'FFFFFF',
+      b: true,
+      sz: 11,
+      alignment: { horizontal: :center, vertical: :center, wrap_text: true }
+    )
+
     workbook.add_worksheet(name: 'Liste des Équipements') do |sheet|
       add_header(sheet)
       add_equipment_data(sheet)
@@ -56,7 +65,7 @@ class EquipmentListExporter
       'Statut',
       'Criticité',
       'Notes'
-    ], style: header_style
+    ], style: @header_style
   end
 
   def add_equipment_data(sheet)
@@ -140,19 +149,15 @@ class EquipmentListExporter
   # =============================================================================
 
   def equipment_list
-    @equipment_list ||= @organization.equipment
-                                     .includes(space: { level: { building: :site } })
-                                     .order('sites.name, buildings.name, levels.level_number, spaces.name, equipment.name')
-  end
-
-  def header_style
-    {
-      bg_color: '4F46E5',
-      fg_color: 'FFFFFF',
-      b: true,
-      sz: 11,
-      alignment: { horizontal: :center, vertical: :center, wrap_text: true }
-    }
+    @equipment_list ||= if @organization
+                          @organization.equipment
+                                       .includes(space: { level: { building: :site } })
+                                       .order('sites.name, buildings.name, levels.level_number, spaces.name, equipment.name')
+                        else
+                          # For admin users without organization, export all equipment
+                          Equipment.includes(space: { level: { building: :site } })
+                                   .order('sites.name, buildings.name, levels.level_number, spaces.name, equipment.name')
+                        end
   end
 
   def format_number(value)

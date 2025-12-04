@@ -1,16 +1,12 @@
 <% content_for :header, "Équipements" %>
 
-<div class="section">
-  <!-- Header Section -->
-  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; align-items: center; gap: var(--space-md);">
-      <%= render 'shared/hierarchy_icons', type: 'equipment', size: 32, color: 'var(--coral-primary)' %>
-      <div>
-        <h2 class="typo-h2" style="margin-bottom: var(--space-xs);">Équipements</h2>
-        <p class="typo-body-small" style="color: var(--medium-gray);">Gestion des équipements techniques</p>
-      </div>
+<div class="section" data-controller="equipment-list">
+  <div class="page-header-responsive">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Gestion des Équipements</h2>
+      <p class="typo-body-small">Total: <%= @all_equipment_count %> équipement<%= @all_equipment_count > 1 ? 's' : '' %></p>
     </div>
-    <div style="display: flex; gap: var(--space-md);">
+    <div class="button-group-responsive">
       <%= link_to exports_equipment_path, style: "display: inline-flex; align-items: center; gap: var(--space-sm); background-color: var(--medium-gray); color: var(--white); padding: 0 32px; height: 3.315rem; font-size: 1.105rem; font-weight: 500; border: none; border-radius: 8px; cursor: pointer; text-decoration: none;", data: { turbo: false } do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -26,79 +22,190 @@
     </div>
   </div>
 
-  <% if @equipment.any? %>
-    <!-- Equipment List -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); overflow: hidden;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead style="background-color: var(--pink-pale);">
-          <tr>
-            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Nom</th>
-            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Type</th>
-            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Fabricant</th>
-            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Localisation</th>
-            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Statut</th>
-            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: left;">Criticité</th>
-            <th class="typo-body-small typo-bold" style="padding: var(--space-md); text-align: center;">Actions</th>
+  <div style="background-color: var(--white); border-radius: var(--space-md); width: 100%; max-width: 100%; overflow-x: hidden; box-sizing: border-box;">
+    <!-- Filters Section -->
+    <%= form_with url: equipment_index_path, method: :get, data: { equipment_list_target: "filterForm" } do |f| %>
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm); overflow-x: hidden;">
+        
+        <!-- Basic Filters (Always Visible) -->
+        <div class="filters-grid-equipment" style="display: grid; grid-template-columns: repeat(<%= current_user.admin? ? 5 : 4 %>, 1fr); gap: var(--space-md); align-items: end; margin-bottom: var(--space-md);">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+            <%= f.text_field :search, placeholder: "Nom, N° série, fabricant...", value: @filter_params[:search], style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+          
+          <% if current_user.admin? %>
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Organisation</label>
+              <%= f.select :organization, options_for_select([['Toutes les organisations', '']] + @organizations.map { |o| [o.name, o.id] }, @filter_params[:organization]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+            </div>
+          <% end %>
+          
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Site</label>
+            <%= f.select :site, options_for_select([['Tous les sites', '']] + @sites.map { |s| [s.name, s.id] }, @filter_params[:site]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Bâtiment</label>
+            <%= f.select :building, options_for_select([['Tous les bâtiments', '']] + @buildings.map { |b| [b.name, b.id] }, @filter_params[:building]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type d'Équipement</label>
+            <%= f.select :equipment_type, options_for_select([['Tous les types', '']] + @equipment_types.map { |et| [et.equipment_type_name, et.id] }, @filter_params[:equipment_type]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
+            <%= f.select :status, options_for_select([
+              ['Tous', ''],
+              ['Actif', 'active'],
+              ['Inactif', 'inactive'],
+              ['En maintenance', 'maintenance'],
+              ['Hors service', 'out_of_service'],
+              ['Décommissionné', 'decommissioned']
+            ], @filter_params[:status]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Criticité</label>
+            <%= f.select :criticality, options_for_select([
+              ['Toutes', ''],
+              ['Faible', 'low'],
+              ['Moyenne', 'medium'],
+              ['Élevée', 'high'],
+              ['Critique', 'critical']
+            ], @filter_params[:criticality]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="grid-column: 1 / -1; display: flex; gap: var(--space-md); justify-content: flex-end; align-items: center; margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid #dee2e6;">
+          <button type="button" data-action="click->equipment-list#clearFilters" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer
+          </button>
+          <%= f.submit "Filtrer", class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Equipment Table -->
+    <div class="table-responsive" style="max-height: 600px; overflow-x: auto; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+      <table style="width: 100%; border-collapse: collapse;" data-equipment-list-target="table">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--pink-pale);">
+            <% if current_user.admin? %>
+              <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; cursor: pointer;" data-action="click->equipment-list#sort" data-column="organization_id">
+                Organisation
+                <% if @sort_column == 'organization_id' %>
+                  <span style="margin-left: 4px;"><%= @sort_direction == 'asc' ? '↑' : '↓' %></span>
+                <% end %>
+              </th>
+            <% end %>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; cursor: pointer;" data-action="click->equipment-list#sort" data-column="name">
+              Nom
+              <% if @sort_column == 'name' %>
+                <span style="margin-left: 4px;"><%= @sort_direction == 'asc' ? '↑' : '↓' %></span>
+              <% end %>
+            </th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Type</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; cursor: pointer;" data-action="click->equipment-list#sort" data-column="manufacturer">
+              Fabricant
+              <% if @sort_column == 'manufacturer' %>
+                <span style="margin-left: 4px;"><%= @sort_direction == 'asc' ? '↑' : '↓' %></span>
+              <% end %>
+            </th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666;">Localisation</th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; cursor: pointer;" data-action="click->equipment-list#sort" data-column="status">
+              Statut
+              <% if @sort_column == 'status' %>
+                <span style="margin-left: 4px;"><%= @sort_direction == 'asc' ? '↑' : '↓' %></span>
+              <% end %>
+            </th>
+            <th class="typo-body-small typo-bold" style="text-align: left; padding: var(--space-md); color: #666; cursor: pointer;" data-action="click->equipment-list#sort" data-column="criticality">
+              Criticité
+              <% if @sort_column == 'criticality' %>
+                <span style="margin-left: 4px;"><%= @sort_direction == 'asc' ? '↑' : '↓' %></span>
+              <% end %>
+            </th>
+            <th class="typo-body-small typo-bold" style="text-align: center; padding: var(--space-md); color: #666;">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% @equipment.each do |equipment| %>
-            <tr style="border-bottom: 1px solid var(--pink-pale);">
-              <td style="padding: var(--space-md);">
-                <%= link_to equipment.name, equipment_path(equipment), class: "typo-body-small typo-bold", style: "color: var(--coral-primary); text-decoration: none;" %>
-              </td>
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small"><%= equipment.equipment_type&.equipment_type_name || '-' %></span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small"><%= equipment.manufacturer || '-' %></span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <span class="typo-body-small"><%= equipment.location_path || '-' %></span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <% status_colors = {
-                  'active' => { bg: '#d4edda', text: '#155724' },
-                  'inactive' => { bg: '#f8d7da', text: '#721c24' },
-                  'maintenance' => { bg: '#fff3cd', text: '#856404' },
-                  'out_of_service' => { bg: '#f8d7da', text: '#721c24' },
-                  'decommissioned' => { bg: '#e2e3e5', text: '#383d41' }
-                } %>
-                <% color = status_colors[equipment.status] || { bg: '#e2e3e5', text: '#383d41' } %>
-                <span style="display: inline-block; padding: 4px 10px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                  <%= equipment.status_label %>
-                </span>
-              </td>
-              <td style="padding: var(--space-md);">
-                <% if equipment.criticality.present? %>
-                  <% criticality_colors = {
-                    'low' => { bg: '#d4edda', text: '#155724' },
-                    'medium' => { bg: '#fff3cd', text: '#856404' },
-                    'high' => { bg: '#fff3cd', text: '#856404' },
-                    'critical' => { bg: '#f8d7da', text: '#721c24' }
-                  } %>
-                  <% color = criticality_colors[equipment.criticality] || { bg: '#e2e3e5', text: '#383d41' } %>
-                  <span style="display: inline-block; padding: 4px 10px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
-                    <%= equipment.criticality_label %>
-                  </span>
-                <% else %>
-                  <span class="typo-body-small">-</span>
+          <% if @equipment.any? %>
+            <% @equipment.each do |equipment| %>
+              <tr style="border-bottom: 1px solid #eee;">
+                <% if current_user.admin? %>
+                  <td style="padding: var(--space-md);">
+                    <span class="typo-body-small"><%= equipment.organization&.name || '-' %></span>
+                  </td>
                 <% end %>
-              </td>
-              <td style="padding: var(--space-md); text-align: center;">
-                <div style="display: flex; gap: var(--space-sm); justify-content: center;">
-                  <%= link_to equipment_path(equipment), class: "typo-btn-small typo-btn-small-primary" do %>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
+                <td style="padding: var(--space-md);">
+                  <%= link_to equipment.name, equipment_path(equipment), class: "typo-body-small typo-bold", style: "color: var(--coral-primary); text-decoration: none;" %>
+                </td>
+                <td style="padding: var(--space-md);">
+                  <span class="typo-body-small"><%= equipment.equipment_type&.equipment_type_name || '-' %></span>
+                </td>
+                <td style="padding: var(--space-md);">
+                  <span class="typo-body-small"><%= equipment.manufacturer || '-' %></span>
+                </td>
+                <td style="padding: var(--space-md);">
+                  <span class="typo-body-small"><%= equipment.location_path || '-' %></span>
+                </td>
+                <td style="padding: var(--space-md);">
+                  <% status_colors = {
+                    'active' => { bg: '#d4edda', text: '#155724' },
+                    'inactive' => { bg: '#f8d7da', text: '#721c24' },
+                    'maintenance' => { bg: '#fff3cd', text: '#856404' },
+                    'out_of_service' => { bg: '#f8d7da', text: '#721c24' },
+                    'decommissioned' => { bg: '#e2e3e5', text: '#383d41' }
+                  } %>
+                  <% color = status_colors[equipment.status] || { bg: '#e2e3e5', text: '#383d41' } %>
+                  <span style="display: inline-block; padding: 4px 10px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                    <%= equipment.status_label %>
+                  </span>
+                </td>
+                <td style="padding: var(--space-md);">
+                  <% if equipment.criticality.present? %>
+                    <% criticality_colors = {
+                      'low' => { bg: '#d4edda', text: '#155724' },
+                      'medium' => { bg: '#fff3cd', text: '#856404' },
+                      'high' => { bg: '#fff3cd', text: '#856404' },
+                      'critical' => { bg: '#f8d7da', text: '#721c24' }
+                    } %>
+                    <% color = criticality_colors[equipment.criticality] || { bg: '#e2e3e5', text: '#383d41' } %>
+                    <span style="display: inline-block; padding: 4px 10px; background-color: <%= color[:bg] %>; color: <%= color[:text] %>; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                      <%= equipment.criticality_label %>
+                    </span>
+                  <% else %>
+                    <span class="typo-body-small">-</span>
                   <% end %>
-                  <%= link_to edit_equipment_path(equipment), class: "typo-btn-small typo-btn-small-secondary" do %>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  <% end %>
-                </div>
+                </td>
+                <td style="padding: var(--space-md); text-align: center;">
+                  <div style="display: flex; gap: var(--space-sm); justify-content: center;">
+                    <%= link_to equipment_path(equipment), class: "typo-btn-small typo-btn-small-primary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    <% end %>
+                    <%= link_to edit_equipment_path(equipment), class: "typo-btn-small typo-btn-small-secondary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="<%= current_user.admin? ? 8 : 7 %>" style="padding: var(--space-xl); text-align: center; color: #999;">
+                Aucun équipement trouvé
               </td>
             </tr>
           <% end %>
@@ -112,20 +219,11 @@
         <%= paginate @equipment %>
       </div>
     <% end %>
-  <% else %>
-    <!-- Empty State -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xxl); text-align: center;">
-      <%= render 'shared/hierarchy_icons', type: 'equipment', size: 64, color: 'var(--medium-gray)' %>
-      <h3 class="typo-h3" style="margin-top: var(--space-lg); color: var(--gray-secondary);">Aucun équipement</h3>
-      <p class="typo-body" style="color: var(--medium-gray); margin-top: var(--space-sm);">
-        Commencez par créer votre premier équipement.
-      </p>
-      <%= link_to new_equipment_path, class: "typo-btn-success", style: "margin-top: var(--space-lg);" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Créer le premier équipement
-      <% end %>
-    </div>
-  <% end %>
+  </div>
 </div>
+
+<style>
+  .filters-grid-equipment { display: grid; gap: var(--space-md); }
+  @media (max-width: 1200px) { .filters-grid-equipment { grid-template-columns: 1fr 1fr !important; } }
+  @media (max-width: 768px) { .filters-grid-equipment { grid-template-columns: 1fr !important; } }
+</style>
