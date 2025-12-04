@@ -26,7 +26,7 @@ class EquipmentController < ApplicationController
     @equipment = @equipment.includes(space: { level: { building: :site } })
                            .page(params[:page]).per(@per_page)
     
-    # Store filter values for the view
+    # Store filter values for the view (exclude empty values for pagination)
     @filter_params = {
       search: params[:search],
       organization: params[:organization],
@@ -35,7 +35,7 @@ class EquipmentController < ApplicationController
       equipment_type: params[:equipment_type],
       status: params[:status],
       criticality: params[:criticality]
-    }
+    }.compact.reject { |k, v| v.blank? }
     
     # Get unique values for filter dropdowns
     if current_user.admin?
