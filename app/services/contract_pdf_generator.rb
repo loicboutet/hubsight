@@ -18,7 +18,14 @@ class ContractPdfGenerator
   
   def initialize(contract)
     @contract = contract
-    @pdf = Prawn::Document.new(page_size: 'A4', margin: 40)
+    @pdf = Prawn::Document.new(
+      page_size: 'A4', 
+      margin: 40,
+      info: {
+        Title: sanitize_text("Contrat #{contract.contract_number}"),
+        Creator: "HubSight"
+      }
+    )
   end
   
   def generate
@@ -94,56 +101,42 @@ class ContractPdfGenerator
       
       @pdf.move_down 15
       @pdf.indent(15) do
-        # Business hours
-        if @contract.business_day_breakdown_phone.present?
+        # Use available contractor contact information
+        if @contract.contractor_phone.present?
           @pdf.font('Helvetica-Bold', size: 11) do
             @pdf.fill_color COLORS[:coral]
-            @pdf.text 'Jours Ouvrés'
+            @pdf.text 'Contact Principal'
             @pdf.fill_color '000000'
           end
           @pdf.move_down 5
           
-          contact_row('Planning', @contract.business_day_schedule_hours)
-          contact_row('Délai d\'intervention', @contract.business_day_intervention_delay)
+          contact_row('Contact', @contract.contractor_contact_name)
+          contact_row('Horaires', @contract.working_hours)
+          contact_row('Délai d\'intervention', @contract.intervention_delay_hours ? "#{@contract.intervention_delay_hours}h" : nil)
           
           @pdf.font('Helvetica-Bold', size: 12) do
             @pdf.fill_color COLORS[:emergency]
-            @pdf.text "☎ #{@contract.business_day_breakdown_phone}"
+            @pdf.text "☎ #{@contract.contractor_phone}"
             @pdf.fill_color '000000'
           end
           
-          if @contract.business_day_breakdown_email.present?
+          if @contract.contractor_email.present?
             @pdf.font('Helvetica', size: 9) do
-              @pdf.text "✉ #{@contract.business_day_breakdown_email}"
+              @pdf.text "✉ #{@contract.contractor_email}"
             end
           end
           
           @pdf.move_down 10
         end
         
-        # On-call / Astreinte
-        if @contract.on_call_breakdown_phone.present?
+        # On-call / Astreinte info if available
+        if @contract.on_call_24_7
           @pdf.font('Helvetica-Bold', size: 11) do
             @pdf.fill_color COLORS[:coral]
-            @pdf.text 'Astreinte (24/7)'
+            @pdf.text 'Astreinte 24/7 Disponible'
             @pdf.fill_color '000000'
           end
           @pdf.move_down 5
-          
-          contact_row('Planning', @contract.on_call_schedule_hours)
-          contact_row('Délai d\'intervention', @contract.on_call_intervention_delay)
-          
-          @pdf.font('Helvetica-Bold', size: 12) do
-            @pdf.fill_color COLORS[:emergency]
-            @pdf.text "☎ #{@contract.on_call_breakdown_phone}"
-            @pdf.fill_color '000000'
-          end
-          
-          if @contract.on_call_breakdown_email.present?
-            @pdf.font('Helvetica', size: 9) do
-              @pdf.text "✉ #{@contract.on_call_breakdown_email}"
-            end
-          end
         end
         
         @pdf.move_down 10
@@ -161,8 +154,7 @@ class ContractPdfGenerator
       ['Type', @contract.contract_type&.humanize || '—'],
       ['Famille d\'Achats', @contract.contract_family || '—'],
       ['Sous-famille', @contract.purchase_subfamily || '—'],
-      ['Statut', format_status(@contract.status)],
-      ['Devise', @contract.currency || 'EUR']
+      ['Statut', format_status(@contract.status)]
     ]
     
     render_info_table(data)
@@ -179,8 +171,8 @@ class ContractPdfGenerator
     @pdf.move_down 5
     
     data = [
-      ['Organisation', @contract.contractor_organization || @contract.contractor_organization_name || '—'],
-      ['Contact', @contract.contractor_contact || @contract.contractor_contact_name || '—'],
+      ['Organisation', @contract.contractor_organization_name || '—'],
+      ['Contact', @contract.contractor_contact_name || '—'],
       ['Email', @contract.contractor_email || '—'],
       ['Téléphone', @contract.contractor_phone || '—']
     ]
@@ -191,10 +183,33 @@ class ContractPdfGenerator
   def add_scope
     section_header('🎯 PÉRIMÈTRE', COLORS[:primary])
     
+    # Format covered_equipment_types if it's a JSON array
+    equipment_types_display = if @contract.covered_equipment_types.is_a?(Array)
+      @contract.covered_equipment_types.join(', ')
+    else
+      @contract.covered_equipment_types
+    end
+    
+    # Format covered_sites if it's a JSON array
+    sites_display = if @contract.covered_sites.is_a?(Array)
+      @contract.covered_sites.join(', ')
+    elsif @contract.site&.name
+      @contract.site.name
+    else
+      @contract.covered_sites
+    end
+    
+    # Format covered_buildings if it's a JSON array
+    buildings_display = if @contract.covered_buildings.is_a?(Array)
+      @contract.covered_buildings.join(', ')
+    else
+      @contract.covered_buildings
+    end
+    
     data = [
-      ['Site(s) Couvert(s)', @contract.site&.name || @contract.covered_sites || '—'],
-      ['Bâtiment(s)', @contract.covered_buildings || '—'],
-      ['Type(s) d\'Équipement', @contract.equipment_types || '—'],
+      ['Site(s) Couvert(s)', sites_display || '—'],
+      ['Bâtiment(s)', buildings_display || '—'],
+      ['Type(s) d\'Équipement', equipment_types_display || '—'],
       ['Nombre d\'Équipements', @contract.equipment_count&.to_s || '—']
     ]
     
@@ -255,15 +270,15 @@ class ContractPdfGenerator
   def add_financial_aspects
     section_header('💰 ASPECTS FINANCIERS', COLORS[:primary])
     
-    annual_amount = @contract.annual_amount || @contract.annual_amount_excl_tax
+    annual_amount = @contract.annual_amount || @contract.annual_amount_ht
     
     data = [
       ['Montant Annuel HT', format_currency(annual_amount)],
-      ['Montant Annuel TTC', format_currency(@contract.annual_amount_incl_tax)],
+      ['Montant Annuel TTC', format_currency(@contract.annual_amount_ttc)],
       ['Montant Mensuel', format_currency(@contract.monthly_amount)],
       ['Fréquence de Facturation', @contract.billing_frequency || '—'],
       ['Mode de Règlement', @contract.billing_method || '—'],
-      ['Délai de Paiement', @contract.payment_delay ? "#{@contract.payment_delay} jours" : '—']
+      ['Conditions de Paiement', @contract.payment_terms || '—']
     ]
     
     render_info_table(data)
@@ -275,10 +290,10 @@ class ContractPdfGenerator
     data = [
       ['Date de Signature', format_date(@contract.signature_date)],
       ['Date de Début', format_date(@contract.start_date || @contract.execution_start_date)],
-      ['Date de Fin', format_date(@contract.end_date || @contract.execution_end_date)],
-      ['Durée Initiale', @contract.initial_duration ? "#{@contract.initial_duration} mois" : '—'],
+      ['Date de Fin', format_date(@contract.end_date)],
+      ['Durée Initiale', @contract.initial_duration_months ? "#{@contract.initial_duration_months} mois" : '—'],
       ['Reconduction Auto.', @contract.automatic_renewal ? 'Oui' : 'Non'],
-      ['Préavis de Résiliation', @contract.termination_notice ? "#{@contract.termination_notice} mois" : '—']
+      ['Préavis de Résiliation', @contract.notice_period_days ? "#{@contract.notice_period_days} jours" : '—']
     ]
     
     render_info_table(data)
@@ -290,7 +305,7 @@ class ContractPdfGenerator
     data = [
       ['Nature des Services', @contract.service_nature || '—'],
       ['Fréquence d\'Intervention', @contract.intervention_frequency || '—'],
-      ['Délai d\'Intervention', @contract.intervention_delay ? "#{@contract.intervention_delay}h" : '—'],
+      ['Délai d\'Intervention', @contract.intervention_delay_hours ? "#{@contract.intervention_delay_hours}h" : '—'],
       ['Horaires de Travail', @contract.working_hours || '—'],
       ['Astreinte 24/7', @contract.on_call_24_7 ? 'Oui' : 'Non'],
       ['Pièces de Rechange', @contract.spare_parts_included ? 'Incluses' : 'Non incluses']
@@ -322,7 +337,7 @@ class ContractPdfGenerator
     @pdf.move_down 5
     @pdf.font('Helvetica-Bold', size: 12) do
       @pdf.fill_color color
-      @pdf.text title
+      @pdf.text sanitize_text(title)
       @pdf.fill_color '000000'
     end
     @pdf.stroke_color color
@@ -382,7 +397,18 @@ class ContractPdfGenerator
   end
   
   def has_emergency_info?
-    @contract.business_day_breakdown_phone.present? || 
-    @contract.on_call_breakdown_phone.present?
+    @contract.contractor_phone.present? || 
+    @contract.contractor_email.present? ||
+    @contract.on_call_24_7
+  end
+  
+  # Sanitize text to remove emojis and ensure Windows-1252 compatibility
+  def sanitize_text(text)
+    return text unless text
+    # Remove emojis and other characters incompatible with Windows-1252
+    text.encode('Windows-1252', invalid: :replace, undef: :replace, replace: '')
+  rescue Encoding::UndefinedConversionError
+    # If conversion fails, strip all non-ASCII characters
+    text.encode('ASCII', invalid: :replace, undef: :replace, replace: '')
   end
 end
