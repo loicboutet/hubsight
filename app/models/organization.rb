@@ -8,6 +8,17 @@ class Organization < ApplicationRecord
   has_many :equipment, dependent: :restrict_with_error
   has_many :contacts, dependent: :destroy
   has_many :agencies, dependent: :destroy
+  
+  # Contract relationships - when this organization is the contractor or client
+  has_many :contracts_as_contractor, 
+           class_name: 'Contract', 
+           foreign_key: :contractor_organization_id,
+           dependent: :nullify
+           
+  has_many :contracts_as_client, 
+           class_name: 'Contract', 
+           foreign_key: :client_organization_id,
+           dependent: :nullify
 
   # Constants
   ORGANIZATION_TYPES = [
@@ -63,6 +74,11 @@ class Organization < ApplicationRecord
 
   def full_address
     [headquarters_address, postal_code, city].compact.join(', ')
+  end
+  
+  # Get all contracts where this organization is either contractor or client
+  def all_contracts
+    Contract.where('contractor_organization_id = ? OR client_organization_id = ?', id, id)
   end
 
   private

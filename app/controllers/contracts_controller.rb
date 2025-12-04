@@ -557,7 +557,11 @@ class ContractsController < ApplicationController
       
       # Other fields
       :status,
-      :contract_family
+      :contract_family,
+      
+      # Organization references
+      :contractor_organization_id,
+      :client_organization_id
     )
   end
 end
