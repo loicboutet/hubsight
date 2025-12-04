@@ -113,6 +113,7 @@ Rails.application.routes.draw do
       get 'validate'
       post 'confirm_validation'
       get 'pdf'
+      get 'generate_pdf'  # GET /contracts/:id/generate_pdf - Generate PDF summary
       delete 'delete_pdf'
       post 'retry_ocr'  # POST /contracts/:id/retry_ocr
       post 'retry_extraction'  # POST /contracts/:id/retry_extraction
