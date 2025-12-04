@@ -1,252 +1,220 @@
 class AnalyticsController < ApplicationController
+  include DataScoping
+  
+  before_action :authenticate_user!
+
   def index
-    # Get current user's organization for scoping data
-    org_id = current_user&.organization_id
-    
     #===========================================
     # USER ACTIVITY METRICS (KPI Cards)
     # ===========================================
-    @total_active_users = User.where(status: 'active', organization_id: org_id).count
-    @total_users = User.where(organization_id: org_id).count
+    users = scoped_users
+    @total_active_users = users.where(status: 'active').count
+    @total_users = users.count
     
-    @new_users_this_week = User.where(organization_id: org_id).where('created_at >= ?', 7.days.ago).count
+    @new_users_this_week = users.where('created_at >= ?', 7.days.ago).count
     
-    @connections_this_week = ActiveSession.joins(:user).where(users: { organization_id: org_id }).where('active_sessions.created_at >= ?', 7.days.ago).count
-    @connections_this_month = ActiveSession.joins(:user).where(users: { organization_id: org_id }).where('active_sessions.created_at >= ?', 30.days.ago).count
+    # Get active sessions scoped to visible users
+    user_ids = users.pluck(:id)
+    @connections_this_week = ActiveSession.where(user_id: user_ids).where('created_at >= ?', 7.days.ago).count
+    @connections_this_month = ActiveSession.where(user_id: user_ids).where('created_at >= ?', 30.days.ago).count
     
-    # Calculate average session duration
-    avg_duration_minutes = 12
-    @avg_session_duration = "#{avg_duration_minutes}m 34s"
+    # Calculate average session duration from active sessions
+    sessions_with_duration = ActiveSession.where(user_id: user_ids)
+                                          .where.not(updated_at: nil)
+                                          .where('updated_at > created_at')
+    
+    if sessions_with_duration.any?
+      # Database-agnostic duration calculation
+      total_duration = sessions_with_duration.sum do |session|
+        (session.updated_at - session.created_at).to_i
+      end
+      avg_duration_seconds = (total_duration / sessions_with_duration.count).to_i
+      minutes = avg_duration_seconds / 60
+      seconds = avg_duration_seconds % 60
+      @avg_session_duration = "#{minutes}m #{seconds}s"
+    else
+      @avg_session_duration = "0m 0s"
+    end
     
     # ===========================================
     # CONTRACT ENTRY ACTIVITY
     # ===========================================
-    # TODO: Replace with Contract.where(created_at: ...).count queries
-    @contracts_last_24h = 8
-    @contracts_last_48h = 15
-    @contracts_this_week = 42
-    @contracts_this_month = 178
+    contracts = scoped_contracts
     
-    # Weekly trend data for chart
-    # TODO: Replace with Contract.group_by_week(:created_at).count
-    @weekly_contract_trend = [
-      { week: 'Sem 44', count: 35 },
-      { week: 'Sem 45', count: 42 },
-      { week: 'Sem 46', count: 38 },
-      { week: 'Sem 47', count: 41 },
-      { week: 'Sem 48', count: 45 },
-      { week: 'Sem 49', count: 42 },
-      { week: 'Sem 50', count: 48 }
-    ]
+    @contracts_last_24h = contracts.where('created_at >= ?', 24.hours.ago).count
+    @contracts_last_48h = contracts.where('created_at >= ?', 48.hours.ago).count
+    @contracts_this_week = contracts.where('created_at >= ?', 7.days.ago).count
+    @contracts_this_month = contracts.where('created_at >= ?', 30.days.ago).count
+    
+    # Weekly trend data for chart (last 7 weeks)
+    @weekly_contract_trend = []
+    6.downto(0) do |weeks_ago|
+      week_start = weeks_ago.weeks.ago.beginning_of_week
+      week_end = weeks_ago.weeks.ago.end_of_week
+      week_count = contracts.where(created_at: week_start..week_end).count
+      
+      # Format week number (ISO week)
+      week_num = week_start.strftime('%U')
+      @weekly_contract_trend << { week: "Sem #{week_num}", count: week_count }
+    end
     
     # Daily trend for current week
-    # TODO: Replace with Contract.where(created_at: 7.days.ago..Time.now).group_by_day(:created_at).count
-    @daily_contract_trend = [
-      { day: 'Lun', count: 8 },
-      { day: 'Mar', count: 6 },
-      { day: 'Mer', count: 7 },
-      { day: 'Jeu', count: 9 },
-      { day: 'Ven', count: 12 },
-      { day: 'Sam', count: 0 },
-      { day: 'Dim', count: 0 }
-    ]
+    @daily_contract_trend = []
+    day_names = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
+    
+    0.upto(6) do |days_ago|
+      day = (6 - days_ago).days.ago.to_date
+      day_count = contracts.where('DATE(created_at) = ?', day).count
+      day_name = day_names[day.wday]
+      @daily_contract_trend << { day: day_name, count: day_count }
+    end
     
     # ===========================================
-    # ACTIVITY BY PORTFOLIO CLIENT
+    # ACTIVITY BY PORTFOLIO CLIENT (Organizations)
     # ===========================================
-    # TODO: Replace with real client/contract relationship queries
-    @client_activity = [
-      { 
-        name: 'Groupe Immobilier Paris', 
-        contracts_24h: 2, 
-        contracts_48h: 4, 
-        contracts_week: 12, 
-        contracts_month: 45,
-        active_users: 8,
-        last_activity: '2 heures'
-      },
-      { 
-        name: 'Foncière Atlantique', 
-        contracts_24h: 1, 
-        contracts_48h: 3, 
-        contracts_week: 8, 
-        contracts_month: 32,
-        active_users: 5,
-        last_activity: '5 heures'
-      },
-      { 
-        name: 'Patrimoine Lyon Métropole', 
-        contracts_24h: 3, 
-        contracts_48h: 5, 
-        contracts_week: 15, 
-        contracts_month: 58,
-        active_users: 12,
-        last_activity: '1 heure'
-      },
-      { 
-        name: 'Résidences du Sud-Ouest', 
-        contracts_24h: 0, 
-        contracts_48h: 1, 
-        contracts_week: 4, 
-        contracts_month: 18,
-        active_users: 3,
-        last_activity: '1 jour'
-      },
-      { 
-        name: 'Bureaux Défense Gestion', 
-        contracts_24h: 2, 
-        contracts_48h: 2, 
-        contracts_week: 3, 
-        contracts_month: 25,
-        active_users: 6,
-        last_activity: '3 heures'
+    organizations = scoped_organizations
+    
+    @client_activity = organizations.map do |org|
+      org_contracts = if current_user.admin?
+        Contract.where(organization_id: org.id)
+      elsif current_user.portfolio_manager?
+        Contract.where(organization_id: org.id)
+      else
+        # For site managers/technicians, only show contracts from their assigned sites
+        assigned_site_ids = current_user.assigned_sites.pluck(:id)
+        Contract.where(organization_id: org.id, site_id: assigned_site_ids)
+      end
+      
+      org_users = User.where(organization_id: org.id)
+      last_session = ActiveSession.joins(:user).where(users: { organization_id: org.id }).order(created_at: :desc).first
+      
+      {
+        name: org.name,
+        contracts_24h: org_contracts.where('created_at >= ?', 24.hours.ago).count,
+        contracts_48h: org_contracts.where('created_at >= ?', 48.hours.ago).count,
+        contracts_week: org_contracts.where('created_at >= ?', 7.days.ago).count,
+        contracts_month: org_contracts.where('created_at >= ?', 30.days.ago).count,
+        active_users: org_users.where(status: 'active').count,
+        last_activity: last_session ? time_ago_in_words_fr(last_session.created_at) : 'N/A'
       }
-    ]
+    end.sort_by { |a| -a[:contracts_month] }.first(10) # Top 10 most active
     
     # ===========================================
     # ACTIVITY BY SITE
     # ===========================================
-    # TODO: Replace with real site/contract relationship queries
-    @site_activity = [
-      { 
-        name: 'Tour Montparnasse', 
-        contracts_24h: 2, 
-        contracts_48h: 3, 
-        contracts_week: 8, 
-        contracts_month: 28,
-        most_active_user: 'Sophie Martin',
-        last_activity: '1 heure'
-      },
-      { 
-        name: 'Campus La Défense', 
-        contracts_24h: 3, 
-        contracts_48h: 6, 
-        contracts_week: 14, 
-        contracts_month: 52,
-        most_active_user: 'Marc Dubois',
-        last_activity: '2 heures'
-      },
-      { 
-        name: 'Centre Commercial Odysseum', 
-        contracts_24h: 1, 
-        contracts_48h: 2, 
-        contracts_week: 5, 
-        contracts_month: 22,
-        most_active_user: 'Julie Petit',
-        last_activity: '4 heures'
-      },
-      { 
-        name: 'Site Industriel Lyon Nord', 
-        contracts_24h: 0, 
-        contracts_48h: 1, 
-        contracts_week: 6, 
-        contracts_month: 31,
-        most_active_user: 'Pierre Rousseau',
-        last_activity: '6 heures'
-      },
-      { 
-        name: 'Campus Universitaire Grenoble', 
-        contracts_24h: 2, 
-        contracts_48h: 3, 
-        contracts_week: 9, 
-        contracts_month: 45,
-        most_active_user: 'Claire Bernard',
-        last_activity: '30 min'
+    sites = scoped_sites.includes(:organization)
+    
+    @site_activity = sites.map do |site|
+      site_contracts = contracts.where(site_id: site.id)
+      
+      # Last activity for this site
+      last_contract = site_contracts.order(created_at: :desc).first
+      
+      {
+        name: site.name,
+        contracts_24h: site_contracts.where('created_at >= ?', 24.hours.ago).count,
+        contracts_48h: site_contracts.where('created_at >= ?', 48.hours.ago).count,
+        contracts_week: site_contracts.where('created_at >= ?', 7.days.ago).count,
+        contracts_month: site_contracts.where('created_at >= ?', 30.days.ago).count,
+        most_active_user: 'N/A', # Creator tracking not implemented yet
+        last_activity: last_contract ? time_ago_in_words_fr(last_contract.created_at) : 'N/A'
       }
-    ]
+    end.sort_by { |s| -s[:contracts_month] }.first(10) # Top 10 most active sites
     
     # ===========================================
     # PERSONALIZED ALERTS WITH DEADLINES
     # ===========================================
-    # TODO: Replace with Alert.where(user_id: current_user.id, alert_type: 'personalized')
-    @personalized_alerts = [
-      { 
-        type: 'Renouvellement Contrat',
-        description: 'CTR-2024-HVAC-001 - Maintenance CVC',
-        deadline: Date.today + 5.days,
-        days_remaining: 5,
-        priority: 'high',
-        site: 'Tour Montparnasse'
-      },
-      { 
-        type: 'Révision Tarifaire',
-        description: 'CTR-2024-SEC-001 - Gardiennage 24/7',
-        deadline: Date.today + 12.days,
-        days_remaining: 12,
-        priority: 'medium',
-        site: 'Campus Grenoble'
-      },
-      { 
-        type: 'Audit Annuel',
-        description: 'Contrôle technique ascenseurs',
-        deadline: Date.today + 3.days,
-        days_remaining: 3,
-        priority: 'high',
-        site: 'Campus La Défense'
-      },
-      { 
-        type: 'Renouvellement Contrat',
-        description: 'CTR-2024-001 - Fourniture électricité',
-        deadline: Date.today + 18.days,
-        days_remaining: 18,
-        priority: 'medium',
-        site: 'Tous sites'
-      },
-      { 
-        type: 'Fin de Garantie',
-        description: 'Équipements CVC Zone B',
-        deadline: Date.today + 7.days,
-        days_remaining: 7,
-        priority: 'low',
-        site: 'Centre Commercial'
-      },
-      { 
-        type: 'Révision Tarifaire',
-        description: 'CTR-2024-CLN-012 - Nettoyage bureaux',
-        deadline: Date.today + 25.days,
-        days_remaining: 25,
-        priority: 'low',
-        site: 'Campus La Défense'
+    # Get contracts approaching renewal/deadline
+    today = Date.today
+    upcoming_contracts = contracts.where('end_date IS NOT NULL AND end_date >= ? AND end_date <= ?', today, today + 90.days)
+                                  .order(:end_date)
+    
+    @personalized_alerts = upcoming_contracts.map do |contract|
+      days_remaining = (contract.end_date - today).to_i
+      
+      # Determine priority based on days remaining
+      priority = if days_remaining <= 7
+        'high'
+      elsif days_remaining <= 30
+        'medium'
+      else
+        'low'
+      end
+      
+      # Determine alert type
+      alert_type = if contract.renewal_count.to_i > 0
+        'Renouvellement Contrat'
+      else
+        'Fin de Contrat'
+      end
+      
+      {
+        type: alert_type,
+        description: "#{contract.contract_number} - #{contract.title}",
+        deadline: contract.end_date,
+        days_remaining: days_remaining,
+        priority: priority,
+        site: contract.site&.name || 'Tous sites'
       }
-    ]
+    end.first(20) # Limit to 20 most urgent
     
     # ===========================================
     # USAGE PATTERNS & TRENDS
     # ===========================================
-    # Peak hours analysis
-    # TODO: Replace with session/activity tracking grouped by hour
-    @peak_usage_hours = [
-      { hour: '8h-10h', percentage: 25 },
-      { hour: '10h-12h', percentage: 35 },
-      { hour: '14h-16h', percentage: 30 },
-      { hour: '16h-18h', percentage: 10 }
+    # Peak hours analysis - based on active sessions
+    sessions = ActiveSession.where(user_id: user_ids).where('created_at >= ?', 30.days.ago)
+    
+    hour_ranges = [
+      { range: '8h-10h', start: 8, end: 10 },
+      { range: '10h-12h', start: 10, end: 12 },
+      { range: '14h-16h', start: 14, end: 16 },
+      { range: '16h-18h', start: 16, end: 18 }
     ]
     
-    # Most active users
-    # TODO: Replace with User activity tracking
-    @most_active_users = [
-      { name: 'Sophie Martin', role: 'Gestionnaire', actions: 234 },
-      { name: 'Marc Dubois', role: 'Responsable Site', actions: 189 },
-      { name: 'Claire Bernard', role: 'Gestionnaire', actions: 156 },
-      { name: 'Pierre Rousseau', role: 'Technicien', actions: 142 },
-      { name: 'Julie Petit', role: 'Responsable Site', actions: 128 }
-    ]
+    total_sessions = sessions.count.to_f
+    total_sessions = 1 if total_sessions == 0 # Avoid division by zero
     
-    # Feature usage statistics
-    # TODO: Track feature/page access
+    @peak_usage_hours = hour_ranges.map do |hr|
+      # Database-agnostic hour extraction
+      count = sessions.select { |s| s.created_at.hour >= hr[:start] && s.created_at.hour < hr[:end] }.count
+      {
+        hour: hr[:range],
+        percentage: ((count / total_sessions) * 100).round
+      }
+    end
+    
+    # Most active users - based on session activity
+    # Note: Contract creator tracking not implemented yet
+    @most_active_users = users.map do |user|
+      sessions_count = ActiveSession.where(user_id: user.id).where('created_at >= ?', 30.days.ago).count
+      
+      {
+        name: user.full_name,
+        role: user.role.titleize,
+        actions: sessions_count
+      }
+    end.sort_by { |u| -u[:actions] }.first(5)
+    
+    # Feature usage statistics - track page/controller access
+    # Note: This would require additional tracking in the future
+    # For now, we'll use contract-related activities as a proxy
+    equipment_count = scoped_equipment.where('created_at >= ?', 30.days.ago).count
+    sites_with_activity = sites.where('updated_at >= ?', 30.days.ago).count
+    
+    total_activities = @contracts_this_month + equipment_count + sites_with_activity + @connections_this_month
+    total_activities = 1 if total_activities == 0
+    
     @feature_usage = [
-      { feature: 'Contrats', views: 1245, percentage: 32 },
-      { feature: 'Équipements', views: 876, percentage: 23 },
-      { feature: 'Sites', views: 654, percentage: 17 },
-      { feature: 'Alertes', views: 543, percentage: 14 },
-      { feature: 'Tableau de Bord', views: 532, percentage: 14 }
-    ]
+      { feature: 'Contrats', views: @contracts_this_month, percentage: ((@contracts_this_month.to_f / total_activities) * 100).round },
+      { feature: 'Équipements', views: equipment_count, percentage: ((equipment_count.to_f / total_activities) * 100).round },
+      { feature: 'Sites', views: sites_with_activity, percentage: ((sites_with_activity.to_f / total_activities) * 100).round },
+      { feature: 'Connexions', views: @connections_this_month, percentage: ((@connections_this_month.to_f / total_activities) * 100).round }
+    ].sort_by { |f| -f[:views] }
     
     # ===========================================
     # CONTRACT DISTRIBUTION ANALYSIS
     # ===========================================
-    # Contract distribution by family
-    contracts_by_family = Contract.where(organization_id: org_id).group(:contract_family).count
+    contracts_by_family = contracts.group(:contract_family).count
     total_contracts = contracts_by_family.values.sum.to_f
     total_contracts = 1 if total_contracts == 0 # Avoid division by zero
     
@@ -268,32 +236,45 @@ class AnalyticsController < ApplicationController
       'suspended' => { label: 'Suspendu', color: '#6b7280' }
     }
     
-    contracts_by_status = Contract.where(organization_id: org_id).group(:status).count
+    contracts_by_status = contracts.group(:status).count
     @contract_by_status = contracts_by_status.map do |status, count|
+      status_info = status_map[status] || { label: status, color: '#6b7280' }
       {
-        status: status_map[status][:label],
+        status: status_info[:label],
         count: count,
         percentage: ((count / total_contracts) * 100).round,
-        color: status_map[status][:color]
+        color: status_info[:color]
       }
     end
     
     # ===========================================
     # SPENDING TRENDS ANALYSIS
     # ===========================================
-    # Monthly spending trends for current year (mock budget data)
+    # Monthly spending trends for current year
     month_names = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
-    base_budget = 130000
-    @monthly_spending = month_names.map.with_index do |month, index|
-      budget = base_budget + (index / 4) * 10000
-      actual = budget * (0.92 + rand(0..16) / 100.0)
-      { month: month, amount: actual.round, budget: budget }
+    current_year = Date.today.year
+    
+    @monthly_spending = month_names.map.with_index do |month_name, index|
+      month_num = index + 1
+      month_start = Date.new(current_year, month_num, 1)
+      month_end = month_start.end_of_month
+      
+      # Get contracts active during this month
+      month_contracts = contracts.where('(start_date <= ? AND (end_date >= ? OR end_date IS NULL))', month_end, month_start)
+      actual_amount = month_contracts.sum(:annual_amount) / 12.0 # Convert annual to monthly
+      
+      # For budget, assume 10% buffer over actual
+      budget_amount = actual_amount * 1.1
+      
+      {
+        month: month_name,
+        amount: actual_amount.round,
+        budget: budget_amount.round
+      }
     end
     
     # Spending by contract family
-    spending_by_family = Contract.where(organization_id: org_id)
-                                 .group(:contract_family)
-                                 .sum(:annual_amount)
+    spending_by_family = contracts.group(:contract_family).sum(:annual_amount)
     
     total_spending = spending_by_family.values.sum.to_f
     total_spending = 1 if total_spending == 0
@@ -309,18 +290,19 @@ class AnalyticsController < ApplicationController
     end
     
     # Total spending metrics
-    @total_annual_spending = Contract.where(organization_id: org_id).sum(:annual_amount).to_i
-    @budget_total = (@total_annual_spending * 1.022).round # ~2% above spending
+    @total_annual_spending = contracts.sum(:annual_amount).to_i
+    @budget_total = (@total_annual_spending * 1.1).round # 10% budget buffer
     @budget_used_percentage = @budget_total > 0 ? ((@total_annual_spending.to_f / @budget_total) * 100).round(1) : 0
     
     # ===========================================
     # EQUIPMENT DISTRIBUTION ANALYSIS
     # ===========================================
+    equipment = scoped_equipment
+    
     # Equipment distribution by type
-    equipment_by_type = Equipment.where(organization_id: org_id)
-                                  .joins(:equipment_type)
-                                  .group('equipment_types.equipment_type_name')
-                                  .count
+    equipment_by_type = equipment.joins(:equipment_type)
+                                 .group('equipment_types.equipment_type_name')
+                                 .count
     total_equipment = equipment_by_type.values.sum.to_f
     total_equipment = 1 if total_equipment == 0
     
@@ -335,19 +317,18 @@ class AnalyticsController < ApplicationController
     end
     
     # Equipment distribution by site (top 10)
-    equipment_by_site = Equipment.where(organization_id: org_id)
-                                  .joins(:site)
-                                  .group('sites.name')
-                                  .count
-                                  .sort_by { |k, v| -v }
-                                  .first(10)
+    equipment_by_site = equipment.joins(:site)
+                                 .group('sites.name')
+                                 .count
+                                 .sort_by { |k, v| -v }
+                                 .first(10)
     
     @equipment_by_site = equipment_by_site.map do |site_name, count|
       { site: site_name, count: count }
     end
     
     # Equipment age distribution
-    all_equipment = Equipment.where(organization_id: org_id).where.not(commissioning_date: nil)
+    all_equipment = equipment.where.not(commissioning_date: nil)
     age_counts = { '0-5 ans' => 0, '6-10 ans' => 0, '11-15 ans' => 0, '16-20 ans' => 0, '20+ ans' => 0 }
     
     all_equipment.each do |eq|
@@ -375,6 +356,33 @@ class AnalyticsController < ApplicationController
       }
     end
     
-    @total_equipment_count = Equipment.where(organization_id: org_id).count
+    @total_equipment_count = equipment.count
+  end
+  
+  private
+  
+  # Helper method to convert time to French relative time
+  def time_ago_in_words_fr(time)
+    seconds = (Time.current - time).to_i
+    
+    case seconds
+    when 0..59
+      'À l\'instant'
+    when 60..3599
+      minutes = seconds / 60
+      "#{minutes} minute#{minutes > 1 ? 's' : ''}"
+    when 3600..86399
+      hours = seconds / 3600
+      "#{hours} heure#{hours > 1 ? 's' : ''}"
+    when 86400..604799
+      days = seconds / 86400
+      "#{days} jour#{days > 1 ? 's' : ''}"
+    when 604800..2591999
+      weeks = seconds / 604800
+      "#{weeks} semaine#{weeks > 1 ? 's' : ''}"
+    else
+      months = seconds / 2592000
+      "#{months} mois"
+    end
   end
 end

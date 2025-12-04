@@ -26,17 +26,14 @@ class SiteManager::EquipmentController < ApplicationController
       )
     end
     
-    # Statistics
+    # Statistics (calculate before pagination)
     @total_count = @equipment.count
     @active_count = @equipment.where(status: 'active').count
     @maintenance_count = @equipment.where(status: 'maintenance').count
     @critical_count = @equipment.where(criticality: 'critical').count
     
-    # Group by site for organized display
-    @equipment_by_site = @equipment.group_by(&:site)
-    
     # Pagination
-    @equipment = @equipment.page(params[:page]).per(15)
+    @equipment = @equipment.page(params[:page]).per(25)
     
     # Get assigned sites for filter dropdown
     @assigned_sites = current_user.assigned_sites.order(:name)
@@ -77,6 +74,7 @@ class SiteManager::EquipmentController < ApplicationController
     equipment = equipment.where(level_id: params[:level_id]) if params[:level_id].present?
     equipment = equipment.where(space_id: params[:space_id]) if params[:space_id].present?
     equipment = equipment.where(status: params[:status]) if params[:status].present?
+    equipment = equipment.where(criticality: params[:criticality]) if params[:criticality].present?
     equipment = equipment.where(equipment_type_id: params[:equipment_type_id]) if params[:equipment_type_id].present?
     equipment
   end

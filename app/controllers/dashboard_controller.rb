@@ -1,15 +1,11 @@
 class DashboardController < ApplicationController
+  include DataScoping
+  
   before_action :authenticate_user!
 
   def index
-    # Get the current user's organization
-    # Admin sees all data, other users see only their organization's data
-    if current_user.admin?
-      contracts = Contract.all
-    else
-      org_id = current_user.organization_id
-      contracts = Contract.by_organization(org_id)
-    end
+    # Get contracts scoped by user role
+    contracts = scoped_contracts
     @contracts_by_status = contracts.group(:status).count
     @total_contracts = contracts.count
     
@@ -44,17 +40,10 @@ class DashboardController < ApplicationController
       .order(:end_date)
       .limit(10)
     
-    # Sites count
-    if current_user.admin?
-      @sites_count = Site.count
-      @buildings_count = Building.count
-      @equipment_count = Equipment.count
-    else
-      org_id = current_user.organization_id
-      @sites_count = Site.where(organization_id: org_id).count
-      @buildings_count = Building.where(organization_id: org_id).count
-      @equipment_count = Equipment.where(organization_id: org_id).count
-    end
+    # Sites, buildings, and equipment counts (scoped by role)
+    @sites_count = scoped_sites.count
+    @buildings_count = scoped_buildings.count
+    @equipment_count = scoped_equipment.count
     
     # Service providers (unique contractor organizations)
     @providers_count = contracts.where.not(contractor_organization_name: nil)
