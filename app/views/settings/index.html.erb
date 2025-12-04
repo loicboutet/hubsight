@@ -125,8 +125,22 @@
               </label>
               <%= f.password_field :password, 
                   autocomplete: "new-password",
-                  placeholder: "Minimum 6 caractères",
+                  placeholder: "Entrez votre nouveau mot de passe",
                   style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+              
+              <!-- Password Requirements Hint -->
+              <div style="margin-top: var(--space-sm); padding: var(--space-md); background-color: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 4px;">
+                <p class="typo-body-small" style="font-weight: 600; color: #1e40af; margin-bottom: var(--space-xs);">
+                  Le mot de passe doit respecter les critères suivants :
+                </p>
+                <ul class="typo-body-small" style="color: #1e40af; margin: 0; padding-left: 20px; line-height: 1.6;">
+                  <li>Contenir au moins 8 caractères</li>
+                  <li>Contenir au moins une lettre majuscule (A-Z)</li>
+                  <li>Contenir au moins une lettre minuscule (a-z)</li>
+                  <li>Contenir au moins un chiffre (0-9)</li>
+                  <li>Contenir au moins un caractère spécial (!@#$%^&*)</li>
+                </ul>
+              </div>
             </div>
             
             <div>

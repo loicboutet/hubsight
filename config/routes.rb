@@ -280,10 +280,11 @@ Rails.application.routes.draw do
   
   # Global and resource-specific search
   get 'search', to: 'search#index'
-  get 'search/contracts', to: 'search#contracts'
-  get 'search/equipment', to: 'search#equipment'
-  get 'search/sites', to: 'search#sites'
-  get 'search/organizations', to: 'search#organizations'
+  get 'search/contracts', to: 'search#contracts', as: :global_search_contracts
+  get 'search/equipment', to: 'search#equipment', as: :global_search_equipment
+  get 'search/sites', to: 'search#sites', as: :global_search_sites
+  get 'search/organizations', to: 'search#organizations', as: :global_search_organizations  
+  get 'search/contacts', to: 'search#contacts', as: :global_search_contacts
 
   # =============================================================================
   # API ENDPOINTS (for AJAX/SPA features)
