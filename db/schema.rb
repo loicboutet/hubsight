@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_03_131213) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_04_095428) do
   create_table "active_sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "session_id", null: false
@@ -309,8 +309,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_03_131213) do
     t.integer "lease_duration_months"
     t.date "next_lease_deadline"
     t.text "lease_alerts"
+    t.integer "contractor_organization_id"
+    t.integer "client_organization_id"
+    t.index ["client_organization_id"], name: "index_contracts_on_client_organization_id"
     t.index ["contract_family"], name: "index_contracts_on_contract_family"
     t.index ["contract_type"], name: "index_contracts_on_contract_type"
+    t.index ["contractor_organization_id"], name: "index_contracts_on_contractor_organization_id"
     t.index ["contractor_organization_name"], name: "index_contracts_on_contractor_organization_name"
     t.index ["execution_start_date"], name: "index_contracts_on_execution_start_date"
     t.index ["extraction_processed_at"], name: "index_contracts_on_extraction_processed_at"
@@ -632,6 +636,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_03_131213) do
   add_foreign_key "buildings", "sites"
   add_foreign_key "buildings", "users"
   add_foreign_key "contacts", "organizations"
+  add_foreign_key "contracts", "organizations", column: "client_organization_id"
+  add_foreign_key "contracts", "organizations", column: "contractor_organization_id"
   add_foreign_key "equipment", "buildings"
   add_foreign_key "equipment", "equipment_types"
   add_foreign_key "equipment", "levels"

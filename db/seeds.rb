@@ -1334,11 +1334,15 @@ statuses = ['active', 'active', 'active', 'active', 'active', 'pending', 'expire
 org1_sites_for_contracts = Site.where(organization_id: org1.id).limit(5).to_a
 org2_sites_for_contracts = Site.where(organization_id: org2.id).limit(3).to_a
 
+# Get supplier organizations to use as contractors
+supplier_orgs = Organization.where(organization_type: 'supplier').to_a
+
 # Create contracts for Organization 1
 puts "  Creating contracts for Organization 1..."
 30.times do |i|
   site = org1_sites_for_contracts.sample
   family = contract_families.sample
+  contractor_org = supplier_orgs.sample
   
   # Calculate dates with better distribution
   start_date = Date.today - rand(365..730).days
@@ -1373,7 +1377,10 @@ puts "  Creating contracts for Organization 1..."
     site_id: site.id,
     title: "Contrat #{family} - #{site.name}",
     contract_type: "Contrat de maintenance",
-    contractor_organization_name: "Prestataire Maintenance",
+    contractor_organization_id: contractor_org.id,
+    contractor_organization_name: contractor_org.name,
+    client_organization_id: org1.id,
+    client_organization_name: org1.name,
     contract_object: "Maintenance et entretien des équipements",
     contract_family: family,
     status: status,
@@ -1384,7 +1391,7 @@ puts "  Creating contracts for Organization 1..."
     initial_duration_months: ((end_date - start_date) / 30).to_i
   )
   contract.save!
-  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
+  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, contractor: #{contractor_org.name}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
 end
 
 # Create contracts for Organization 2
@@ -1392,6 +1399,7 @@ puts "  Creating contracts for Organization 2..."
 15.times do |i|
   site = org2_sites_for_contracts.sample
   family = contract_families.sample
+  contractor_org = supplier_orgs.sample
   
   start_date = Date.today - rand(365..730).days
   
@@ -1425,7 +1433,10 @@ puts "  Creating contracts for Organization 2..."
     site_id: site.id,
     title: "Contrat #{family} - #{site.name}",
     contract_type: "Contrat de maintenance",
-    contractor_organization_name: "Prestataire Maintenance",
+    contractor_organization_id: contractor_org.id,
+    contractor_organization_name: contractor_org.name,
+    client_organization_id: org2.id,
+    client_organization_name: org2.name,
     contract_object: "Maintenance et entretien des équipements",
     contract_family: family,
     status: status,
@@ -1436,7 +1447,7 @@ puts "  Creating contracts for Organization 2..."
     initial_duration_months: ((end_date - start_date) / 30).to_i
   )
   contract.save!
-  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
+  puts "    ✓ Created contract: #{contract.contract_number} (#{contract.contract_family}, contractor: #{contractor_org.name}, expires: #{end_date.strftime('%d/%m/%Y')}, status: #{status})"
 end
 
 puts "\n📊 Total contracts created: #{Contract.count}"
@@ -2887,6 +2898,168 @@ puts "   - Organization 1 (this week): #{ActiveSession.joins(:user).where(users:
 puts "   - Organization 1 (this month): #{ActiveSession.joins(:user).where(users: { organization_id: org1.id }).where('active_sessions.created_at >= ?', 30.days.ago).count}"
 puts "   - Organization 2 (this week): #{ActiveSession.joins(:user).where(users: { organization_id: org2.id }).where('active_sessions.created_at >= ?', 7.days.ago).count}"
 puts "   - Organization 2 (this month): #{ActiveSession.joins(:user).where(users: { organization_id: org2.id }).where('active_sessions.created_at >= ?', 30.days.ago).count}"
+
+# ============================================================================
+# LINK CONTRACTS TO ORGANIZATIONS - Match contracts with organization records
+# ============================================================================
+
+puts "\n🔗 Linking contracts to organizations..."
+
+# Link existing contracts to organization records based on contractor and client names
+# Run via Admin UI: /admin/seeds
+
+puts "=" * 80
+puts "LINKING CONTRACTS TO ORGANIZATIONS"
+puts "=" * 80
+puts ""
+
+total_contracts = Contract.count
+puts "Total contracts to process: #{total_contracts}"
+puts ""
+
+# Initialize counters
+stats = {
+  contractor_linked: 0,
+  contractor_not_found: 0,
+  contractor_already_linked: 0,
+  contractor_no_name: 0,
+  client_linked: 0,
+  client_not_found: 0,
+  client_already_linked: 0,
+  client_no_name: 0
+}
+
+unmatched_contractors = []
+unmatched_clients = []
+
+# Process each contract
+Contract.find_each.with_index do |contract, index|
+  puts "[#{index + 1}/#{total_contracts}] Processing: #{contract.contract_number}"
+  
+  # === LINK CONTRACTOR ORGANIZATION ===
+  if contract.contractor_organization_id.present?
+    puts "  → Contractor already linked: #{contract.contractor_organization.name}"
+    stats[:contractor_already_linked] += 1
+  elsif contract.contractor_organization_name.blank?
+    puts "  → No contractor name to match"
+    stats[:contractor_no_name] += 1
+  else
+    # Try exact match first
+    org = Organization.find_by(name: contract.contractor_organization_name)
+    
+    # Try case-insensitive match if exact fails
+    org ||= Organization.where("LOWER(name) = LOWER(?)", contract.contractor_organization_name).first
+    
+    # Try partial match if still not found
+    org ||= Organization.where("name LIKE ?", "%#{contract.contractor_organization_name}%").first
+    
+    # If still no match, assign a random supplier organization
+    org ||= Organization.where(organization_type: 'supplier').order("RANDOM()").first
+    
+    if org
+      contract.update_columns(
+        contractor_organization_id: org.id,
+        contractor_organization_name: org.name
+      )
+      puts "  ✓ Contractor linked: #{org.name}"
+      stats[:contractor_linked] += 1
+    else
+      puts "  ✗ No match for contractor: '#{contract.contractor_organization_name}'"
+      stats[:contractor_not_found] += 1
+      unmatched_contractors << contract.contractor_organization_name unless unmatched_contractors.include?(contract.contractor_organization_name)
+    end
+  end
+  
+  # === LINK CLIENT ORGANIZATION ===
+  if contract.client_organization_id.present?
+    puts "  → Client already linked: #{contract.client_organization.name}"
+    stats[:client_already_linked] += 1
+  elsif contract.client_organization_name.blank?
+    puts "  → No client name to match"
+    stats[:client_no_name] += 1
+  else
+    # Try exact match first
+    org = Organization.find_by(name: contract.client_organization_name)
+    
+    # Try case-insensitive match if exact fails
+    org ||= Organization.where("LOWER(name) = LOWER(?)", contract.client_organization_name).first
+    
+    # Try partial match if still not found
+    org ||= Organization.where("name LIKE ?", "%#{contract.client_organization_name}%").first
+    
+    # If still no match, assign a random owner organization
+    org ||= Organization.where(organization_type: 'owner').order("RANDOM()").first
+    
+    if org
+      contract.update_columns(
+        client_organization_id: org.id,
+        client_organization_name: org.name
+      )
+      puts "  ✓ Client linked: #{org.name}"
+      stats[:client_linked] += 1
+    else
+      puts "  ✗ No match for client: '#{contract.client_organization_name}'"
+      stats[:client_not_found] += 1
+      unmatched_clients << contract.client_organization_name unless unmatched_clients.include?(contract.client_organization_name)
+    end
+  end
+  
+  puts ""
+end
+
+# === SUMMARY ===
+puts "=" * 80
+puts "SUMMARY"
+puts "=" * 80
+puts ""
+puts "CONTRACTOR ORGANIZATIONS:"
+puts "  ✓ Linked successfully:     #{stats[:contractor_linked]}"
+puts "  → Already linked:          #{stats[:contractor_already_linked]}"
+puts "  ✗ No match found:          #{stats[:contractor_not_found]}"
+puts "  - No name provided:        #{stats[:contractor_no_name]}"
+puts ""
+puts "CLIENT ORGANIZATIONS:"
+puts "  ✓ Linked successfully:     #{stats[:client_linked]}"
+puts "  → Already linked:          #{stats[:client_already_linked]}"
+puts "  ✗ No match found:          #{stats[:client_not_found]}"
+puts "  - No name provided:        #{stats[:client_no_name]}"
+puts ""
+
+# === UNMATCHED ORGANIZATIONS ===
+if unmatched_contractors.any? || unmatched_clients.any?
+  puts "=" * 80
+  puts "UNMATCHED ORGANIZATIONS (Need to be created)"
+  puts "=" * 80
+  puts ""
+  
+  if unmatched_contractors.any?
+    puts "CONTRACTORS (#{unmatched_contractors.size}):"
+    unmatched_contractors.sort.each do |name|
+      puts "  - #{name}"
+    end
+    puts ""
+  end
+  
+  if unmatched_clients.any?
+    puts "CLIENTS (#{unmatched_clients.size}):"
+    unmatched_clients.sort.each do |name|
+      puts "  - #{name}"
+    end
+    puts ""
+  end
+  
+  puts "NEXT STEPS:"
+  puts "1. Create the missing organizations via /organizations or /admin/organizations"
+  puts "2. Re-run this seed: /admin/seeds -> 'Link Contract Organizations'"
+  puts ""
+else
+  puts "✓ All contracts with organization names have been linked!"
+  puts ""
+end
+
+puts "=" * 80
+puts "DONE - Contract Organizations Linking"
+puts "=" * 80
 
 puts "\n✅ Seed completed successfully!"
 puts "\n📝 Test Users Created:"

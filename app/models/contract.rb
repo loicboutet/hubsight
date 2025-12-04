@@ -1,6 +1,10 @@
 class Contract < ApplicationRecord
   belongs_to :organization
   belongs_to :site, optional: true
+  
+  # Organization relationships for contractor and client
+  belongs_to :contractor_organization, class_name: 'Organization', optional: true
+  belongs_to :client_organization, class_name: 'Organization', optional: true
 
   # ActiveStorage attachment for PDF document
   has_one_attached :pdf_document
@@ -26,6 +30,7 @@ class Contract < ApplicationRecord
   before_save :calculate_contract_dates
   before_save :calculate_vat_amounts
   before_save :track_amount_updates
+  before_save :sync_organization_names
   after_commit :trigger_ocr_extraction, on: [:create, :update], if: :should_trigger_ocr?
   after_commit :trigger_llm_extraction, on: [:update], if: :should_trigger_llm?
 
@@ -53,6 +58,18 @@ class Contract < ApplicationRecord
   scope :extraction_failed, -> { where(extraction_status: 'failed') }
   scope :needs_extraction, -> { ocr_completed.where(extraction_status: [nil, 'pending', 'failed']) }
 
+  # Organization Display Helper Methods
+  
+  # Display contractor organization name with fallback
+  def contractor_display_name
+    contractor_organization&.name || contractor_organization_name || '—'
+  end
+  
+  # Display client organization name with fallback
+  def client_display_name
+    client_organization&.name || client_organization_name || '—'
+  end
+  
   # Contract Family Integration Methods
   
   # Returns the ContractFamily object by looking up contract_family string
@@ -389,6 +406,17 @@ class Contract < ApplicationRecord
   def track_amount_updates
     if amount_fields_changed?
       self.last_amount_update = Date.current
+    end
+  end
+  
+  # Callback to sync organization name fields when organization is linked
+  def sync_organization_names
+    if contractor_organization_id_changed? && contractor_organization.present?
+      self.contractor_organization_name = contractor_organization.name
+    end
+    
+    if client_organization_id_changed? && client_organization.present?
+      self.client_organization_name = client_organization.name
     end
   end
 
