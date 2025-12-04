@@ -44,9 +44,8 @@ class ContactsController < ApplicationController
   end
   
   def destroy
-    organization = @contact.organization
     @contact.destroy
-    redirect_to organization || contacts_path, notice: 'Contact supprimé avec succès.'
+    redirect_to contacts_path, notice: 'Contact supprimé avec succès.'
   end
   
   def search
