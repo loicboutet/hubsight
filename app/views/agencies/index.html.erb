@@ -1,63 +1,236 @@
 <% content_for :header, "Agences" %>
 
-<div style="max-width: 1400px; margin: 0 auto; padding: 24px;">
-  <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-      <h1 style="font-size: 24px; font-weight: 600; color: #111827; margin: 0;">
-        Agences
-      </h1>
-      <%= link_to "Nouvelle Agence", new_agency_path, class: "btn btn-primary" %>
+<div class="section">
+  <div class="page-header-responsive">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Mes Agences</h2>
+      <p class="typo-body-small">Gérer les agences de votre réseau d'organisations</p>
+    </div>
+    <div style="display: flex; gap: var(--space-sm); align-items: center;">
+      <a href="<%= new_agency_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Nouvelle Agence
+      </a>
+    </div>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    <!-- Filters Section -->
+    <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
+      <style>
+        @media (max-width: 1200px) {
+          .filters-grid-agencies { grid-template-columns: 1fr 1fr auto auto !important; }
+        }
+        @media (max-width: 768px) {
+          .filters-grid-agencies { grid-template-columns: 1fr !important; }
+        }
+      </style>
+      <%= form_with url: agencies_path, method: :get do |f| %>
+        <div class="filters-grid-agencies" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+            <%= f.text_field :search, 
+                value: params[:search],
+                placeholder: "Nom, code, ville...", 
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Type</label>
+            <%= f.select :agency_type, 
+                options_for_select([
+                  ['Tous les types', '']
+                ] + Agency::AGENCY_TYPES, params[:agency_type]),
+                {},
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Organisation</label>
+            <%= f.collection_select :organization_id,
+                Organization.ordered,
+                :id,
+                :name,
+                { include_blank: 'Toutes' },
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <button type="button" 
+                  onclick="window.location.href='<%= agencies_path %>'"
+                  class="typo-btn-cancel" 
+                  style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer
+          </button>
+          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filtrer
+          </button>
+        </div>
+      <% end %>
     </div>
 
-    <!-- Search Form -->
-    <%= form_with url: agencies_path, method: :get, style: "margin-bottom: 24px;" do |f| %>
-      <div style="display: flex; gap: 12px;">
-        <%= f.text_field :search, value: params[:search], placeholder: "Rechercher une agence...", style: "flex: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px;" %>
-        <%= f.submit "Rechercher", style: "background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;" %>
-      </div>
-    <% end %>
-
-    <% if @agencies.any? %>
-      <div class="table-responsive">
-        <table class="table">
+    <!-- Agencies Table -->
+    <div class="table-responsive">
+      <% if @agencies.any? %>
+        <table style="width: 100%; border-collapse: collapse;">
           <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Organisation</th>
-              <th>Type</th>
-              <th>Ville</th>
-              <th>Téléphone</th>
-              <th>Statut</th>
-              <th>Actions</th>
+            <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+              <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">AGENCE</th>
+              <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ORGANISATION</th>
+              <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TYPE</th>
+              <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">LOCALISATION</th>
+              <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">CONTACT</th>
+              <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
+              <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
             </tr>
           </thead>
           <tbody>
-            <% @agencies.each do |agency| %>
-              <tr>
-                <td><%= link_to agency.display_name, agency %></td>
-                <td><%= link_to agency.organization.name, agency.organization if agency.organization %></td>
-                <td><%= agency.type_label %></td>
-                <td><%= agency.city %></td>
-                <td><%= agency.phone %></td>
-                <td>
-                  <% if agency.active? %>
-                    <span class="badge bg-success">Actif</span>
+            <% @agencies.each_with_index do |agency, index| %>
+              <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
+                <!-- Agency Name -->
+                <td style="padding: var(--space-md);">
+                  <div>
+                    <%= link_to agency_path(agency), style: "text-decoration: none;" do %>
+                      <p class="typo-body-small typo-bold" style="margin-bottom: 2px; color: var(--coral-primary); transition: color 0.2s;"><%= agency.name %></p>
+                    <% end %>
+                    <% if agency.code.present? %>
+                      <p class="typo-body-small" style="color: #999; font-size: 0.75rem;">Code: <%= agency.code %></p>
+                    <% end %>
+                  </div>
+                </td>
+                
+                <!-- Organization -->
+                <td style="padding: var(--space-md);">
+                  <% if agency.organization.present? %>
+                    <%= link_to agency.organization.name, organization_path(agency.organization), class: "typo-body-small", style: "color: var(--purple-primary); text-decoration: none;" %>
                   <% else %>
-                    <span class="badge bg-secondary">Inactif</span>
+                    <span style="color: #999;">—</span>
                   <% end %>
                 </td>
-                <td>
-                  <%= link_to "Voir", agency, class: "btn btn-sm btn-outline-primary" %>
-                  <%= link_to "Modifier", edit_agency_path(agency), class: "btn btn-sm btn-outline-secondary" %>
+                
+                <!-- Type -->
+                <td style="padding: var(--space-md);">
+                  <% if agency.agency_type.present? %>
+                    <span style="display: inline-block; padding: 4px 12px; background-color: #e7f3ff; color: #0066cc; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                      <%= agency.type_label %>
+                    </span>
+                  <% else %>
+                    <span style="color: #999;">—</span>
+                  <% end %>
+                </td>
+                
+                <!-- Location -->
+                <td style="padding: var(--space-md);">
+                  <div>
+                    <% if agency.city.present? %>
+                      <p class="typo-body-small" style="margin-bottom: 2px;"><%= agency.city %></p>
+                    <% end %>
+                    <% if agency.region.present? %>
+                      <p class="typo-body-small" style="color: #999; font-size: 0.813rem;"><%= agency.region %></p>
+                    <% end %>
+                    <% if agency.city.blank? && agency.region.blank? %>
+                      <span style="color: #999;">—</span>
+                    <% end %>
+                  </div>
+                </td>
+                
+                <!-- Contact -->
+                <td style="padding: var(--space-md);">
+                  <div>
+                    <% if agency.phone.present? %>
+                      <p class="typo-body-small" style="margin-bottom: 2px;"><%= agency.phone %></p>
+                    <% end %>
+                    <% if agency.email.present? %>
+                      <p class="typo-body-small" style="color: #999; font-size: 0.813rem;"><%= agency.email %></p>
+                    <% end %>
+                    <% if agency.phone.blank? && agency.email.blank? %>
+                      <span style="color: #999;">—</span>
+                    <% end %>
+                  </div>
+                </td>
+                
+                <!-- Status -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <% if agency.active? %>
+                    <span style="display: inline-block; padding: 4px 12px; background-color: #d4edda; color: #155724; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                      Actif
+                    </span>
+                  <% else %>
+                    <span style="display: inline-block; padding: 4px 12px; background-color: #f8d7da; color: #721c24; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                      Inactif
+                    </span>
+                  <% end %>
+                </td>
+                
+                <!-- Actions -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                    <%= link_to agency_path(agency), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Voir
+                    <% end %>
+                    <%= link_to edit_agency_path(agency), title: "Éditer", class: "typo-btn-small typo-btn-small-primary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Éditer
+                    <% end %>
+                    <%= link_to agency_path(agency), 
+                        method: :delete,
+                        data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr de vouloir supprimer l'agence \"#{agency.display_name}\" ?" },
+                        title: "Supprimer",
+                        class: "typo-btn-small",
+                        style: "background-color: #dc2626; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 6px; font-size: 0.813rem; font-weight: 600; transition: background-color 0.2s;" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Supprimer
+                    <% end %>
+                  </div>
                 </td>
               </tr>
             <% end %>
           </tbody>
         </table>
-      </div>
-    <% else %>
-      <div style="text-align: center; padding: 48px; color: #6b7280;">
-        <p>Aucune agence trouvée.</p>
+      <% else %>
+        <div style="text-align: center; padding: var(--space-xxl); background-color: #f8f9fa; border-radius: var(--space-md);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); color: #ccc;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <h3 class="typo-h3" style="margin-bottom: var(--space-sm); color: #666;">Aucune agence pour le moment</h3>
+          <p class="typo-body-small" style="color: #999; margin-bottom: var(--space-lg);">
+            <% if params[:search].present? || params[:agency_type].present? || params[:organization_id].present? %>
+              Aucun résultat ne correspond à vos critères de recherche.
+            <% else %>
+              Commencez par créer votre première agence
+            <% end %>
+          </p>
+          <%= link_to new_agency_path, class: "typo-btn-success" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Créer une agence
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <% if @agencies.total_pages > 1 %>
+      <div style="margin-top: var(--space-xl);">
+        <%= render 'shared/pagination', 
+          current_page: @agencies.current_page, 
+          total_pages: @agencies.total_pages, 
+          total_count: @agencies.total_count, 
+          per_page: 20,
+          path: agencies_path %>
       </div>
     <% end %>
   </div>

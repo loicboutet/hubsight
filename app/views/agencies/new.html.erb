@@ -1,0 +1,25 @@
+<% content_for :header, "Nouvelle Agence" %>
+
+<div class="section">
+  <!-- Breadcrumb Navigation -->
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Agences', url: agencies_path },
+      { name: 'Nouvelle Agence', url: nil }
+    ] %>
+  </div>
+
+  <!-- Header Section -->
+  <div style="margin-bottom: var(--space-xl);">
+    <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm);">
+      <div style="font-size: 32px;">🏪</div>
+      <h2 class="typo-h2">Créer une Nouvelle Agence</h2>
+    </div>
+    <p class="typo-body-small" style="color: var(--medium-gray);">
+      Ajouter une agence à votre réseau d'organisations
+    </p>
+  </div>
+
+  <!-- Form -->
+  <%= render 'form' %>
+</div>

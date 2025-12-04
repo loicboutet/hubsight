@@ -1,0 +1,278 @@
+<div style="background-color: var(--white); border-radius: var(--space-md);">
+  <%= form_with(model: @agency, local: true) do |f| %>
+    <% if @agency.errors.any? %>
+      <div style="background-color: #fee; border: 1px solid var(--coral-primary); border-radius: var(--space-sm); padding: var(--space-md); margin-bottom: var(--space-lg);">
+        <h4 class="typo-h4" style="color: var(--coral-primary); margin-bottom: var(--space-sm);">
+          <%= pluralize(@agency.errors.count, "erreur") %> empêche(nt) la sauvegarde :
+        </h4>
+        <ul style="margin-left: var(--space-lg);">
+          <% @agency.errors.full_messages.each do |message| %>
+            <li class="typo-body-small"><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Organization Selection -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        🏢 Organisation
+      </h4>
+
+      <% if current_user.admin? %>
+        <!-- Admin: Organization Selection with Autocomplete -->
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Organisation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <div 
+            data-controller="organization-autocomplete"
+            data-organization-autocomplete-url-value="/api/organizations/autocomplete"
+            style="position: relative;"
+          >
+            <%= f.hidden_field :organization_id, 
+                data: { 
+                  "organization-autocomplete-target": "hiddenField"
+                },
+                value: @agency.organization_id || params[:organization_id] %>
+            
+            <input 
+              type="text" 
+              placeholder="Rechercher une organisation..."
+              data-organization-autocomplete-target="input"
+              data-action="input->organization-autocomplete#search"
+              value="<%= @agency.organization&.name || (@organization&.name if params[:organization_id]) %>"
+              style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;"
+              <%= 'disabled' if params[:organization_id].present? %>
+            />
+            
+            <div 
+              data-organization-autocomplete-target="suggestions"
+              style="position: absolute; background: white; border: 1px solid var(--light-gray); border-radius: var(--space-sm); margin-top: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-height: 300px; overflow-y: auto; display: none; z-index: 1000; width: 100%;">
+            </div>
+          </div>
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+            Commencez à taper pour rechercher une organisation
+          </p>
+        </div>
+      <% else %>
+        <!-- Non-Admin (Portfolio Manager): Automatically use current user's organization -->
+        <%= f.hidden_field :organization_id, value: current_user.organization_id %>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Organisation <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <input 
+            type="text" 
+            value="<%= current_user.organization.name %>"
+            disabled
+            style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem; background-color: #f8f9fa; color: #6c757d;"
+          />
+          <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+            L'agence sera automatiquement associée à votre organisation
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Basic Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        📋 Informations de Base
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom de l'Agence <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.text_field :name, placeholder: "Ex: Agence Paris Nord", required: true, style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Code Agence
+          </label>
+          <%= f.text_field :code, placeholder: "Ex: PAR-N", style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: #999; margin-top: 4px; font-size: 0.75rem;">Code unique d'identification de l'agence</p>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Type d'Agence <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :agency_type,
+            Agency::AGENCY_TYPES,
+            { include_blank: 'Sélectionner...' },
+            { required: true, style: "width: 100%;" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        📍 Localisation
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Adresse
+          </label>
+          <%= f.text_area :address, rows: 2, placeholder: "Ex: 45 Rue de la République", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Ville
+          </label>
+          <%= f.text_field :city, placeholder: "Ex: Paris", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Code Postal
+          </label>
+          <%= f.text_field :postal_code, placeholder: "Ex: 75018", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Région
+          </label>
+          <%= f.text_field :region, placeholder: "Ex: Île-de-France", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        📞 Coordonnées
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone
+          </label>
+          <%= f.text_field :phone, placeholder: "Ex: +33 1 40 06 20 00", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email
+          </label>
+          <%= f.email_field :email, placeholder: "Ex: contact@agence.com", style: "width: 100%;" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Details Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        🔧 Détails du Service
+      </h4>
+      
+      <div style="display: grid; gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Zone de Service
+          </label>
+          <%= f.text_area :service_area, rows: 2, placeholder: "Ex: Paris et petite couronne (75, 92, 93, 94)", style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: #999; margin-top: 4px; font-size: 0.75rem;">Zone géographique couverte par l'agence</p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Certifications
+          </label>
+          <%= f.text_area :certifications, rows: 2, placeholder: "Ex: ISO 9001, Qualibat, RGE", style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: #999; margin-top: 4px; font-size: 0.75rem;">Certifications et labels de l'agence</p>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Spécialités
+          </label>
+          <%= f.text_area :specialties, rows: 3, placeholder: "Ex: CVC, Plomberie, Électricité, Maintenance préventive", style: "width: 100%;" %>
+          <p class="typo-body-small" style="color: #999; margin-top: 4px; font-size: 0.75rem;">Domaines d'expertise de l'agence</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Management Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        👤 Gestion
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom du Responsable
+          </label>
+          <%= f.text_field :manager_name, placeholder: "Ex: Jean Dupont", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Contact du Responsable
+          </label>
+          <%= f.text_field :manager_contact, placeholder: "Ex: jean.dupont@email.com ou +33 6 12 34 56 78", style: "width: 100%;" %>
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Horaires d'Ouverture
+          </label>
+          <%= f.text_area :operating_hours, rows: 2, placeholder: "Ex: Lun-Ven: 8h-18h, Sam: 9h-12h", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Statut <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= f.select :status,
+            [
+              ['Actif', 'active'],
+              ['Inactif', 'inactive']
+            ],
+            {},
+            { required: true, style: "width: 100%;" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Notes Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        📝 Notes Complémentaires
+      </h4>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+          Notes
+        </label>
+        <%= f.text_area :notes, rows: 4, placeholder: "Informations complémentaires, particularités, historique, etc.", style: "width: 100%;" %>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to @organization ? organization_path(@organization) : agencies_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <button type="submit" class="typo-btn-success" style="cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= @agency.new_record? ? "Créer l'Agence" : "Mettre à Jour" %>
+      </button>
+    </div>
+  <% end %>
+</div>
