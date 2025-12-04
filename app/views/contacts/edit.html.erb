@@ -1,8 +1,12 @@
+<% content_for :header, "Modifier le Contact" %>
+
 <div class="section">
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier le Contact</h2>
-    <p class="typo-body-small">Organisation: <%= @organization.name %></p>
+    <% if @contact.organization.present? %>
+      <p class="typo-body-small">Organisation: <%= @contact.organization.name %></p>
+    <% end %>
   </div>
 
-  <%= render 'form' %>
+  <%= render 'form', contact: @contact %>
 </div>

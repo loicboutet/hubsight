@@ -83,7 +83,8 @@ class ContactsController < ApplicationController
       :availability,
       :languages,
       :notes,
-      :status
+      :status,
+      organization_attributes: [:name, :legal_name, :siret, :status]
     )
   end
 end
