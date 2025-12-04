@@ -148,8 +148,8 @@
               </li>
             <% end %>
 
-            <!-- Économies Potentielles - Hidden for Technicians -->
-            <% unless current_user&.technician? %>
+            <!-- Économies Potentielles - Hidden for Technicians and Site Managers -->
+            <% if current_user&.portfolio_manager? %>
               <li>
                 <%= link_to savings_path, class: "user-sidebar-link #{controller_name == 'savings' ? 'active' : ''}", title: "Économies Potentielles" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -160,8 +160,8 @@
               </li>
             <% end %>
 
-            <!-- Contacts - Hidden for Technicians -->
-            <% unless current_user&.technician? %>
+            <!-- Contacts - Hidden for Technicians and Site Managers -->
+            <% if current_user&.portfolio_manager? %>
               <li>
                 <%= link_to contacts_path, class: "user-sidebar-link #{controller_name == 'contacts' ? 'active' : ''}", title: "Contacts" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,8 +172,8 @@
               </li>
             <% end %>
 
-            <!-- Organisations - Hidden for Technicians -->
-            <% unless current_user&.technician? %>
+            <!-- Organisations - Hidden for Technicians and Site Managers -->
+            <% if current_user&.portfolio_manager? %>
               <li>
                 <%= link_to organizations_path, class: "user-sidebar-link #{controller_name == 'organizations' ? 'active' : ''}", title: "Organisations" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -184,8 +184,8 @@
               </li>
             <% end %>
 
-            <!-- Agences - Hidden for Technicians -->
-            <% unless current_user&.technician? %>
+            <!-- Agences - Hidden for Technicians and Site Managers -->
+            <% if current_user&.portfolio_manager? %>
               <li>
                 <%= link_to agencies_path, class: "user-sidebar-link #{controller_name == 'agencies' ? 'active' : ''}", title: "Agences" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -208,8 +208,8 @@
               </li>
             <% end %>
 
-            <!-- Analytics - Hidden for Technicians -->
-            <% unless current_user&.technician? %>
+            <!-- Analytics - Hidden for Technicians and Site Managers -->
+            <% if current_user&.portfolio_manager? %>
               <li>
                 <%= link_to analytics_path, class: "user-sidebar-link #{controller_name == 'analytics' ? 'active' : ''}", title: "Analytics" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -234,8 +234,8 @@
                 <span>Paramètres</span>
               <% end %>
             </li>
-            <!-- Gestion des utilisateurs - Hidden for Technicians -->
-            <% unless current_user&.technician? %>
+            <!-- Gestion des utilisateurs - Hidden for Technicians and Site Managers -->
+            <% if current_user&.portfolio_manager? %>
               <li>
                 <%= link_to users_path, class: "user-sidebar-link #{controller_name == 'users' ? 'active' : ''}", title: "Gestion des utilisateurs" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -245,8 +245,8 @@
                 <% end %>
               </li>
             <% end %>
-            <!-- Recommander Hubsight - Hidden for Technicians -->
-            <% unless current_user&.technician? %>
+            <!-- Recommander Hubsight - Hidden for Technicians and Site Managers -->
+            <% if current_user&.portfolio_manager? %>
               <li>
                 <%= link_to referrals_path, class: "user-sidebar-link #{controller_name == 'referrals' ? 'active' : ''}", title: "Recommander Hubsight" do %>
                   <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor">

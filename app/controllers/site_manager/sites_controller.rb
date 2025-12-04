@@ -19,6 +19,12 @@ class SiteManager::SitesController < ApplicationController
   end
 
   def show
+    # Calculate real statistics from database (matching sites_controller)
+    @buildings_count = @site.buildings.count
+    @levels_count = @site.levels.count
+    @spaces_count = Space.joins(level: :building).where(buildings: { site_id: @site.id }).count
+    @equipment_count = Equipment.joins(space: { level: :building }).where(buildings: { site_id: @site.id }).count
+    
     @opening_hours = [
       { day: "Lundi", open: true, from: "08:00", to: "20:00" },
       { day: "Mardi", open: true, from: "08:00", to: "20:00" },
@@ -30,15 +36,17 @@ class SiteManager::SitesController < ApplicationController
       { day: "Jours fériés", open: false, from: "Fermé", to: "Fermé" }
     ]
     
-    @contacts = [
-      {
-        name: @site.site_manager || "N/A",
+    # Get actual contacts associated with this site
+    @contacts = []
+    if @site.site_manager.present? || @site.contact_email.present? || @site.contact_phone.present?
+      @contacts << {
+        name: @site.site_manager || "Non renseigné",
         role: "Responsable de Site",
-        phone: @site.contact_phone || "N/A",
-        email: @site.contact_email || "N/A",
+        phone: @site.contact_phone || "Non renseigné",
+        email: @site.contact_email || "Non renseigné",
         organization: @site.name
       }
-    ]
+    end
   end
 
   def equipment

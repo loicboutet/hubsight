@@ -240,7 +240,7 @@ class ContractPdfGenerator
     equipment.each do |eq|
       location = [eq.building&.name, eq.level&.name, eq.space&.name].compact.join(' > ')
       table_data << [
-        eq.equipment_type&.truncate(20) || '—',
+        eq.equipment_type&.equipment_type_name&.truncate(20) || '—',
         eq.name&.truncate(30) || '—',
         location.truncate(40)
       ]
