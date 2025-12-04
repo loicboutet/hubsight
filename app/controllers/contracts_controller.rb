@@ -2,7 +2,7 @@ require 'ostruct'
 
 class ContractsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_contract, only: [:show, :edit, :update, :destroy, :validate, :confirm_validation, :delete_pdf, :retry_ocr, :retry_extraction]
+  before_action :set_contract, only: [:show, :edit, :update, :destroy, :validate, :confirm_validation, :delete_pdf, :retry_ocr, :retry_extraction, :generate_pdf]
 
   def index
     # Get base query - admins see all, others see only their organization
@@ -145,6 +145,22 @@ class ContractsController < ApplicationController
 
   def pdf
     # Renders contracts/pdf.html.erb or generates PDF
+  end
+  
+  def generate_pdf
+    # Check authorization
+    unless current_user.admin? || @contract.organization_id == current_user.organization_id
+      redirect_to contracts_path, alert: "Accès non autorisé"
+      return
+    end
+    
+    # Generate PDF using shared service
+    pdf_binary = ContractPdfGenerator.new(@contract).generate
+    
+    send_data pdf_binary,
+      filename: "Contrat_#{@contract.contract_number}_#{Date.today.strftime('%Y%m%d')}.pdf",
+      type: 'application/pdf',
+      disposition: 'inline'
   end
 
   def validate
