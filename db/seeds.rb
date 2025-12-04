@@ -1121,6 +1121,191 @@ end
 puts "\n📊 Total agencies created: #{Agency.count}"
 
 # ============================================================================
+# AGENCIES FOR ORGANIZATION 1 - Portfolio Manager's organization agencies
+# ============================================================================
+
+puts "\n🏢 Creating 30 agencies for Organization 1 (Immobilière Centrale)..."
+
+org1_agencies_data = [
+  # Headquarters
+  { name: "Siège Social Immobilière Centrale", code: "IMC-HQ-001", agency_type: "headquarters", 
+    address: "45 Avenue Montaigne", postal_code: "75008", city: "Paris", 
+    region: "Île-de-France", phone: "+33 1 44 13 22 22", 
+    email: "siege@immobiliere-centrale.fr", status: "active",
+    manager_name: "Jean-Pierre Durand", manager_contact: "+33 6 12 34 56 78" },
+  
+  # Regional Offices - 5 agencies
+  { name: "Agence Régionale Île-de-France Nord", code: "IMC-IDF-N", agency_type: "regional_office",
+    address: "15 Boulevard Poissonnière", postal_code: "75002", city: "Paris",
+    region: "Île-de-France", phone: "+33 1 42 36 70 00", email: "idf-nord@immobiliere-centrale.fr",
+    status: "active", manager_name: "Marie Dubois", manager_contact: "+33 6 23 45 67 89" },
+    
+  { name: "Agence Régionale Île-de-France Sud", code: "IMC-IDF-S", agency_type: "regional_office",
+    address: "22 Rue de Tolbiac", postal_code: "75013", city: "Paris",
+    region: "Île-de-France", phone: "+33 1 45 83 12 34", email: "idf-sud@immobiliere-centrale.fr",
+    status: "active", manager_name: "Sophie Martin", manager_contact: "+33 6 34 56 78 90" },
+  
+  { name: "Agence Régionale Auvergne-Rhône-Alpes", code: "IMC-ARA", agency_type: "regional_office",
+    address: "78 Cours Gambetta", postal_code: "69003", city: "Lyon",
+    region: "Auvergne-Rhône-Alpes", phone: "+33 4 72 34 56 78", email: "lyon@immobiliere-centrale.fr",
+    status: "active", manager_name: "Luc Moreau", manager_contact: "+33 6 45 67 89 01" },
+  
+  { name: "Agence Régionale Provence-Alpes-Côte d'Azur", code: "IMC-PACA", agency_type: "regional_office",
+    address: "12 La Canebière", postal_code: "13001", city: "Marseille",
+    region: "Provence-Alpes-Côte d'Azur", phone: "+33 4 91 54 32 10", email: "marseille@immobiliere-centrale.fr",
+    status: "active", manager_name: "Claire Bernard", manager_contact: "+33 6 56 78 90 12" },
+  
+  { name: "Agence Régionale Nouvelle-Aquitaine", code: "IMC-NAQ", agency_type: "regional_office",
+    address: "34 Cours de l'Intendance", postal_code: "33000", city: "Bordeaux",
+    region: "Nouvelle-Aquitaine", phone: "+33 5 56 48 12 34", email: "bordeaux@immobiliere-centrale.fr",
+    status: "active", manager_name: "Marc Fontaine", manager_contact: "+33 6 67 89 01 23" },
+  
+  # Local Branches - 20 agencies
+  { name: "Agence Locale La Défense", code: "IMC-DEF", agency_type: "branch",
+    address: "25 Esplanade du Général de Gaulle", postal_code: "92400", city: "La Défense",
+    region: "Île-de-France", phone: "+33 1 47 73 12 34", email: "ladefense@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Versailles", code: "IMC-VER", agency_type: "branch",
+    address: "18 Rue de la Paroisse", postal_code: "78000", city: "Versailles",
+    region: "Île-de-France", phone: "+33 1 39 50 12 34", email: "versailles@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Saint-Germain-en-Laye", code: "IMC-SGE", agency_type: "branch",
+    address: "5 Rue au Pain", postal_code: "78100", city: "Saint-Germain-en-Laye",
+    region: "Île-de-France", phone: "+33 1 34 51 12 34", email: "st-germain@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Neuilly-sur-Seine", code: "IMC-NEU", agency_type: "branch",
+    address: "42 Avenue Charles de Gaulle", postal_code: "92200", city: "Neuilly-sur-Seine",
+    region: "Île-de-France", phone: "+33 1 46 24 12 34", email: "neuilly@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Montreuil", code: "IMC-MTR", agency_type: "branch",
+    address: "8 Rue de Paris", postal_code: "93100", city: "Montreuil",
+    region: "Île-de-France", phone: "+33 1 48 58 12 34", email: "montreuil@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Lille", code: "IMC-LIL", agency_type: "branch",
+    address: "56 Rue Nationale", postal_code: "59000", city: "Lille",
+    region: "Hauts-de-France", phone: "+33 3 20 55 12 34", email: "lille@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Toulouse", code: "IMC-TLS", agency_type: "branch",
+    address: "28 Rue d'Alsace-Lorraine", postal_code: "31000", city: "Toulouse",
+    region: "Occitanie", phone: "+33 5 61 23 12 34", email: "toulouse@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Nice", code: "IMC-NCE", agency_type: "branch",
+    address: "15 Avenue Jean Médecin", postal_code: "06000", city: "Nice",
+    region: "Provence-Alpes-Côte d'Azur", phone: "+33 4 93 87 12 34", email: "nice@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Nantes", code: "IMC-NTE", agency_type: "branch",
+    address: "7 Place Graslin", postal_code: "44000", city: "Nantes",
+    region: "Pays de la Loire", phone: "+33 2 40 47 12 34", email: "nantes@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Strasbourg", code: "IMC-STR", agency_type: "branch",
+    address: "22 Place Kléber", postal_code: "67000", city: "Strasbourg",
+    region: "Grand Est", phone: "+33 3 88 32 12 34", email: "strasbourg@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Montpellier", code: "IMC-MTP", agency_type: "branch",
+    address: "12 Rue de la Loge", postal_code: "34000", city: "Montpellier",
+    region: "Occitanie", phone: "+33 4 67 60 12 34", email: "montpellier@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Rennes", code: "IMC-RNS", agency_type: "branch",
+    address: "18 Rue Le Bastard", postal_code: "35000", city: "Rennes",
+    region: "Bretagne", phone: "+33 2 99 79 12 34", email: "rennes@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Grenoble", code: "IMC-GRE", agency_type: "branch",
+    address: "5 Place Victor Hugo", postal_code: "38000", city: "Grenoble",
+    region: "Auvergne-Rhône-Alpes", phone: "+33 4 76 46 12 34", email: "grenoble@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Dijon", code: "IMC-DIJ", agency_type: "branch",
+    address: "9 Rue de la Liberté", postal_code: "21000", city: "Dijon",
+    region: "Bourgogne-Franche-Comté", phone: "+33 3 80 30 12 34", email: "dijon@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Reims", code: "IMC-RMS", agency_type: "branch",
+    address: "14 Place Drouet d'Erlon", postal_code: "51100", city: "Reims",
+    region: "Grand Est", phone: "+33 3 26 47 12 34", email: "reims@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Le Havre", code: "IMC-LEH", agency_type: "branch",
+    address: "6 Place de l'Hôtel de Ville", postal_code: "76600", city: "Le Havre",
+    region: "Normandie", phone: "+33 2 35 19 12 34", email: "lehavre@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Toulon", code: "IMC-TLN", agency_type: "branch",
+    address: "8 Avenue Colbert", postal_code: "83000", city: "Toulon",
+    region: "Provence-Alpes-Côte d'Azur", phone: "+33 4 94 03 12 34", email: "toulon@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Angers", code: "IMC-ANG", agency_type: "branch",
+    address: "11 Rue Lenepveu", postal_code: "49100", city: "Angers",
+    region: "Pays de la Loire", phone: "+33 2 41 87 12 34", email: "angers@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Brest", code: "IMC-BRS", agency_type: "branch",
+    address: "3 Rue de Siam", postal_code: "29200", city: "Brest",
+    region: "Bretagne", phone: "+33 2 98 44 12 34", email: "brest@immobiliere-centrale.fr",
+    status: "active" },
+  
+  { name: "Agence Locale Aix-en-Provence", code: "IMC-AIX", agency_type: "branch",
+    address: "17 Cours Mirabeau", postal_code: "13100", city: "Aix-en-Provence",
+    region: "Provence-Alpes-Côte d'Azur", phone: "+33 4 42 26 12 34", email: "aix@immobiliere-centrale.fr",
+    status: "active" },
+  
+  # Service Centers - 4 agencies
+  { name: "Centre de Services Paris Est", code: "IMC-SVC-PE", agency_type: "service_center",
+    address: "45 Avenue du Général Leclerc", postal_code: "93500", city: "Pantin",
+    region: "Île-de-France", phone: "+33 1 48 10 12 34", email: "services-est@immobiliere-centrale.fr",
+    status: "active", specialties: "Gestion technique, Maintenance" },
+  
+  { name: "Centre de Services Lyon Métropole", code: "IMC-SVC-LY", agency_type: "service_center",
+    address: "88 Rue de la Villette", postal_code: "69003", city: "Lyon",
+    region: "Auvergne-Rhône-Alpes", phone: "+33 4 78 95 12 34", email: "services-lyon@immobiliere-centrale.fr",
+    status: "active", specialties: "Support technique, Travaux" },
+  
+  { name: "Centre de Services Marseille Provence", code: "IMC-SVC-MR", agency_type: "service_center",
+    address: "56 Boulevard de la Libération", postal_code: "13004", city: "Marseille",
+    region: "Provence-Alpes-Côte d'Azur", phone: "+33 4 91 49 12 34", email: "services-marseille@immobiliere-centrale.fr",
+    status: "active", specialties: "Gestion locative, Administration" },
+  
+  { name: "Centre de Services Bordeaux Aquitaine", code: "IMC-SVC-BX", agency_type: "service_center",
+    address: "23 Quai des Chartrons", postal_code: "33300", city: "Bordeaux",
+    region: "Nouvelle-Aquitaine", phone: "+33 5 56 52 12 34", email: "services-bordeaux@immobiliere-centrale.fr",
+    status: "active", specialties: "Gestion de patrimoine, Contentieux" }
+]
+
+org1_agencies_data.each do |agency_data|
+  agency = Agency.find_or_initialize_by(
+    organization_id: org1.id,
+    code: agency_data[:code]
+  )
+  agency.assign_attributes(agency_data)
+  
+  if agency.new_record?
+    agency.save!
+    puts "  ✓ Created agency: #{agency.name} (#{agency.city})"
+  else
+    agency.save!
+    puts "  ✓ Updated agency: #{agency.name} (#{agency.city})"
+  end
+end
+
+puts "\n📊 Total agencies for Organization 1: #{Agency.where(organization_id: org1.id).count}"
+puts "   - Headquarters: #{Agency.where(organization_id: org1.id, agency_type: 'headquarters').count}"
+puts "   - Regional Offices: #{Agency.where(organization_id: org1.id, agency_type: 'regional_office').count}"
+puts "   - Local Branches: #{Agency.where(organization_id: org1.id, agency_type: 'branch').count}"
+puts "   - Service Centers: #{Agency.where(organization_id: org1.id, agency_type: 'service_center').count}"
+
+# ============================================================================
 # CONTRACTS - Sample contracts for testing key indicators (Item 45)
 # ============================================================================
 

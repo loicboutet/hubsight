@@ -5,17 +5,52 @@ class EquipmentController < ApplicationController
   before_action :load_organizations_for_admin, only: [:new, :edit], if: -> { current_user&.admin? }
   
   def index
-    @equipment = if current_user.admin? && params[:organization_id].present?
-                   Organization.find(params[:organization_id]).equipment
-                 elsif current_organization
-                   current_organization.equipment
-                 else
-                   Equipment.none
-                 end
+    # Get base query - admins see all, others see only their organization
+    if current_user.admin?
+      @equipment = Equipment.all
+    else
+      @equipment = current_organization.equipment
+    end
     
+    # Apply filters
+    @equipment = apply_filters(@equipment)
+    
+    # Apply sorting
+    @equipment = apply_sorting(@equipment)
+    
+    # Get count before pagination
+    @all_equipment_count = @equipment.count
+    
+    # Apply pagination
+    @per_page = (params[:per_page] || 15).to_i
     @equipment = @equipment.includes(space: { level: { building: :site } })
-                           .order(created_at: :desc)
-                           .page(params[:page]).per(10)
+                           .page(params[:page]).per(@per_page)
+    
+    # Store filter values for the view
+    @filter_params = {
+      search: params[:search],
+      organization: params[:organization],
+      site: params[:site],
+      building: params[:building],
+      equipment_type: params[:equipment_type],
+      status: params[:status],
+      criticality: params[:criticality]
+    }
+    
+    # Get unique values for filter dropdowns
+    if current_user.admin?
+      @organizations = Organization.order(:name)
+      @sites = Site.order(:name)
+      @buildings = Building.order(:name)
+    else
+      @sites = Site.by_organization(current_user.organization_id).order(:name)
+      @buildings = Building.by_organization(current_user.organization_id).order(:name)
+    end
+    @equipment_types = EquipmentType.order(:equipment_type_name)
+    
+    # Store sorting params
+    @sort_column = params[:sort] || 'name'
+    @sort_direction = params[:direction] || 'asc'
   end
 
   def show
@@ -126,6 +161,75 @@ class EquipmentController < ApplicationController
   end
 
   private
+  
+  def apply_filters(equipment)
+    # Search filter (name, serial number, manufacturer, model)
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      equipment = equipment.where(
+        "name LIKE ? OR serial_number LIKE ? OR manufacturer LIKE ? OR model LIKE ?",
+        search_term, search_term, search_term, search_term
+      )
+    end
+    
+    # Organization filter (admin only)
+    if params[:organization].present? && current_user.admin?
+      equipment = equipment.where(organization_id: params[:organization])
+    end
+    
+    # Site filter
+    if params[:site].present?
+      equipment = equipment.where(site_id: params[:site])
+    end
+    
+    # Building filter
+    if params[:building].present?
+      equipment = equipment.where(building_id: params[:building])
+    end
+    
+    # Equipment type filter
+    if params[:equipment_type].present?
+      equipment = equipment.where(equipment_type_id: params[:equipment_type])
+    end
+    
+    # Status filter
+    if params[:status].present?
+      equipment = equipment.where(status: params[:status])
+    end
+    
+    # Criticality filter
+    if params[:criticality].present?
+      equipment = equipment.where(criticality: params[:criticality])
+    end
+    
+    equipment
+  end
+  
+  def apply_sorting(equipment)
+    sort_column = params[:sort] || 'name'
+    sort_direction = params[:direction] || 'asc'
+    
+    # Validate sort column to prevent SQL injection
+    allowed_columns = %w[
+      name equipment_type manufacturer model serial_number
+      status criticality manufacturing_date commissioning_date
+      warranty_end_date created_at updated_at
+    ]
+    
+    if allowed_columns.include?(sort_column)
+      # Handle NULL values for date columns
+      if ['manufacturing_date', 'commissioning_date', 'warranty_end_date'].include?(sort_column)
+        equipment = equipment.order(Arel.sql("#{sort_column} IS NULL, #{sort_column} #{sort_direction}"))
+      else
+        equipment = equipment.order("#{sort_column} #{sort_direction}")
+      end
+    else
+      # Default sort
+      equipment = equipment.order(name: :asc)
+    end
+    
+    equipment
+  end
 
   def require_organization_or_admin
     # Allow admins to proceed (they can select organization in form)

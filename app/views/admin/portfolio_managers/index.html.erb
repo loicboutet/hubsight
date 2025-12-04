@@ -1,135 +1,189 @@
-<div style="">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
+<% content_for :header, "Gestionnaires de Portefeuille" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
     <div>
-      <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Gestionnaires de Portefeuille</h1>
-      <p style="color: var(--gray); margin: 0;">Gérer les comptes des gestionnaires de portefeuille</p>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Gestionnaires de Portefeuille</h2>
+      <p class="typo-body-small">Gérer les comptes des gestionnaires de portefeuille</p>
     </div>
-    <a href="<%= new_admin_portfolio_manager_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+    <%= link_to new_admin_portfolio_manager_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
       Nouveau Gestionnaire
-    </a>
+    <% end %>
   </div>
 
-  <% if @portfolio_managers.any? %>
-  <div style="background: var(--white); border-radius: var(--space-md); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead style="background-color: var(--pink-pale);">
-        <tr>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Nom</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Email</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Organisation</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Statut</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Invitation</th>
-          <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--dark-gray);">Date de création</th>
-          <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--dark-gray);">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @portfolio_managers.each do |pm| %>
-        <tr style="border-bottom: 1px solid var(--light-gray);">
-          <td style="padding: var(--space-md);">
-            <div style="font-weight: 500;"><%= pm.full_name %></div>
-          </td>
-          <td style="padding: var(--space-md);">
-            <div style="color: var(--gray);"><%= pm.email %></div>
-          </td>
-          <td style="padding: var(--space-md);">
-            <% if pm.organization %>
-              <div style="font-weight: 500;"><%= pm.organization.name %></div>
-              <% if pm.department.present? %>
-                <div style="font-size: 0.875rem; color: var(--gray);"><%= pm.department %></div>
-              <% end %>
-            <% else %>
-              <span style="color: var(--gray); font-style: italic;">Non assigné</span>
-            <% end %>
-          </td>
-          <td style="padding: var(--space-md);">
-            <% if pm.status == 'active' %>
-              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Actif
-              </span>
-            <% else %>
-              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #ffebee; color: #c62828; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Inactif
-              </span>
-            <% end %>
-          </td>
-          <td style="padding: var(--space-md);">
-            <% if pm.invitation_pending? %>
-              <% if pm.invitation_expired? %>
-                <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #fff3e0; color: #e65100; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    
+    <!-- Filters Section -->
+    <%= form_with url: admin_portfolio_managers_path, method: :get, local: true do |f| %>
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+            <%= f.text_field :search, value: params[:search], placeholder: "Nom, email...", style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
+            <%= f.select :status, 
+                options_for_select([['Tous', 'all'], ['Actif', 'active'], ['Inactif', 'inactive']], params[:status] || 'all'),
+                {},
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Invitation</label>
+            <%= f.select :invitation_status, 
+                options_for_select([['Tous', 'all'], ['En attente', 'pending'], ['Acceptée', 'accepted'], ['Expirée', 'expired']], params[:invitation_status] || 'all'),
+                {},
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <%= link_to admin_portfolio_managers_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer
+          <% end %>
+          <%= f.submit "Filtrer", class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Portfolio Managers Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">GESTIONNAIRE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">EMAIL</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ORGANISATION</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">INVITATION</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DATE CRÉATION</th>
+            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @portfolio_managers.empty? %>
+            <tr>
+              <td colspan="7" style="padding: var(--space-xl); text-align: center; color: var(--medium-gray);">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-md);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
-                  Expirée
-                </span>
-              <% else %>
-                <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #fff9c4; color: #f57f17; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  En attente
-                </span>
-              <% end %>
-            <% elsif pm.invitation_accepted_at.present? %>
-              <span style="display: inline-flex; align-items: center; padding: 4px 12px; background-color: #e8f5e9; color: #2e7d32; border-radius: 12px; font-size: 0.875rem; font-weight: 500;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 4px;">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Acceptée
-              </span>
-            <% else %>
-              <span style="color: var(--gray); font-size: 0.875rem;">-</span>
+                  <p class="typo-body">Aucun gestionnaire de portefeuille trouvé</p>
+                  <p class="typo-body-small">Commencez par créer un nouveau gestionnaire de portefeuille</p>
+                </div>
+              </td>
+            </tr>
+          <% else %>
+            <% @portfolio_managers.each_with_index do |pm, index| %>
+              <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
+                <!-- Name -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem;">
+                      <%= pm.full_name.split.map(&:first).join.upcase %>
+                    </div>
+                    <div>
+                      <p class="typo-body-small typo-bold"><%= pm.full_name %></p>
+                      <% if pm.department.present? %>
+                        <p class="typo-body-small" style="color: var(--gray); font-size: 0.75rem;"><%= pm.department %></p>
+                      <% end %>
+                    </div>
+                  </div>
+                </td>
+                
+                <!-- Email -->
+                <td style="padding: var(--space-md);">
+                  <p class="typo-body-small"><%= pm.email %></p>
+                </td>
+                
+                <!-- Organization -->
+                <td style="padding: var(--space-md);">
+                  <% if pm.organization %>
+                    <p class="typo-body-small typo-bold"><%= pm.organization.name %></p>
+                  <% else %>
+                    <span style="color: var(--gray); font-style: italic; font-size: 0.875rem;">Non assigné</span>
+                  <% end %>
+                </td>
+                
+                <!-- Status -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <% if pm.status == 'active' %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #d4edda; color: #155724;">
+                      Actif
+                    </span>
+                  <% else %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #f8d7da; color: #721c24;">
+                      Inactif
+                    </span>
+                  <% end %>
+                </td>
+                
+                <!-- Invitation Status -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <% if pm.invitation_pending? %>
+                    <% if pm.invitation_expired? %>
+                      <span style="display: inline-block; padding: 4px 12px; background-color: #fff3cd; color: #856404; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                        Expirée
+                      </span>
+                    <% else %>
+                      <span style="display: inline-block; padding: 4px 12px; background-color: #fff9c4; color: #f57f17; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                        En attente
+                      </span>
+                    <% end %>
+                  <% elsif pm.invitation_accepted_at.present? %>
+                    <span style="display: inline-block; padding: 4px 12px; background-color: #d4edda; color: #155724; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                      Acceptée
+                    </span>
+                  <% else %>
+                    <span style="color: var(--gray); font-size: 0.813rem;">-</span>
+                  <% end %>
+                </td>
+                
+                <!-- Created At -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <p class="typo-body-small" style="color: #666;">
+                    <%= pm.created_at.strftime('%d/%m/%Y') %>
+                  </p>
+                </td>
+                
+                <!-- Actions -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                    <%= link_to admin_portfolio_manager_path(pm), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Voir
+                    <% end %>
+                    <%= link_to edit_admin_portfolio_manager_path(pm), title: "Modifier", class: "typo-btn-small typo-btn-small-primary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Modifier
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
             <% end %>
-          </td>
-          <td style="padding: var(--space-md);">
-            <div style="font-size: 0.875rem; color: var(--gray);">
-              <%= pm.created_at.strftime('%d/%m/%Y') %>
-            </div>
-          </td>
-          <td style="padding: var(--space-md); text-align: center;">
-            <div style="display: inline-flex; gap: var(--space-sm);">
-              <%= link_to admin_portfolio_manager_path(pm), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Voir
-              <% end %>
-              <%= link_to edit_admin_portfolio_manager_path(pm), title: "Modifier", class: "typo-btn-small typo-btn-small-primary" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Modifier
-              <% end %>
-            </div>
-          </td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <% if @portfolio_managers.any? %>
+      <div style="margin-top: var(--space-xl);">
+        <%= render 'shared/pagination', 
+          current_page: @portfolio_managers.current_page, 
+          total_pages: @portfolio_managers.total_pages, 
+          total_count: @portfolio_managers.total_count, 
+          per_page: @portfolio_managers.limit_value,
+          path: admin_portfolio_managers_path %>
+      </div>
+    <% end %>
   </div>
-  <% else %>
-  <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-2xl); text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); color: var(--gray);">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-    </svg>
-    <h3 class="typo-h4" style="margin-bottom: var(--space-sm); color: var(--dark-gray);">Aucun Gestionnaire de Portefeuille</h3>
-    <p style="color: var(--gray); margin-bottom: var(--space-lg);">Commencez par créer votre premier gestionnaire de portefeuille</p>
-    <a href="<%= new_admin_portfolio_manager_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-      </svg>
-      Créer un Gestionnaire
-    </a>
-  </div>
-  <% end %>
 </div>

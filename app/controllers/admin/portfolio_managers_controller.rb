@@ -9,7 +9,38 @@ module Admin
     def index
       @portfolio_managers = User.by_role(User::ROLES[:portfolio_manager])
                                 .includes(:organization)
-                                .order(created_at: :desc)
+      
+      # Search filter
+      if params[:search].present?
+        search_term = "%#{params[:search]}%"
+        @portfolio_managers = @portfolio_managers.where(
+          "LOWER(first_name) LIKE LOWER(?) OR LOWER(last_name) LIKE LOWER(?) OR LOWER(email) LIKE LOWER(?)",
+          search_term, search_term, search_term
+        )
+      end
+      
+      # Status filter
+      if params[:status].present? && params[:status] != 'all'
+        @portfolio_managers = @portfolio_managers.where(status: params[:status])
+      end
+      
+      # Invitation status filter
+      if params[:invitation_status].present? && params[:invitation_status] != 'all'
+        case params[:invitation_status]
+        when 'pending'
+          @portfolio_managers = @portfolio_managers.where.not(invitation_token: nil).where(invitation_accepted_at: nil)
+        when 'accepted'
+          @portfolio_managers = @portfolio_managers.where.not(invitation_accepted_at: nil)
+        when 'expired'
+          @portfolio_managers = @portfolio_managers.where("invitation_sent_at < ?", 7.days.ago)
+                                                   .where(invitation_accepted_at: nil)
+                                                   .where.not(invitation_token: nil)
+        end
+      end
+      
+      @portfolio_managers = @portfolio_managers.order(created_at: :desc)
+                                               .page(params[:page])
+                                               .per(25)
     end
     
     # GET /admin/portfolio_managers/:id

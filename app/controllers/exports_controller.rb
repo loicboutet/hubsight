@@ -62,14 +62,25 @@ class ExportsController < ApplicationController
   end
 
   def equipment
-    organization = current_user.organization
+    # Handle admin vs portfolio manager
+    if current_user.admin?
+      organization = nil
+      organization_name = "tous_equipements"
+    else
+      organization = current_user.organization
+      unless organization
+        redirect_to equipment_index_path, alert: "Aucune organisation associée à votre compte."
+        return
+      end
+      organization_name = organization.name.parameterize
+    end
 
     # Generate Excel file using service class
     exporter = EquipmentListExporter.new(organization)
     excel_data = exporter.generate
 
     # Send file to user
-    filename = "equipements_#{organization.name.parameterize}_#{Date.today.strftime('%Y%m%d')}.xlsx"
+    filename = "equipements_#{organization_name}_#{Date.today.strftime('%Y%m%d')}.xlsx"
     
     send_data excel_data,
               filename: filename,

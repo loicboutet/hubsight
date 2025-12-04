@@ -1,6 +1,7 @@
 class Contact < ApplicationRecord
   # Associations
-  belongs_to :organization
+  belongs_to :organization, optional: true
+  accepts_nested_attributes_for :organization
 
   # Validations
   validates :first_name, presence: true
@@ -14,7 +15,7 @@ class Contact < ApplicationRecord
   scope :inactive, -> { where(status: 'inactive') }
   scope :by_organization, ->(org_id) { where(organization_id: org_id) if org_id.present? }
   scope :search, ->(query) {
-    where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ? OR position ILIKE ?",
+    where("first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR position LIKE ?",
           "%#{query}%", "%#{query}%", "%#{query}%", "%#{query}%") if query.present?
   }
   scope :ordered, -> { order(:last_name, :first_name) }

@@ -23,7 +23,6 @@ class Organization < ApplicationRecord
 
   # Validations
   validates :name, presence: true, uniqueness: true
-  validates :organization_type, presence: true
   validates :status, presence: true, inclusion: { in: %w[active inactive] }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, allow_blank: true }
   validates :siret, format: { with: /\A\d{14}\z/, message: "doit contenir exactement 14 chiffres" }, allow_blank: true
@@ -33,8 +32,10 @@ class Organization < ApplicationRecord
   scope :inactive, -> { where(status: 'inactive') }
   scope :by_type, ->(type) { where(organization_type: type) if type.present? }
   scope :search, ->(query) {
-    where("name ILIKE ? OR legal_name ILIKE ? OR siret ILIKE ?", 
-          "%#{query}%", "%#{query}%", "%#{query}%") if query.present?
+    if query.present?
+      where("name LIKE ? OR legal_name LIKE ? OR siret LIKE ?", 
+            "%#{query}%", "%#{query}%", "%#{query}%")
+    end
   }
   scope :ordered, -> { order(:name) }
 

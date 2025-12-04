@@ -1,4 +1,17 @@
-<%= form_tag (@organization ? organization_contacts_path(@organization) : contacts_path), method: :post do %>
+<%= form_with(model: contact, local: true) do |form| %>
+  <% if contact.errors.any? %>
+    <div style="background-color: var(--danger-bg); border: 1px solid var(--danger); border-radius: var(--space-sm); padding: var(--space-md); margin-bottom: var(--space-lg);">
+      <h4 class="typo-h5" style="color: var(--danger); margin-bottom: var(--space-sm);">
+        <%= pluralize(contact.errors.count, "erreur") %> empêche(nt) la sauvegarde :
+      </h4>
+      <ul style="margin: 0; padding-left: var(--space-lg);">
+        <% contact.errors.full_messages.each do |message| %>
+          <li style="color: var(--danger);"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div style="background-color: var(--white); border-radius: var(--space-md);">
     
     <!-- Personal Information Section -->
@@ -9,35 +22,82 @@
       
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Nom
-          </label>
-          <%= text_field_tag 'contact[last_name]', '', placeholder: "Ex: Nom", style: "width: 100%;" %>
+          <%= form.label :first_name, "Prénom", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.text_field :first_name, placeholder: "Ex: Jean", style: "width: 100%;", required: true %>
         </div>
 
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Prénom
-          </label>
-          <%= text_field_tag 'contact[first_name]', '', placeholder: "Ex: Prénom", style: "width: 100%;" %>
+          <%= form.label :last_name, "Nom", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.text_field :last_name, placeholder: "Ex: Dupont", style: "width: 100%;", required: true %>
+        </div>
+
+        <% if current_user.admin? %>
+          <!-- Admin: Organization Selection with Autocomplete -->
+          <div style="grid-column: 1 / -1;">
+            <%= form.label :organization_id, "Organisation", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <div 
+              data-controller="organization-autocomplete"
+              data-organization-autocomplete-url-value="/api/organizations/autocomplete"
+              style="position: relative;"
+            >
+              <%= form.hidden_field :organization_id, 
+                  data: { 
+                    "organization-autocomplete-target": "hiddenField"
+                  },
+                  value: contact.organization_id || params[:organization_id] %>
+              
+              <input 
+                type="text" 
+                placeholder="Rechercher une organisation..."
+                data-organization-autocomplete-target="input"
+                data-action="input->organization-autocomplete#search"
+                value="<%= contact.organization&.name || (@organization&.name if params[:organization_id]) %>"
+                style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem;"
+                <%= 'disabled' if params[:organization_id].present? %>
+              />
+              
+              <div 
+                data-organization-autocomplete-target="suggestions"
+                style="position: absolute; background: white; border: 1px solid var(--light-gray); border-radius: var(--space-sm); margin-top: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-height: 300px; overflow-y: auto; display: none; z-index: 1000; width: 100%;">
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <!-- Non-Admin: Automatically use current user's organization -->
+          <%= form.hidden_field :organization_id, value: current_user.organization_id %>
+          <div style="grid-column: 1 / -1;">
+            <%= form.label :organization_id, "Organisation", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <input 
+              type="text" 
+              value="<%= current_user.organization.name %>"
+              disabled
+              style="width: 100%; padding: 12px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1rem; background-color: #f8f9fa; color: #6c757d;"
+            />
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+              Les contacts seront automatiquement associés à votre organisation
+            </p>
+          </div>
+        <% end %>
+
+        <div>
+          <%= form.label :position, "Fonction", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.text_field :position, placeholder: "Ex: Directeur des Opérations", style: "width: 100%;" %>
         </div>
 
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Organisation affiliée
-          </label>
-          <% if @organization.present? %>
-            <%= text_field_tag 'contact[affiliated_organization]', @organization.name, placeholder: "Rempli automatiquement", disabled: true, style: "width: 100%; background-color: #f8f9fa;" %>
-          <% else %>
-            <%= text_field_tag 'contact[organization_id]', '', placeholder: "Ex: Sélectionner une organisation", style: "width: 100%;" %>
-          <% end %>
+          <%= form.label :department, "Service", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.text_field :department, placeholder: "Ex: Service Technique", style: "width: 100%;" %>
         </div>
 
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Nom de l'agence associé
-          </label>
-          <%= text_field_tag 'contact[agency_name]', '', placeholder: "Ex: Agence Paris Nord", style: "width: 100%;" %>
+          <%= form.label :status, "Statut", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.select :status, 
+              options_for_select([
+                ['Actif', 'active'],
+                ['Inactif', 'inactive']
+              ], contact.status || 'active'),
+              {},
+              { style: "width: 100%;" } %>
         </div>
       </div>
     </div>
@@ -49,19 +109,24 @@
       </h4>
       
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Téléphone Mobile
-          </label>
-          <%= telephone_field_tag 'contact[mobile_phone]', '', placeholder: "Ex: Téléphone Mobile", style: "width: 100%;" %>
+          <%= form.label :phone, "Téléphone Fixe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.telephone_field :phone, placeholder: "Ex: 01 23 45 67 89", style: "width: 100%;" %>
         </div>
 
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Email Principal
-          </label>
-          <%= email_field_tag 'contact[email]', '', placeholder: "Ex: m.dupont@entreprise.fr", style: "width: 100%;" %>
+          <%= form.label :mobile, "Téléphone Mobile", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.telephone_field :mobile, placeholder: "Ex: 06 12 34 56 78", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <%= form.label :email, "Email", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.email_field :email, placeholder: "Ex: j.dupont@entreprise.fr", style: "width: 100%;" %>
+        </div>
+
+        <div>
+          <%= form.label :languages, "Langues", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.text_field :languages, placeholder: "Ex: Français, Anglais", style: "width: 100%;" %>
         </div>
       </div>
     </div>
@@ -74,20 +139,27 @@
       
       <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-lg);">
         <div>
-          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-            Disponibilité
-          </label>
-          <%= text_area_tag 'contact[availability]', '', rows: 3, placeholder: "Ex: Disponibilité du lundi au vendredi de 9h à 18h, joignable le soir en cas d'urgence...", style: "width: 100%;" %>
+          <%= form.label :availability, "Disponibilité", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.text_area :availability, rows: 3, 
+              placeholder: "Ex: Du lundi au vendredi de 9h à 18h, joignable le soir en cas d'urgence...", 
+              style: "width: 100%;" %>
           <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
             Précisez les horaires de disponibilité et conditions de contact
           </p>
+        </div>
+
+        <div>
+          <%= form.label :notes, "Notes", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+          <%= form.text_area :notes, rows: 3, 
+              placeholder: "Informations complémentaires...", 
+              style: "width: 100%;" %>
         </div>
       </div>
     </div>
 
     <!-- Action Buttons -->
     <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
-      <%= link_to @organization ? organization_contacts_path(@organization) : contacts_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+      <%= link_to contacts_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -97,7 +169,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
-        Créer le Contact
+        <%= contact.persisted? ? 'Mettre à jour' : 'Créer' %> le Contact
       </button>
     </div>
   </div>
