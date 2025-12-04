@@ -25,7 +25,7 @@ class Agency < ApplicationRecord
   scope :by_type, ->(type) { where(agency_type: type) if type.present? }
   scope :by_city, ->(city) { where(city: city) if city.present? }
   scope :search, ->(query) {
-    where("name ILIKE ? OR city ILIKE ? OR code ILIKE ?",
+    where("LOWER(name) LIKE LOWER(?) OR LOWER(city) LIKE LOWER(?) OR LOWER(code) LIKE LOWER(?)",
           "%#{query}%", "%#{query}%", "%#{query}%") if query.present?
   }
   scope :ordered, -> { order(:name) }
