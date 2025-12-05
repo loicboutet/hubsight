@@ -1,0 +1,210 @@
+<% content_for :header, @user.full_name %>
+
+<div class="section">
+  <!-- Header with Actions -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);"><%= @user.full_name %></h2>
+      <p class="typo-body-small" style="color: var(--medium-gray);">
+        <%= 
+          case @user.role
+          when 'admin'
+            'Administrateur'
+          when 'portfolio_manager'
+            'Gestionnaire de Portefeuille'
+          when 'site_manager'
+            'Gestionnaire de Site'
+          when 'technician'
+            'Technicien'
+          else
+            @user.role
+          end
+        %>
+      </p>
+    </div>
+    <div style="display: flex; gap: var(--space-md);">
+      <%= link_to admin_users_path, class: "typo-btn-cancel" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Retour
+      <% end %>
+      <%= link_to edit_admin_user_path(@user), class: "typo-btn-success" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        Modifier
+      <% end %>
+    </div>
+  </div>
+
+  <!-- User Information -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      Informations de l'utilisateur
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Prénom</label>
+        <p class="typo-body"><%= @user.first_name %></p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Nom</label>
+        <p class="typo-body"><%= @user.last_name %></p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Email</label>
+        <p class="typo-body"><%= @user.email %></p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Téléphone</label>
+        <p class="typo-body"><%= @user.phone.present? ? @user.phone : "Non renseigné" %></p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Département</label>
+        <p class="typo-body"><%= @user.department.present? ? @user.department : "Non renseigné" %></p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Rôle</label>
+        <p class="typo-body">
+          <%= 
+            case @user.role
+            when 'admin'
+              'Administrateur'
+            when 'portfolio_manager'
+              'Gestionnaire de Portefeuille'
+            when 'site_manager'
+              'Gestionnaire de Site'
+            when 'technician'
+              'Technicien'
+            else
+              @user.role
+            end
+          %>
+        </p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Organisation</label>
+        <p class="typo-body">
+          <% if @user.organization %>
+            <%= link_to @user.organization.name, admin_organization_path(@user.organization), class: "typo-link-primary" %>
+          <% else %>
+            Non assigné
+          <% end %>
+        </p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Statut</label>
+        <p class="typo-body">
+          <% if @user.status == 'active' %>
+            <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #d4edda; color: #155724;">
+              Actif
+            </span>
+          <% else %>
+            <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #f8d7da; color: #721c24;">
+              Inactif
+            </span>
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invitation Status -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      Statut d'invitation
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Statut</label>
+        <p class="typo-body">
+          <% if @user.invitation_pending? %>
+            <% if @user.invitation_expired? %>
+              <span style="display: inline-block; padding: 4px 12px; background-color: #fff3cd; color: #856404; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                Expirée
+              </span>
+            <% else %>
+              <span style="display: inline-block; padding: 4px 12px; background-color: #fff9c4; color: #f57f17; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                En attente
+              </span>
+            <% end %>
+          <% elsif @user.invitation_accepted_at.present? %>
+            <span style="display: inline-block; padding: 4px 12px; background-color: #d4edda; color: #155724; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+              Acceptée
+            </span>
+          <% else %>
+            Aucune invitation envoyée
+          <% end %>
+        </p>
+      </div>
+      
+      <% if @user.invitation_sent_at.present? %>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Date d'envoi</label>
+          <p class="typo-body"><%= @user.invitation_sent_at.strftime('%d/%m/%Y à %H:%M') %></p>
+        </div>
+      <% end %>
+      
+      <% if @user.invitation_accepted_at.present? %>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Date d'acceptation</label>
+          <p class="typo-body"><%= @user.invitation_accepted_at.strftime('%d/%m/%Y à %H:%M') %></p>
+        </div>
+      <% end %>
+    </div>
+    
+    <% if @user.invitation_pending? %>
+      <div style="margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+        <%= button_to resend_invitation_admin_user_path(@user), method: :post, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Renvoyer l'invitation
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Account Details -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+    <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+      Détails du compte
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Date de création</label>
+        <p class="typo-body"><%= @user.created_at.strftime('%d/%m/%Y à %H:%M') %></p>
+      </div>
+      
+      <div>
+        <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Dernière modification</label>
+        <p class="typo-body"><%= @user.updated_at.strftime('%d/%m/%Y à %H:%M') %></p>
+      </div>
+      
+      <% if @user.invited_by.present? %>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Invité par</label>
+          <p class="typo-body"><%= @user.invited_by.full_name %></p>
+        </div>
+      <% end %>
+      
+      <% if @user.current_sign_in_at.present? %>
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-xs); color: var(--medium-gray);">Dernière connexion</label>
+          <p class="typo-body"><%= @user.current_sign_in_at.strftime('%d/%m/%Y à %H:%M') %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

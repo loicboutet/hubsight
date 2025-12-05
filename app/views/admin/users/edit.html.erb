@@ -1,0 +1,176 @@
+<% content_for :header, "Modifier #{@user.full_name}" %>
+
+<div class="section">
+  <!-- Header -->
+  <div style="margin-bottom: var(--space-xl);">
+    <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier l'utilisateur</h2>
+    <p class="typo-body-small">Mettre à jour les informations de l'utilisateur</p>
+  </div>
+
+  <!-- Form -->
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
+    <%= form_with model: @user, url: admin_user_path(@user), method: :patch, local: true do |f| %>
+      
+      <!-- User Information Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Informations personnelles
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
+          <!-- First Name -->
+          <div>
+            <%= f.label :first_name, "Prénom *", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.text_field :first_name, required: true, style: "width: 100%;" %>
+            <% if @user.errors[:first_name].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:first_name].first %>
+              </p>
+            <% end %>
+          </div>
+          
+          <!-- Last Name -->
+          <div>
+            <%= f.label :last_name, "Nom *", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.text_field :last_name, required: true, style: "width: 100%;" %>
+            <% if @user.errors[:last_name].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:last_name].first %>
+              </p>
+            <% end %>
+          </div>
+          
+          <!-- Email -->
+          <div>
+            <%= f.label :email, "Email *", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.email_field :email, required: true, style: "width: 100%;" %>
+            <% if @user.errors[:email].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:email].first %>
+              </p>
+            <% end %>
+          </div>
+          
+          <!-- Phone -->
+          <div>
+            <%= f.label :phone, "Téléphone", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.tel_field :phone, style: "width: 100%;" %>
+            <% if @user.errors[:phone].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:phone].first %>
+              </p>
+            <% end %>
+          </div>
+          
+          <!-- Department -->
+          <div style="grid-column: 1 / -1;">
+            <%= f.label :department, "Département", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.text_field :department, style: "width: 100%;" %>
+            <% if @user.errors[:department].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:department].first %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role & Organization Section -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Rôle et organisation
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
+          <!-- Role -->
+          <div>
+            <%= f.label :role, "Rôle *", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.select :role, 
+                options_for_select([
+                  ['Admin', User::ROLES[:admin]],
+                  ['Gestionnaire de Portefeuille', User::ROLES[:portfolio_manager]],
+                  ['Gestionnaire de Site', User::ROLES[:site_manager]],
+                  ['Technicien', User::ROLES[:technician]]
+                ], @user.role),
+                {},
+                { required: true, style: "width: 100%;" } %>
+            <% if @user.errors[:role].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:role].first %>
+              </p>
+            <% end %>
+          </div>
+          
+          <!-- Organization -->
+          <div>
+            <%= f.label :organization_id, "Organisation", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.select :organization_id, 
+                options_for_select([['Aucune', nil]] + @organizations.map { |org| [org.name, org.id] }, @user.organization_id),
+                {},
+                { style: "width: 100%;" } %>
+            <% if @user.errors[:organization_id].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:organization_id].first %>
+              </p>
+            <% end %>
+          </div>
+          
+          <!-- Status -->
+          <div>
+            <%= f.label :status, "Statut *", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.select :status, 
+                options_for_select([['Actif', 'active'], ['Inactif', 'inactive']], @user.status),
+                {},
+                { required: true, style: "width: 100%;" } %>
+            <% if @user.errors[:status].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:status].first %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Section (Optional) -->
+      <div style="margin-bottom: var(--space-2xl);">
+        <h3 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          Mot de passe
+        </h3>
+        
+        <p class="typo-body-small" style="margin-bottom: var(--space-lg); color: var(--medium-gray);">
+          Laissez vide pour ne pas modifier le mot de passe
+        </p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
+          <!-- Password -->
+          <div>
+            <%= f.label :password, "Nouveau mot de passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.password_field :password, autocomplete: "new-password", style: "width: 100%;" %>
+            <% if @user.errors[:password].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:password].first %>
+              </p>
+            <% end %>
+          </div>
+          
+          <!-- Password Confirmation -->
+          <div>
+            <%= f.label :password_confirmation, "Confirmer le mot de passe", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", style: "width: 100%;" %>
+            <% if @user.errors[:password_confirmation].any? %>
+              <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @user.errors[:password_confirmation].first %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div style="display: flex; justify-content: flex-end; gap: var(--space-md); padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+        <%= link_to "Annuler", admin_users_path, class: "typo-btn-cancel" %>
+        <%= f.submit "Enregistrer", class: "typo-btn-success" %>
+      </div>
+    <% end %>
+  </div>
+</div>
