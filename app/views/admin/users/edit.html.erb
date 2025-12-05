@@ -54,7 +54,7 @@
           <!-- Phone -->
           <div>
             <%= f.label :phone, "Téléphone", class: "typo-body-small typo-bold", style: "display: block; margin-bottom: var(--space-sm);" %>
-            <%= f.tel_field :phone, style: "width: 100%;" %>
+            <%= f.telephone_field :phone, style: "width: 100%;" %>
             <% if @user.errors[:phone].any? %>
               <p style="color: #e53e3e; font-size: 0.875rem; margin-top: var(--space-xs);">
                 <%= @user.errors[:phone].first %>
