@@ -413,8 +413,10 @@
         </div>
       </div>
 
-      <!-- Quick Actions -->
-      <%= render 'shared/quick_actions' %>
+      <!-- Quick Actions (Hidden for Technicians) -->
+      <% unless current_user&.technician? %>
+        <%= render 'shared/quick_actions' %>
+      <% end %>
     </div>
   </div>
 </div>

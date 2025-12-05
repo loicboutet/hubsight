@@ -1,0 +1,142 @@
+<% content_for :header, "Techniciens" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Techniciens</h2>
+      <p class="typo-body-small">Gérer les profils des techniciens de votre organisation</p>
+    </div>
+    <%= link_to new_technician_path, class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nouveau Technicien
+    <% end %>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    
+    <!-- Technicians Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TECHNICIEN</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">EMAIL</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">TÉLÉPHONE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DÉPARTEMENT</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DERNIÈRE CONNEXION</th>
+            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @technicians.empty? %>
+            <tr>
+              <td colspan="7" style="padding: var(--space-xl); text-align: center; color: var(--medium-gray);">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-md);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <p class="typo-body">Aucun technicien trouvé</p>
+                  <p class="typo-body-small">Commencez par créer un nouveau technicien</p>
+                </div>
+              </td>
+            </tr>
+          <% else %>
+            <% @technicians.each_with_index do |technician, index| %>
+              <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
+                <!-- Name -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem;">
+                      <%= technician.full_name.split.map(&:first).join.upcase %>
+                    </div>
+                    <div>
+                      <p class="typo-body-small typo-bold"><%= technician.full_name %></p>
+                      <% if technician.invitation_pending? %>
+                        <span style="display: inline-block; padding: 2px 8px; background-color: #fff3cd; color: #856404; border-radius: 8px; font-size: 0.7rem; font-weight: 600; margin-top: 2px;">
+                          Invitation en attente
+                        </span>
+                      <% end %>
+                    </div>
+                  </div>
+                </td>
+                
+                <!-- Email -->
+                <td style="padding: var(--space-md);">
+                  <p class="typo-body-small"><%= technician.email %></p>
+                </td>
+                
+                <!-- Phone -->
+                <td style="padding: var(--space-md);">
+                  <p class="typo-body-small"><%= technician.phone || '-' %></p>
+                </td>
+                
+                <!-- Department -->
+                <td style="padding: var(--space-md);">
+                  <p class="typo-body-small"><%= technician.department || '-' %></p>
+                </td>
+                
+                <!-- Status -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <% if technician.invitation_pending? %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #fff3cd; color: #856404;">
+                      En attente
+                    </span>
+                  <% elsif technician.active? %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #d4edda; color: #155724;">
+                      Actif
+                    </span>
+                  <% else %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #f8d7da; color: #721c24;">
+                      Inactif
+                    </span>
+                  <% end %>
+                </td>
+                
+                <!-- Last Login -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <p class="typo-body-small" style="color: #666;">
+                    <% if technician.current_sign_in_at %>
+                      <%= time_ago_in_words(technician.current_sign_in_at) %> ago
+                    <% else %>
+                      Jamais connecté
+                    <% end %>
+                  </p>
+                </td>
+                
+                <!-- Actions -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                    <%= link_to technician_path(technician), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Voir
+                    <% end %>
+                    <%= link_to edit_technician_path(technician), title: "Éditer", class: "typo-btn-small typo-btn-small-primary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Éditer
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <% if @technicians.total_pages > 1 %>
+      <div style="margin-top: var(--space-xl);">
+        <%= paginate @technicians %>
+      </div>
+    <% end %>
+  </div>
+</div>
