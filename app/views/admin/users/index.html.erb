@@ -1,0 +1,246 @@
+<% content_for :header, "Gestion des Utilisateurs" %>
+
+<div class="section">
+  <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Gestion des Utilisateurs</h2>
+      <p class="typo-body-small">Gérer tous les comptes utilisateurs de la plateforme</p>
+    </div>
+  </div>
+
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    
+    <!-- Filters Section -->
+    <%= form_with url: admin_users_path, method: :get, local: true do |f| %>
+      <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto auto; gap: var(--space-md); align-items: end;">
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Recherche</label>
+            <%= f.text_field :search, value: params[:search], placeholder: "Nom, email...", style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Rôle</label>
+            <%= f.select :role, 
+                options_for_select([
+                  ['Tous', 'all'], 
+                  ['Admin', User::ROLES[:admin]], 
+                  ['Gestionnaire de Portefeuille', User::ROLES[:portfolio_manager]], 
+                  ['Gestionnaire de Site', User::ROLES[:site_manager]], 
+                  ['Technicien', User::ROLES[:technician]]
+                ], params[:role] || 'all'),
+                {},
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
+            <%= f.select :status, 
+                options_for_select([['Tous', 'all'], ['Actif', 'active'], ['Inactif', 'inactive']], params[:status] || 'all'),
+                {},
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Invitation</label>
+            <%= f.select :invitation_status, 
+                options_for_select([['Tous', 'all'], ['En attente', 'pending'], ['Acceptée', 'accepted'], ['Expirée', 'expired']], params[:invitation_status] || 'all'),
+                {},
+                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+          </div>
+          <%= link_to admin_users_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Effacer
+          <% end %>
+          <%= f.submit "Filtrer", class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Users Table -->
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f8f9fa; border-bottom: 2px solid var(--pink-pale);">
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">UTILISATEUR</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">EMAIL</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">RÔLE</th>
+            <th style="padding: var(--space-md); text-align: left; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ORGANISATION</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">STATUT</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">INVITATION</th>
+            <th style="padding: var(--space-md); text-align: center; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">DATE CRÉATION</th>
+            <th style="padding: var(--space-md); text-align: right; font-weight: 600; color: var(--gray-secondary); font-size: 0.875rem;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @users.empty? %>
+            <tr>
+              <td colspan="8" style="padding: var(--space-xl); text-align: center; color: var(--medium-gray);">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-md);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <p class="typo-body">Aucun utilisateur trouvé</p>
+                  <p class="typo-body-small">Essayez de modifier vos filtres de recherche</p>
+                </div>
+              </td>
+            </tr>
+          <% else %>
+            <% @users.each_with_index do |user, index| %>
+              <tr style="border-bottom: 1px solid #e9ecef; <%= 'background-color: #fafbfc;' if index.even? %>">
+                <!-- Name -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                    <% 
+                      # Different gradients for different roles
+                      gradient = case user.role
+                        when 'admin'
+                          'linear-gradient(135deg, #FF6B6B 0%, #FF8585 100%)'
+                        when 'portfolio_manager'
+                          'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                        when 'site_manager'
+                          'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                        when 'technician'
+                          'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                        else
+                          'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                      end
+                    %>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: <%= gradient %>; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem;">
+                      <%= user.full_name.split.map(&:first).join.upcase %>
+                    </div>
+                    <div>
+                      <p class="typo-body-small typo-bold"><%= user.full_name %></p>
+                      <% if user.department.present? %>
+                        <p class="typo-body-small" style="color: var(--gray); font-size: 0.75rem;"><%= user.department %></p>
+                      <% end %>
+                    </div>
+                  </div>
+                </td>
+                
+                <!-- Email -->
+                <td style="padding: var(--space-md);">
+                  <p class="typo-body-small"><%= user.email %></p>
+                </td>
+                
+                <!-- Role -->
+                <td style="padding: var(--space-md);">
+                  <% 
+                    role_label = case user.role
+                      when 'admin'
+                        'Admin'
+                      when 'portfolio_manager'
+                        'Gestionnaire de Portefeuille'
+                      when 'site_manager'
+                        'Gestionnaire de Site'
+                      when 'technician'
+                        'Technicien'
+                      else
+                        user.role
+                    end
+                    
+                    role_color = case user.role
+                      when 'admin'
+                        'background-color: #fed7d7; color: #742a2a;'
+                      when 'portfolio_manager'
+                        'background-color: #e0e7ff; color: #3730a3;'
+                      when 'site_manager'
+                        'background-color: #fce7f3; color: #831843;'
+                      when 'technician'
+                        'background-color: #dbeafe; color: #1e3a8a;'
+                      else
+                        'background-color: #e5e7eb; color: #1f2937;'
+                    end
+                  %>
+                  <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; <%= role_color %>">
+                    <%= role_label %>
+                  </span>
+                </td>
+                
+                <!-- Organization -->
+                <td style="padding: var(--space-md);">
+                  <% if user.organization %>
+                    <p class="typo-body-small typo-bold"><%= user.organization.name %></p>
+                  <% else %>
+                    <span style="color: var(--gray); font-style: italic; font-size: 0.875rem;">Non assigné</span>
+                  <% end %>
+                </td>
+                
+                <!-- Status -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <% if user.status == 'active' %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #d4edda; color: #155724;">
+                      Actif
+                    </span>
+                  <% else %>
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.813rem; font-weight: 600; background-color: #f8d7da; color: #721c24;">
+                      Inactif
+                    </span>
+                  <% end %>
+                </td>
+                
+                <!-- Invitation Status -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <% if user.invitation_pending? %>
+                    <% if user.invitation_expired? %>
+                      <span style="display: inline-block; padding: 4px 12px; background-color: #fff3cd; color: #856404; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                        Expirée
+                      </span>
+                    <% else %>
+                      <span style="display: inline-block; padding: 4px 12px; background-color: #fff9c4; color: #f57f17; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                        En attente
+                      </span>
+                    <% end %>
+                  <% elsif user.invitation_accepted_at.present? %>
+                    <span style="display: inline-block; padding: 4px 12px; background-color: #d4edda; color: #155724; border-radius: 12px; font-size: 0.813rem; font-weight: 600;">
+                      Acceptée
+                    </span>
+                  <% else %>
+                    <span style="color: var(--gray); font-size: 0.813rem;">-</span>
+                  <% end %>
+                </td>
+                
+                <!-- Created At -->
+                <td style="padding: var(--space-md); text-align: center;">
+                  <p class="typo-body-small" style="color: #666;">
+                    <%= user.created_at.strftime('%d/%m/%Y') %>
+                  </p>
+                </td>
+                
+                <!-- Actions -->
+                <td style="padding: var(--space-md);">
+                  <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                    <%= link_to admin_user_path(user), title: "Voir", class: "typo-btn-small typo-btn-small-secondary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      Voir
+                    <% end %>
+                    <%= link_to edit_admin_user_path(user), title: "Modifier", class: "typo-btn-small typo-btn-small-primary" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Modifier
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <% if @users.any? %>
+      <div style="margin-top: var(--space-xl);">
+        <%= render 'shared/pagination', 
+          current_page: @users.current_page, 
+          total_pages: @users.total_pages, 
+          total_count: @users.total_count, 
+          per_page: @users.limit_value,
+          path: admin_users_path %>
+      </div>
+    <% end %>
+  </div>
+</div>

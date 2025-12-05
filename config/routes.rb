@@ -22,6 +22,13 @@ Rails.application.routes.draw do
   # =============================================================================
   
   namespace :admin do
+    # User Management (all users across all roles)
+    resources :users, only: [:index, :show, :edit, :update, :destroy] do
+      member do
+        post :resend_invitation
+      end
+    end
+    
     # Portfolio Managers Management
     resources :portfolio_managers do
       member do
