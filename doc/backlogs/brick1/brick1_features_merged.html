@@ -252,31 +252,14 @@
                 </tr>
                 <tr>
                     <td class="sl-col">6</td>
-                    <td class="title-col">Session Management</td>
-                    <td class="description-col">Secure session handling with timeout, "remember me" cookie, concurrent session management, logout functionality</td>
-                    <td class="url-col"><span class="empty-cell">System-wide feature</span></td>
+                    <td class="title-col">User Management</td>
+                    <td class="description-col">Create/edit users, manage roles</td>
+                    <td class="url-col"><a href="http://localhost:3000/users">localhost:3000/users</a></td>
                     <td class="test-col">
-                        <div class="role-badges">
-                            <span class="badge badge-system">All Users</span>
-                        </div>
-                        <div class="test-section">
-                            <strong>Test Session Behavior:</strong>
-                            <ol>
-                                <li>Login with valid credentials without "Remember me"</li>
-                                <li>Verify session timeout after 30 minutes of inactivity</li>
-                                <li>Verify redirect to login page on timeout</li>
-                                <li>Login again with "Remember me" checked</li>
-                                <li>Close browser and reopen</li>
-                                <li>Verify still logged in (cookie-based session)</li>
-                                <li>Test concurrent sessions: login from 2 different browsers</li>
-                                <li>Verify both sessions work independently</li>
-                                <li>Test logout: click "Déconnexion" (Logout)</li>
-                                <li>Verify session destroyed and redirected to login</li>
-                                <li>Verify cannot access protected pages after logout</li>
-                                <li>Test session security: verify CSRF protection active</li>
-                            </ol>
-                        </div>
+                        <div><span class="badge badge-admin">Admin Only</span></div>
+                        <div class="test-section"><strong>Test:</strong> CRUD users, assign roles, impersonate</div>
                     </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
