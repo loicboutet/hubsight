@@ -2,7 +2,8 @@ require 'ostruct'
 
 class ContractsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_contract, only: [:show, :edit, :update, :destroy, :validate, :confirm_validation, :delete_pdf, :retry_ocr, :retry_extraction, :generate_pdf]
+  
+  before_action :set_contract, only: [:show, :edit, :update, :destroy, :validate, :confirm_validation, :apply_ai_value, :delete_pdf, :retry_ocr, :retry_extraction, :generate_pdf]
 
   def index
     # Get base query - admins see all, others see only their organization
@@ -165,7 +166,6 @@ class ContractsController < ApplicationController
 
   def validate
     # Check authorization
-    # Admins can access all contracts across all organizations
     unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
@@ -185,24 +185,59 @@ class ContractsController < ApplicationController
 
   def confirm_validation
     # Check authorization
-    # Admins can access all contracts across all organizations
     unless current_user.admin? || @contract.organization_id == current_user.organization_id
       redirect_to contracts_path, alert: "Accès non autorisé"
       return
     end
     
-    # Update contract with validated data
-    if @contract.update(validation_params)
-      # Mark as validated
-      @contract.update(
-        validation_status: 'validated',
-        validated_at: Time.current,
-        validated_by: "#{current_user.first_name} #{current_user.last_name}".strip
-      )
+    begin
+      # Apply validation using new side-by-side comparison workflow
+      @contract.apply_validation!(validation_params.to_h, current_user)
       
       redirect_to contract_path(@contract), notice: "Contrat validé avec succès"
-    else
+    rescue => e
+      flash.now[:alert] = "Erreur lors de la validation: #{e.message}"
       render :validate, status: :unprocessable_entity
+    end
+  end
+  
+  # AJAX endpoint - Apply AI value immediately when "Use AI" button is clicked
+  def apply_ai_value
+    # Get field and value from params
+    field = params[:field]
+    value = params[:value]
+    
+    # Validate field is in allowed list
+    allowed_fields = Contract.validation_fields.values.flatten.map(&:to_s)
+    
+    unless allowed_fields.include?(field.to_s)
+      render json: { success: false, error: "Champ non autorisé" }, status: :unprocessable_entity
+      return
+    end
+    
+    begin
+      # Convert value based on field type
+      converted_value = convert_value_for_field(field, value)
+      
+      # Update the contract field immediately
+      @contract.update!(field => converted_value)
+      
+      # Track that this field was accepted from AI
+      @contract.corrected_fields ||= {}
+      @contract.corrected_fields[field] = 'llm_accepted'
+      @contract.save!
+      
+      render json: { 
+        success: true, 
+        message: "Champ #{field} mis à jour avec succès",
+        field: field,
+        value: converted_value
+      }
+    rescue => e
+      render json: { 
+        success: false, 
+        error: "Erreur lors de la sauvegarde: #{e.message}" 
+      }, status: :unprocessable_entity
     end
   end
 
@@ -405,7 +440,7 @@ class ContractsController < ApplicationController
       status actions
     ]
   end
-  
+
   def validation_params
     # Get all the extracted fields that can be validated/corrected
     params.require(:contract).permit(
@@ -481,6 +516,81 @@ class ContractsController < ApplicationController
     )
   end
 
+  # Convert value based on field type to handle different formats (especially dates)
+  def convert_value_for_field(field, value)
+    return nil if value.blank?
+    
+    # Get the field type from the model
+    column = Contract.columns_hash[field.to_s]
+    return value unless column
+    
+    case column.type
+    when :date
+      # Handle various date formats
+      parse_date_value(value)
+    when :boolean
+      # Handle boolean values
+      parse_boolean_value(value)
+    when :integer
+      value.to_i
+    when :decimal, :float
+      value.to_f
+    else
+      value
+    end
+  rescue => e
+    Rails.logger.error("Error converting value for field #{field}: #{e.message}")
+    value # Return original value if conversion fails
+  end
+  
+  # Parse date from various formats
+  def parse_date_value(value)
+    return nil if value.blank?
+    return value if value.is_a?(Date)
+    
+    # If already in ISO format (YYYY-MM-DD), return as is
+    return value if value.match?(/^\d{4}-\d{2}-\d{2}$/)
+    
+    # Try to parse various date formats
+    date_formats = [
+      '%Y-%m-%d',           # 2024-01-15
+      '%d/%m/%Y',           # 15/01/2024
+      '%d-%m-%Y',           # 15-01-2024
+      '%d.%m.%Y',           # 15.01.2024
+      '%Y/%m/%d',           # 2024/01/15
+      '%d %B %Y',           # 15 janvier 2024 (French)
+      '%d %b %Y',           # 15 jan 2024
+      '%B %d, %Y',          # January 15, 2024 (English)
+      '%b %d, %Y'           # Jan 15, 2024
+    ]
+    
+    # Try each format
+    date_formats.each do |format|
+      begin
+        parsed_date = Date.strptime(value, format)
+        return parsed_date.strftime('%Y-%m-%d')
+      rescue ArgumentError, TypeError
+        # Try next format
+        next
+      end
+    end
+    
+    # If no format works, try Rails' default parsing
+    begin
+      Date.parse(value).strftime('%Y-%m-%d')
+    rescue ArgumentError, TypeError => e
+      Rails.logger.error("Unable to parse date value: #{value} - #{e.message}")
+      value # Return original value if all parsing attempts fail
+    end
+  end
+  
+  # Parse boolean from various formats
+  def parse_boolean_value(value)
+    return true if value == true || value.to_s.downcase.in?(['true', '1', 'yes', 'oui', 't', 'y'])
+    return false if value == false || value.to_s.downcase.in?(['false', '0', 'no', 'non', 'f', 'n'])
+    nil
+  end
+  
   def contract_params
     params.require(:contract).permit(
       # PDF Document

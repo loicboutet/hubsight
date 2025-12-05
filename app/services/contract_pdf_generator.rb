@@ -94,11 +94,17 @@ class ContractPdfGenerator
     
     section_header('CONTACTS D\'URGENCE', COLORS[:emergency])
     
-    @pdf.bounding_box([0, @pdf.cursor], width: @pdf.bounds.width) do
-      @pdf.fill_color 'FEE2E2'  # Light red background
-      @pdf.fill_rectangle [0, @pdf.cursor], @pdf.bounds.width, @pdf.cursor - 20
-      @pdf.fill_color '000000'
-      
+    # Use a fixed reasonable height for the background box
+    start_cursor = @pdf.cursor
+    box_height = 120  # Reasonable fixed height for emergency contacts section
+    
+    # Draw the background rectangle first
+    @pdf.fill_color 'FEE2E2'  # Light red background
+    @pdf.fill_rectangle [0, start_cursor], @pdf.bounds.width, box_height
+    @pdf.fill_color '000000'
+    
+    # Now draw the actual content on top
+    @pdf.bounding_box([0, start_cursor], width: @pdf.bounds.width) do
       @pdf.move_down 15
       @pdf.indent(15) do
         # Use available contractor contact information

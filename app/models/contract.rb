@@ -285,6 +285,94 @@ class Contract < ApplicationRecord
     corrected_fields&.key?(field_name.to_s)
   end
   
+  # Get LLM extracted value for a specific field
+  def extracted_value(field_name)
+    return nil unless extraction_data.present?
+    extraction_data[field_name.to_s] || extraction_data[field_name.to_sym]
+  end
+  
+  # Get original (current) value for a specific field
+  def original_value(field_name)
+    send(field_name)
+  end
+  
+  # Check if field has LLM extracted value
+  def has_extracted_value?(field_name)
+    extracted_value(field_name).present? 
+  end
+  
+  # List of all validatable fields (grouped by category)
+  def self.validation_fields
+    {
+      identification: [
+        :title, :contract_type, :purchase_subfamily, :contract_object,
+        :detailed_description, :contracting_method, :public_reference
+      ],
+      stakeholders: [
+        :contractor_organization_name, :contractor_contact_name, :contractor_agency_name,
+        :client_organization_name, :client_contact_name, :managing_department,
+        :monitoring_manager, :contractor_phone, :contractor_email, :client_contact_email
+      ],
+      scope: [
+        :equipment_count, :geographic_areas, :building_names, :floor_levels,
+        :specific_zones, :technical_lot, :equipment_categories, :coverage_description
+      ],
+      financial: [
+        :annual_amount_ht, :annual_amount_ttc, :monthly_amount, :billing_method,
+        :billing_frequency, :payment_terms, :revision_conditions, :revision_index,
+        :revision_frequency, :budget_code
+      ],
+      temporality: [
+        :signature_date, :execution_start_date, :initial_duration_months,
+        :renewal_duration_months, :renewal_count, :automatic_renewal,
+        :notice_period_days, :next_deadline_date
+      ],
+      services: [
+        :service_nature, :intervention_frequency, :intervention_delay_hours,
+        :resolution_delay_hours, :working_hours, :on_call_24_7,
+        :sla_percentage, :spare_parts_included
+      ]
+    }
+  end
+  
+  # Apply validated data from extraction_data to main fields
+  def apply_validation!(validated_params, user)
+    update_attributes = {}
+    corrected = {}
+    
+    # For each field in validated_params, determine source and update
+    self.class.validation_fields.values.flatten.each do |field|
+      next unless validated_params.key?(field.to_s)
+      
+      validated_value = validated_params[field.to_s]
+      original = original_value(field)
+      extracted = extracted_value(field)
+      
+      # Skip if no change
+      next if validated_value == original
+      
+      # Track the source of the value
+      if validated_value == extracted
+        corrected[field.to_s] = 'llm_accepted'
+      elsif validated_value != original
+        corrected[field.to_s] = 'manual_edit'
+      end
+      
+      update_attributes[field] = validated_value
+    end
+    
+    # Update contract with validated data
+    update_attributes.merge!(
+      validation_status: 'validated',
+      validated_at: Time.current,
+      validated_by: user.email,
+      validation_notes: validated_params[:validation_notes],
+      corrected_fields: self.corrected_fields.merge(corrected)
+    )
+    
+    update!(update_attributes)
+  end
+  
   # VAT Calculation Methods
   
   # Calculate TTC (inclusive) from HT (exclusive) amount

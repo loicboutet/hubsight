@@ -119,6 +119,7 @@ Rails.application.routes.draw do
     member do
       get 'validate'
       post 'confirm_validation'
+      patch 'apply_ai_value'  # PATCH /contracts/:id/apply_ai_value - Apply AI value immediately
       get 'pdf'
       get 'generate_pdf'  # GET /contracts/:id/generate_pdf - Generate PDF summary
       delete 'delete_pdf'

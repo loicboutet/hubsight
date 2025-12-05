@@ -27,11 +27,11 @@ module Llm
     private
     
     def api_key
-      Rails.application.credentials.dig(:openrouter, :api_key)
+      ENV['OPENROUTER_API_KEY'] || Rails.application.credentials.dig(:openrouter, :api_key)
     end
     
     def model_name
-      Rails.application.credentials.dig(:openrouter, :model) || DEFAULT_MODEL
+      ENV['OPENROUTER_MODEL'] || Rails.application.credentials.dig(:openrouter, :model) || DEFAULT_MODEL
     end
     
     def call_openrouter_api(ocr_text)

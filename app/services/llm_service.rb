@@ -43,8 +43,19 @@ class LlmService
     end
     
     # Check if OpenRouter LLM is configured with valid API key
+    # Checks both ENV vars (for local dev) and Rails credentials (for production)
     def openrouter_configured?
-      Rails.application.credentials.dig(:openrouter, :api_key).present?
+      openrouter_api_key.present?
+    end
+    
+    # Get OpenRouter API key from ENV or credentials
+    def openrouter_api_key
+      ENV['OPENROUTER_API_KEY'] || Rails.application.credentials.dig(:openrouter, :api_key)
+    end
+    
+    # Get OpenRouter model from ENV or credentials
+    def openrouter_model
+      ENV['OPENROUTER_MODEL'] || Rails.application.credentials.dig(:openrouter, :model) || 'anthropic/claude-3.5-sonnet'
     end
     
     # Get the appropriate provider instance
