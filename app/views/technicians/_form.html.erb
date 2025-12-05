@@ -1,0 +1,57 @@
+<%= form_with(model: @technician, local: true) do |f| %>
+  <% if @technician.errors.any? %>
+    <div class="alert alert-error">
+      <h3><%= pluralize(@technician.errors.count, "erreur") %> a empêché la sauvegarde:</h3>
+      <ul>
+        <% @technician.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <%= f.label :first_name, "Prénom *", class: "form-label" %>
+      <%= f.text_field :first_name, class: "form-input", required: true, autocomplete: "given-name" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :last_name, "Nom *", class: "form-label" %>
+      <%= f.text_field :last_name, class: "form-input", required: true, autocomplete: "family-name" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email, "Email *", class: "form-label" %>
+      <%= f.email_field :email, class: "form-input", required: true, autocomplete: "email" %>
+      <% if @technician.persisted? && @technician.invitation_pending? %>
+        <p class="form-help-text" style="color: #f59e0b;">
+          ⚠️ Invitation en attente - L'utilisateur n'a pas encore accepté l'invitation
+        </p>
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :phone, "Téléphone", class: "form-label" %>
+      <%= f.text_field :phone, class: "form-input", autocomplete: "tel" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :department, "Département/Service", class: "form-label" %>
+      <%= f.text_field :department, class: "form-input", autocomplete: "organization" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :status, "Statut", class: "form-label" %>
+      <%= f.select :status, 
+                   [['Actif', 'active'], ['Inactif', 'inactive']], 
+                   { selected: @technician.status || 'active' },
+                   class: "form-select" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit @technician.persisted? ? "Mettre à jour" : "Créer le technicien", class: "btn btn-primary" %>
+    <%= link_to "Annuler", technicians_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

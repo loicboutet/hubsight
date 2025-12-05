@@ -1,5 +1,6 @@
 class InvitationsController < ApplicationController
   skip_before_action :authenticate_user!
+  layout 'application'
   
   def show
     @user = User.find_by(invitation_token: params[:token])

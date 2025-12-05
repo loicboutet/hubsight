@@ -154,6 +154,13 @@ Rails.application.routes.draw do
     end
   end
   
+  # Technicians Management (Site Manager only)
+  resources :technicians do
+    member do
+      post :resend_invitation
+    end
+  end
+  
   # Alerts Management (BRIQUE 2)
   resources :alerts do
     member do
