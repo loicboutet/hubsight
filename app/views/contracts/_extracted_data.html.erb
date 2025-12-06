@@ -105,9 +105,9 @@
               🎯 Périmètre (15 champs)
             </summary>
             <div style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-              <%= render partial: 'contracts/extracted_field', locals: { label: 'Sites couverts', value: (@contract.covered_sites || []).join(', '), type: 'array' } %>
-              <%= render partial: 'contracts/extracted_field', locals: { label: 'Bâtiments couverts', value: (@contract.covered_buildings || []).join(', '), type: 'array' } %>
-              <%= render partial: 'contracts/extracted_field', locals: { label: 'Types d\'équipements', value: (@contract.covered_equipment_types || []).join(', '), type: 'array' } %>
+              <%= render partial: 'contracts/extracted_field', locals: { label: 'Sites couverts', value: (@contract.covered_sites.is_a?(Array) ? @contract.covered_sites.join(', ') : @contract.covered_sites), type: 'array' } %>
+              <%= render partial: 'contracts/extracted_field', locals: { label: 'Bâtiments couverts', value: (@contract.covered_buildings.is_a?(Array) ? @contract.covered_buildings.join(', ') : @contract.covered_buildings), type: 'array' } %>
+              <%= render partial: 'contracts/extracted_field', locals: { label: 'Types d\'équipements', value: (@contract.covered_equipment_types.is_a?(Array) ? @contract.covered_equipment_types.join(', ') : @contract.covered_equipment_types), type: 'array' } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Liste équipements', value: @contract.covered_equipment_list } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Nombre d\'équipements', value: @contract.equipment_count, type: 'number' } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Zones géographiques', value: @contract.geographic_areas } %>
@@ -179,11 +179,11 @@
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Horaires de travail', value: @contract.working_hours } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Astreinte 24/7', value: @contract.on_call_24_7, type: 'boolean' } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'SLA (%)', value: @contract.sla_percentage, type: 'percentage' } %>
-              <%= render partial: 'contracts/extracted_field', locals: { label: 'KPIs', value: (@contract.kpis || []).join(', '), type: 'array' } %>
+              <%= render partial: 'contracts/extracted_field', locals: { label: 'KPIs', value: (@contract.kpis.is_a?(Array) ? @contract.kpis.join(', ') : @contract.kpis), type: 'array' } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Pièces incluses', value: @contract.spare_parts_included, type: 'boolean' } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Fournitures incluses', value: @contract.supplies_included, type: 'boolean' } %>
               <%= render partial: 'contracts/extracted_field', locals: { label: 'Rapport obligatoire', value: @contract.report_required, type: 'boolean' } %>
-              <%= render partial: 'contracts/extracted_field', locals: { label: 'Documents annexes', value: (@contract.appendix_documents || []).join(', '), type: 'array' } %>
+              <%= render partial: 'contracts/extracted_field', locals: { label: 'Documents annexes', value: (@contract.appendix_documents.is_a?(Array) ? @contract.appendix_documents.join(', ') : @contract.appendix_documents), type: 'array' } %>
             </div>
           </details>
 

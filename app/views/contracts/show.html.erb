@@ -1,6 +1,14 @@
 <% content_for :header, @contract.title %>
 
 <div class="section">
+  <!-- Breadcrumb Navigation -->
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Contrats', url: contracts_path },
+      { name: @contract.contract_number, url: nil }
+    ] %>
+  </div>
+
   <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);"><%= @contract.title %></h2>
@@ -492,15 +500,15 @@
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg);">
       <div style="grid-column: 1 / -1;">
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Sites Couverts</p>
-        <p class="typo-body"><%= Array(@contract.covered_sites).join(', ') if @contract.covered_sites.present? || '-' %></p>
+        <p class="typo-body"><%= @contract.covered_sites.present? ? (@contract.covered_sites.is_a?(Array) ? @contract.covered_sites.join(', ') : @contract.covered_sites) : '-' %></p>
       </div>
       <div style="grid-column: 1 / -1;">
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Bâtiments Couverts</p>
-        <p class="typo-body"><%= Array(@contract.covered_buildings).join(', ') if @contract.covered_buildings.present? || '-' %></p>
+        <p class="typo-body"><%= @contract.covered_buildings.present? ? (@contract.covered_buildings.is_a?(Array) ? @contract.covered_buildings.join(', ') : @contract.covered_buildings) : '-' %></p>
       </div>
       <div style="grid-column: 1 / -1;">
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Types d'Équipement Couverts</p>
-        <p class="typo-body"><%= Array(@contract.covered_equipment_types).join(', ') if @contract.covered_equipment_types.present? || '-' %></p>
+        <p class="typo-body"><%= @contract.covered_equipment_types.present? ? (@contract.covered_equipment_types.is_a?(Array) ? @contract.covered_equipment_types.join(', ') : @contract.covered_equipment_types) : '-' %></p>
       </div>
       <div>
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Nombre d'Équipements</p>
@@ -607,7 +615,7 @@
       </div>
       <div style="grid-column: 1 / -1;">
         <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Indicateurs de Performance (KPI)</p>
-        <p class="typo-body"><%= Array(@contract.kpis).join(', ') if @contract.kpis.present? || '-' %></p>
+        <p class="typo-body"><%= @contract.kpis.present? ? (@contract.kpis.is_a?(Array) ? @contract.kpis.join(', ') : @contract.kpis) : '-' %></p>
       </div>
     </div>
   </div>

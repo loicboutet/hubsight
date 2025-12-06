@@ -1,6 +1,14 @@
 <% content_for :header, "Contrats" %>
 
 <div class="section">
+  <!-- Breadcrumb Navigation -->
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Contrats', url: contracts_path },
+      { name: 'Nouveau', url: nil }
+    ] %>
+  </div>
+
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Nouveau Contrat</h2>

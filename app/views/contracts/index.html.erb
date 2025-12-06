@@ -1,6 +1,13 @@
 <% content_for :header, "Contrats" %>
 
 <div class="section" data-controller="contract-list" data-contract-list-update-columns-url-value="<%= update_columns_contracts_path %>">
+  <!-- Breadcrumb Navigation -->
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Contrats', url: nil }
+    ] %>
+  </div>
+
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Gestion des Contrats</h2>
