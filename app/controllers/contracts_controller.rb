@@ -2,7 +2,6 @@ require 'ostruct'
 
 class ContractsController < ApplicationController
   before_action :authenticate_user!
-  
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :validate, :confirm_validation, :apply_ai_value, :delete_pdf, :retry_ocr, :retry_extraction, :generate_pdf]
 
   def index
@@ -88,26 +87,29 @@ class ContractsController < ApplicationController
   end
 
   def new
-    # Admins don't have organization_id, so we leave it nil for them to select
-    @contract = Contract.new(organization_id: current_user.organization_id) unless current_user.admin?
-    @contract = Contract.new if current_user.admin?
-    
-    # For Portfolio Managers, auto-set client to their organization
-    if current_user.portfolio_manager?
-      @contract.client_organization_id = current_user.organization_id
-      @contract.client_organization_name = current_user.organization&.name
+    if current_user.admin?
+      # Admins don't have organization_id, so we leave it nil for them to select
+      @contract = Contract.new
+    else
+      # For regular users, use their organization
+      @contract = Contract.new(organization_id: current_user.organization_id)
+      
+      # For Portfolio Managers, auto-set client to their organization
+      if current_user.portfolio_manager?
+        @contract.client_organization_id = current_user.organization_id
+        @contract.client_organization_name = current_user.organization&.name
+      end
     end
   end
 
   def create
     @contract = Contract.new(contract_params)
     
-    # For non-admin users, always use their organization
-    # For admins, they can select from params or we use a default (first org)
     if current_user.admin?
       # If admin didn't select an organization, use the first available one
       @contract.organization_id = params[:contract][:organization_id].presence || Organization.first&.id
     else
+      # For non-admin users, always use their organization
       @contract.organization_id = current_user.organization_id
       
       # For Portfolio Managers, if client_organization_id not provided, default to user's org

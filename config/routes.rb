@@ -128,6 +128,9 @@ Rails.application.routes.draw do
     end
   end
   
+  # Organizations autocomplete/search - MUST come before resources
+  get 'organizations/autocomplete', to: 'organizations#autocomplete'
+  
   # Organizations Management
   resources :organizations do
     # Contacts nested under organizations
@@ -316,9 +319,6 @@ Rails.application.routes.draw do
     
     # Contract Families autocomplete/search
     get 'contract_families/autocomplete', to: 'contract_families#autocomplete'
-    
-    # Organizations autocomplete/search (Task 38)
-    get 'organizations/autocomplete', to: 'organizations#autocomplete'
     
     # Autocomplete endpoints
     namespace :autocomplete do

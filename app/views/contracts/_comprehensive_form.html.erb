@@ -271,11 +271,41 @@
         <span style="font-size: 1.2rem;">Parties Prenantes (10 champs)</span>
       </summary>
       <div style="padding: var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
-        <div>
+        <div data-controller="organization-autocomplete" style="position: relative;">
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Prestataire (Organisation) <span style="color: var(--coral-primary);">*</span>
           </label>
-          <%= f.text_field :contractor_organization_name, value: contract.contractor_organization_name, placeholder: "Nom de l'organisation prestataire", required: true, style: "width: 100%;" %>
+          
+          <!-- Autocomplete input -->
+          <input 
+            type="text"
+            data-organization-autocomplete-target="input"
+            data-action="input->organization-autocomplete#search"
+            placeholder="Rechercher une organisation..."
+            value="<%= contract.contractor_organization&.name || contract.contractor_organization_name %>"
+            style="width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: var(--dark-gray);"
+            onfocus="this.style.borderColor='var(--coral-primary)'; this.style.boxShadow='0 0 0 3px rgba(255, 107,107, 0.1)';"
+            onblur="setTimeout(() => { this.style.borderColor='var(--light-gray)'; this.style.boxShadow='none'; }, 200);"
+            required
+          />
+          
+          <!-- Hidden fields for actual selection -->
+          <%= f.hidden_field :contractor_organization_id, 
+            data: { organization_autocomplete_target: "hiddenField" },
+            value: contract.contractor_organization_id %>
+          <%= f.hidden_field :contractor_organization_name,
+            data: { organization_autocomplete_target: "nameField" },
+            value: contract.contractor_organization_name %>
+          
+          <!-- Suggestions dropdown -->
+          <div 
+            data-organization-autocomplete-target="suggestions"
+            style="position: absolute; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; z-index: 1000; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 4px; margin-top: 4px;">
+          </div>
+          
+          <p class="typo-body-small" style="margin-top: 4px; color: #dc3545;">
+            ⚠️ Sélection obligatoire depuis la liste - Pas de saisie libre autorisée
+          </p>
         </div>
 
         <div>
@@ -292,11 +322,40 @@
           <%= f.text_field :contractor_agency_name, value: contract.contractor_agency_name, placeholder: "Nom de l'agence", style: "width: 100%;" %>
         </div>
 
-        <div>
+        <div data-controller="organization-autocomplete" style="position: relative;">
           <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
             Client (Organisation)
           </label>
-          <%= f.text_field :client_organization_name, value: contract.client_organization_name, placeholder: "Nom de l'organisation cliente", style: "width: 100%;" %>
+          
+          <!-- Autocomplete input -->
+          <input 
+            type="text"
+            data-organization-autocomplete-target="input"
+            data-action="input->organization-autocomplete#search"
+            placeholder="Rechercher organisation client..."
+            value="<%= contract.client_organization&.name || contract.client_organization_name %>"
+            style="width: 100%; height: 3.315rem; padding: 0 1.105rem; border: 1px solid var(--light-gray); border-radius: var(--space-sm); font-size: 1.105rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; color: var(--dark-gray);"
+            onfocus="this.style.borderColor='var(--coral-primary)'; this.style.boxShadow='0 0 0 3px rgba(255, 107, 107, 0.1)';"
+            onblur="setTimeout(() => { this.style.borderColor='var(--light-gray)'; this.style.boxShadow='none'; }, 200);"
+          />
+          
+          <!-- Hidden fields for actual selection -->
+          <%= f.hidden_field :client_organization_id, 
+            data: { organization_autocomplete_target: "hiddenField" },
+            value: contract.client_organization_id %>
+          <%= f.hidden_field :client_organization_name,
+            data: { organization_autocomplete_target: "nameField" },
+            value: contract.client_organization_name %>
+          
+          <!-- Suggestions dropdown -->
+          <div 
+            data-organization-autocomplete-target="suggestions"
+            style="position: absolute; background: white; border: 1px solid #ddd; display: none; max-height: 300px; overflow-y: auto; z-index: 1000; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 4px; margin-top: 4px;">
+          </div>
+          
+          <p class="typo-body-small" style="margin-top: 4px; color: #6c757d;">
+            💡 Sélectionner l'organisation cliente
+          </p>
         </div>
 
         <div>
