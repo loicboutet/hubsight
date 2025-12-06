@@ -91,10 +91,17 @@ class ContractsController < ApplicationController
     # Admins don't have organization_id, so we leave it nil for them to select
     @contract = Contract.new(organization_id: current_user.organization_id) unless current_user.admin?
     @contract = Contract.new if current_user.admin?
+    
+    # For Portfolio Managers, auto-set client to their organization
+    if current_user.portfolio_manager?
+      @contract.client_organization_id = current_user.organization_id
+      @contract.client_organization_name = current_user.organization&.name
+    end
   end
 
   def create
     @contract = Contract.new(contract_params)
+    
     # For non-admin users, always use their organization
     # For admins, they can select from params or we use a default (first org)
     if current_user.admin?
@@ -102,6 +109,12 @@ class ContractsController < ApplicationController
       @contract.organization_id = params[:contract][:organization_id].presence || Organization.first&.id
     else
       @contract.organization_id = current_user.organization_id
+      
+      # For Portfolio Managers, if client_organization_id not provided, default to user's org
+      if current_user.portfolio_manager? && @contract.client_organization_id.blank?
+        @contract.client_organization_id = current_user.organization_id
+        @contract.client_organization_name = current_user.organization&.name
+      end
     end
     
     if @contract.save

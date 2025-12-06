@@ -2,7 +2,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "hiddenField", "suggestions", "detailsPanel", "contactSelect"]
+  static targets = ["input", "hiddenField", "nameField", "suggestions", "detailsPanel", "contactSelect", "aliases", "similarNames", "similarList"]
   
   connect() {
     console.log("Organization autocomplete controller connected")
@@ -29,7 +29,7 @@ export default class extends Controller {
     try {
       this.showLoading()
       
-      const response = await fetch(`/api/organizations/autocomplete?query=${encodeURIComponent(query)}`)
+      const response = await fetch(`/organizations/autocomplete?query=${encodeURIComponent(query)}`)
       
       if (!response.ok) {
         throw new Error('API request failed')
@@ -133,9 +133,14 @@ export default class extends Controller {
     if (this.hasHiddenFieldTarget) {
       this.hiddenFieldTarget.value = organization.id
     }
+    
+    // Also set the name field for form submission
+    if (this.hasNameFieldTarget) {
+      this.nameFieldTarget.value = organization.name
+    }
 
     // Display aliases if available
-    if (this.hasAliasesTarget && organization.aliases.length > 0) {
+    if (this.hasAliasesTarget && organization.aliases && organization.aliases.length > 0) {
       this.aliasesTarget.textContent = `Également connu sous: ${organization.aliases.join(", ")}`
       this.aliasesTarget.style.display = "block"
     }

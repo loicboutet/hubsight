@@ -1,5 +1,6 @@
 class OrganizationsController < ApplicationController
-  before_action :require_organization_access
+  before_action :authenticate_user!
+  before_action :require_organization_access, except: [:autocomplete]
   before_action :set_organization, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -53,6 +54,46 @@ class OrganizationsController < ApplicationController
                                 .ordered
                                 .limit(50)
     render json: @organizations
+  end
+
+  def autocomplete
+    query = params[:query].to_s.strip
+    
+    if query.length < 2
+      render json: { organizations: [] }
+      return
+    end
+    
+    # Search across ALL organizations (not scoped to current user's org)
+    organizations = Organization.active
+                                .search(query)
+                                .ordered
+                                .limit(50)
+    
+    # Build response with organization details
+    results = organizations.map do |org|
+      {
+        id: org.id,
+        name: org.name,
+        legal_name: org.legal_name,
+        display_name: org.display_name,
+        organization_type: org.organization_type,
+        type_label: org.type_label,
+        siret: org.siret,
+        formatted_siret: org.formatted_siret,
+        phone: org.phone,
+        email: org.email,
+        website: org.website,
+        headquarters_address: org.headquarters_address,
+        specialties: org.specialties,
+        status: org.status
+      }
+    end
+    
+    render json: { organizations: results }
+  rescue => e
+    Rails.logger.error "Organizations autocomplete error: #{e.message}"
+    render json: { error: e.message }, status: :internal_server_error
   end
 
   private
