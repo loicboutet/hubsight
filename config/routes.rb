@@ -119,6 +119,7 @@ Rails.application.routes.draw do
     member do
       get 'validate'
       post 'confirm_validation'
+      patch 'apply_ai_value'  # PATCH /contracts/:id/apply_ai_value - Apply AI value immediately
       get 'pdf'
       get 'generate_pdf'  # GET /contracts/:id/generate_pdf - Generate PDF summary
       delete 'delete_pdf'
@@ -126,6 +127,9 @@ Rails.application.routes.draw do
       post 'retry_extraction'  # POST /contracts/:id/retry_extraction
     end
   end
+  
+  # Organizations autocomplete/search - MUST come before resources
+  get 'organizations/autocomplete', to: 'organizations#autocomplete'
   
   # Organizations Management
   resources :organizations do
@@ -315,9 +319,6 @@ Rails.application.routes.draw do
     
     # Contract Families autocomplete/search
     get 'contract_families/autocomplete', to: 'contract_families#autocomplete'
-    
-    # Organizations autocomplete/search (Task 38)
-    get 'organizations/autocomplete', to: 'organizations#autocomplete'
     
     # Autocomplete endpoints
     namespace :autocomplete do

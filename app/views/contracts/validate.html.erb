@@ -1,11 +1,27 @@
 <% content_for :header, "Validation du Contrat" %>
 
 <div class="section">
+  <!-- Breadcrumb Navigation -->
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Contrats', url: contracts_path },
+      { name: @contract.contract_number, url: contract_path(@contract) },
+      { name: 'Validation', url: nil }
+    ] %>
+  </div>
+
   <!-- Header -->
   <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Validation des Données Extraites</h2>
       <p class="typo-body-small">Contrat N° <%= @contract.contract_number %></p>
+      <% if @contract.pdf_attached? %>
+        <p class="typo-body-small" style="margin-top: var(--space-xs);">
+          <%= link_to "📄 Voir le PDF", rails_blob_path(@contract.pdf_document, disposition: "inline"), 
+              target: "_blank", 
+              class: "typo-link" %>
+        </p>
+      <% end %>
     </div>
     <div>
       <%= link_to contract_path(@contract), class: "typo-btn-cancel" do %>
@@ -14,412 +30,336 @@
     </div>
   </div>
 
-  <!-- Validation Status Banner -->
+  <!-- Validation Banner -->
   <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md); margin-bottom: var(--space-xl);">
     <div style="display: flex; align-items: center; gap: var(--space-md);">
       <span style="font-size: 2rem;">✓</span>
       <div>
-        <h3 style="margin: 0; font-size: 1.25rem;">Validation Manuelle Requise</h3>
-        <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Vérifiez les données extraites automatiquement et corrigez si nécessaire avant de valider</p>
+        <h3 style="margin: 0; font-size: 1.25rem;">Comparez et approuvez les données</h3>
+        <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Comparez les valeurs originales (saisie manuelle) avec les valeurs extraites par l'IA. Modifiez si nécessaire.</p>
       </div>
     </div>
   </div>
 
-  <!-- Split Screen Layout -->
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-xl);">
+  <%= form_with model: @contract, url: confirm_validation_contract_path(@contract), method: :post do |f| %>
     
-    <!-- LEFT: PDF Viewer -->
-    <div style="position: sticky; top: 20px; height: calc(100vh - 40px);">
-      <div style="background: white; border-radius: var(--space-md); padding: var(--space-lg); height: 100%; display: flex; flex-direction: column;">
-        <h3 class="typo-h4" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-          📄 Document PDF Original
-        </h3>
+    <!-- Validation Form -->
+    <div style="background: white; border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+      
+      <!-- Help Text -->
+      <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: var(--space-md); margin-bottom: var(--space-lg); border-radius: var(--space-sm);">
+        <p class="typo-body-small" style="color: #0d47a1; margin: 0;">
+          💡 <strong>Comment utiliser:</strong> Comparez les valeurs de chaque champ. Le champ de droite (Valeur Finale) est pré-rempli avec la valeur extraite par l'IA si disponible, sinon avec votre valeur originale. Modifiez la valeur finale si nécessaire.
+        </p>
+      </div>
+
+      <% Contract.validation_fields.each do |category, fields| %>
+        <% 
+          category_titles = {
+            identification: '📋 Identification',
+            stakeholders: '👥 Parties Prenantes',
+            scope: '🎯 Périmètre',
+            financial: '💰 Aspects Financiers',
+            temporality: '📅 Temporalité',
+            services: '🔧 Services & SLA'
+          }
+        %>
         
-        <% if @contract.pdf_attached? %>
-          <div style="flex: 1; overflow: auto; background: #f5f5f5; border-radius: var(--space-sm); padding: var(--space-md);">
-            <iframe 
-              src="<%= rails_blob_path(@contract.pdf_document, disposition: "inline") %>" 
-              style="width: 100%; height: 100%; border: none; border-radius: var(--space-sm);"
-              title="Contract PDF">
-            </iframe>
+        <!-- CATEGORY -->
+        <details open style="border: 1px solid #e5e7eb; border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md);">
+          <summary style="cursor: pointer; font-weight: 600; font-size: 1.1rem; padding: var(--space-sm); user-select: none;">
+            <%= category_titles[category] %> (<%= fields.count %> champs)
+          </summary>
+          
+          <div style="margin-top: var(--space-md);">
+            <!-- Comparison Table -->
+            <table style="width: 100%; border-collapse: collapse; margin-top: var(--space-md);">
+              <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                  <th style="padding: var(--space-sm); text-align: left; width: 25%; font-size: 0.9rem; color: #6c757d;">Champ</th>
+                  <th style="padding: var(--space-sm); text-align: left; width: 30%; font-size: 0.9rem; color: #6c757d;">Valeur Originale</th>
+                  <th style="padding: var(--space-sm); text-align: left; width: 30%; font-size: 0.9rem; color: #6c757d;">Valeur Extraite (IA)</th>
+                  <th style="padding: var(--space-sm); text-align: left; width: 15%; font-size: 0.9rem; color: #6c757d; text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% fields.each do |field| %>
+                  <% 
+                    original = @contract.original_value(field)
+                    extracted = @contract.extracted_value(field)
+                    has_extracted = @contract.has_extracted_value?(field)
+                    
+                    # Get field type for normalization
+                    field_type = @contract.class.columns_hash[field.to_s]&.type
+                    
+                    # Normalize values for accurate comparison (handles dates, booleans, etc.)
+                    normalized_original = normalize_value_for_comparison(original, field_type)
+                    normalized_extracted = normalize_value_for_comparison(extracted, field_type)
+                    
+                    # Check if values are actually different after normalization
+                    values_differ = has_extracted && (normalized_extracted != normalized_original)
+                    
+                    # Determine which value to use as default (prefer extracted if available)
+                    default_value = has_extracted ? extracted : original
+                    
+                    # Field labels in French
+                    field_labels = {
+                      title: 'Titre',
+                      contract_type: 'Type de contrat',
+                      purchase_subfamily: 'Sous-famille d\'achats',
+                      contract_object: 'Objet du contrat',
+                      detailed_description: 'Description détaillée',
+                      contracting_method: 'Mode de passation',
+                      public_reference: 'Référence publique',
+                      contractor_organization_name: 'Prestataire (Organisation)',
+                      contractor_contact_name: 'Contact prestataire',
+                      contractor_agency_name: 'Agence prestataire',
+                      client_organization_name: 'Client (Organisation)',
+                      client_contact_name: 'Contact client',
+                      managing_department: 'Département gestionnaire',
+                      monitoring_manager: 'Responsable suivi',
+                      contractor_phone: 'Téléphone prestataire',
+                      contractor_email: 'Email prestataire',
+                      client_contact_email: 'Email contact client',
+                      equipment_count: 'Nombre d\'équipements',
+                      geographic_areas: 'Zones géographiques',
+                      building_names: 'Noms des bâtiments',
+                      floor_levels: 'Niveaux/Étages',
+                      specific_zones: 'Zones spécifiques',
+                      technical_lot: 'Lot technique',
+                      equipment_categories: 'Catégories équipements',
+                      coverage_description: 'Description périmètre',
+                      annual_amount_ht: 'Montant annuel HT (€)',
+                      annual_amount_ttc: 'Montant annuel TTC (€)',
+                      monthly_amount: 'Montant mensuel (€)',
+                      billing_method: 'Méthode facturation',
+                      billing_frequency: 'Fréquence facturation',
+                      payment_terms: 'Conditions de paiement',
+                      revision_conditions: 'Conditions révision',
+                      revision_index: 'Indice de révision',
+                      revision_frequency: 'Fréquence révision',
+                      budget_code: 'Code budgétaire',
+                      signature_date: 'Date de signature',
+                      execution_start_date: 'Date début exécution',
+                      initial_duration_months: 'Durée initiale (mois)',
+                      renewal_duration_months: 'Durée renouvellement (mois)',
+                      renewal_count: 'Nombre de renouvellements',
+                      automatic_renewal: 'Renouvellement automatique',
+                      notice_period_days: 'Préavis (jours)',
+                      next_deadline_date: 'Prochaine échéance',
+                      service_nature: 'Nature des services',
+                      intervention_frequency: 'Fréquence intervention',
+                      intervention_delay_hours: 'Délai intervention (h)',
+                      resolution_delay_hours: 'Délai résolution (h)',
+                      working_hours: 'Horaires de travail',
+                      on_call_24_7: 'Astreinte 24/7',
+                      sla_percentage: 'SLA (%)',
+                      spare_parts_included: 'Pièces incluses'
+                    }
+                  %>
+                  
+                  <tr style="border-bottom: 1px solid #e9ecef;">
+                    <!-- Field Name -->
+                    <td style="padding: var(--space-md); vertical-align: top; font-weight: 500; color: #495057;">
+                      <%= field_labels[field] || field.to_s.humanize %>
+                    </td>
+                    
+                    <!-- Original Value -->
+                    <td style="padding: var(--space-md); vertical-align: top;">
+                      <div style="background: #f8f9fa; padding: var(--space-sm); border-radius: var(--space-xs); min-height: 2rem; display: flex; align-items: center;">
+                        <span style="color: #6c757d; font-size: 0.9rem;">
+                          <% if original.present? %>
+                            <%= original.is_a?(TrueClass) || original.is_a?(FalseClass) ? (original ? 'Oui' : 'Non') : original %>
+                          <% else %>
+                            <em style="color: #ced4da;">(vide)</em>
+                          <% end %>
+                        </span>
+                      </div>
+                    </td>
+                    
+                    <!-- Extracted Value -->
+                    <td style="padding: var(--space-md); vertical-align: top;">
+                      <div style="background: <%= has_extracted ? '#d4edda' : '#f8f9fa' %>; padding: var(--space-sm); border-radius: var(--space-xs); min-height: 2rem; display: flex; align-items: center;">
+                        <span style="color: <%= has_extracted ? '#155724' : '#6c757d' %>; font-size: 0.9rem;">
+                          <% if has_extracted %>
+                            <%= extracted.is_a?(TrueClass) || extracted.is_a?(FalseClass) ? (extracted ? 'Oui' : 'Non') : extracted %>
+                          <% else %>
+                            <em style="color: #ced4da;">(non extrait)</em>
+                          <% end %>
+                        </span>
+                      </div>
+                    </td>
+                    
+                    <!-- Action Button -->
+                    <td style="padding: var(--space-md); vertical-align: top; text-align: center;">
+                      <% if values_differ %>
+                        <button type="button"
+                                class="typo-btn-small typo-btn-small-success use-extracted-btn"
+                                data-field="<%= field %>"
+                                data-value="<%= extracted %>"
+                                data-contract-id="<%= @contract.id %>"
+                                title="Utiliser la valeur extraite par l'IA">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          Utiliser IA
+                        </button>
+                      <% else %>
+                        <span style="color: #ced4da; font-size: 0.85rem;">—</span>
+                      <% end %>
+                    </td>
+                  </tr>
+                  
+                  <!-- Editable Row (Valeur Finale) -->
+                  <tr style="background: #fff;">
+                    <td colspan="4" style="padding: var(--space-sm) var(--space-md);">
+                      <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                        <label style="font-weight: 500; color: #495057; min-width: 120px; font-size: 0.9rem;">
+                          → Valeur Finale:
+                        </label>
+                        <div style="flex: 1;">
+                          <%
+                            field_type = @contract.class.columns_hash[field.to_s]&.type
+                          %>
+                          
+                          <% case field_type %>
+                          <% when :text %>
+                            <%= f.text_area field, 
+                                value: default_value,
+                                rows: 2,
+                                class: "typo-input final-value-field",
+                                style: "width: 100%; font-size: 0.9rem;",
+                                data: { field: field } %>
+                          <% when :boolean %>
+                            <%= f.select field,
+                                [['Oui', true], ['Non', false]],
+                                { selected: default_value },
+                                class: "typo-input final-value-field",
+                                style: "width: 150px; font-size: 0.9rem;",
+                                data: { field: field } %>
+                          <% when :date %>
+                            <%= f.date_field field,
+                                value: default_value,
+                                class: "typo-input final-value-field",
+                                style: "width: 200px; font-size: 0.9rem;",
+                                data: { field: field } %>
+                          <% when :integer, :decimal %>
+                            <%= f.number_field field,
+                                value: default_value,
+                                step: field_type == :decimal ? 0.01 : 1,
+                                class: "typo-input final-value-field",
+                                style: "width: 200px; font-size: 0.9rem;",
+                                data: { field: field } %>
+                          <% else %>
+                            <%= f.text_field field,
+                                value: default_value,
+                                class: "typo-input final-value-field",
+                                style: "width: 100%; font-size: 0.9rem;",
+                                data: { field: field } %>
+                          <% end %>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
           </div>
-        <% else %>
-          <div style="flex: 1; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: var(--space-sm);">
-            <div style="text-align: center; color: #999;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto 1rem;">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-              <p style="font-size: 1.1rem; color: #666;">Aucun PDF disponible</p>
-            </div>
-          </div>
+        </details>
+      <% end %>
+
+      <!-- Validation Notes -->
+      <div style="margin-top: var(--space-xl);">
+        <label class="typo-label">Notes de validation (optionnel)</label>
+        <%= f.text_area :validation_notes, 
+            rows: 4, 
+            class: "typo-input", 
+            placeholder: "Ajoutez des notes concernant cette validation...",
+            style: "width: 100%;" %>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-md); justify-content: flex-end;">
+        <%= link_to contract_path(@contract), class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+          Annuler
         <% end %>
+        <%= f.submit "✓ Valider le Contrat", 
+            class: "typo-btn-success", 
+            style: "cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);" %>
       </div>
     </div>
-
-    <!-- RIGHT: Validation Form -->
-    <div>
-      <%= form_with model: @contract, url: confirm_validation_contract_path(@contract), method: :post, data: { controller: "validation" } do |f| %>
-        
-        <div style="background: white; border-radius: var(--space-md); padding: var(--space-lg); margin-bottom: var(--space-lg);">
-          <h3 class="typo-h4" style="margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-            ✏️ Données Éditables
-          </h3>
-          
-          <!-- Help Text -->
-          <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: var(--space-md); margin-bottom: var(--space-lg); border-radius: var(--space-sm);">
-            <p class="typo-body-small" style="color: #0d47a1; margin: 0;">
-              💡 <strong>Astuce:</strong> Les champs avec fond vert ont été extraits automatiquement. Les champs avec fond rouge sont vides. Vérifiez et corrigez les données avant de valider.
-            </p>
-          </div>
-
-          <!-- CATEGORY 1: IDENTIFICATION -->
-          <details open style="border: 1px solid #e5e7eb; border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md);">
-            <summary style="cursor: pointer; font-weight: 600; font-size: 1.1rem; padding: var(--space-sm); user-select: none;">
-              📋 Identification (8 champs)
-            </summary>
-            <div style="margin-top: var(--space-md); display: grid; gap: var(--space-md);">
-              
-              <div>
-                <label class="typo-label">Titre</label>
-                <%= f.text_field :title, class: "typo-input", style: field_style(@contract.title), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Objet du contrat</label>
-                <%= f.text_area :contract_object, rows: 3, class: "typo-input", style: field_style(@contract.contract_object), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Type de contrat</label>
-                <%= f.text_field :contract_type, class: "typo-input", style: field_style(@contract.contract_type), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Sous-famille d'achats</label>
-                <%= f.text_field :purchase_subfamily, class: "typo-input", style: field_style(@contract.purchase_subfamily), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Description détaillée</label>
-                <%= f.text_area :detailed_description, rows: 3, class: "typo-input", style: field_style(@contract.detailed_description), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Mode de passation</label>
-                <%= f.text_field :contracting_method, class: "typo-input", style: field_style(@contract.contracting_method), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Référence publique</label>
-                <%= f.text_field :public_reference, class: "typo-input", style: field_style(@contract.public_reference), data: { validation_target: "field" } %>
-              </div>
-            </div>
-          </details>
-
-          <!-- CATEGORY 2: STAKEHOLDERS -->
-          <details style="border: 1px solid #e5e7eb; border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md);">
-            <summary style="cursor: pointer; font-weight: 600; font-size: 1.1rem; padding: var(--space-sm); user-select: none;">
-              👥 Parties Prenantes (10 champs)
-            </summary>
-            <div style="margin-top: var(--space-md); display: grid; gap: var(--space-md);">
-              
-              <div>
-                <label class="typo-label">Prestataire (Organisation)</label>
-                <%= f.text_field :contractor_organization_name, class: "typo-input", style: field_style(@contract.contractor_organization_name), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Contact prestataire</label>
-                <%= f.text_field :contractor_contact_name, class: "typo-input", style: field_style(@contract.contractor_contact_name), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Agence prestataire</label>
-                <%= f.text_field :contractor_agency_name, class: "typo-input", style: field_style(@contract.contractor_agency_name), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Client (Organisation)</label>
-                <%= f.text_field :client_organization_name, class: "typo-input", style: field_style(@contract.client_organization_name), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Contact client</label>
-                <%= f.text_field :client_contact_name, class: "typo-input", style: field_style(@contract.client_contact_name), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Département gestionnaire</label>
-                <%= f.text_field :managing_department, class: "typo-input", style: field_style(@contract.managing_department), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Responsable suivi</label>
-                <%= f.text_field :monitoring_manager, class: "typo-input", style: field_style(@contract.monitoring_manager), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Téléphone prestataire</label>
-                <%= f.text_field :contractor_phone, class: "typo-input", style: field_style(@contract.contractor_phone), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Email prestataire</label>
-                <%= f.email_field :contractor_email, class: "typo-input", style: field_style(@contract.contractor_email), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Email contact client</label>
-                <%= f.email_field :client_contact_email, class: "typo-input", style: field_style(@contract.client_contact_email), data: { validation_target: "field" } %>
-              </div>
-            </div>
-          </details>
-
-          <!-- CATEGORY 3: SCOPE -->
-          <details style="border: 1px solid #e5e7eb; border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md);">
-            <summary style="cursor: pointer; font-weight: 600; font-size: 1.1rem; padding: var(--space-sm); user-select: none;">
-              🎯 Périmètre (8 champs sélectionnés)
-            </summary>
-            <div style="margin-top: var(--space-md); display: grid; gap: var(--space-md);">
-              
-              <div>
-                <label class="typo-label">Nombre d'équipements</label>
-                <%= f.number_field :equipment_count, class: "typo-input", style: field_style(@contract.equipment_count), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Zones géographiques</label>
-                <%= f.text_field :geographic_areas, class: "typo-input", style: field_style(@contract.geographic_areas), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Noms des bâtiments</label>
-                <%= f.text_field :building_names, class: "typo-input", style: field_style(@contract.building_names), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Niveaux/Étages</label>
-                <%= f.text_field :floor_levels, class: "typo-input", style: field_style(@contract.floor_levels), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Zones spécifiques</label>
-                <%= f.text_field :specific_zones, class: "typo-input", style: field_style(@contract.specific_zones), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Lot technique</label>
-                <%= f.text_field :technical_lot, class: "typo-input", style: field_style(@contract.technical_lot), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Catégories équipements</label>
-                <%= f.text_field :equipment_categories, class: "typo-input", style: field_style(@contract.equipment_categories), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Description périmètre</label>
-                <%= f.text_area :coverage_description, rows: 3, class: "typo-input", style: field_style(@contract.coverage_description), data: { validation_target: "field" } %>
-              </div>
-            </div>
-          </details>
-
-          <!-- CATEGORY 4: FINANCIAL -->
-          <details style="border: 1px solid #e5e7eb; border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md);">
-            <summary style="cursor: pointer; font-weight: 600; font-size: 1.1rem; padding: var(--space-sm); user-select: none;">
-              💰 Aspects Financiers (10 champs sélectionnés)
-            </summary>
-            <div style="margin-top: var(--space-md); display: grid; gap: var(--space-md);">
-              
-              <div>
-                <label class="typo-label">Montant annuel HT (€)</label>
-                <%= f.number_field :annual_amount_ht, step: 0.01, class: "typo-input", style: field_style(@contract.annual_amount_ht), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Montant annuel TTC (€)</label>
-                <%= f.number_field :annual_amount_ttc, step: 0.01, class: "typo-input", style: field_style(@contract.annual_amount_ttc), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Montant mensuel (€)</label>
-                <%= f.number_field :monthly_amount, step: 0.01, class: "typo-input", style: field_style(@contract.monthly_amount), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Méthode facturation</label>
-                <%= f.text_field :billing_method, class: "typo-input", style: field_style(@contract.billing_method), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Fréquence facturation</label>
-                <%= f.text_field :billing_frequency, class: "typo-input", style: field_style(@contract.billing_frequency), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Conditions de paiement</label>
-                <%= f.text_field :payment_terms, class: "typo-input", style: field_style(@contract.payment_terms), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Conditions révision</label>
-                <%= f.text_area :revision_conditions, rows: 2, class: "typo-input", style: field_style(@contract.revision_conditions), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Indice de révision</label>
-                <%= f.text_field :revision_index, class: "typo-input", style: field_style(@contract.revision_index), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Fréquence révision</label>
-                <%= f.text_field :revision_frequency, class: "typo-input", style: field_style(@contract.revision_frequency), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Code budgétaire</label>
-                <%= f.text_field :budget_code, class: "typo-input", style: field_style(@contract.budget_code), data: { validation_target: "field" } %>
-              </div>
-            </div>
-          </details>
-
-          <!-- CATEGORY 5: TEMPORALITY -->
-          <details style="border: 1px solid #e5e7eb; border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md);">
-            <summary style="cursor: pointer; font-weight: 600; font-size: 1.1rem; padding: var(--space-sm); user-select: none;">
-              📅 Temporalité (8 champs sélectionnés)
-            </summary>
-            <div style="margin-top: var(--space-md); display: grid; gap: var(--space-md);">
-              
-              <div>
-                <label class="typo-label">Date de signature</label>
-                <%= f.date_field :signature_date, class: "typo-input", style: field_style(@contract.signature_date), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Date début exécution</label>
-                <%= f.date_field :execution_start_date, class: "typo-input", style: field_style(@contract.execution_start_date), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Durée initiale (mois)</label>
-                <%= f.number_field :initial_duration_months, class: "typo-input", style: field_style(@contract.initial_duration_months), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Durée renouvellement (mois)</label>
-                <%= f.number_field :renewal_duration_months, class: "typo-input", style: field_style(@contract.renewal_duration_months), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Nombre de renouvellements</label>
-                <%= f.number_field :renewal_count, class: "typo-input", style: field_style(@contract.renewal_count), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Renouvellement automatique</label>
-                <%= f.select :automatic_renewal, [['Oui', true], ['Non', false]], {}, class: "typo-input", style: field_style(@contract.automatic_renewal), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Préavis (jours)</label>
-                <%= f.number_field :notice_period_days, class: "typo-input", style: field_style(@contract.notice_period_days), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Prochaine échéance</label>
-                <%= f.date_field :next_deadline_date, class: "typo-input", style: field_style(@contract.next_deadline_date), data: { validation_target: "field" } %>
-              </div>
-            </div>
-          </details>
-
-          <!-- CATEGORY 6: SERVICES & SLA -->
-          <details style="border: 1px solid #e5e7eb; border-radius: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md);">
-            <summary style="cursor: pointer; font-weight: 600; font-size: 1.1rem; padding: var(--space-sm); user-select: none;">
-              🔧 Services & SLA (8 champs sélectionnés)
-            </summary>
-            <div style="margin-top: var(--space-md); display: grid; gap: var(--space-md);">
-              
-              <div>
-                <label class="typo-label">Nature des services</label>
-                <%= f.text_area :service_nature, rows: 3, class: "typo-input", style: field_style(@contract.service_nature), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Fréquence intervention</label>
-                <%= f.text_field :intervention_frequency, class: "typo-input", style: field_style(@contract.intervention_frequency), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Délai intervention (h)</label>
-                <%= f.number_field :intervention_delay_hours, class: "typo-input", style: field_style(@contract.intervention_delay_hours), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Délai résolution (h)</label>
-                <%= f.number_field :resolution_delay_hours, class: "typo-input", style: field_style(@contract.resolution_delay_hours), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Horaires de travail</label>
-                <%= f.text_field :working_hours, class: "typo-input", style: field_style(@contract.working_hours), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Astreinte 24/7</label>
-                <%= f.select :on_call_24_7, [['Oui', true], ['Non', false]], {}, class: "typo-input", style: field_style(@contract.on_call_24_7), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">SLA (%)</label>
-                <%= f.number_field :sla_percentage, step: 0.1, class: "typo-input", style: field_style(@contract.sla_percentage), data: { validation_target: "field" } %>
-              </div>
-
-              <div>
-                <label class="typo-label">Pièces incluses</label>
-                <%= f.select :spare_parts_included, [['Oui', true], ['Non', false]], {}, class: "typo-input", style: field_style(@contract.spare_parts_included), data: { validation_target: "field" } %>
-              </div>
-            </div>
-          </details>
-
-          <!-- Validation Notes -->
-          <div style="margin-top: var(--space-xl);">
-            <label class="typo-label">Notes de validation (optionnel)</label>
-            <%= f.text_area :validation_notes, rows: 4, class: "typo-input", placeholder: "Ajoutez des notes concernant cette validation..." %>
-          </div>
-
-          <!-- Action Buttons -->
-          <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-md); justify-content: flex-end;">
-            <%= link_to contract_path(@contract), class: "typo-btn-cancel" do %>
-              Annuler
-            <% end %>
-            <%= f.submit "✓ Valider le Contrat", class: "typo-btn-primary", style: "background: linear-gradient(135deg, #10b981 0%, #059669 100%);" %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <% end %>
 </div>
 
-<% content_for :javascript do %>
-  <script>
-    // Helper function to determine field background color
-    function field_style(value) {
-      if (value && value !== '') {
-        return 'background-color: #f0fdf4; border: 2px solid #10b981;'; // Green for populated
-      } else {
-        return 'background-color: #fef2f2; border: 2px solid #ef4444;'; // Red for empty
+<!-- JavaScript for "Use AI" buttons -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get CSRF token for AJAX requests
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  
+  // Handle "Use AI" button clicks
+  document.querySelectorAll('.use-extracted-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const field = this.dataset.field;
+      const value = this.dataset.value;
+      const contractId = this.dataset.contractId;
+      const btn = this;
+      
+      // Find the corresponding final value field
+      const finalField = document.querySelector(`[data-field="${field}"].final-value-field`);
+      
+      if (finalField) {
+        // Update the input field
+        finalField.value = value;
+        
+        // Disable button and show loading state
+        btn.disabled = true;
+        btn.textContent = '⏳ Sauvegarde...';
+        
+        // Prepare data to send
+        const formData = new FormData();
+        formData.append('field', field);
+        formData.append('value', value);
+        
+        // Send AJAX request to save immediately
+        fetch(`/contracts/${contractId}/apply_ai_value`, {
+          method: 'PATCH',
+          headers: {
+            'X-CSRF-Token': csrfToken,
+            'Accept': 'application/json'
+          },
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Highlight the field temporarily
+            finalField.style.background = '#d4edda';
+            setTimeout(() => {
+              finalField.style.background = '';
+            }, 1000);
+            
+            // Update button to success state
+            btn.textContent = '✓ Appliqué';
+            btn.style.background = '#6c757d';
+            
+            // Show success message
+            console.log(`✓ ${field} sauvegardé avec succès`);
+          } else {
+            // Show error
+            alert('Erreur: ' + (data.error || 'Impossible de sauvegarder'));
+            btn.disabled = false;
+            btn.textContent = '✓ Utiliser IA';
+          }
+        })
+        .catch(error => {
+          console.error('Erreur AJAX:', error);
+          alert('Erreur de connexion. Veuillez réessayer.');
+          btn.disabled = false;
+          btn.textContent = '✓ Utiliser IA';
+        });
       }
-    }
-  </script>
-<% end %>
-
-<%
-  # Helper method to determine field style based on whether it has a value
-  def field_style(value)
-    if value.present?
-      "background-color: #f0fdf4; border: 2px solid #10b981;" # Green
-    else
-      "background-color: #fef2f2; border: 2px solid #ef4444;" # Red
-    end
-  end
-%>
+    });
+  });
+});
+</script>

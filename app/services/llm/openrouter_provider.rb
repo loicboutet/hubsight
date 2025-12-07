@@ -27,11 +27,11 @@ module Llm
     private
     
     def api_key
-      Rails.application.credentials.dig(:openrouter, :api_key)
+      ENV['OPENROUTER_API_KEY'] || Rails.application.credentials.dig(:openrouter, :api_key)
     end
     
     def model_name
-      Rails.application.credentials.dig(:openrouter, :model) || DEFAULT_MODEL
+      ENV['OPENROUTER_MODEL'] || Rails.application.credentials.dig(:openrouter, :model) || DEFAULT_MODEL
     end
     
     def call_openrouter_api(ocr_text)
@@ -45,7 +45,7 @@ module Llm
       request['HTTP-Referer'] = 'https://hubsight.app'
       request['X-Title'] = 'HubSight Contract Extraction'
       
-      request.body = JSON.dump({
+      payload = {
         model: model_name,
         messages: [
           { role: 'system', content: system_prompt },
@@ -53,11 +53,19 @@ module Llm
         ],
         temperature: TEMPERATURE,
         max_tokens: MAX_TOKENS
-      })
+      }
+      
+      request.body = JSON.dump(payload)
+      
+      # Log: Sending payload to OpenRouter
+      Rails.logger.info("Sending payload to OpenRouter API - Model: #{model_name}, OCR text length: #{ocr_text.length} chars")
       
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
         http.request(request)
       end
+      
+      # Log: Received response from OpenRouter
+      Rails.logger.info("Received response from OpenRouter API - Status: #{response.code}, Body length: #{response.body&.length || 0} chars")
       
       if response.code == '200'
         data = JSON.parse(response.body)

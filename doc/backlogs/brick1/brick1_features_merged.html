@@ -252,31 +252,14 @@
                 </tr>
                 <tr>
                     <td class="sl-col">6</td>
-                    <td class="title-col">Session Management</td>
-                    <td class="description-col">Secure session handling with timeout, "remember me" cookie, concurrent session management, logout functionality</td>
-                    <td class="url-col"><span class="empty-cell">System-wide feature</span></td>
+                    <td class="title-col">User Management</td>
+                    <td class="description-col">Create/edit users, manage roles</td>
+                    <td class="url-col"><a href="http://localhost:3000/users">localhost:3000/users</a></td>
                     <td class="test-col">
-                        <div class="role-badges">
-                            <span class="badge badge-system">All Users</span>
-                        </div>
-                        <div class="test-section">
-                            <strong>Test Session Behavior:</strong>
-                            <ol>
-                                <li>Login with valid credentials without "Remember me"</li>
-                                <li>Verify session timeout after 30 minutes of inactivity</li>
-                                <li>Verify redirect to login page on timeout</li>
-                                <li>Login again with "Remember me" checked</li>
-                                <li>Close browser and reopen</li>
-                                <li>Verify still logged in (cookie-based session)</li>
-                                <li>Test concurrent sessions: login from 2 different browsers</li>
-                                <li>Verify both sessions work independently</li>
-                                <li>Test logout: click "Déconnexion" (Logout)</li>
-                                <li>Verify session destroyed and redirected to login</li>
-                                <li>Verify cannot access protected pages after logout</li>
-                                <li>Test session security: verify CSRF protection active</li>
-                            </ol>
-                        </div>
+                        <div><span class="badge badge-admin">Admin Only</span></div>
+                        <div class="test-section"><strong>Test:</strong> CRUD users, assign roles, impersonate</div>
                     </td>
+                    <td class="video-col"><span class="empty-cell">-</span></td>
                     <td class="video-col"><span class="empty-cell">-</span></td>
                 </tr>
                 <tr>
@@ -708,16 +691,29 @@
                             <strong>Test as Portfolio Manager:</strong>
                             <ol>
                                 <li>Login as portfolio manager (portfolio@hubsight.com / Password123!)</li>
-                                <li>Upload contract with PDF (or use existing contract)</li>
-                                <li>Wait for OCR extraction to complete</li>
-                                <li>Verify "Données Extraites" section appears</li>
-                                <li>Verify 🎭 Demo mode banner displayed at top</li>
-                                <li>Verify 6 collapsible sections: Identification, Parties, Scope, Financial, Temporality, Services</li>
-                                <li>Expand each section and verify extracted fields</li>
-                                <li>Count total fields - should be 72 across all sections</li>
-                                <li>Verify color-coded confidence indicators (green/yellow/red)</li>
-                                <li>Test collapsing/expanding sections</li>
-                                <li>Verify extraction completes within reasonable time</li>
+                                <li>Navigate to localhost:3000/contracts/new</li>
+                                <li>Upload a PDF contract file (max 10MB) using drag-and-drop</li>
+                                <li>Fill required fields: contract_number, title, contractor_organization_name</li>
+                                <li>Click "Créer le Contrat" to submit</li>
+                                <li>After redirect to contract detail page, wait 10-20 seconds for OCR to complete</li>
+                                <li>Once OCR shows "Terminé" status, LLM extraction automatically starts</li>
+                                <li>Scroll down to find purple gradient section "🤖 Données Extraites Automatiquement"</li>
+                                <li>Verify status badge shows "Terminé" (green) when complete</li>
+                                <li>Verify 🎭 "Mode Démonstration" banner appears (regex-based extraction)</li>
+                                <li>Verify extraction metadata displays: Provider (mock/demo), Model, Confidence %, Processed date</li>
+                                <li>Verify 6 collapsible <code>&lt;details&gt;</code> sections present:</li>
+                                <li style="margin-left: 20px;">📋 Identification (8 fields): contract_number, title, contract_type, purchase_subfamily, contract_object, detailed_description, contracting_method, public_reference</li>
+                                <li style="margin-left: 20px;">👥 Parties Prenantes (10 fields): contractor/client organizations, contacts, agencies, managing_department, monitoring_manager, phones, emails</li>
+                                <li style="margin-left: 20px;">🎯 Périmètre (15 fields): covered_sites, covered_buildings, covered_equipment_types, equipment_count, technical_lot, exclusions, etc.</li>
+                                <li style="margin-left: 20px;">💰 Aspects Financiers (15 fields): annual amounts HT/TTC, monthly_amount, billing_method/frequency, payment_terms, revision_index, deposit_amount, etc.</li>
+                                <li style="margin-left: 20px;">📅 Temporalité (10 fields): signature_date, execution_start_date, durations, renewal info, notice_period, deadlines</li>
+                                <li style="margin-left: 20px;">🔧 Services & SLA (12 fields): service_nature, intervention frequencies/delays, working_hours, on_call_24_7, SLA %, KPIs, spare_parts/supplies included, etc.</li>
+                                <li>Click each section to expand/collapse and verify fields display</li>
+                                <li>Count total fields across all 6 sections = 70 fields (8+10+15+15+10+12)</li>
+                                <li>Verify fields show either extracted values or "N/A" for empty fields</li>
+                                <li>Test automatic trigger: extraction runs automatically after OCR, no manual action needed</li>
+                                <li>Test retry: if extraction fails, verify "🔄 Relancer l'extraction" button appears</li>
+                                <li>Verify extraction is asynchronous (background job) - page doesn't freeze</li>
                             </ol>
                         </div>
                     </td>
