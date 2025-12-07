@@ -214,9 +214,14 @@
     </div>
 
     <!-- Pagination -->
-    <% if @equipment.respond_to?(:total_pages) && @equipment.total_pages > 1 %>
-      <div style="margin-top: var(--space-lg); text-align: center;">
-        <%= paginate @equipment, params: @filter_params.merge(sort: @sort_column, direction: @sort_direction) %>
+    <% if @equipment.any? %>
+      <div style="margin-top: var(--space-xl);">
+        <%= render 'shared/pagination', 
+          current_page: @equipment.current_page, 
+          total_pages: @equipment.total_pages, 
+          total_count: @all_equipment_count, 
+          per_page: @per_page,
+          path: equipment_index_path %>
       </div>
     <% end %>
   </div>
