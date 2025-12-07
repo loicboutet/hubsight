@@ -11,6 +11,8 @@ class LlmService
       return error_result('No OCR text provided') if ocr_text.blank?
       
       provider_name = provider == :auto ? determine_provider : provider
+      Rails.logger.info("LLM Service: Selected provider: #{provider_name} (OpenRouter API key configured: #{openrouter_configured?})")
+      
       provider_instance = get_provider(provider_name)
       
       result = provider_instance.extract_from_text(ocr_text)

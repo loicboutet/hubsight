@@ -37,7 +37,11 @@ class ExtractContractOcrJob < ApplicationJob
         ocr_error_message: nil
       )
       
-      Rails.logger.info("OCR completed for Contract ##{contract.id} using #{result[:provider]} (#{result[:page_count]} pages)")
+      Rails.logger.info("Contract ##{contract.id}: OCR completed using #{result[:provider]} - #{result[:page_count]} pages, #{result[:text]&.length || 0} characters extracted")
+      
+      # Queue LLM extraction job
+      Rails.logger.info("Contract ##{contract.id}: Queuing LLM extraction job")
+      ExtractContractDataJob.perform_later(contract.id)
     else
       # OCR failed - save error message
       contract.update(
