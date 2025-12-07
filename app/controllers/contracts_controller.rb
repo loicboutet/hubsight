@@ -67,8 +67,8 @@ class ContractsController < ApplicationController
     @subfamilies = ContractFamily.subfamilies_only.order(:name)
     
     # Store sorting params
-    @sort_column = params[:sort] || 'contract_number'
-    @sort_direction = params[:direction] || 'asc'
+    @sort_column = params[:sort] || 'created_at'
+    @sort_direction = params[:direction] || 'desc'
     
     # Get column visibility preferences from session
     @visible_columns = session[:contract_columns] || default_columns
@@ -416,8 +416,8 @@ class ContractsController < ApplicationController
   end
   
   def apply_sorting(contracts)
-    sort_column = params[:sort] || 'contract_number'
-    sort_direction = params[:direction] || 'asc'
+    sort_column = params[:sort] || 'created_at'
+    sort_direction = params[:direction] || 'desc'
     
     # Validate sort column to prevent SQL injection
     allowed_columns = %w[
