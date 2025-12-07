@@ -7,18 +7,18 @@
     ] %>
   </div>
 
-<div style="padding: var(--space-xl);">
-  <!-- Header with Statistics -->
-  <div style="margin-bottom: var(--space-2xl);">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
-      <div>
-        <h1 class="typo-h1" style="margin-bottom: var(--space-sm);">Vue Arborescente</h1>
-        <p style="color: var(--gray); margin: 0;">Navigation hiérarchique de votre portefeuille immobilier</p>
-      </div>
+  <div class="page-header-responsive">
+    <div>
+      <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Vue Arborescente</h2>
+      <p class="typo-body-small">Navigation hiérarchique de votre portefeuille immobilier</p>
     </div>
+  </div>
 
+  <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl);">
     <!-- Statistics Cards -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-xl);">
+    <div style="margin-bottom: var(--space-2xl);">
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-xl);">
       <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: var(--space-lg); border-radius: var(--space-md);">
         <div style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs);"><%= @total_sites %></div>
         <div style="font-size: 0.875rem; opacity: 0.9;">Sites</div>
@@ -39,24 +39,24 @@
         <div style="font-size: 2rem; font-weight: 700; margin-bottom: var(--space-xs);"><%= @total_equipment %></div>
         <div style="font-size: 0.875rem; opacity: 0.9;">Équipements</div>
       </div>
-    </div>
-  </div>
-
-  <!-- Tree View Container -->
-  <div style="background: var(--white); border-radius: var(--space-md); padding: var(--space-xl); box-shadow: 0 1px 3px rgba(0,0,0,0.1);" data-controller="tree">
-    
-    <% if @sites.empty? %>
-      <!-- Empty State -->
-      <div style="text-align: center; padding: var(--space-2xl); color: var(--gray);">
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); opacity: 0.3;">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-        <h3 style="margin-bottom: var(--space-sm); color: var(--dark-gray);">Aucun site disponible</h3>
-        <p>Commencez par <%= link_to "créer votre premier site", new_site_path, style: "color: var(--coral-primary); text-decoration: none;" %></p>
       </div>
-    <% else %>
-      <!-- Portfolio Root -->
-      <div class="tree-node tree-root">
+    </div>
+
+    <!-- Tree View Container -->
+    <div data-controller="tree">
+    
+      <% if @sites.empty? %>
+        <!-- Empty State -->
+        <div style="text-align: center; padding: var(--space-2xl); color: var(--gray);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin: 0 auto var(--space-lg); opacity: 0.3;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+          <h3 style="margin-bottom: var(--space-sm); color: var(--dark-gray);">Aucun site disponible</h3>
+          <p>Commencez par <%= link_to "créer votre premier site", new_site_path, style: "color: var(--coral-primary); text-decoration: none;" %></p>
+        </div>
+      <% else %>
+        <!-- Portfolio Root -->
+        <div class="tree-node tree-root">
         <div class="tree-node-header" style="padding: var(--space-md); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: var(--space-sm); margin-bottom: var(--space-md);">
           <div style="display: flex; align-items: center; gap: var(--space-sm);">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -235,14 +235,15 @@
             </div>
           <% end %>
         </div>
-      </div>
-    <% end %>
-  </div>
+        </div>
+      <% end %>
+    </div>
 
-  <!-- Help Text -->
-  <div style="margin-top: var(--space-lg); padding: var(--space-md); background: var(--blue-pale); border-left: 4px solid var(--blue-primary); border-radius: var(--space-sm);">
-    <p style="margin: 0; color: var(--dark-gray); font-size: 0.875rem;">
-      <strong>💡 Astuce :</strong> Cliquez sur les icônes de flèche pour développer/réduire les niveaux de la hiérarchie. Cliquez sur les noms pour accéder aux pages de détail.
-    </p>
+    <!-- Help Text -->
+    <div style="margin-top: var(--space-lg); padding: var(--space-md); background: var(--blue-pale); border-left: 4px solid var(--blue-primary); border-radius: var(--space-sm);">
+      <p style="margin: 0; color: var(--dark-gray); font-size: 0.875rem;">
+        <strong>💡 Astuce :</strong> Cliquez sur les icônes de flèche pour développer/réduire les niveaux de la hiérarchie. Cliquez sur les noms pour accéder aux pages de détail.
+      </p>
+    </div>
   </div>
 </div>

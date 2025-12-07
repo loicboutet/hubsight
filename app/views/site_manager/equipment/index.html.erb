@@ -1,21 +1,20 @@
-<% content_for :header
+<% content_for :header, "Mes Équipements" %>
+
 <div class="section">
   <div style="margin-bottom: var(--space-xl);">
     <%= render 'shared/breadcrumb', path: [
       { name: 'Mes Équipements', url: nil }
     ] %>
   </div>
-, "Mes Équipements" %>
 
-<div class="section" data-controller="equipment-list">
-  <div class="page-header-responsive">
+  <div class="page-header-responsive" data-controller="equipment-list">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Gestion des Équipements</h2>
       <p class="typo-body-small">Total: <%= @total_count %> équipement<%= @total_count > 1 ? 's' : '' %></p>
     </div>
   </div>
 
-  <div style="background-color: var(--white); border-radius: var(--space-md); width: 100%; max-width: 100%; overflow-x: hidden; box-sizing: border-box;">
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
     <!-- Filters Section -->
     <%= form_with url: my_equipment_index_path, method: :get, data: { equipment_list_target: "filterForm" } do |f| %>
       <div style="margin-bottom: var(--space-xl); padding: var(--space-lg); background-color: #f8f9fa; border-radius: var(--space-sm); overflow-x: hidden;">
@@ -70,7 +69,7 @@
     <% end %>
 
     <!-- Equipment Table -->
-    <div class="table-responsive" style="max-height: 600px; overflow-x: auto; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <div class="table-responsive">
       <table style="width: 100%; border-collapse: collapse;" data-equipment-list-target="table">
         <thead>
           <tr style="border-bottom: 2px solid var(--pink-pale);">
