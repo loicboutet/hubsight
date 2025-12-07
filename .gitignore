@@ -39,3 +39,6 @@
 /config/credentials/production.key
 
 /config/credentials/development.key
+
+# Log files
+server.log

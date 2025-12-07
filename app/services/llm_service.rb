@@ -11,7 +11,12 @@ class LlmService
       return error_result('No OCR text provided') if ocr_text.blank?
       
       provider_name = provider == :auto ? determine_provider : provider
+      
+      # Enhanced debugging logs
       Rails.logger.info("LLM Service: Selected provider: #{provider_name} (OpenRouter API key configured: #{openrouter_configured?})")
+      Rails.logger.info("LLM Service: Rails.env = #{Rails.env}")
+      Rails.logger.info("LLM Service: ENV['OPENROUTER_API_KEY'] = #{ENV['OPENROUTER_API_KEY'].present? ? 'present' : 'nil'}")
+      Rails.logger.info("LLM Service: Rails.application.credentials.dig(:openrouter, :api_key) = #{Rails.application.credentials.dig(:openrouter, :api_key).present? ? 'present' : 'nil'}")
       
       provider_instance = get_provider(provider_name)
       
