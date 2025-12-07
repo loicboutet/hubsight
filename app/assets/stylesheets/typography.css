@@ -660,12 +660,14 @@ body {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
+  height: 40px; /* Consistent height for all small buttons */
 }
 
 /* Edit Button - Medium Gray (Neutral Edit Action) */
 .typo-btn-small-primary {
   background-color: var(--medium-gray);
   color: var(--white);
+  height: 40px;
 }
 
 .typo-btn-small-primary:hover {
@@ -678,6 +680,7 @@ body {
 .typo-btn-small-secondary {
   background-color: var(--coral-primary);
   color: var(--white);
+  height: 40px;
 }
 
 .typo-btn-small-secondary:hover {
@@ -690,6 +693,7 @@ body {
 .typo-btn-small-success {
   background-color: #10b981;
   color: var(--white);
+  height: 40px;
 }
 
 .typo-btn-small-success:hover {
@@ -698,11 +702,51 @@ body {
   box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
 }
 
+/* Info Button - Blue (Informational Action) */
+.typo-btn-small-info {
+  background-color: #3b82f6;
+  color: var(--white);
+  height: 40px;
+}
+
+.typo-btn-small-info:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+/* Warning Button - Orange (Warning/Processing Action) */
+.typo-btn-small-warning {
+  background-color: #f59e0b;
+  color: var(--white);
+  height: 40px;
+}
+
+.typo-btn-small-warning:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+/* Purple Button - Purple (Special/Analysis Action) */
+.typo-btn-small-purple {
+  background-color: #8b5cf6;
+  color: var(--white);
+  height: 40px;
+}
+
+.typo-btn-small-purple:hover {
+  background-color: #7c3aed;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+}
+
 /* Delete Button - Light with Red Accent (Destructive Action) */
 .typo-btn-small-danger {
   background-color: #fff5f5;
   color: #e53e3e;
   border: 1px solid #feb2b2;
+  height: 40px;
 }
 
 .typo-btn-small-danger:hover {
