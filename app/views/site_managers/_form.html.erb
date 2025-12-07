@@ -1,0 +1,163 @@
+<%= form_with(model: @site_manager, url: @site_manager.persisted? ? site_manager_path(@site_manager) : site_managers_path, method: @site_manager.persisted? ? :patch : :post, local: true) do |form| %>
+  <div style="background-color: var(--white); border-radius: var(--space-md);">
+    
+    <!-- Display validation errors -->
+    <% if @site_manager.errors.any? %>
+      <div style="background-color: #fee2e2; border: 1px solid #ef4444; border-radius: var(--space-sm); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+        <div style="display: flex; align-items: start; gap: var(--space-md);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#dc2626" style="flex-shrink: 0;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div style="flex: 1;">
+            <h4 style="color: #dc2626; font-weight: 600; margin-bottom: var(--space-sm);">
+              <%= pluralize(@site_manager.errors.count, "erreur") %> <%= @site_manager.errors.count > 1 ? 'ont empêché' : 'a empêché' %> l'enregistrement:
+            </h4>
+            <ul style="margin: 0; padding-left: var(--space-lg); color: #991b1b;">
+              <% @site_manager.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Personal Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations Personnelles
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Prénom <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= form.text_field :first_name, required: true, style: "width: 100%;" %>
+          <% if @site_manager.errors[:first_name].any? %>
+            <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+              <%= @site_manager.errors[:first_name].first %>
+            </p>
+          <% end %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Nom <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= form.text_field :last_name, required: true, style: "width: 100%;" %>
+          <% if @site_manager.errors[:last_name].any? %>
+            <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+              <%= @site_manager.errors[:last_name].first %>
+            </p>
+          <% end %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Email <span style="color: var(--coral-primary);">*</span>
+          </label>
+          <%= form.email_field :email, required: true, style: "width: 100%;" %>
+          <% if @site_manager.errors[:email].any? %>
+            <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+              <%= @site_manager.errors[:email].first %>
+            </p>
+          <% end %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Téléphone
+          </label>
+          <%= form.text_field :phone, type: 'tel', style: "width: 100%;" %>
+          <% if @site_manager.errors[:phone].any? %>
+            <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+              <%= @site_manager.errors[:phone].first %>
+            </p>
+          <% end %>
+        </div>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Département
+          </label>
+          <%= form.text_field :department, style: "width: 100%;" %>
+          <% if @site_manager.errors[:department].any? %>
+            <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+              <%= @site_manager.errors[:department].first %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Information Section -->
+    <div style="margin-bottom: var(--space-xl);">
+      <h4 class="typo-h4" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+        Informations de Compte
+      </h4>
+      
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg);">
+        <% if @site_manager.persisted? %>
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Nouveau mot de passe
+            </label>
+            <%= form.password_field :password, placeholder: "Laisser vide pour ne pas changer", minlength: 8, style: "width: 100%;" %>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-top: var(--space-xs); font-size: 0.75rem;">
+              Laisser vide pour conserver le mot de passe actuel
+            </p>
+            <% if @site_manager.errors[:password].any? %>
+              <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @site_manager.errors[:password].first %>
+              </p>
+            <% end %>
+          </div>
+
+          <div>
+            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+              Confirmer le mot de passe
+            </label>
+            <%= form.password_field :password_confirmation, placeholder: "Confirmer si changement", minlength: 8, style: "width: 100%;" %>
+            <% if @site_manager.errors[:password_confirmation].any? %>
+              <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+                <%= @site_manager.errors[:password_confirmation].first %>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div>
+          <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+            Statut
+          </label>
+          <%= form.select :status, 
+              [['Actif', 'active'], ['Inactif', 'inactive']], 
+              {}, 
+              { style: "width: 100%;" } %>
+          <% if @site_manager.errors[:status].any? %>
+            <p style="color: #dc2626; font-size: 0.875rem; margin-top: var(--space-xs);">
+              <%= @site_manager.errors[:status].first %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: var(--space-md); justify-content: flex-end; padding-top: var(--space-lg); border-top: 1px solid var(--pink-pale);">
+      <%= link_to @site_manager.persisted? ? site_manager_path(@site_manager) : site_managers_path, class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Annuler
+      <% end %>
+      <%= form.submit @site_manager.persisted? ? "Mettre à Jour" : "Créer", class: "typo-btn-success", style: "cursor: pointer; display: inline-flex; align-items: center; gap: var(--space-sm);" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <%= @site_manager.persisted? ? "Mettre à Jour" : "Créer" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -10,29 +10,29 @@
       <!-- Export Buttons -->
       <div style="display: flex; gap: var(--space-xs);">
         <%= link_to exports_sites_path(export_format: 'hierarchical'), 
-            class: "typo-btn-small",
-            style: "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;",
+            class: "page-header-btn",
+            style: "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;",
             title: "Export structure hiérarchique (1 feuille)",
             data: { turbo: false } do %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
           </svg>
           Export Hiérarchique
         <% end %>
         
         <%= link_to exports_sites_path(export_format: 'sheets'), 
-            class: "typo-btn-small",
-            style: "background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;",
+            class: "page-header-btn",
+            style: "background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;",
             title: "Export multi-feuilles (5 feuilles séparées)",
             data: { turbo: false } do %>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           Export Multi-Feuilles
         <% end %>
       </div>
       
-      <a href="<%= new_site_path %>" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+      <a href="<%= new_site_path %>" class="typo-btn-success page-header-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
