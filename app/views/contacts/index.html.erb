@@ -1,6 +1,12 @@
 <% content_for :header, "Contacts" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Contacts', url: nil }
+    ] %>
+  </div>
+
   <!-- Header Section -->
   <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
     <div>

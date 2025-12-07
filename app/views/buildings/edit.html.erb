@@ -1,6 +1,17 @@
 <% content_for :header, "Edit Building" %>
 
 <div class="section">
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: sites_path, icon: site_icon },
+      { name: @site.name, url: site_path(@site), icon: site_icon },
+      { name: @building.name, url: building_path(@building), icon: building_icon },
+      { name: 'Modifier', url: nil }
+    ] %>
+  </div>
+
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier le Bâtiment</h2>
     <p class="typo-body-small">Mettre à jour les informations du bâtiment <%= @building.name %></p>

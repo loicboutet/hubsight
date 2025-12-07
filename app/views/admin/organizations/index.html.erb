@@ -1,4 +1,11 @@
 <div style="padding: var(--space-2xl);">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Admin', url: nil },
+      { name: 'Organisations', url: nil }
+    ] %>
+  </div>
+
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
     <div>
       <h1 class="typo-h2" style="margin-bottom: var(--space-sm);">Organisations</h1>

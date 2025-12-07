@@ -1,6 +1,19 @@
 <% content_for :header, "Edit Level" %>
 
 <div class="section">
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
+  <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: sites_path, icon: site_icon },
+      { name: @building.site.name, url: site_path(@building.site), icon: site_icon },
+      { name: @building.name, url: building_path(@building), icon: building_icon },
+      { name: @level.name, url: level_path(@level), icon: level_icon },
+      { name: 'Modifier', url: nil }
+    ] %>
+  </div>
+
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier le Niveau</h2>
     <p class="typo-body-small">Éditer les informations du niveau <%= @level.name %></p>

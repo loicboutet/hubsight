@@ -1,6 +1,13 @@
 <% content_for :header, "Sites" %>
 
 <div class="section">
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: nil, icon: site_icon }
+    ] %>
+  </div>
+
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Mes Sites</h2>

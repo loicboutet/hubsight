@@ -1,4 +1,11 @@
-<% content_for :header, "Techniciens" %>
+<% content_for :header
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Techniciens', url: nil }
+    ] %>
+  </div>
+, "Techniciens" %>
 
 <div class="section">
   <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">

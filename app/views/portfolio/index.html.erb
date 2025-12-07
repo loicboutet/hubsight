@@ -1,5 +1,12 @@
 <% content_for :header, "Vue Arborescente du Portefeuille" %>
 
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Portfolio', url: nil }
+    ] %>
+  </div>
+
 <div style="padding: var(--space-xl);">
   <!-- Header with Statistics -->
   <div style="margin-bottom: var(--space-2xl);">

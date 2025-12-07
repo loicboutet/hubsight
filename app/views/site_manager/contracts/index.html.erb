@@ -1,4 +1,11 @@
-<% content_for :header, "Mes Contrats" %>
+<% content_for :header
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Mes Contrats', url: nil }
+    ] %>
+  </div>
+, "Mes Contrats" %>
 
 <div class="section">
   <div class="page-header-responsive">

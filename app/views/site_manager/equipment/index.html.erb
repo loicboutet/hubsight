@@ -1,4 +1,11 @@
-<% content_for :header, "Mes Équipements" %>
+<% content_for :header
+<div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Mes Équipements', url: nil }
+    ] %>
+  </div>
+, "Mes Équipements" %>
 
 <div class="section" data-controller="equipment-list">
   <div class="page-header-responsive">
