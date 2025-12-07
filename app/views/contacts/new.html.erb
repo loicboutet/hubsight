@@ -1,6 +1,13 @@
 <% content_for :header, "Nouveau Contact" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Contacts', url: contacts_path },
+      { name: 'Nouveau', url: nil }
+    ] %>
+  </div>
+
   <div class="page-header-responsive" style="margin-bottom: var(--space-lg);">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un nouveau contact</h2>

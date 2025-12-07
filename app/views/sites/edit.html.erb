@@ -1,6 +1,14 @@
 <% content_for :header, "Modifier le Site" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: sites_path },
+      { name: @site.name, url: site_path(@site) },
+      { name: 'Modifier', url: nil }
+    ] %>
+  </div>
+
   <div class="page-header-responsive" style="margin-bottom: var(--space-lg);">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier le site : <%= @site.name %></h2>

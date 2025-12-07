@@ -1,6 +1,15 @@
 <% content_for :header, "New Building" %>
 
 <div class="section">
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: sites_path, icon: site_icon },
+      { name: @site.name, url: site_path(@site), icon: site_icon },
+      { name: 'Nouveau Bâtiment', url: nil }
+    ] %>
+  </div>
+
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un Nouveau Bâtiment</h2>
     <p class="typo-body-small">Ajouter un bâtiment au site <%= @site.name %></p>

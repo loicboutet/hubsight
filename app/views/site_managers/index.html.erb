@@ -1,6 +1,12 @@
 <% content_for :header, "Responsables de Site" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Gestionnaires de Site', url: nil }
+    ] %>
+  </div>
+
   <div style="margin-bottom: var(--space-xl); display: flex; justify-content: space-between; align-items: center;">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Responsables de Site</h2>

@@ -1,6 +1,13 @@
 <% content_for :header, "Paramètres" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Paramètres', url: nil }
+    ] %>
+  </div>
+
+<div class="section">
   <!-- Flash Messages -->
   <% if flash[:notice] %>
     <div style="background-color: #d1fae5; border: 1px solid #34d399; color: #065f46; padding: 1rem; border-radius: 8px; margin-bottom: var(--space-lg); display: flex; align-items: center; gap: 12px;">

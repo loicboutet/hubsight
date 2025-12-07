@@ -1,6 +1,12 @@
 <% content_for :header, "Organisations" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Organisations', url: nil }
+    ] %>
+  </div>
+
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Mes Organisations</h2>

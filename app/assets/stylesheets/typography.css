@@ -758,6 +758,25 @@ body {
 }
 
 /* =============================================================================
+   PAGE HEADER BUTTONS - Consistent height for all buttons in page-header-responsive
+   ============================================================================= */
+
+.page-header-btn {
+  height: 3.315rem; /* Match typo-btn-success height */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0 var(--space-lg);
+  font-size: 1.105rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+}
+
+/* =============================================================================
    HEADER - Based on Style Guide Gradient
    ============================================================================= */
 

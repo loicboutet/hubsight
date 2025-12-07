@@ -1,6 +1,21 @@
 <% content_for :header, "Éditer Espace" %>
 
 <div class="section">
+  <% site_icon = capture { render 'shared/hierarchy_icons', type: 'site', size: 16 } %>
+  <% building_icon = capture { render 'shared/hierarchy_icons', type: 'building', size: 16 } %>
+  <% level_icon = capture { render 'shared/hierarchy_icons', type: 'level', size: 16 } %>
+  <% space_icon = capture { render 'shared/hierarchy_icons', type: 'space', size: 16 } %>
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: sites_path, icon: site_icon },
+      { name: @level.building.site.name, url: site_path(@level.building.site), icon: site_icon },
+      { name: @level.building.name, url: building_path(@level.building), icon: building_icon },
+      { name: @level.name, url: level_path(@level), icon: level_icon },
+      { name: @space.name, url: space_path(@space), icon: space_icon },
+      { name: 'Modifier', url: nil }
+    ] %>
+  </div>
+
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Éditer l'Espace</h2>
     <p class="typo-body-small">Modifier les informations de <%= @space.name %></p>

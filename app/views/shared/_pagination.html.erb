@@ -4,6 +4,15 @@
   total_count ||= 0
   per_page ||= 15
   path ||= '#'
+  
+  # Build query params preserving existing filters and sorting
+  query_params = params.except(:controller, :action, :page).to_unsafe_h
+    
+  # Helper method to build URL with page parameter
+  def page_url(path, page_num, params)
+    query_string = params.merge(page: page_num).to_query
+    "#{path}?#{query_string}"
+  end
 %>
 
 <% if total_pages > 1 %>
@@ -33,14 +42,14 @@
       <% if current_page == 1 %>
         <span class="pagination-item first disabled">« Début</span>
       <% else %>
-        <a href="<%= path %>?page=1" class="pagination-item first">« Début</a>
+        <a href="<%= page_url(path, 1, query_params) %>" class="pagination-item first">« Début</a>
       <% end %>
       
       <!-- Previous Page -->
       <% if current_page == 1 %>
         <span class="pagination-item prev disabled">‹ Préc</span>
       <% else %>
-        <a href="<%= path %>?page=<%= current_page - 1 %>" class="pagination-item prev" rel="prev">‹ Préc</a>
+        <a href="<%= page_url(path, current_page - 1, query_params) %>" class="pagination-item prev" rel="prev">‹ Préc</a>
       <% end %>
       
       <!-- Page Numbers -->
@@ -50,7 +59,7 @@
         <% elsif page == current_page %>
           <span class="pagination-item page current" aria-current="page"><%= page %></span>
         <% else %>
-          <a href="<%= path %>?page=<%= page %>" class="pagination-item page"><%= page %></a>
+          <a href="<%= page_url(path, page, query_params) %>" class="pagination-item page"><%= page %></a>
         <% end %>
       <% end %>
       
@@ -58,14 +67,14 @@
       <% if current_page == total_pages %>
         <span class="pagination-item next disabled">Suiv ›</span>
       <% else %>
-        <a href="<%= path %>?page=<%= current_page + 1 %>" class="pagination-item next" rel="next">Suiv ›</a>
+        <a href="<%= page_url(path, current_page + 1, query_params) %>" class="pagination-item next" rel="next">Suiv ›</a>
       <% end %>
       
       <!-- Last Page -->
       <% if current_page == total_pages %>
         <span class="pagination-item last disabled">Fin »</span>
       <% else %>
-        <a href="<%= path %>?page=<%= total_pages %>" class="pagination-item last">Fin »</a>
+        <a href="<%= page_url(path, total_pages, query_params) %>" class="pagination-item last">Fin »</a>
       <% end %>
     </nav>
   </div>

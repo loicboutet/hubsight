@@ -16,4 +16,9 @@ module SiteManagerAuthorization
       redirect_to root_path, alert: "Accès non autorisé. Cette fonctionnalité est réservée aux Responsables de Site."
     end
   end
+  
+  # Check if the current site manager has any assigned sites
+  def has_assigned_sites?
+    current_user.assigned_sites.any?
+  end
 end

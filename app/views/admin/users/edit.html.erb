@@ -1,6 +1,14 @@
 <% content_for :header, "Modifier #{@user.full_name}" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Utilisateurs', url: admin_users_path },
+      { name: @user.full_name, url: admin_user_path(@user) },
+      { name: 'Modifier', url: nil }
+    ] %>
+  </div>
+
   <!-- Header -->
   <div style="margin-bottom: var(--space-xl);">
     <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Modifier l'utilisateur</h2>

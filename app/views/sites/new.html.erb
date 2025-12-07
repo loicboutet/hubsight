@@ -1,6 +1,13 @@
 <% content_for :header, "Nouveau Site" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Sites', url: sites_path },
+      { name: 'Nouveau', url: nil }
+    ] %>
+  </div>
+
   <div class="page-header-responsive" style="margin-bottom: var(--space-lg);">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Créer un nouveau site</h2>

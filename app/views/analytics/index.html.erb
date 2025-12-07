@@ -1,6 +1,12 @@
 <% content_for :header, "Analytics" %>
 
 <div class="section">
+  <div style="margin-bottom: var(--space-xl);">
+    <%= render 'shared/breadcrumb', path: [
+      { name: 'Analytics', url: nil }
+    ] %>
+  </div>
+
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Analytics d'Usage de la Plateforme</h2>
