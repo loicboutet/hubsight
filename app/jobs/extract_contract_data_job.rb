@@ -6,22 +6,26 @@ class ExtractContractDataJob < ApplicationJob
   def perform(contract_id)
     contract = Contract.find(contract_id)
     
+    Rails.logger.info("Contract ##{contract_id}: LLM extraction job started")
+    
     # Check if OCR is completed
     unless contract.ocr_completed?
-      Rails.logger.warn("Contract #{contract_id}: OCR not completed, skipping LLM extraction")
+      Rails.logger.warn("Contract ##{contract_id}: OCR not completed, skipping LLM extraction")
       return
     end
     
     # Skip if already extracted
     if contract.extraction_status == 'completed'
-      Rails.logger.info("Contract #{contract_id}: Already extracted, skipping")
+      Rails.logger.info("Contract ##{contract_id}: Already extracted, skipping")
       return
     end
     
     # Update status to processing
     contract.update(extraction_status: 'processing')
+    Rails.logger.info("Contract ##{contract_id}: Extraction status set to 'processing'")
     
     # Call LLM service
+    Rails.logger.info("Contract ##{contract_id}: Calling LLM service for data extraction (OCR text length: #{contract.ocr_text&.length || 0} chars)")
     result = LlmService.extract_contract_data(contract.ocr_text)
     
     if result[:success]

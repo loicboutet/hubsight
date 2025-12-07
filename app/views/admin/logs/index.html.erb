@@ -5,7 +5,7 @@
     <div>
       <h1 class="text-3xl font-bold text-gray-900">Application Logs</h1>
       <p class="text-gray-600 mt-1">
-        Viewing last 1000 lines from
+        Viewing last 2000 lines from
         <span class="font-mono text-sm px-2 py-1 rounded">
           <%= @environment %>.log
         </span>
@@ -48,7 +48,7 @@
       <div class="bg-gray-900 px-4 py-2 border-b border-gray-800">
         <h3 class="text-sm font-semibold text-gray-300">Log Output</h3>
       </div>
-      <div class="p-4 overflow-auto max-h-[600px] bg-black">
+      <div class="p-4 overflow-auto bg-black">
         <pre class="text-xs font-mono leading-relaxed" style="color: white !important; background-color: black !important;"><% @log_lines.each do |line| %><%= format_log_line(line) %>
 <% end %></pre>
       </div>

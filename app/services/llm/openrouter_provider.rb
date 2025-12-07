@@ -58,14 +58,14 @@ module Llm
       request.body = JSON.dump(payload)
       
       # Log: Sending payload to OpenRouter
-      Rails.logger.info("Sending payload to OpenRouter API - Model: #{model_name}, OCR text length: #{ocr_text.length} chars")
+      Rails.logger.info("OpenRouter: Sending API request - Model: #{model_name}, OCR text length: #{ocr_text.length} chars, Max tokens: #{MAX_TOKENS}")
       
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
         http.request(request)
       end
       
       # Log: Received response from OpenRouter
-      Rails.logger.info("Received response from OpenRouter API - Status: #{response.code}, Body length: #{response.body&.length || 0} chars")
+      Rails.logger.info("OpenRouter: Received API response - Status: #{response.code}, Body length: #{response.body&.length || 0} chars")
       
       if response.code == '200'
         data = JSON.parse(response.body)

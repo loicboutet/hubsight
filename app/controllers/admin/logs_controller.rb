@@ -7,8 +7,8 @@ class Admin::LogsController < ApplicationController
     @log_file_path = Rails.root.join('log', "#{@environment}.log")
     
     if File.exist?(@log_file_path)
-      # Read the last 1000 lines from the log file
-      @log_lines = read_last_n_lines(@log_file_path, 1000)
+      # Read the last 2000 lines from the log file
+      @log_lines = read_last_n_lines(@log_file_path, 2000)
     else
       @log_lines = []
       flash.now[:alert] = "Log file not found. Please restart the Rails server to initialize file logging. (#{@log_file_path})"
