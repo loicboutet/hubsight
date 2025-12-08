@@ -31,6 +31,7 @@ class Contract < ApplicationRecord
   before_save :calculate_vat_amounts
   before_save :track_amount_updates
   before_save :sync_organization_names
+  before_save :reset_extraction_on_pdf_change
   after_commit :trigger_ocr_extraction, on: [:create, :update], if: :should_trigger_ocr?
   after_commit :trigger_llm_extraction, on: [:update], if: :should_trigger_llm?
 
@@ -508,15 +509,57 @@ class Contract < ApplicationRecord
     end
   end
 
+  # Callback to reset extraction data when PDF is replaced
+  def reset_extraction_on_pdf_change
+    # Check if PDF attachment has changed
+    if pdf_document.attached? && will_save_change_to_attribute?(:id) == false
+      # This is an update (not create) - check if PDF changed by comparing blob IDs
+      # ActiveStorage doesn't provide a clean "changed?" method, so we check the attachment record
+      if pdf_document.attachment&.blob_id_previously_changed? || 
+         (pdf_document.attachment&.new_record? && persisted?)
+        # PDF was replaced - reset all extraction data
+        Rails.logger.info("PDF replaced for contract #{id} - resetting extraction data")
+        
+        self.ocr_status = 'pending'
+        self.ocr_text = nil
+        self.ocr_error_message = nil
+        self.ocr_processed_at = nil
+        self.ocr_page_count = nil
+        
+        self.extraction_status = nil
+        self.extraction_data = nil
+        self.extraction_notes = nil
+        self.extraction_confidence = nil
+        self.extraction_processed_at = nil
+        
+        self.validation_status = nil
+        self.validated_at = nil
+        self.validated_by = nil
+        self.corrected_fields = nil
+      end
+    end
+  end
+  
+  # Check if PDF has been attached or changed
+  def pdf_changed?
+    return false unless pdf_document.attached?
+    
+    # On new record, if PDF is attached, it's "changed"
+    return true if new_record?
+    
+    # On existing record, check if the blob has changed
+    pdf_document.attachment&.blob_id_previously_changed? || false
+  end
+
   # Determine if OCR extraction should be triggered
   def should_trigger_ocr?
     # Trigger OCR if:
-    # 1. PDF was just attached (saved_change_to_attribute?)
-    # 2. OCR status is pending or nil
-    # 3. PDF is actually attached
+    # 1. PDF is attached
+    # 2. OCR status is pending (including after PDF replacement)
+    # 3. This is a new record OR PDF was just changed
     pdf_attached? && 
-      (ocr_status.nil? || ocr_status == 'pending') &&
-      saved_change_to_attribute?(:id) # Only on create, or we can add PDF change detection
+      ocr_status == 'pending' &&
+      (saved_change_to_attribute?(:id) || saved_change_to_ocr_status?)
   end
 
   # Trigger OCR extraction job
