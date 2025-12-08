@@ -12,6 +12,11 @@ class ContractsController < ApplicationController
       @contracts = Contract.by_organization(current_user.organization_id)
     end
     
+    # PHASE 1: Apply default filters (Items 1-3 from todo.html)
+    # Store filter values with defaults applied
+    @filter_params = apply_default_filters
+    @using_defaults = @filter_params[:using_defaults]
+    
     # Apply filters
     @contracts = apply_filters(@contracts)
     
@@ -29,29 +34,6 @@ class ContractsController < ApplicationController
     # Apply pagination (15 per page by default)
     @per_page = (params[:per_page] || 15).to_i
     @contracts = @contracts.page(params[:page]).per(@per_page)
-    
-    # Store filter values for the view (17 total filters)
-    @filter_params = {
-      search: params[:search],
-      site: params[:site],
-      building: params[:building],
-      type: params[:type],
-      family: params[:family],
-      subfamily: params[:subfamily],
-      provider: params[:provider],
-      renewal: params[:renewal],
-      status: params[:status],
-      signature_date_from: params[:signature_date_from],
-      signature_date_to: params[:signature_date_to],
-      start_date_from: params[:start_date_from],
-      start_date_to: params[:start_date_to],
-      end_date_from: params[:end_date_from],
-      end_date_to: params[:end_date_to],
-      amount_ht_min: params[:amount_ht_min],
-      amount_ht_max: params[:amount_ht_max],
-      amount_ttc_min: params[:amount_ttc_min],
-      amount_ttc_max: params[:amount_ttc_max]
-    }
     
     # Get unique values for filter dropdowns
     if current_user.admin?
@@ -319,10 +301,88 @@ class ContractsController < ApplicationController
     @contract = Contract.find(params[:id])
   end
   
+  # PHASE 1: Apply default filters (Items 1-3) - Priority: Service contracts
+  def apply_default_filters
+    # Check if user explicitly cleared filters
+    if params[:clear_filters] == 'true'
+      return {
+        search: nil, site: nil, building: nil, type: nil,
+        family: nil, subfamily: nil, provider: nil, renewal: nil,
+        status: nil, signature_date_from: nil, signature_date_to: nil,
+        start_date_from: nil, start_date_to: nil, end_date_from: nil,
+        end_date_to: nil, amount_ht_min: nil, amount_ht_max: nil,
+        amount_ttc_min: nil, amount_ttc_max: nil,
+        using_defaults: false
+      }
+    end
+    
+    # Check if any filter parameters are present (excluding pagination/sorting)
+    filter_keys = [:search, :site, :building, :type, :family, :subfamily, 
+                   :provider, :renewal, :status, :signature_date_from, 
+                   :signature_date_to, :start_date_from, :start_date_to,
+                   :end_date_from, :end_date_to, :amount_ht_min, :amount_ht_max,
+                   :amount_ttc_min, :amount_ttc_max]
+    
+    has_filters = filter_keys.any? { |key| params[key].present? }
+    
+    # If no filters and not explicitly cleared, apply defaults
+    if !has_filters && params[:reset_defaults] != 'true'
+      {
+        search: nil,
+        site: nil,
+        building: nil,
+        type: nil,
+        family: 'MAIN',         # Default: Maintenance contracts (code MAIN)
+        subfamily: nil,
+        provider: nil,
+        renewal: nil,
+        status: 'active',       # Default: Active contracts
+        signature_date_from: nil,
+        signature_date_to: nil,
+        start_date_from: nil,
+        start_date_to: nil,
+        end_date_from: nil,
+        end_date_to: nil,
+        amount_ht_min: nil,
+        amount_ht_max: nil,
+        amount_ttc_min: nil,
+        amount_ttc_max: nil,
+        using_defaults: true
+      }
+    else
+      # Use provided filters
+      {
+        search: params[:search],
+        site: params[:site],
+        building: params[:building],
+        type: params[:type],
+        family: params[:family],
+        subfamily: params[:subfamily],
+        provider: params[:provider],
+        renewal: params[:renewal],
+        status: params[:status],
+        signature_date_from: params[:signature_date_from],
+        signature_date_to: params[:signature_date_to],
+        start_date_from: params[:start_date_from],
+        start_date_to: params[:start_date_to],
+        end_date_from: params[:end_date_from],
+        end_date_to: params[:end_date_to],
+        amount_ht_min: params[:amount_ht_min],
+        amount_ht_max: params[:amount_ht_max],
+        amount_ttc_min: params[:amount_ttc_min],
+        amount_ttc_max: params[:amount_ttc_max],
+        using_defaults: false
+      }
+    end
+  end
+  
   def apply_filters(contracts)
+    # Use @filter_params which includes defaults
+    filter_values = @filter_params || params
+    
     # Search filter (contract number, title, contractor)
-    if params[:search].present?
-      search_term = "%#{params[:search]}%"
+    if filter_values[:search].present?
+      search_term = "%#{filter_values[:search]}%"
       contracts = contracts.where(
         "contract_number LIKE ? OR title LIKE ? OR contractor_organization_name LIKE ?",
         search_term, search_term, search_term
@@ -330,86 +390,86 @@ class ContractsController < ApplicationController
     end
     
     # Site filter
-    if params[:site].present?
-      contracts = contracts.where(site_id: params[:site])
+    if filter_values[:site].present?
+      contracts = contracts.where(site_id: filter_values[:site])
     end
     
-    # Building filter (NEW - Task 34)
-    if params[:building].present?
-      contracts = contracts.where(building_id: params[:building])
+    # Building filter
+    if filter_values[:building].present?
+      contracts = contracts.where(building_id: filter_values[:building])
     end
     
     # Contract type filter
-    if params[:type].present?
-      contracts = contracts.where(contract_type: params[:type])
+    if filter_values[:type].present?
+      contracts = contracts.where(contract_type: filter_values[:type])
     end
     
-    # Family filter
-    if params[:family].present?
+    # Family filter (with default applied)
+    if filter_values[:family].present?
       # Match contract_family field which stores codes like "MAIN", "NETT", etc.
-      contracts = contracts.where("contract_family LIKE ?", "#{params[:family]}%")
+      contracts = contracts.where("contract_family LIKE ?", "#{filter_values[:family]}%")
     end
     
     # Subfamily filter
-    if params[:subfamily].present?
-      contracts = contracts.where(purchase_subfamily: params[:subfamily])
+    if filter_values[:subfamily].present?
+      contracts = contracts.where(purchase_subfamily: filter_values[:subfamily])
     end
     
     # Provider filter
-    if params[:provider].present?
-      contracts = contracts.where("contractor_organization_name LIKE ?", "%#{params[:provider]}%")
+    if filter_values[:provider].present?
+      contracts = contracts.where("contractor_organization_name LIKE ?", "%#{filter_values[:provider]}%")
     end
     
     # Renewal mode filter
-    if params[:renewal].present?
-      contracts = contracts.where(renewal_mode: params[:renewal])
+    if filter_values[:renewal].present?
+      contracts = contracts.where(renewal_mode: filter_values[:renewal])
     end
     
-    # Status filter
-    if params[:status].present?
-      contracts = contracts.where(status: params[:status])
+    # Status filter (with default applied)
+    if filter_values[:status].present?
+      contracts = contracts.where(status: filter_values[:status])
     end
     
-    # Date range filters (NEW - Task 34)
+    # Date range filters
     # Signature date range
-    if params[:signature_date_from].present?
-      contracts = contracts.where("signature_date >= ?", params[:signature_date_from])
+    if filter_values[:signature_date_from].present?
+      contracts = contracts.where("signature_date >= ?", filter_values[:signature_date_from])
     end
-    if params[:signature_date_to].present?
-      contracts = contracts.where("signature_date <= ?", params[:signature_date_to])
+    if filter_values[:signature_date_to].present?
+      contracts = contracts.where("signature_date <= ?", filter_values[:signature_date_to])
     end
     
     # Start date range
-    if params[:start_date_from].present?
-      contracts = contracts.where("execution_start_date >= ?", params[:start_date_from])
+    if filter_values[:start_date_from].present?
+      contracts = contracts.where("execution_start_date >= ?", filter_values[:start_date_from])
     end
-    if params[:start_date_to].present?
-      contracts = contracts.where("execution_start_date <= ?", params[:start_date_to])
+    if filter_values[:start_date_to].present?
+      contracts = contracts.where("execution_start_date <= ?", filter_values[:start_date_to])
     end
     
     # End date range
-    if params[:end_date_from].present?
-      contracts = contracts.where("end_date >= ?", params[:end_date_from])
+    if filter_values[:end_date_from].present?
+      contracts = contracts.where("end_date >= ?", filter_values[:end_date_from])
     end
-    if params[:end_date_to].present?
-      contracts = contracts.where("end_date <= ?", params[:end_date_to])
+    if filter_values[:end_date_to].present?
+      contracts = contracts.where("end_date <= ?", filter_values[:end_date_to])
     end
     
-    # Amount range filters (NEW - Task 34)
+    # Amount range filters
     # Amount HT range
-    if params[:amount_ht_min].present?
-      contracts = contracts.where("annual_amount_ht >= ?", params[:amount_ht_min].to_f)
+    if filter_values[:amount_ht_min].present?
+      contracts = contracts.where("annual_amount_ht >= ?", filter_values[:amount_ht_min].to_f)
     end
-    if params[:amount_ht_max].present?
-      contracts = contracts.where("annual_amount_ht <= ?", params[:amount_ht_max].to_f)
+    if filter_values[:amount_ht_max].present?
+      contracts = contracts.where("annual_amount_ht <= ?", filter_values[:amount_ht_max].to_f)
     end
     
     # Amount TTC range
-    if params[:amount_ttc_min].present?
-      contracts = contracts.where("annual_amount_ttc >= ?", params[:amount_ttc_min].to_f)
+    if filter_values[:amount_ttc_min].present?
+      contracts = contracts.where("annual_amount_ttc >= ?", filter_values[:amount_ttc_min].to_f)
     end
-    if params[:amount_ttc_max].present?
-      contracts = contracts.where("annual_amount_ttc <= ?", params[:amount_ttc_max].to_f)
+    if filter_values[:amount_ttc_max].present?
+      contracts = contracts.where("annual_amount_ttc <= ?", filter_values[:amount_ttc_max].to_f)
     end
     
     contracts

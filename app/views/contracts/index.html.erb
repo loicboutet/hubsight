@@ -82,11 +82,11 @@
           </div>
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Famille</label>
-            <%= f.select :family, options_for_select([['Toutes', '']] + @families.map { |fam| [fam.name, fam.code] }, @filter_params[:family]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+            <%= f.select :family, options_for_select([['Toutes', '']] + @families.map { |fam| [fam.name, fam.code] }, @filter_params[:family]), {}, style: "width: 100%; padding: 10px; border: 1px solid #{@filter_params[:family].present? ? '#667eea' : 'var(--light-gray)'}; border-radius: var(--space-sm); background-color: white;" %>
           </div>
           <div>
             <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">Statut</label>
-            <%= f.select :status, options_for_select([['Tous', ''], ['Actif', 'active'], ['Expiré', 'expired'], ['En attente', 'pending'], ['Suspendu', 'suspended']], @filter_params[:status]), {}, style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm); background-color: white;" %>
+            <%= f.select :status, options_for_select([['Tous', ''], ['Actif', 'active'], ['Expiré', 'expired'], ['En attente', 'pending'], ['Suspendu', 'suspended']], @filter_params[:status]), {}, style: "width: 100%; padding: 10px; border: 1px solid #{@filter_params[:status].present? ? '#667eea' : 'var(--light-gray)'}; border-radius: var(--space-sm); background-color: white;" %>
           </div>
         </div>
 
@@ -202,16 +202,18 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Action Buttons (PHASE 1: Updated with reset options) -->
         <div style="grid-column: 1 / -1; display: flex; gap: var(--space-md); justify-content: flex-end; align-items: center; margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid #dee2e6;">
           <span class="typo-body-small">Afficher:</span>
           <%= f.select :per_page, options_for_select([[15, 15], [25, 25], [50, 50], [100, 100]], @per_page), {}, { onchange: "this.form.submit()", style: "padding: 8px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" } %>
-          <button type="button" data-action="click->contract-list#clearFilters" class="typo-btn-cancel" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+          
+          <%= link_to contracts_path(clear_filters: 'true'), class: "typo-btn-cancel", style: "display: inline-flex; align-items: center; gap: var(--space-sm); text-decoration: none;" do %>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
             Effacer
-          </button>
+          <% end %>
+          
           <%= f.submit "Filtrer", class: "typo-btn-success", style: "display: inline-flex; align-items: center; gap: var(--space-sm);" %>
         </div>
       </div>
