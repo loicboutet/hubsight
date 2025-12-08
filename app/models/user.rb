@@ -18,7 +18,6 @@ class User < ApplicationRecord
   has_many :sites, dependent: :destroy
   has_many :site_assignments, dependent: :destroy
   has_many :assigned_sites, through: :site_assignments, source: :site
-  has_many :audit_logs, dependent: :destroy
   belongs_to :invited_by, class_name: 'User', optional: true
   belongs_to :organization, optional: true
 

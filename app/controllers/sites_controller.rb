@@ -96,73 +96,13 @@ class SitesController < ApplicationController
       return
     end
 
-    # Capture site data before deletion for audit log
-    site_data = {
-      name: @site.name,
-      code: @site.code,
-      city: @site.city,
-      site_type: @site.site_type,
-      buildings_count: @site.buildings.count,
-      total_area: @site.total_area
-    }
+    site_name = @site.name
 
-    # Perform deletion in a transaction
-    ActiveRecord::Base.transaction do
-      # Log the deletion attempt
-      AuditLog.log_action(
-        user: current_user,
-        action: 'delete',
-        auditable_type: 'Site',
-        auditable_id: @site.id,
-        change_data: site_data,
-        metadata: {
-          confirmed: true,
-          password_verified: true,
-          dependencies_checked: true
-        },
-        ip_address: request.remote_ip,
-        user_agent: request.user_agent
-      )
-
-      # Destroy the site
-      if @site.destroy
-        redirect_to sites_path, notice: "Site '#{site_data[:name]}' supprimé avec succès. Cette action a été enregistrée dans l'audit trail."
-      else
-        raise ActiveRecord::Rollback
-      end
+    if @site.destroy
+      redirect_to sites_path, notice: "Site '#{site_name}' supprimé avec succès."
+    else
+      redirect_to sites_path, alert: "Impossible de supprimer le site: #{@site.errors.full_messages.join(', ')}"
     end
-  rescue ActiveRecord::Rollback
-    # Log failed deletion
-    AuditLog.log_action(
-      user: current_user,
-      action: 'delete',
-      auditable_type: 'Site',
-      auditable_id: @site.id,
-      change_data: site_data,
-      metadata: { confirmed: true, password_verified: true },
-      ip_address: request.remote_ip,
-      user_agent: request.user_agent,
-      status: 'failed',
-      error_message: @site.errors.full_messages.join(', ')
-    )
-    
-    redirect_to sites_path, alert: "Impossible de supprimer le site: #{@site.errors.full_messages.join(', ')}"
-  rescue StandardError => e
-    # Log unexpected errors
-    AuditLog.log_action(
-      user: current_user,
-      action: 'delete',
-      auditable_type: 'Site',
-      auditable_id: @site&.id,
-      change_data: site_data || {},
-      metadata: { confirmed: true },
-      ip_address: request.remote_ip,
-      user_agent: request.user_agent,
-      status: 'failed',
-      error_message: e.message
-    )
-    
-    redirect_to sites_path, alert: "Une erreur est survenue lors de la suppression: #{e.message}"
   end
   
   private

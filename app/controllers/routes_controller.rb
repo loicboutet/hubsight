@@ -24,7 +24,6 @@ class RoutesController < ApplicationController
         # Monitoring Section (BRIQUE 2)
         { name: 'Alertes', path: '/alerts?role=admin', edit_path: '/alerts/1/edit', description: 'Dashboard of all alerts across all portfolios' },
         { name: 'Économies (vue administrateur)', path: '/savings?role=admin', description: 'Admin view of all potential savings', exclude_leases: true },
-        { name: 'Historisation des Modifications', path: '/audit_trail?role=admin', description: 'View modification history across all portfolios' },
        
         # Tools Section
         { name: 'Recherche Globale', path: '/search?role=admin', description: 'Universal search across all entities' }
@@ -39,7 +38,6 @@ class RoutesController < ApplicationController
         { name: 'Alertes', path: '/alerts', edit_path: '/alerts/1/edit', description: 'Dashboard of all alerts' },
         { name: 'Paramètres d\'Alertes', path: '/alerts/settings', description: 'Alert settings form' },
         { name: 'Économies (vue utilisateurs)', path: '/savings', description: 'View potential savings per contract', exclude_leases: true },
-        { name: 'Historisation des Modifications', path: '/audit_trail', description: 'View modification history' },
         { name: 'Types d\'Équipement', path: '/equipment_types', description: 'List equipment type catalog (OmniClass)' },
         { name: 'Recherche', path: '/search', description: 'Global search across all entities' }
       ],
