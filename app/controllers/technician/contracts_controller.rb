@@ -1,7 +1,21 @@
 module Technician
   class ContractsController < ApplicationController
+    before_action :authenticate_user!
+    before_action :ensure_technician!
+    
     def index
-      # Renders technician/contracts/index.html.erb
+      # Technicians can view all contracts in their organization (read-only)
+      @contracts = Contract.by_organization(current_user.organization_id)
+                          .includes(:site, :contractor_organization)
+                          .order(created_at: :desc)
+      
+      # Apply filters if present
+      apply_filters if params[:search].present? || params[:site_id].present? || 
+                      params[:family].present? || params[:status].present? || 
+                      params[:contractor].present?
+      
+      # Paginate results (15 per page)
+      @contracts = @contracts.page(params[:page]).per(15)
     end
 
     def show
@@ -67,7 +81,61 @@ module Technician
     end
 
     def pdf
+      @contract = Contract.by_organization(current_user.organization_id).find(params[:id])
       # Renders technician/contracts/pdf.html.erb or generates PDF
+      respond_to do |format|
+        format.html
+        format.pdf do
+          redirect_to rails_blob_path(@contract.pdf_document, disposition: "inline")
+        end
+      end
+    end
+    
+    private
+    
+    def ensure_technician!
+      unless current_user&.technician?
+        redirect_to root_path, alert: "Accès non autorisé"
+      end
+    end
+    
+    def apply_filters
+      # Search by contract number or title
+      if params[:search].present?
+        @contracts = @contracts.where(
+          "contract_number ILIKE ? OR title ILIKE ?", 
+          "%#{params[:search]}%", 
+          "%#{params[:search]}%"
+        )
+      end
+      
+      # Filter by site
+      if params[:site_id].present?
+        @contracts = @contracts.where(site_id: params[:site_id])
+      end
+      
+      # Filter by contract family
+      if params[:family].present?
+        @contracts = @contracts.where("contract_family ILIKE ?", "%#{params[:family]}%")
+      end
+      
+      # Filter by status
+      if params[:status].present?
+        status_map = {
+          'Actif' => 'active',
+          'En cours' => 'pending',
+          'Terminé' => 'expired'
+        }
+        @contracts = @contracts.where(status: status_map[params[:status]] || params[:status])
+      end
+      
+      # Filter by contractor
+      if params[:contractor].present?
+        @contracts = @contracts.where(
+          "contractor_organization_name ILIKE ?", 
+          "%#{params[:contractor]}%"
+        )
+      end
     end
   end
 end
