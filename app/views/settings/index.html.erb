@@ -7,7 +7,6 @@
     ] %>
   </div>
 
-<div class="section">
   <!-- Flash Messages -->
   <% if flash[:notice] %>
     <div style="background-color: #d1fae5; border: 1px solid #34d399; color: #065f46; padding: 1rem; border-radius: 8px; margin-bottom: var(--space-lg); display: flex; align-items: center; gap: 12px;">
@@ -31,147 +30,324 @@
   <div class="page-header-responsive">
     <div>
       <h2 class="typo-h2" style="margin-bottom: var(--space-sm);">Paramètres</h2>
-      <p class="typo-body-small">Gérez vos informations personnelles et votre sécurité</p>
+      <p class="typo-body-small">Gérez vos informations personnelles, sécurité et historique</p>
     </div>
   </div>
 
-  <!-- Settings Content -->
+  <!-- Tabs Navigation -->
+  <div style="margin-top: var(--space-xl); border-bottom: 2px solid var(--pink-pale);">
+    <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+      <!-- Profile Tab -->
+      <button type="button" 
+        class="settings-tab <%= params[:tab] != 'security' && params[:tab] != 'history' ? 'active' : '' %>" 
+        data-tab="profile"
+        onclick="switchTab(event, 'profile')"
+        style="display: inline-flex; align-items: center; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; font-weight: 600; color: #6b7280;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        <span>Profil</span>
+      </button>
+
+      <!-- Security Tab -->
+      <button type="button" 
+        class="settings-tab <%= params[:tab] == 'security' ? 'active' : '' %>" 
+        data-tab="security"
+        onclick="switchTab(event, 'security')"
+        style="display: inline-flex; align-items: center; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; font-weight: 600; color: #6b7280;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <span>Sécurité</span>
+      </button>
+
+      <!-- Data History Tab (HP Task 4) -->
+      <button type="button" 
+        class="settings-tab <%= params[:tab] == 'history' ? 'active' : '' %>" 
+        data-tab="history"
+        onclick="switchTab(event, 'history')"
+        style="display: inline-flex; align-items: center; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; font-weight: 600; color: #6b7280;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Historique des Données</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
   <div style="margin-top: var(--space-xl); max-width: 800px;">
     
-    <!-- Profile Information Section -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-lg); border: 1px solid var(--pink-pale);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
-        <h3 class="typo-h3" style="margin: 0;">Informations Personnelles</h3>
-        <span style="background-color: var(--coral-primary); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-          <%= current_user.role.titleize %>
-        </span>
+    <!-- Profile Tab Content -->
+    <div class="tab-content <%= params[:tab] != 'security' && params[:tab] != 'history' ? '' : 'hidden' %>" data-tab-content="profile">
+      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); margin-bottom: var(--space-lg); border: 1px solid var(--pink-pale);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">
+          <h3 class="typo-h3" style="margin: 0;">Informations Personnelles</h3>
+          <span style="background-color: var(--coral-primary); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+            <%= current_user.role.titleize %>
+          </span>
+        </div>
+        
+        <%= form_with model: current_user, url: settings_path, method: :patch, local: true do |f| %>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-lg);">
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                Prénom <span style="color: var(--coral-primary);">*</span>
+              </label>
+              <%= f.text_field :first_name, 
+                  value: current_user.first_name, 
+                  required: true,
+                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+            </div>
+            
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                Nom <span style="color: var(--coral-primary);">*</span>
+              </label>
+              <%= f.text_field :last_name, 
+                  value: current_user.last_name, 
+                  required: true,
+                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-xl);">
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                Email <span style="color: var(--coral-primary);">*</span>
+              </label>
+              <%= f.email_field :email, 
+                  value: current_user.email, 
+                  required: true,
+                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+            </div>
+            
+            <div>
+              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                Téléphone
+              </label>
+              <%= f.text_field :phone, 
+                  value: current_user.phone, 
+                  placeholder: "+33 1 23 45 67 89",
+                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: var(--space-md);">
+            <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Enregistrer les modifications
+            </button>
+            <%= link_to "Annuler", settings_path, class: "typo-btn-cancel" %>
+          </div>
+        <% end %>
       </div>
-      
-      <%= form_with model: current_user, url: settings_path, method: :patch, local: true do |f| %>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-lg);">
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Prénom <span style="color: var(--coral-primary);">*</span>
-            </label>
-            <%= f.text_field :first_name, 
-                value: current_user.first_name, 
-                required: true,
-                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
-          </div>
-          
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Nom <span style="color: var(--coral-primary);">*</span>
-            </label>
-            <%= f.text_field :last_name, 
-                value: current_user.last_name, 
-                required: true,
-                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
-          </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-bottom: var(--space-xl);">
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Email <span style="color: var(--coral-primary);">*</span>
-            </label>
-            <%= f.email_field :email, 
-                value: current_user.email, 
-                required: true,
-                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
-          </div>
-          
-          <div>
-            <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-              Téléphone
-            </label>
-            <%= f.text_field :phone, 
-                value: current_user.phone, 
-                placeholder: "+33 1 23 45 67 89",
-                style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
-          </div>
-        </div>
-        
-        <div style="display: flex; gap: var(--space-md);">
-          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            Enregistrer les modifications
-          </button>
-          <%= link_to "Annuler", settings_path, class: "typo-btn-cancel" %>
-        </div>
-      <% end %>
     </div>
 
-    <!-- Security / Password Section -->
-    <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); border: 1px solid var(--pink-pale);">
-      <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Sécurité</h3>
-      
-      <%= form_with model: current_user, url: settings_path, method: :patch, local: true do |f| %>
-        <div style="margin-bottom: var(--space-lg);">
-          <h4 class="typo-h4" style="margin-bottom: var(--space-md); font-size: 1.105rem;">Changer le mot de passe</h4>
-          <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-lg);">
-            Pour modifier votre mot de passe, veuillez remplir tous les champs ci-dessous.
-          </p>
-          
-          <div style="display: flex; flex-direction: column; gap: var(--space-md); max-width: 500px;">
-            <div>
-              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-                Mot de passe actuel <span style="color: var(--coral-primary);">*</span>
-              </label>
-              <%= f.password_field :current_password, 
-                  autocomplete: "current-password",
-                  placeholder: "Entrez votre mot de passe actuel",
-                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
-            </div>
+    <!-- Security Tab Content -->
+    <div class="tab-content <%= params[:tab] == 'security' ? '' : 'hidden' %>" data-tab-content="security">
+      <div style="background-color: var(--white); border-radius: var(--space-md); padding: var(--space-xl); border: 1px solid var(--pink-pale);">
+        <h3 class="typo-h3" style="margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 2px solid var(--pink-pale);">Sécurité</h3>
+        
+        <%= form_with model: current_user, url: settings_path, method: :patch, local: true do |f| %>
+          <div style="margin-bottom: var(--space-lg);">
+            <h4 class="typo-h4" style="margin-bottom: var(--space-md); font-size: 1.105rem;">Changer le mot de passe</h4>
+            <p class="typo-body-small" style="color: var(--medium-gray); margin-bottom: var(--space-lg);">
+              Pour modifier votre mot de passe, veuillez remplir tous les champs ci-dessous.
+            </p>
             
-            <div>
-              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-                Nouveau mot de passe <span style="color: var(--coral-primary);">*</span>
-              </label>
-              <%= f.password_field :password, 
-                  autocomplete: "new-password",
-                  placeholder: "Entrez votre nouveau mot de passe",
-                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md); max-width: 500px;">
+              <div>
+                <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                  Mot de passe actuel <span style="color: var(--coral-primary);">*</span>
+                </label>
+                <%= f.password_field :current_password, 
+                    autocomplete: "current-password",
+                    placeholder: "Entrez votre mot de passe actuel",
+                    style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+              </div>
               
-              <!-- Password Requirements Hint -->
-              <div style="margin-top: var(--space-sm); padding: var(--space-md); background-color: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 4px;">
-                <p class="typo-body-small" style="font-weight: 600; color: #1e40af; margin-bottom: var(--space-xs);">
-                  Le mot de passe doit respecter les critères suivants :
-                </p>
-                <ul class="typo-body-small" style="color: #1e40af; margin: 0; padding-left: 20px; line-height: 1.6;">
-                  <li>Contenir au moins 8 caractères</li>
-                  <li>Contenir au moins une lettre majuscule (A-Z)</li>
-                  <li>Contenir au moins une lettre minuscule (a-z)</li>
-                  <li>Contenir au moins un chiffre (0-9)</li>
-                  <li>Contenir au moins un caractère spécial (!@#$%^&*)</li>
-                </ul>
+              <div>
+                <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                  Nouveau mot de passe <span style="color: var(--coral-primary);">*</span>
+                </label>
+                <%= f.password_field :password, 
+                    autocomplete: "new-password",
+                    placeholder: "Entrez votre nouveau mot de passe",
+                    style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+                
+                <!-- Password Requirements Hint -->
+                <div style="margin-top: var(--space-sm); padding: var(--space-md); background-color: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 4px;">
+                  <p class="typo-body-small" style="font-weight: 600; color: #1e40af; margin-bottom: var(--space-xs);">
+                    Le mot de passe doit respecter les critères suivants :
+                  </p>
+                  <ul class="typo-body-small" style="color: #1e40af; margin: 0; padding-left: 20px; line-height: 1.6;">
+                    <li>Contenir au moins 8 caractères</li>
+                    <li>Contenir au moins une lettre majuscule (A-Z)</li>
+                    <li>Contenir au moins une lettre minuscule (a-z)</li>
+                    <li>Contenir au moins un chiffre (0-9)</li>
+                    <li>Contenir au moins un caractère spécial (!@#$%^&*)</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div>
+                <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
+                  Confirmer le nouveau mot de passe <span style="color: var(--coral-primary);">*</span>
+                </label>
+                <%= f.password_field :password_confirmation, 
+                    autocomplete: "new-password",
+                    placeholder: "Retapez le nouveau mot de passe",
+                    style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
               </div>
             </div>
+          </div>
+          
+          <div style="display: flex; gap: var(--space-md);">
+            <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Mettre à jour le mot de passe
+            </button>
+            <%= link_to "Annuler", settings_path, class: "typo-btn-cancel" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Data History Tab Content (HP Task 4) -->
+    <div class="tab-content <%= params[:tab] == 'history' ? '' : 'hidden' %>" data-tab-content="history">
+      <div style="background: white; border-radius: 12px; padding: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        
+        <div style="text-align: center; padding: 60px 20px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="#cbd5e0" style="margin: 0 auto 30px;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          
+          <h3 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 16px;">
+            Historique des Modifications
+          </h3>
+          
+          <p style="color: #6b7280; font-size: 1rem; max-width: 600px; margin: 0 auto 30px; line-height: 1.6;">
+            Cette fonctionnalité permet de suivre toutes les modifications apportées aux données de votre système.
+          </p>
+          
+          <!-- Coming Soon Badge -->
+          <div style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50px; font-weight: 600; margin-bottom: 40px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Bientôt Disponible
+          </div>
+          
+          <!-- Features List -->
+          <div style="text-align: left; max-width: 800px; margin: 0 auto;">
+            <h4 style="font-size: 1.125rem; font-weight: 600; color: #374151; margin-bottom: 20px;">
+              Fonctionnalités à venir :
+            </h4>
             
-            <div>
-              <label class="typo-body-small typo-bold" style="display: block; margin-bottom: var(--space-sm);">
-                Confirmer le nouveau mot de passe <span style="color: var(--coral-primary);">*</span>
-              </label>
-              <%= f.password_field :password_confirmation, 
-                  autocomplete: "new-password",
-                  placeholder: "Retapez le nouveau mot de passe",
-                  style: "width: 100%; padding: 10px; border: 1px solid var(--light-gray); border-radius: var(--space-sm);" %>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+              <!-- Feature 1 -->
+              <div style="display: flex; gap: 12px; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#667eea" stroke-width="2" style="flex-shrink: 0;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <div>
+                  <h5 style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Timeline Complète</h5>
+                  <p style="color: #6b7280; font-size: 0.875rem; margin: 0;">Visualisez toutes les modifications dans une timeline chronologique</p>
+                </div>
+              </div>
+              
+              <!-- Feature 2 -->
+              <div style="display: flex; gap: 12px; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#667eea" stroke-width="2" style="flex-shrink: 0;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <div>
+                  <h5 style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Traçabilité Utilisateur</h5>
+                  <p style="color: #6b7280; font-size: 0.875rem; margin: 0;">Identifiez qui a fait quelle modification et quand</p>
+                </div>
+              </div>
+              
+              <!-- Feature 3 -->
+              <div style="display: flex; gap: 12px; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#667eea" stroke-width="2" style="flex-shrink: 0;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+                <div>
+                  <h5 style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Avant/Après Comparaison</h5>
+                  <p style="color: #6b7280; font-size: 0.875rem; margin: 0;">Comparez les valeurs avant et après modification</p>
+                </div>
+              </div>
+              
+              <!-- Feature 4 -->
+              <div style="display: flex; gap: 12px; padding: 20px; background: #f9fafb; border-radius: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#667eea" stroke-width="2" style="flex-shrink: 0;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <div>
+                  <h5 style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Export & Rapports</h5>
+                  <p style="color: #6b7280; font-size: 0.875rem; margin: 0;">Exportez l'historique en CSV ou PDF pour audit</p>
+                </div>
+              </div>
             </div>
           </div>
+          
+          <!-- Implementation Note -->
+          <div style="margin-top: 40px; padding: 20px; background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <p style="color: #1e40af; font-size: 0.875rem; margin: 0;">
+              <strong>Note Technique:</strong> Cette fonctionnalité nécessite l'intégration de la gem PaperTrail pour le versioning des données. L'implémentation complète est prévue dans une prochaine phase.
+            </p>
+          </div>
         </div>
-        
-        <div style="display: flex; gap: var(--space-md);">
-          <button type="submit" class="typo-btn-success" style="display: inline-flex; align-items: center; gap: var(--space-sm);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            Mettre à jour le mot de passe
-          </button>
-          <%= link_to "Annuler", settings_path, class: "typo-btn-cancel" %>
-        </div>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Tab Switching JavaScript -->
+<style>
+  .settings-tab.active {
+    color: var(--coral-primary) !important;
+    border-bottom-color: var(--coral-primary) !important;
+  }
+  
+  .settings-tab:hover {
+    color: var(--coral-primary);
+  }
+  
+  .tab-content.hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  function switchTab(event, tabName) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.settings-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.add('hidden');
+    });
+    
+    // Add active class to clicked tab
+    event.currentTarget.classList.add('active');
+    
+    // Show corresponding content
+    const content = document.querySelector(`[data-tab-content="${tabName}"]`);
+    if (content) {
+      content.classList.remove('hidden');
+    }
+    
+    // Update URL with tab parameter (optional)
+    const url = new URL(window.location);
+    url.searchParams.set('tab', tabName);
+    window.history.pushState({}, '', url);
+  }
+</script>
