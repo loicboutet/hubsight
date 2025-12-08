@@ -273,7 +273,7 @@
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); margin-bottom: var(--space-lg);">
           <div>
             <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Date de Prise d'Effet</p>
-            <p class="typo-body"><%= @contract.lease_effective_date&.strftime("%d/%m/%Y") || @contract.effective_date&.strftime("%d/%m/%Y") || '-' %></p>
+            <p class="typo-body"><%= @contract.lease_effective_date&.strftime("%d/%m/%Y") || @contract.start_date&.strftime("%d/%m/%Y") || '-' %></p>
           </div>
           <div>
             <p class="typo-body-small typo-bold" style="color: var(--gray-secondary); margin-bottom: var(--space-xs);">Durée du Bail (mois)</p>

@@ -117,28 +117,8 @@ class EquipmentController < ApplicationController
     end
     
     space = @equipment.space
-    equipment_name = @equipment.name
-    equipment_id = @equipment.id
-    organization_id = @equipment.organization_id
     
     @equipment.destroy
-    
-    # Log the deletion in audit trail
-    AuditLog.log_action(
-      user: current_user,
-      action: 'delete',
-      auditable_type: 'Equipment',
-      auditable_id: equipment_id,
-      change_data: { name: equipment_name },
-      metadata: { 
-        organization_id: organization_id,
-        space_id: space&.id,
-        deleted_at: Time.current.iso8601
-      },
-      ip_address: request.remote_ip,
-      user_agent: request.user_agent,
-      status: 'success'
-    )
     
     respond_to do |format|
       format.html do

@@ -15,23 +15,26 @@ class SiteManager::ContractsController < ApplicationController
                         .includes(:site, :organization)
                         .order('sites.name ASC, contracts.contract_number ASC')
     
-    # Apply filters if present
-    if params[:site_id].present?
-      @contracts = @contracts.where(site_id: params[:site_id])
+    # ITEM 3: Apply default filters (same as main contracts - Maintenance + Active)
+    @filter_params = apply_default_filters
+    
+    # Apply filters
+    if @filter_params[:site_id].present?
+      @contracts = @contracts.where(site_id: @filter_params[:site_id])
     end
     
-    if params[:family].present?
-      @contracts = @contracts.where(contract_family: params[:family])
+    if @filter_params[:family].present?
+      @contracts = @contracts.where("contract_family LIKE ?", "#{@filter_params[:family]}%")
     end
     
-    if params[:status].present?
-      @contracts = @contracts.where(status: params[:status])
+    if @filter_params[:status].present?
+      @contracts = @contracts.where(status: @filter_params[:status])
     end
     
-    if params[:search].present?
-      search_term = "%#{params[:search]}%"
+    if @filter_params[:search].present?
+      search_term = "%#{@filter_params[:search]}%"
       @contracts = @contracts.where(
-        "contract_number LIKE ? OR title LIKE ? OR contractor_organization LIKE ?",
+        "contract_number LIKE ? OR title LIKE ? OR contractor_organization_name LIKE ?",
         search_term, search_term, search_term
       )
     end
@@ -104,6 +107,41 @@ class SiteManager::ContractsController < ApplicationController
   end
   
   private
+  
+  # ITEM 3: Apply default filters for site manager (Maintenance + Active)
+  def apply_default_filters
+    # Check if user explicitly cleared filters
+    if params[:clear_filters] == 'true'
+      return {
+        search: nil,
+        site_id: nil,
+        family: nil,
+        status: nil
+      }
+    end
+    
+    # Check if any filter parameters are present
+    filter_keys = [:search, :site_id, :family, :status]
+    has_filters = filter_keys.any? { |key| params[key].present? }
+    
+    # If no filters, apply defaults
+    if !has_filters
+      {
+        search: nil,
+        site_id: nil,
+        family: 'MAIN',      # Default: Maintenance contracts
+        status: 'active'     # Default: Active contracts
+      }
+    else
+      # Use provided filters
+      {
+        search: params[:search],
+        site_id: params[:site_id],
+        family: params[:family],
+        status: params[:status]
+      }
+    end
+  end
   
   def ensure_site_manager_role
     unless current_user.site_manager?
