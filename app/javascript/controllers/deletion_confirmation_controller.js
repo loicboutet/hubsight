@@ -151,7 +151,7 @@ export default class extends Controller {
     }
   }
 
-  handleDelete(modalId, button) {
+  async handleDelete(modalId, button) {
     const modal = document.getElementById(modalId)
     if (!modal) return
 
@@ -184,47 +184,95 @@ export default class extends Controller {
       <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
       </svg>
-      Suppression en cours...
+      Vérification...
     `
 
     // Get CSRF token
     const csrfToken = document.querySelector('[name="csrf-token"]')?.content
 
-    // Make DELETE request to backend
-    fetch(deletePath, {
-      method: 'DELETE',
-      headers: {
-        'X-CSRF-Token': csrfToken,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ password: passwordValue })
-    })
-    .then(response => {
-      // Check if response is redirect (Rails redirects on success)
-      if (response.redirected) {
-        window.location.href = response.url
-        return null
+    try {
+      // HP Task 3: Verify password with backend FIRST
+      const verifyResponse = await fetch('/deletion_verifications/verify_password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({ password: passwordValue })
+      })
+
+      const verifyResult = await verifyResponse.json()
+
+      if (!verifyResult.success) {
+        // Password incorrect - show error
+        if (errorMessage) {
+          errorMessage.textContent = verifyResult.error || 'Mot de passe incorrect'
+          errorMessage.style.display = 'block'
+        }
+        this.resetButton(button)
+        passwordInput.focus()
+        return
       }
-      
-      // Try to parse JSON for error handling
-      return response.text().then(text => {
-        try {
-          return JSON.parse(text)
-        } catch {
-          // Not JSON, likely HTML redirect
-          if (response.ok) {
-            window.location.reload()
-            return null
-          }
-          throw new Error('Erreur lors de la suppression')
+
+      // Password verified! Update button text
+      button.innerHTML = `
+        <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Suppression en cours...
+      `
+
+      // Log the deletion attempt
+      await fetch('/deletion_verifications/log_deletion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({
+          entity_type: entityType,
+          entity_name: entityName,
+          entity_id: modalId.replace('deletion-modal-', '')
+        })
+      })
+
+      // Password verified and logged - proceed with deletion
+      const deleteResponse = await fetch(deletePath, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-Token': csrfToken,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       })
-    })
-    .then(data => {
-      if (data === null) return // Already handled redirect
-      
-      if (data.success) {
+
+      // Check if response is redirect (Rails redirects on success)
+      if (deleteResponse.redirected) {
+        this.showSuccessMessage(entityType, entityName)
+        setTimeout(() => {
+          window.location.href = deleteResponse.url
+        }, 1000)
+        return
+      }
+
+      // Try to parse JSON for error handling
+      const text = await deleteResponse.text()
+      let data
+      try {
+        data = JSON.parse(text)
+      } catch {
+        // Not JSON, likely HTML redirect
+        if (deleteResponse.ok) {
+          this.showSuccessMessage(entityType, entityName)
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+          return
+        }
+        throw new Error('Erreur lors de la suppression')
+      }
+
+      if (data.success || deleteResponse.ok) {
         this.showSuccessMessage(entityType, entityName)
         this.closeModal(modalId)
         // Redirect to the specified URL or reload page after short delay
@@ -239,12 +287,11 @@ export default class extends Controller {
         this.showErrorMessage(data.error || 'Une erreur est survenue lors de la suppression')
         this.resetButton(button)
       }
-    })
-    .catch(error => {
+    } catch (error) {
       console.error('Delete error:', error)
       this.showErrorMessage(error.message || 'Une erreur est survenue lors de la suppression')
       this.resetButton(button)
-    })
+    }
   }
 
   resetButton(button) {

@@ -290,6 +290,14 @@ Rails.application.routes.draw do
   end
 
   # =============================================================================
+  # DELETION VERIFICATION (HP Task 3)
+  # =============================================================================
+  
+  # Password verification and deletion logging for secure deletions
+  post 'deletion_verifications/verify_password', to: 'deletion_verifications#verify_password'
+  post 'deletion_verifications/log_deletion', to: 'deletion_verifications#log_deletion'
+
+  # =============================================================================
   # SEARCH & FILTERING
   # =============================================================================
   
