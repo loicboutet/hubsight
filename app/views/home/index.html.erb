@@ -1,4 +1,118 @@
-<div>
-  <h1 class="font-bold text-4xl">Home#index</h1>
-  <p>Find me in app/views/home/index.html.erb</p>
+<div style="min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+  <div style="max-width: 1200px; width: 100%; text-align: center;">
+    
+    <!-- Logo & Title -->
+    <div style="margin-bottom: 60px;">
+      <h1 style="font-size: 4rem; font-weight: 800; color: white; margin: 0 0 20px 0; text-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+        HubSight
+      </h1>
+      <div style="display: inline-block; padding: 8px 20px; background-color: #48bb78; color: white; border-radius: 50px; font-weight: 600; font-size: 0.875rem; margin-bottom: 30px;">
+        ✨ 100% Plateforme Gratuite
+      </div>
+      
+      <!-- Tagline -->
+      <p style="font-size: 1.5rem; color: rgba(255,255,255,0.95); max-width: 700px; margin: 0 auto; line-height: 1.6;">
+        Gérez vos contrats. Ne manquez jamais une échéance. Analysez vos économies potentielles.
+      </p>
+    </div>
+
+    <!-- Features Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 60px;">
+      
+      <!-- Feature 1 -->
+      <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px 30px; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h3 style="color: white; font-size: 1.25rem; font-weight: 600; margin-bottom: 15px;">Gestion de Contrats</h3>
+        <p style="color: rgba(255,255,255,0.8); font-size: 0.938rem; line-height: 1.6;">
+          Centralisez tous vos contrats et suivez automatiquement les échéances importantes
+        </p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px 30px; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+        </div>
+        <h3 style="color: white; font-size: 1.25rem; font-weight: 600; margin-bottom: 15px;">Alertes Intelligentes</h3>
+        <p style="color: rgba(255,255,255,0.8); font-size: 0.938rem; line-height: 1.6;">
+          Recevez des notifications avant chaque échéance pour ne rien manquer
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px 30px; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 style="color: white; font-size: 1.25rem; font-weight: 600; margin-bottom: 15px;">Analyse d'Économies</h3>
+        <p style="color: rgba(255,255,255,0.8); font-size: 0.938rem; line-height: 1.6;">
+          Identifiez automatiquement les opportunités d'économies sur vos contrats
+        </p>
+      </div>
+    </div>
+
+    <!-- Unlock Message -->
+    <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; border: 1px solid rgba(255,255,255,0.3); margin-bottom: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+      <div style="display: flex; align-items: center; gap: 15px; justify-content: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+        </svg>
+        <p style="color: white; font-size: 1.125rem; margin: 0; font-weight: 500;">
+          🎁 Le module <strong>Économies Potentielles</strong> se déverrouille automatiquement dès que vous importez 5 contrats
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+      <% if user_signed_in? %>
+        <%= link_to dashboard_path, style: "display: inline-flex; align-items: center; gap: 10px; padding: 18px 40px; background-color: white; color: #667eea; border-radius: 12px; font-weight: 700; font-size: 1.125rem; text-decoration: none; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transition: transform 0.2s;" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+          Accéder au Tableau de Bord
+        <% end %>
+      <% else %>
+        <%= link_to new_user_session_path, style: "display: inline-flex; align-items: center; gap: 10px; padding: 18px 40px; background-color: white; color: #667eea; border-radius: 12px; font-weight: 700; font-size: 1.125rem; text-decoration: none; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transition: transform 0.2s;" do %>
+          Se Connecter
+        <% end %>
+        <%= link_to new_user_registration_path, style: "display: inline-flex; align-items: center; gap: 10px; padding: 18px 40px; background-color: rgba(255,255,255,0.2); color: white; border: 2px solid white; border-radius: 12px; font-weight: 700; font-size: 1.125rem; text-decoration: none; transition: all 0.2s;" do %>
+          Créer un Compte
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Footer Note -->
+    <p style="color: rgba(255,255,255,0.7); font-size: 0.875rem; margin-top: 60px;">
+      HubSight © 2025 - Gestion intelligente de vos contrats
+    </p>
+  </div>
 </div>
+
+<style>
+  /* Hover effects for CTA buttons */
+  a[href="<%= user_signed_in? ? dashboard_path : new_user_session_path %>"] {
+    transition: transform 0.2s;
+  }
+  a[href="<%= user_signed_in? ? dashboard_path : new_user_session_path %>"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+  }
+  <% unless user_signed_in? %>
+  a[href="<%= new_user_registration_path %>"] {
+    transition: all 0.2s;
+  }
+  a[href="<%= new_user_registration_path %>"]:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255,255,255,0.3);
+  }
+  <% end %>
+</style>

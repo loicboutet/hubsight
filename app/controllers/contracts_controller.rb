@@ -3,6 +3,7 @@ require 'ostruct'
 class ContractsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_contract, only: [:show, :edit, :update, :destroy, :validate, :confirm_validation, :apply_ai_value, :delete_pdf, :retry_ocr, :retry_extraction, :generate_pdf]
+  before_action :validate_contractor_organization, only: [:create, :update]
 
   def index
     # Get base query - admins see all, others see only their organization
@@ -664,6 +665,36 @@ class ContractsController < ApplicationController
     return true if value == true || value.to_s.downcase.in?(['true', '1', 'yes', 'oui', 't', 'y'])
     return false if value == false || value.to_s.downcase.in?(['false', '0', 'no', 'non', 'f', 'n'])
     nil
+  end
+  
+  # ASUS Task 2: Validate contractor organization
+  def validate_contractor_organization
+    # Skip if no contractor organization specified
+    return true if params[:contract][:contractor_organization_id].blank?
+    
+    org_id = params[:contract][:contractor_organization_id]
+    org_name = params[:contract][:contractor_organization_name]
+    
+    # Verify organization exists
+    organization = Organization.find_by(id: org_id)
+    
+    unless organization
+      flash[:alert] = "Organisation invalide. Veuillez sélectionner une organisation existante."
+      @contract ||= Contract.new(contract_params)
+      render (action_name == 'create' ? :new : :edit), status: :unprocessable_entity
+      return false
+    end
+    
+    # Verify name matches (allow slight variations due to autocomplete)
+    unless org_name.blank? || organization.name.downcase.include?(org_name.downcase) || 
+           org_name.downcase.include?(organization.name.downcase)
+      flash[:alert] = "Le nom de l'organisation ne correspond pas à la sélection."
+      @contract ||= Contract.new(contract_params)
+      render (action_name == 'create' ? :new : :edit), status: :unprocessable_entity
+      return false
+    end
+    
+    true
   end
   
   def contract_params

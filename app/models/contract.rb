@@ -25,6 +25,9 @@ class Contract < ApplicationRecord
   
   # PDF validations - OPTIONAL for manual contract creation
   validate :pdf_document_validation, if: -> { pdf_document.attached? }
+  
+  # ASUS Task 2: Prevent free text contractor entries
+  validate :contractor_organization_must_be_valid, if: :contractor_organization_id?
 
   # Callbacks
   before_save :calculate_contract_dates
@@ -592,6 +595,21 @@ class Contract < ApplicationRecord
     # Validate file size (max 10MB)
     if pdf_document.byte_size > 10.megabytes
       errors.add(:pdf_document, 'ne doit pas dépasser 10 Mo')
+    end
+  end
+  
+  # ASUS Task 2: Validate contractor organization association
+  def contractor_organization_must_be_valid
+    return unless contractor_organization_id.present?
+    
+    organization = Organization.find_by(id: contractor_organization_id)
+    
+    if organization.nil?
+      errors.add(:contractor_organization_id, "doit référencer une organisation existante")
+    elsif contractor_organization_name.present? && 
+          !organization.name.downcase.include?(contractor_organization_name.downcase) &&
+          !contractor_organization_name.downcase.include?(organization.name.downcase)
+      errors.add(:contractor_organization_name, "ne correspond pas à l'organisation sélectionnée")
     end
   end
 end
