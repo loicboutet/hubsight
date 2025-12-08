@@ -1,4 +1,9 @@
 class SavingsController < ApplicationController
+  include DataScoping
+  
+  before_action :authenticate_user!
+  before_action :check_savings_unlocked
+  
   def index
     # Renders savings/index.html.erb
   end
@@ -84,5 +89,23 @@ class SavingsController < ApplicationController
       filename: "economies_potentielles_#{Time.current.strftime('%Y%m%d_%H%M%S')}.xls",
       type: 'application/vnd.ms-excel',
       disposition: 'attachment'
+  end
+  
+  private
+  
+  # ASUS Task 1: Check if savings module is unlocked
+  def check_savings_unlocked
+    # Get contracts count based on user role
+    contracts = scoped_contracts
+    
+    @contracts_count = contracts.count
+    @savings_unlocked = (@contracts_count >= 5)
+    @contracts_needed = [5 - @contracts_count, 0].max
+    
+    # Redirect to dashboard if not unlocked
+    unless @savings_unlocked
+      redirect_to dashboard_path, 
+                  alert: "Le module Économies se déverrouille automatiquement après avoir importé 5 contrats. Il vous en manque #{@contracts_needed}."
+    end
   end
 end

@@ -9,6 +9,12 @@ class DashboardController < ApplicationController
     @contracts_by_status = contracts.group(:status).count
     @total_contracts = contracts.count
     
+    # ASUS Task 1: Savings Module Lock
+    @contracts_count = @total_contracts
+    @savings_unlocked = (@contracts_count >= 5)
+    @contracts_needed = [5 - @contracts_count, 0].max
+    @progress_percentage = (@contracts_count * 100.0 / 5).clamp(0, 100).round
+    
     # Contracts by Family
     @contracts_by_family = contracts.group(:contract_family)
       .select('contract_family, COUNT(*) as count, SUM(annual_amount) as total_amount')
