@@ -1,4 +1,17 @@
-<div>
-  <h1 class="font-bold text-4xl">Home#index</h1>
-  <p>Find me in app/views/home/index.html.erb</p>
+<div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+  <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">
+    <h1 class="font-bold text-4xl text-gray-800 mb-4">HubSight</h1>
+    <p class="text-gray-600 mb-6">Bienvenue sur HubSight - Application de gestion des contrats et équipements</p>
+
+    <div class="space-y-4">
+      <%= link_to "Voir les Mockups →", mockups_root_path, class: "block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200" %>
+
+      <% if user_signed_in? %>
+        <p class="text-sm text-gray-500">Connecté en tant que <%= current_user.email %></p>
+        <%= link_to "Se déconnecter", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-indigo-600 hover:text-indigo-800 underline" %>
+      <% else %>
+        <%= link_to "Se connecter", new_user_session_path, class: "text-indigo-600 hover:text-indigo-800 underline" %>
+      <% end %>
+    </div>
+  </div>
 </div>
